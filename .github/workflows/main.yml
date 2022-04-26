@@ -34,8 +34,11 @@ jobs:
       - name: Npm tool install
         run: npm install -g npm@8
         
-      - name: Npm test
-        run: npm test
+      - name: Npm ci
+        run: npm ci
+        
+      - name: Npm run test:ci
+        run: npm run test:ci
         
       - name: Test Report
         uses: dorny/test-reporter@v1
