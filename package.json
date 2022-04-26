@@ -16,7 +16,6 @@
     "build:watch": "nswag run && tsc -b --watch",
     "clean": "tsc -b --clean",
     "nswag": "nswag run",
-    "example": "cd example && npm start"
   },
   "author": "Laserfiche",
   "license": "MIT",
@@ -33,6 +32,6 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@laserfiche/lf-js-utils": "^3.0.4"
+    "@laserfiche/lf-js-utils": "^3.0.5"
   }
 }
