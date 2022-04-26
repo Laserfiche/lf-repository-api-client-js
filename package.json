@@ -1,7 +1,7 @@
 {
   "name": "@laserfiche/laserfiche-repository-api-client",
   "type": "module",
-  "version": "1.0.20220124-2",
+  "version": "1.0.0",
   "description": "The Laserfiche Repository API Client.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
     "example": "cd example && npm start"
   },
   "author": "Laserfiche",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@types/mocha": "^9.1.0",
