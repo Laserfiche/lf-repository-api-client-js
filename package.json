@@ -15,7 +15,7 @@
     "build": "nswag run && npm run clean && tsc -b",
     "build:watch": "nswag run && tsc -b --watch",
     "clean": "tsc -b --clean",
-    "nswag": "nswag run",
+    "nswag": "nswag run"
   },
   "author": "Laserfiche",
   "license": "MIT",
