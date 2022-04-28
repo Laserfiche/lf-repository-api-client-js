@@ -17,15 +17,8 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: dummy
-      NPM_USERNAME: dummy
-      NPM_EMAIL: dummy
-      NPM_REGISTRY: dummy
-    outputs:
-      NpmBaseVersion: ${{ env.NpmPackageVersion }}
     steps:
       - uses: actions/checkout@v2
 
@@ -55,6 +48,29 @@ jobs:
           reporter: jest-junit
           only-summary: 'true'
           fail-on-error: 'false'
+  build:
+    needs: [ test ] # wait for tests to finish
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: dummy
+      NPM_USERNAME: dummy
+      NPM_EMAIL: dummy
+      NPM_REGISTRY: dummy
+    outputs:
+      NpmBaseVersion: ${{ env.NpmPackageVersion }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Echo build number
+        run: echo ${{github.run_id}}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.5.1
+        with:
+          node-version: '14'
+
+      - name: Npm tool install
+        run: npm install -g npm@8
 
       - name: Npm run build
         run: npm run build
