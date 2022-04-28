@@ -72,6 +72,9 @@ jobs:
       - name: Npm tool install
         run: npm install -g npm@8
 
+      - name: Npm ci
+        run: npm ci
+
       - name: Npm run build
         run: npm run build
 
