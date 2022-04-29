@@ -116,7 +116,7 @@ jobs:
         run: npm install -g npm@8
 
       - name: set NpmPackageVersion as production version from downloaded artifact
-        run: echo "NpmPackageVersion=${{ needs.build.outputs.NpmPackageVersion }}--preview-${{ github.run_id }}"
+        run: echo "NpmPackageVersion=${{ needs.build.outputs.NpmPackageVersion }}--preview-${{ github.run_id }}" >> $GITHUB_ENV
 
       - name: npm version
         run: npm version ${{ env.NpmPackageVersion }} --no-git-tag-version
@@ -154,7 +154,7 @@ jobs:
         run: npm install -g npm@8
 
       - name: set NpmPackageVersion as production version from downloaded artifact
-        run: echo "NpmPackageVersion=${{ needs.build.outputs.NpmPackageVersion }}"
+        run: echo "NpmPackageVersion=${{ needs.build.outputs.NpmPackageVersion }}" >> $GITHUB_ENV
 
       - name: npm version
         run: npm version ${{ env.NpmPackageVersion }} --no-git-tag-version
