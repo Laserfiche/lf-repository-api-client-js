@@ -49,7 +49,7 @@ class Client extends generated.Client {
         request: RequestInit
     ) => Promise<boolean>;
     private serviceBaseUrlDebug: string | undefined;
-
+    public defaultRequestHeaders?: Record<string, string>;
 
     constructor(options: ClientOptions, serviceBaseUrlDebug?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         // @ts-ignore
@@ -141,6 +141,11 @@ class Client extends generated.Client {
         const maxRetries = 1;
         let retryCount = 0;
         let shouldRetry = true;
+
+        if (this.defaultRequestHeaders) {
+            init.headers = Object.assign({}, this.defaultRequestHeaders, init.headers);
+        }
+
         while (retryCount <= maxRetries && shouldRetry) {
             const accessToken = await this.beforeFetchRequestAsync(url, init);
             const absoluteUrl = await this.getAbsoluteUrlFromToken(accessToken, url, init);
