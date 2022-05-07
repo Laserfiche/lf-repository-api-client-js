@@ -10,15 +10,19 @@
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "extendedClasses": ["Client"],
-      "clientBaseClass": "ClientBase",
+      "generateClientClasses": true,
+      "generateClientInterfaces": true,
+      "className": "{controller}Client",
+      "clientBaseClass": "Client",
       "configurationClass": null,
       "extensionCode": "src/ClientBase.ts",
       "output": "src/index.ts",
       "useTransformOptionsMethod": false,
       "useTransformResultMethod": false,
       "generateOptionalParameters": true,
-      "markOptionalProperties": true
+      "markOptionalProperties": true,
+      "operationGenerationMode": "MultipleClientsFromFirstTagAndOperationId"
+
     }
   }
 }
