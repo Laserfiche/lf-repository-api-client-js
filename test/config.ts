@@ -1,15 +1,15 @@
 import 'dotenv/config';
 import {createClientCredentialsHandler} from '@laserfiche/lf-oauth-api-client';
-import { Client, ClientOptions } from '../dist';
+//import { Client, ClientOptions } from '../dist'
 
 let repoBaseUrl = "http://api.a.clouddev.laserfiche.com/repository";
 
 // Initialize our custom client with our base URL
-let options: ClientOptions = {
-    beforeFetchRequestAsync: beforeFetchRequestAsync,
-    afterFetchResponseAsync: afterFetchResponseAsync
-}
-let client = new Client(options, repoBaseUrl);
+// let options: ClientOptions = {
+//     beforeFetchRequestAsync: beforeFetchRequestAsync,
+//     afterFetchResponseAsync: afterFetchResponseAsync
+// }
+// let client = new Client(options, repoBaseUrl);
 
 // Set our repository and entry ids
 let repoId: string = "r-76c66368";
@@ -66,4 +66,4 @@ async function afterFetchResponseAsync(url: string, response: Response, request:
 
 // getEntries();
 
-export {client,getAccessToken,repoId,entryId};
+export {getAccessToken,repoId,entryId};
