@@ -1,4 +1,4 @@
-import {PostEntryWithEdocMetadataRequest,PostEntryChildrenRequest, EntryType, FileParameter, ODataValueOfIListOfTemplateFieldInfo, TemplateFieldInfo, WFieldInfo, PostEntryChildrenEntryType} from "../dist";
+import {PostEntryWithEdocMetadataRequest,PostEntryChildrenRequest, EntryType, FileParameter, ODataValueOfIListOfTemplateFieldInfo, TemplateFieldInfo, WFieldInfo, PostEntryChildrenEntryType} from "../src";
 import {client, repoId} from "./config";
 import { readFileSync } from 'fs';
 import FormData from 'form-data';
