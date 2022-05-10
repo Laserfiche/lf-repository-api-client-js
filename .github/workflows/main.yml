@@ -18,6 +18,10 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: preview
+    env:
+      ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+      SERVICE_PRINCIPAL_KEY:  ${{ secrets.SERVICE_PRINCIPAL_KEY }}
     steps:
       - uses: actions/checkout@v2
 
