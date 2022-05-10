@@ -33,6 +33,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@laserfiche/lf-js-utils": "^3.0.5"
+    "@laserfiche/lf-js-utils": "^3.0.5",
+    "@laserfiche/lf-oauth-api-client": "^1.0.0--preview-2266623532"
   }
 }
