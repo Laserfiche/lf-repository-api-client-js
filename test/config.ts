@@ -1,19 +1,20 @@
 import 'dotenv/config';
 import {createClientCredentialsHandler} from '@laserfiche/lf-oauth-api-client';
-//import { Client, ClientOptions } from '../dist'
+import { Client, ClientOptions } from '../dist'
+import { json } from 'stream/consumers';
 
 let repoBaseUrl = "http://api.a.clouddev.laserfiche.com/repository";
 
 // Initialize our custom client with our base URL
-// let options: ClientOptions = {
-//     beforeFetchRequestAsync: beforeFetchRequestAsync,
-//     afterFetchResponseAsync: afterFetchResponseAsync
-// }
-// let client = new Client(options, repoBaseUrl);
+let options: ClientOptions = {
+     beforeFetchRequestAsync: beforeFetchRequestAsync,
+     afterFetchResponseAsync: afterFetchResponseAsync
+}
+let client = new Client(options, repoBaseUrl);
 
 // Set our repository and entry ids
 let repoId: string = "r-76c66368";
-let entryId: number = 1;
+let entryId: number = 208847;
 let accessToken: string = "";
 
 async function getAccessToken() : Promise<string> {
@@ -23,7 +24,7 @@ async function getAccessToken() : Promise<string> {
     // Import our access and service principal keys 
     let testKey = process.env.ACCESS_KEY ?? ""; // Remember to JSON.parse your stringified access key
     let testServicePrincipalKey = process.env.SERVICE_PRINCIPAL_KEY ?? "";
-
+    await timeout(1000);
     let credentials = createClientCredentialsHandler(testKey, testServicePrincipalKey);
 
     let token = await credentials.getAccessToken();
@@ -35,6 +36,9 @@ async function getAccessToken() : Promise<string> {
         return "";
     }
 }
+const timeout = (delay: number | undefined) =>{
+    new Promise(resolve => setTimeout(resolve, delay));
+};
 
 async function beforeFetchRequestAsync(url: string, request: RequestInit): Promise<string> {
     console.log("Before fetch request for: ", url);
@@ -51,19 +55,14 @@ async function afterFetchResponseAsync(url: string, response: Response, request:
     return false;
 }
 
-// async function getEntries() {
-//     try { 
-//         // Get our access token
-//         accessToken = await getAccessToken();
-//         // Retrieve an entry from the repository
-//         let response = await client.getEntryListing(repoId, entryId);
-//         console.log("Retrieving repository entry...");
-//         console.log(response);
-//     } catch(err) {
-//         console.error(err);
-//     }
-// }
+async function getAccessTokenForTests() {
+     try { 
+         // Get our access token
+         accessToken = await getAccessToken();
+     } catch(err) {
+         console.error(err);
+     }
+     return accessToken;
+}
 
-// getEntries();
-
-export {getAccessToken,repoId,entryId};
+export {client, getAccessTokenForTests,repoId};
