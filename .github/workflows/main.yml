@@ -35,6 +35,9 @@ jobs:
       - name: Npm ci
         run: npm ci
 
+      - name: Npm ci in test
+        run: npm ci --prefix ./test/
+
       - name: Npm run test:ci
         run: npm run test:ci
 
