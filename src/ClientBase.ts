@@ -1,6 +1,6 @@
 import * as generated from './index';
 import { UrlUtils, JwtUtils } from '@laserfiche/lf-js-utils';
-import { GetRepoIdFromUri } from './ClientUtils.js';
+import GetRepoIdFromUri  from './ClientUtils';
 
 // This file is a template copied and pasted into the NSwag index.ts to extend the generated Client classes
 // Do not refactor content into different modules because NSwag will not be able to resolve it, since this file is

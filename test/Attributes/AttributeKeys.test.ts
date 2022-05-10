@@ -8,7 +8,6 @@ describe("Attribute Key Test", () => {
         let response = await client.getTrusteeAttributeKeyValuePairs(repoId);
         expect(response).not.toBeNull;
         token = "";
-        //config.client.accessToken = "";
     });
 
     test("Get the attribute value by Key", async () => {

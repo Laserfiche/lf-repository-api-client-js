@@ -1,6 +1,6 @@
 import {client, getAccessTokenForTests, repoId} from "../config";
 import {jest} from '@jest/globals';
-import {AdvancedSearchRequest} from "@laserfiche/lf-repository-api-client";
+import {AdvancedSearchRequest} from "../../src";
 
 let searchToken = "test";
 describe("Search Tests", () => {

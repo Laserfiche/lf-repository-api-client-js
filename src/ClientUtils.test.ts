@@ -1,4 +1,4 @@
-import { GetRepoIdFromUri } from './ClientUtils.js'
+import GetRepoIdFromUri from './ClientUtils'
 describe("ClientUtils" , () => 
 {
     const sampleApiCall = "http://api.a.clouddev.laserfiche.com/repository/v1/repositories/r-76c66368/entries/1/laserfiche.repository.folder/children";

@@ -8,7 +8,7 @@
 // ReSharper disable InconsistentNaming
 
 import { UrlUtils, JwtUtils } from '@laserfiche/lf-js-utils';
-import { GetRepoIdFromUri } from './ClientUtils.js';
+import GetRepoIdFromUri from './ClientUtils';
 export class ClientBase {
     
 }
