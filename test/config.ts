@@ -64,4 +64,4 @@ async function getAccessTokenForTests() {
      return accessToken;
 }
 
-export {client, getAccessTokenForTests,repoId};
+export {client, getAccessTokenForTests,repoId, options, repoBaseUrl};
