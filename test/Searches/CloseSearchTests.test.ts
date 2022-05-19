@@ -4,7 +4,7 @@ import {SearchClient} from '../../src/SearchClient';
 import {jest} from '@jest/globals';
 
 
-describe("Search Tests", () => {
+describe.skip("Search Tests", () => {
     let token = "";
     beforeEach(async() =>{
         token = await getAccessTokenForTests();

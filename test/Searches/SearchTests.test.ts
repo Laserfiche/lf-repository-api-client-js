@@ -3,7 +3,7 @@ import {jest} from '@jest/globals';
 import {AdvancedSearchRequest} from "../../src";
 
 let searchToken = "test";
-describe("Search Tests", () => {
+describe.skip("Search Tests", () => {
     let token = "";
     beforeEach(async() =>{
         token = await getAccessTokenForTests();
