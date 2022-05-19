@@ -8,6 +8,8 @@ class ClientBase {
 
 // @ts-ignore
 class RepositoryApiClient extends generated.Client {
+    private baseUrl: string;
+
     public attributesClient: generated.IAttributesClient
     public auditReasonsClient: generated.IAuditReasonsClient 
     public entriesClient: generated.IEntriesClient 
@@ -23,8 +25,7 @@ class RepositoryApiClient extends generated.Client {
     private constructor(baseUrlDebug?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         super();
 
-        // @ts-ignore
-        this.baseUrl = "";
+        this.baseUrl = baseUrlDebug ?? "";
 
         this.attributesClient = new generated.AttributesClient(baseUrlDebug, http);
         this.auditReasonsClient = new generated.AuditReasonsClient(baseUrlDebug, http);
@@ -61,6 +62,7 @@ class RepositoryApiClient extends generated.Client {
 /** @internal */
 export class RepositoryApiClientHttpHandler {
     private _httpRequestHandler: HttpRequestHandler;
+    
     constructor(httpRequestHandler: HttpRequestHandler) {
        this._httpRequestHandler = httpRequestHandler; 
     }
