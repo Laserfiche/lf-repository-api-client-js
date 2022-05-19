@@ -2,7 +2,7 @@ import {client, getAccessTokenForTests, repoId,options, repoBaseUrl, entryId} fr
 import {EntryClient} from '../../src/EntryClients'; 
 //import {} from '../../src/ClientHelper';
 
-describe("Get Entry Tests", () => {
+describe.skip("Get Entry Tests", () => {
     let token:string;
     let client2:EntryClient;
     beforeEach(async()=>{
