@@ -33,6 +33,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
+    "@laserfiche/lf-api-client-core": "^1.0.0--preview-2350218491",
     "@laserfiche/lf-js-utils": "^3.0.5"
   }
 }

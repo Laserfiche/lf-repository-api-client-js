@@ -13,7 +13,7 @@
       "generateClientClasses": true,
       "generateClientInterfaces": true,
       "className": "{controller}Client",
-      "clientBaseClass": "Client",
+      "clientBaseClass": "ClientBase",
       "configurationClass": null,
       "extensionCode": "src/ClientBase.ts",
       "output": "src/index.ts",
