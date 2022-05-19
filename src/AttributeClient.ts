@@ -1,17 +1,10 @@
-import { ODataValueContextOfListOfAttribute, ClientOptions } from './index';
-import {BaseClient} from './BaseClient';
-import { setUncaughtExceptionCaptureCallback } from 'process';
+import { ODataValueContextOfListOfAttribute, Client } from './index';
+import { options } from '../test/config';
+import { ClientOptions } from './ClientHelper';
 
-export class AttributeClient extends BaseClient{
-    // constructor(){
-    //     let options: ClientOptions = {
-    //         beforeFetchRequestAsync: this.beforeFetchRequestAsync,
-    //         afterFetchResponseAsync: this.afterFetchResponseAsync
-    //    }
-    //     super(options);
-    // }
+export class AttributeClient extends ClientOptions {
 
-    async getTrusteeAttributeKeyValuePairsNextLink(nextLink: string, maxPageSize?: number):Promise<ODataValueContextOfListOfAttribute>{
-        return await this.getNextLinkListing<ODataValueContextOfListOfAttribute>(this.processGetTrusteeAttributeKeyValuePairs, nextLink, maxPageSize);
+    async getTrusteeAttributeKeyValuePairsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfListOfAttribute> {
+        return await this.getNextLinkListing<ODataValueContextOfListOfAttribute>(this.http, this.processGetTrusteeAttributeKeyValuePairs, nextLink, maxPageSize);
     }
 }

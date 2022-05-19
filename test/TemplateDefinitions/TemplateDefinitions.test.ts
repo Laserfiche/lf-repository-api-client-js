@@ -1,9 +1,8 @@
 import {client, getAccessTokenForTests, repoId,options, repoBaseUrl} from "../config";
-import {AttributeClient} from '../../src/AttributeClient'; 
-import { ODataValueContextOfListOfAttribute, Client } from '../../src/index';
+import {TemplateDefinitionsClient} from '../../src/TemplateDefinitionsClient'; 
 //import {} from '../../src/ClientHelper';
 
-describe("Attribute Key Test", () => {
+describe("Template Definitions Test", () => {
     let token:string;
     beforeEach(async()=>{
         token = await getAccessTokenForTests();
@@ -13,21 +12,16 @@ describe("Attribute Key Test", () => {
         token = "";
     });
 
-    test("Get the attribute keys", async () => {
-        let response = await client.getTrusteeAttributeKeyValuePairs(repoId);
-        expect(response).not.toBeNull;
-    });
-
-    test("Get the attribute value by Key simple paging", async () => {
-        let client2 = new AttributeClient(options, repoBaseUrl);
+    test("Get Template Definition Fields Simple Paging", async()=>{
+        let client2 = new TemplateDefinitionsClient(options, repoBaseUrl);
         let maxPageSize = 1;
         let prefer = `maxpagesize=${maxPageSize}`;
-        let response = await client.getFieldDefinitions(repoId, prefer);
+        let response = await client.getTemplateDefinitions(repoId,null,prefer);
         expect(response).not.toBeNull();
         let nextLink = response.toJSON()["@odata.nextLink"];
         expect(nextLink).not.toBeNull();
         expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
-        let response2 = await client2.getTrusteeAttributeKeyValuePairsNextLink(nextLink,maxPageSize);
+        let response2 = await client2.getTemplateDefinitionsNextLink(nextLink,maxPageSize);
         expect(response2).not.toBeNull();
         expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
     });

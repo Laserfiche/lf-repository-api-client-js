@@ -13,7 +13,7 @@ let client = new Client(options, repoBaseUrl);
 
 // Set our repository and entry ids
 let repoId: string = "r-76c66368";
-let entryId: number = 208847;
+let entryId: number = 196294;
 let accessToken: string = "";
 
 async function getAccessToken() : Promise<string> {
@@ -64,4 +64,4 @@ async function getAccessTokenForTests() {
      return accessToken;
 }
 
-export {client, getAccessTokenForTests,repoId, options, repoBaseUrl};
+export {client, getAccessTokenForTests,repoId, options, repoBaseUrl, entryId};

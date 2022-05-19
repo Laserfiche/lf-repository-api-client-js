@@ -1,7 +1,10 @@
-import {Client, IODataValueContextOfIListOfODataEntry, ODataValueContextOfIListOfFieldValue} from './index';
+import { AttributeClient } from './AttributeClient';
+import {IODataValueContextOfIListOfODataGetEntryChildren, Client} from './index';
 
-export class BaseClient extends Client{
-    async getNextLinkListing<T extends IODataValueContextOfIListOfODataEntry>(processListing: (response: Response) => Promise<T>, nextLink: string, maxPageSize?: number): Promise<T> {
+export class ClientOptions extends Client{
+
+    getNextLinkListing<T extends IODataValueContextOfIListOfODataGetEntryChildren>(http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }, processListing: (response: Response) => Promise<T>, nextLink: string, maxPageSize?: number): Promise<T> {
+        console.log(nextLink);
         if (!nextLink) {
             throw new Error("Next Link is undefined");
         }
@@ -14,15 +17,13 @@ export class BaseClient extends Client{
                 "Accept": "application/json"
             }
         };
-        //console.log(options_);
-        //console.log(nextLink);
-        //console.log(processListing);
-        return this.http.fetch(nextLink, options_).then((_response: Response) => {
-            return processListing(_response);
+        let processListingTwo = processListing.bind(this);
+        console.log(processListingTwo);
+        return http.fetch(nextLink, options_).then((_response: Response) => {
+            return processListingTwo(_response);
         });
 
     }
-
     CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefined {
         //puts the max size into the prefer header of the GET request
         if (!maxSize) {
@@ -32,4 +33,6 @@ export class BaseClient extends Client{
             return `maxpagesize=${maxSize}`;
         }
     }
+
+
 }
