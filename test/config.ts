@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import {createClientCredentialsHandler} from '@laserfiche/lf-oauth-api-client';
+import {createClientCredentialsHandler} from '@laserfiche/lf-api-client-core';
 import { Client, ClientOptions } from '../src';
 
 let repoBaseUrl = "http://api.a.clouddev.laserfiche.com/repository";
