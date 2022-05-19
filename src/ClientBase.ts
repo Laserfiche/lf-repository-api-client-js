@@ -18,10 +18,25 @@ class RepositoryApiClient extends generated.Client {
     public simpleSearchesClient: generated.ISimpleSearchesClient 
     public tagDefinitionsClient: generated.ITagDefinitionsClient 
     public tasksClient: generated.ITasksClient 
-    public templateDefinitionsClient: generated.ITemplateDefinitionsClient 
+    public templateDefinitionsClient: generated.ITemplateDefinitionsClient
 
-    private constructor(baseUrlDebug?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    private repoClientHandler: RepositoryApiClientHttpHandler
+
+    public getDefaultRequestHeaders(): Record<string, string> {
+        return this.repoClientHandler.defaultRequestHeaders;
+    }
+
+    public setDefaultRequestHeaders(headers: Record<string, string>){
+        this.repoClientHandler.defaultRequestHeaders = headers;
+    }
+
+    private constructor(httpRequestHandler: HttpRequestHandler, baseUrlDebug?: string) {
         super();
+
+        this.repoClientHandler = new RepositoryApiClientHttpHandler(httpRequestHandler);
+        let http = {
+            fetch: this.repoClientHandler.httpHandler
+        }
 
         // @ts-ignore
         this.baseUrl = "";
@@ -43,11 +58,7 @@ class RepositoryApiClient extends generated.Client {
         if (!httpRequestHandler) 
             throw new Error("Argument cannot be null: httpRequestHandler");
         
-        let repoClientHandler = new RepositoryApiClientHttpHandler(httpRequestHandler);
-        let httpHandler = {
-            fetch: repoClientHandler.httpHandler
-        }
-        let repoClient = new RepositoryApiClient(baseUrlDebug, httpHandler);
+        let repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
 
         return repoClient;
     }
@@ -61,8 +72,11 @@ class RepositoryApiClient extends generated.Client {
 /** @internal */
 export class RepositoryApiClientHttpHandler {
     private _httpRequestHandler: HttpRequestHandler;
+    public defaultRequestHeaders: Record<string, string>;
+
     constructor(httpRequestHandler: HttpRequestHandler) {
        this._httpRequestHandler = httpRequestHandler; 
+       this.defaultRequestHeaders = {};
     }
 
     public async httpHandler(url: string, init: RequestInit): Promise<Response>{
@@ -70,6 +84,11 @@ export class RepositoryApiClientHttpHandler {
         let retryCount = 0;
         let shouldRetry = true;
         let lastResponse;
+
+        if (this.defaultRequestHeaders) {
+            init.headers = Object.assign({}, this.defaultRequestHeaders, init.headers);
+        }
+
         while (retryCount <= maxRetries && shouldRetry) {
             const beforeSendResult = await this._httpRequestHandler.beforeFetchRequestAsync(url, init);
             const absoluteUrl = UrlUtils.combineURLs(beforeSendResult.regionalDomain, url);
