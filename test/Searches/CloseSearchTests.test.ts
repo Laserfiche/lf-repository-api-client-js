@@ -2,9 +2,10 @@ import {client, getAccessTokenForTests, repoId, repoBaseUrl,options} from "../co
 import {AdvancedSearchRequest} from "../../src";
 import {SearchClient} from '../../src/SearchClient';
 import {jest} from '@jest/globals';
+import {ODataValueContextOfIListOfODataGetSearchResults, ODataValueContextOfIListOfContextHit} from '../../src/index';
 
 
-describe("Search Tests", () => {
+describe.skip("Search Tests", () => {
     let token = "";
     beforeEach(async() =>{
         token = await getAccessTokenForTests();
@@ -46,5 +47,28 @@ describe("Search Tests", () => {
         let response2 = await client2.GetSearchResultsNextLink(nextLink,maxPageSize);
         expect(response2).not.toBeNull();
         expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
+    });
+
+    jest.setTimeout(30000);
+    test.only("Get Search Results for each Paging", async()=>{
+        let client2 = new SearchClient(options, repoBaseUrl);
+        let maxPageSize = 20;
+        let searchRequest = new AdvancedSearchRequest();
+        searchRequest.searchCommand = "({LF:Basic ~= \"search text\", option=\"NLT\"})";
+        let searchResponse = await client.createSearchOperation(repoId,searchRequest);
+        let searchToken = searchResponse.toJSON().token;
+        expect(searchToken).not.toBe("");
+        expect(searchToken).not.toBeNull();
+        await new Promise((r) => setTimeout(r, 10000));
+        let searchResults = 0;
+        let pages = 0;
+        const callback = async(response: ODataValueContextOfIListOfODataGetSearchResults) =>{
+            searchResults += response.toJSON().value.length;
+            pages += 1;
+            return true;
+        }
+        await client2.GetSearchResultsForEach(callback, repoId, searchToken, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,undefined, undefined, maxPageSize);
+        expect(searchResults).toBeGreaterThan(0);
+        expect(pages).toBeGreaterThan(0);
     });
 })

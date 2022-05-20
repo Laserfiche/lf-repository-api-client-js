@@ -31,4 +31,21 @@ describe("Attribute Key Test", () => {
         expect(response2).not.toBeNull();
         expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
     });
+
+    test.only("Get the attributes for each paging", async () => {
+        let client2 = new AttributeClient(options, repoBaseUrl);
+        let maxPageSize = 20;
+        let attributes = 0;
+        let pages = 0;
+        const callback = async(response: ODataValueContextOfListOfAttribute) =>{
+            attributes += response.toJSON().value.length;
+            pages += 1
+            return true;
+        }
+        await client2.GetTrusteeAttributeKeyValuePairsForEach(callback,repoId,true,undefined,undefined,undefined, undefined,undefined,maxPageSize);
+        console.log(attributes);
+        console.log(pages);
+        expect(attributes).toBeGreaterThan(0);
+        expect(pages).toBeGreaterThan(0);
+    });
 })

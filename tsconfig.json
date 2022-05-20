@@ -98,5 +98,5 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "exclude": ["./test/"]
+  "exclude": ["./test/*","./src/AttributeClient.ts","./src/ClientHelper.ts","./src/EntryClients.ts","./src/FieldDefinitionClient.ts","./src/SearchClient.ts", "./src/TagDefinitionsClient.ts", "./src/TemplateDefinitionsClient.ts"]
 }

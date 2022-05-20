@@ -1,9 +1,11 @@
-import {client, getAccessTokenForTests, repoId} from "../config";
+import {client, getAccessTokenForTests, repoId,options, repoBaseUrl} from "../config";
 import {jest} from '@jest/globals';
 import {AdvancedSearchRequest} from "../../src";
+import {ODataValueContextOfIListOfContextHit} from '../../src/index';
+import {SearchClient} from '../../src/SearchClient';
 
 let searchToken = "test";
-describe("Search Tests", () => {
+describe.skip("Search Tests", () => {
     let token = "";
     beforeEach(async() =>{
         token = await getAccessTokenForTests();
@@ -51,6 +53,38 @@ describe("Search Tests", () => {
         var contextHits = contextHitResponse.toJSON().value;
         expect(contextHits).not.toBeNull();
     });
+
+    jest.setTimeout(30000);
+    test.only("Get Search Context Hits for each Paging", async()=>{
+        let client2 = new SearchClient(options, repoBaseUrl);
+        let maxPageSize = 20;
+        let searchRequest = new AdvancedSearchRequest();
+        searchRequest.searchCommand = "({LF:Basic ~= \"search text\", option=\"NLT\"})";
+        let searchResponse = await client.createSearchOperation(repoId,searchRequest);
+        console.log(searchResponse);
+        let searchToken = searchResponse.toJSON().token;
+        expect(searchToken).not.toBe("");
+        expect(searchToken).not.toBeNull();
+        await new Promise((r) => setTimeout(r, 5000));
+        var searchResultsResponse = await client.getSearchResults(repoId,searchToken);
+        console.log(searchResultsResponse);
+        var searchResults = searchResultsResponse.toJSON().value;
+        expect(searchResults).not.toBeNull();
+        expect(searchResults.length > 0).toBeTruthy();
+        let rowNum = searchResults[0].rowNumber;
+        let searchContextHits = 0;
+        let pages = 0;
+        const callback = async(response: ODataValueContextOfIListOfContextHit) =>{
+            console.log(response);
+            searchContextHits += response.toJSON().value.length;
+            pages += 1;
+            return true;
+        }
+        await client2.GetSearchContextHitsForEach(callback, repoId, searchToken, rowNum,undefined,undefined, undefined,undefined,undefined,undefined,maxPageSize);
+        expect(searchContextHits).toBeGreaterThan(0);
+        expect(pages).toBeGreaterThan(0);
+    });
+
     jest.setTimeout(20000);
     test("Get Search Results", async ()=>{
         let request = new AdvancedSearchRequest();

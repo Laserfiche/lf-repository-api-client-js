@@ -1,6 +1,7 @@
 import {client, getAccessTokenForTests, repoId,options, repoBaseUrl} from "../config";
 import {TagDefinitionsClient} from '../../src/TagDefinitionsClient'; 
 //import {} from '../../src/ClientHelper';
+import {ODataValueContextOfIListOfWTagInfo} from '../../src/index';
 
 describe("Tag Definitions Test", () => {
     let token:string;
@@ -24,5 +25,20 @@ describe("Tag Definitions Test", () => {
         let response2 = await client2.getTagDefinitionsNextLink(nextLink,maxPageSize);
         expect(response2).not.toBeNull();
         expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
+    });
+
+    test.only("Get Tag Definitions for each Paging", async()=>{
+        let client2 = new TagDefinitionsClient(options, repoBaseUrl);
+        let maxPageSize = 20;
+        let tagDefinitions = 0;
+        let pages = 0;
+        const callback = async(response: ODataValueContextOfIListOfWTagInfo) =>{
+            tagDefinitions += response.toJSON().value.length;
+            pages += 1;
+            return true;
+        }
+        await client2.GetTagDefinitionsForEach(callback, repoId, undefined, undefined, undefined, undefined, undefined,undefined,undefined, maxPageSize);
+        expect(tagDefinitions).toBeGreaterThan(0);
+        expect(pages).toBeGreaterThan(0);
     });
 })
