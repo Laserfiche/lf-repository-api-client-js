@@ -24,11 +24,12 @@ class RepositoryApiClient extends generated.Client {
 
     private repoClientHandler: RepositoryApiClientHttpHandler
 
-    public getDefaultRequestHeaders(): Record<string, string> {
+
+    public get defaultRequestHeaders(): Record<string, string> {
         return this.repoClientHandler.defaultRequestHeaders;
     }
 
-    public setDefaultRequestHeaders(headers: Record<string, string>){
+    public set defaultRequestHeaders(headers: Record<string, string>){
         this.repoClientHandler.defaultRequestHeaders = headers;
     }
 
@@ -40,8 +41,7 @@ class RepositoryApiClient extends generated.Client {
             fetch: this.repoClientHandler.httpHandler
         }
 
-        // @ts-ignore
-        this.baseUrl = "";
+        this.baseUrl = baseUrlDebug ?? "";
 
         this.attributesClient = new generated.AttributesClient(baseUrlDebug, http);
         this.auditReasonsClient = new generated.AuditReasonsClient(baseUrlDebug, http);
@@ -93,7 +93,7 @@ export class RepositoryApiClientHttpHandler {
 
         while (retryCount <= maxRetries && shouldRetry) {
             const beforeSendResult = await this._httpRequestHandler.beforeFetchRequestAsync(url, init);
-            const absoluteUrl = UrlUtils.combineURLs(beforeSendResult.regionalDomain, url);
+            const absoluteUrl = url.startsWith("http") ? url : UrlUtils.combineURLs(beforeSendResult.regionalDomain, url);
     
             try {
                 let response = await fetch(absoluteUrl, init);

@@ -8673,6 +8673,8 @@ function throwException(message: string, status: number, response: string, heade
 
 // @ts-ignore
 class RepositoryApiClient extends Client {
+    private baseUrl: string;
+
     public attributesClient: IAttributesClient
     public auditReasonsClient: IAuditReasonsClient 
     public entriesClient: IEntriesClient 
@@ -8683,13 +8685,27 @@ class RepositoryApiClient extends Client {
     public simpleSearchesClient: ISimpleSearchesClient 
     public tagDefinitionsClient: ITagDefinitionsClient 
     public tasksClient: ITasksClient 
-    public templateDefinitionsClient: ITemplateDefinitionsClient 
+    public templateDefinitionsClient: ITemplateDefinitionsClient
 
-    private constructor(baseUrlDebug?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    private repoClientHandler: RepositoryApiClientHttpHandler
+
+    public get defaultRequestHeaders(): Record<string, string> {
+        return this.repoClientHandler.defaultRequestHeaders;
+    }
+
+    public set defaultRequestHeaders(headers: Record<string, string>){
+        this.repoClientHandler.defaultRequestHeaders = headers;
+    }
+
+    private constructor(httpRequestHandler: HttpRequestHandler, baseUrlDebug?: string) {
         super();
 
-        // @ts-ignore
-        this.baseUrl = "";
+        this.repoClientHandler = new RepositoryApiClientHttpHandler(httpRequestHandler);
+        let http = {
+            fetch: this.repoClientHandler.httpHandler
+        }
+
+        this.baseUrl = baseUrlDebug ?? "";
 
         this.attributesClient = new AttributesClient(baseUrlDebug, http);
         this.auditReasonsClient = new AuditReasonsClient(baseUrlDebug, http);
@@ -8708,11 +8724,7 @@ class RepositoryApiClient extends Client {
         if (!httpRequestHandler) 
             throw new Error("Argument cannot be null: httpRequestHandler");
         
-        let repoClientHandler = new RepositoryApiClientHttpHandler(httpRequestHandler);
-        let httpHandler = {
-            fetch: repoClientHandler.httpHandler
-        }
-        let repoClient = new RepositoryApiClient(baseUrlDebug, httpHandler);
+        let repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
 
         return repoClient;
     }
@@ -8726,8 +8738,11 @@ class RepositoryApiClient extends Client {
 /** @internal */
 export class RepositoryApiClientHttpHandler {
     private _httpRequestHandler: HttpRequestHandler;
+    public defaultRequestHeaders: Record<string, string>;
+
     constructor(httpRequestHandler: HttpRequestHandler) {
        this._httpRequestHandler = httpRequestHandler; 
+       this.defaultRequestHeaders = {};
     }
 
     public async httpHandler(url: string, init: RequestInit): Promise<Response>{
@@ -8735,9 +8750,14 @@ export class RepositoryApiClientHttpHandler {
         let retryCount = 0;
         let shouldRetry = true;
         let lastResponse;
+
+        if (this.defaultRequestHeaders) {
+            init.headers = Object.assign({}, this.defaultRequestHeaders, init.headers);
+        }
+
         while (retryCount <= maxRetries && shouldRetry) {
             const beforeSendResult = await this._httpRequestHandler.beforeFetchRequestAsync(url, init);
-            const absoluteUrl = UrlUtils.combineURLs(beforeSendResult.regionalDomain, url);
+            const absoluteUrl = url.startsWith("http") ? url : UrlUtils.combineURLs(beforeSendResult.regionalDomain, url);
     
             try {
                 let response = await fetch(absoluteUrl, init);
