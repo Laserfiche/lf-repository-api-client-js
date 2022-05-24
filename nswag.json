@@ -21,8 +21,8 @@
       "useTransformResultMethod": false,
       "generateOptionalParameters": true,
       "markOptionalProperties": true,
-      "operationGenerationMode": "MultipleClientsFromFirstTagAndOperationId"
-
+      "operationGenerationMode": "MultipleClientsFromFirstTagAndOperationId",
+      "templateDirectory": "nswag"
     }
   }
 }

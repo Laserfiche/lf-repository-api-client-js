@@ -7,7 +7,7 @@ class ClientBase {
 }
 
 // @ts-ignore
-class RepositoryApiClient extends generated.Client {
+export class RepositoryApiClient {
     private baseUrl: string;
 
     public attributesClient: generated.IAttributesClient
@@ -34,8 +34,6 @@ class RepositoryApiClient extends generated.Client {
     }
 
     private constructor(httpRequestHandler: HttpRequestHandler, baseUrlDebug?: string) {
-        super();
-
         this.repoClientHandler = new RepositoryApiClientHttpHandler(httpRequestHandler);
         let http = {
             fetch: this.repoClientHandler.httpHandler
