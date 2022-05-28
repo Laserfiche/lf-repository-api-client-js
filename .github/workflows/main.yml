@@ -20,8 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: preview
     env:
-      ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
-      SERVICE_PRINCIPAL_KEY:  ${{ secrets.SERVICE_PRINCIPAL_KEY }}
+        DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
+        DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY:  ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
+        DEV_CA_PUBLIC_USE_REPOSITORY_ID_1:  ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_1 }}
     steps:
       - uses: actions/checkout@v2
 
