@@ -40,8 +40,8 @@ jobs:
       - name: Npm ci
         run: npm ci
 
-      - name: Npm run test:ci
-        run: npm run test:ci
+      - name: Npm test
+        run: npm run test:all
 
       - name: Test Report
         uses: dorny/test-reporter@v1
