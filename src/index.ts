@@ -8763,7 +8763,7 @@ export class RepositoryApiClient{
   private constructor(httpRequestHandler: HttpRequestHandler, baseUrlDebug?: string) {
     this.repoClientHandler = new RepositoryApiClientHttpHandler(httpRequestHandler);
     let fetch = this.repoClientHandler.httpHandler;
-    fetch.bind(this);
+    fetch = fetch.bind(this.repoClientHandler);
     let http = {
       fetch,
     };
@@ -8798,8 +8798,6 @@ export class RepositoryApiClient{
     accessKey: string,
     baseUrlDebug?: string
   ): RepositoryApiClient {
-    console.log(servicePrincipalKey);
-    console.log(accessKey);
     let handler = new OAuthClientCredentialsHandler(servicePrincipalKey,accessKey);
     return RepositoryApiClient.createClientFromHttpRequestHandler(handler, baseUrlDebug);
   }
@@ -8812,13 +8810,10 @@ export class RepositoryApiClientHttpHandler {
 
   constructor(httpRequestHandler: HttpRequestHandler) {
     this._httpRequestHandler = httpRequestHandler;
-    console.log(this._httpRequestHandler);//defined
     this.defaultRequestHeaders = {};
   }
 
   public async httpHandler(url: string, init: RequestInit): Promise<Response> {
-    console.log(this,this._httpRequestHandler);//undefined
-    console.log(typeof(this));
     const maxRetries = 1;
     let retryCount = 0;
     let shouldRetry = true;
