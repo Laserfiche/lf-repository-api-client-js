@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "https://api.a.clouddev.laserfiche.com/repository/swagger/v1/swagger.json",
+      "url": "swagger.json",
       "output": null,
       "newLineBehavior": "Auto"
     }
