@@ -6,11 +6,11 @@ import {
   FieldToUpdate,
   PutLinksRequest,
   PutTagRequest,
+  PutTemplateRequest,
   ValueToUpdate,
   WFieldType,
 } from '../../src/index.js';
-import { jest } from '@jest/globals';
-import { CreateEntry } from '../BaseTest';
+import { allFalse, CreateEntry } from '../BaseTest';
 
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
@@ -27,7 +27,7 @@ describe('Set Entries Integration Tests', () => {
     }
   });
 
-  test('Set fields test', async () => {
+  test('Set fields', async () => {
     let field = null;
     let fieldValue = 'a';
     let fieldDefinitionsResponse = await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId });
@@ -44,8 +44,6 @@ describe('Set Entries Integration Tests', () => {
       }
     }
     expect(field).not.toBeNull();
-    console.log(field);
-    console.log(field?.name);
     let value = new ValueToUpdate();
     value.value = fieldValue;
     value.position = 1;
@@ -65,7 +63,7 @@ describe('Set Entries Integration Tests', () => {
     expect(fields[0].fieldName).toBe(field.name);
   });
 
-  test('Set Tags Test', async () => {
+  test('Set Tags', async () => {
     let tagDefinitionsResponse = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId });
     let tagDefinitions = tagDefinitionsResponse.toJSON().value;
     expect(tagDefinitions).not.toBeNull();
@@ -82,7 +80,7 @@ describe('Set Entries Integration Tests', () => {
     expect(tag).toBe(tags[0].name);
   });
 
-  test('Set Links Test', async () => {
+  test('Set Links', async () => {
     let sourceEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetLinks Source');
     createdEntries.push(sourceEntry);
     var targetEntry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetLinks Target');
@@ -104,4 +102,30 @@ describe('Set Entries Integration Tests', () => {
     expect(sourceEntry.id).toBe(links[0].sourceId);
     expect(targetEntry.id).toBe(links[0].targetId);
   });
+
+  test("Set Templates",async()=>{
+    // Find a template definition with no required fields
+    let template = null;
+    let templateDefinitionResponse = await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({repoId});
+    let templateDefinitions = templateDefinitionResponse.toJSON().value;
+    expect(templateDefinitions).not.toBeNull();
+    expect(templateDefinitions.length).toBeGreaterThan(0);
+    for (let i = 0; i < templateDefinitions.length;i++){
+        let templateDefinitionFeildsResponse = await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitions({repoId,templateId:templateDefinitions[i].id});
+        if (templateDefinitionFeildsResponse.toJSON().value != null && allFalse(templateDefinitionFeildsResponse.toJSON().value)){
+            template = templateDefinitions[i];
+            break;
+        }
+    }
+    expect(template).not.toBeNull();
+
+    //Set the template on an entry
+    let request = new PutTemplateRequest();
+    request.templateName = template?.name;
+    entry = await CreateEntry(_RepositoryApiClient, "APIServerClientIntegrationTest DeleteTemplate");
+    let setTemplateResponse = await _RepositoryApiClient.entriesClient.writeTemplateValueToEntry({repoId,entryId: Number(entry.id),request});
+    expect(setTemplateResponse.toJSON()).not.toBeNull();
+    expect(setTemplateResponse.toJSON().templateName).toBe(template.name);
+
+});
 });

@@ -1,7 +1,7 @@
-import {Entry,PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType} from "../src";
+import {Entry,PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType, FileParameter} from "../src";
 import { testKey, testServicePrincipalKey, repoId,baseUrlDebug } from './testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient} from '../src/ClientBase.js';
-import { readFileSync } from 'fs';
+import * as fs from 'fs';
 import FormData from 'form-data';
 
 export async function CreateEntry(client: IRepositoryApiClient, entryName: string | undefined, parentEntryId:number = 1, autoRename:boolean = true):Promise<Entry>{
