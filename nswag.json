@@ -10,7 +10,9 @@
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "extendedClasses": ["Client"],
+      "generateClientClasses": true,
+      "generateClientInterfaces": true,
+      "className": "{controller}Client",
       "clientBaseClass": "ClientBase",
       "configurationClass": null,
       "extensionCode": "src/ClientBase.ts",
@@ -18,7 +20,9 @@
       "useTransformOptionsMethod": false,
       "useTransformResultMethod": false,
       "generateOptionalParameters": true,
-      "markOptionalProperties": true
+      "markOptionalProperties": true,
+      "operationGenerationMode": "MultipleClientsFromFirstTagAndOperationId",
+      "templateDirectory": "nswag"
     }
   }
 }
