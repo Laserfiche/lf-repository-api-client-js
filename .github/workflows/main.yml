@@ -18,6 +18,11 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: preview
+    env:
+        DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
+        DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY:  ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
+        DEV_CA_PUBLIC_USE_REPOSITORY_ID_1:  ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_1 }}
     steps:
       - uses: actions/checkout@v2
 
@@ -35,11 +40,8 @@ jobs:
       - name: Npm ci
         run: npm ci
 
-      - name: Npm ci in test
-        run: npm ci --prefix ./test/
-
-      - name: Npm run test:ci
-        run: npm run test:ci
+      - name: Npm test
+        run: npm run test:all
 
       - name: Test Report
         uses: dorny/test-reporter@v1
@@ -79,6 +81,28 @@ jobs:
 
       - name: Npm run build
         run: npm run build
+        
+      - name: Install typedoc
+        run: npm install typedoc
+
+      - name: Create temporary directory
+        run: mkdir -p ./docs_temp/${GITHUB_REF##*/}
+      
+      - name: Generate typedoc docs
+        run: npx typedoc ./src/index.ts --out ./docs_temp/${GITHUB_REF##*/} --excludePrivate
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2 # Use your bucket region here
+          
+      - name: Upload docs to S3 bucket
+        run: aws s3 sync ./docs_temp/${GITHUB_REF##*/}/ s3://apiserver-publish-client-library-docs/${GITHUB_REPOSITORY##*/}/docs/${GITHUB_REF##*/} --delete
+        
+      - name: delete temporary directory
+        run: rm -r ./docs_temp
 
       - name: Echo NPM package version
         run: echo ${{ env.NPM_VERSION }}

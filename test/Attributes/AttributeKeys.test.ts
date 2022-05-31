@@ -1,34 +1,30 @@
-import {client, getAccessTokenForTests, repoId,options, repoBaseUrl} from "../config";
-import {AttributeClient} from '../../src/AttributeClient'; 
-import { ODataValueContextOfListOfAttribute, Client } from '../../src/index';
-//import {} from '../../src/ClientHelper';
+import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { ODataValueContextOfListOfAttribute } from '../../src/index.js';
 
-describe("Attribute Key Test", () => {
-    let token:string;
-    beforeEach(async()=>{
-        token = await getAccessTokenForTests();
-    });
+describe('Attribute Key Integration Tests', () => {
+  let _RepositoryApiClient: IRepositoryApiClient;
+  beforeEach(() => {
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+  });
 
-    afterEach(async()=>{
-        token = "";
-    });
+  test('Get the attribute keys', async () => {
+    let result: ODataValueContextOfListOfAttribute =
+      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId });
+    expect(result).not.toBeNull();
+  });
 
-    test("Get the attribute keys", async () => {
-        let response = await client.getTrusteeAttributeKeyValuePairs(repoId);
-        expect(response).not.toBeNull;
+  test('Get the attribute value by Key', async () => {
+    let result: ODataValueContextOfListOfAttribute =
+      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId });
+    let attributeKeys = result.toJSON().value;
+    expect(attributeKeys).not.toBeNull();
+    expect(attributeKeys.length).toBeGreaterThan(0);
+    let attributeValueResponse = await _RepositoryApiClient.attributesClient.getTrusteeAttributeValueByKey({
+      repoId,
+      attributeKey: attributeKeys[0].key,
     });
-
-    test("Get the attribute value by Key simple paging", async () => {
-        let client2 = new AttributeClient(options, repoBaseUrl);
-        let maxPageSize = 1;
-        let prefer = `maxpagesize=${maxPageSize}`;
-        let response = await client.getFieldDefinitions(repoId, prefer);
-        expect(response).not.toBeNull();
-        let nextLink = response.toJSON()["@odata.nextLink"];
-        expect(nextLink).not.toBeNull();
-        expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
-        let response2 = await client2.getTrusteeAttributeKeyValuePairsNextLink(nextLink,maxPageSize);
-        expect(response2).not.toBeNull();
-        expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
-    });
-})
+    expect(attributeValueResponse).not.toBeNull();
+    expect(attributeValueResponse).not.toBe('');
+  });
+});
