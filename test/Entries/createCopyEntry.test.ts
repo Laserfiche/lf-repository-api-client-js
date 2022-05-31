@@ -9,7 +9,6 @@ import {
   Shortcut,
 } from '../../src/index.js';
 import { jest } from '@jest/globals';
-import { CreateEntry } from '../BaseTest.js';
 
 describe('Create Copy Entry Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
@@ -20,7 +19,6 @@ describe('Create Copy Entry Tests', () => {
 
   jest.setTimeout(200000);
   afterEach(async () => {
-    console.log(createdEntries);
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {
         let body:DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
