@@ -36,7 +36,6 @@ describe('Move Entries Integration Tests', () => {
       request,
       autoRename: true,
     });
-    console.log(movedEntry);
     expect(movedEntry).not.toBeNull;
     expect(movedEntry.id).toBe(childFolder.id);
     expect(movedEntry.parentId).toBe(parentFolder.id);

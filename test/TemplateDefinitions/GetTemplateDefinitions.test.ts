@@ -54,7 +54,7 @@ describe('Template Definitions Integration Tests', () => {
     expect(templateDefinitions?.length).toBe(firstTemplateDefinition.fieldCount);
   });
 
-  test.only('Get Template Definition Fields by Id', async () => {
+  test('Get Template Definition Fields by Id', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });
     let firstTemplateDefinition = templateDefinitionResponse.toJSON().value[0];
