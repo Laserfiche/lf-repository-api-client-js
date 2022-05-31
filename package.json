@@ -8,7 +8,8 @@
   "files": [
     "dist/index.js",
     "dist/index.d.ts",
-    "dist/ClientUtils.js"
+    "dist/ClientBase.js",
+    "dist/ClientBase.d.ts"
   ],
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js",

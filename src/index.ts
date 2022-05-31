@@ -356,12 +356,12 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = CreateEntryResult.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
-        } else if (status === 404) {
+        } else if (status === 401) {
             return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = CreateEntryResult.fromJS(resultData404);
-            return throwException("Parent entry is not found.", status, _responseText, _headers, result404);
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
@@ -370,6 +370,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = CreateEntryResult.fromJS(resultData404);
+            return throwException("Parent entry is not found.", status, _responseText, _headers, result404);
+            });
         } else if (status === 409) {
             return response.text().then((_responseText) => {
             let result409: any = null;
@@ -377,26 +384,19 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result409 = CreateEntryResult.fromJS(resultData409);
             return throwException("Document creation is partial success.", status, _responseText, _headers, result409);
             });
-        } else if (status === 500) {
-            return response.text().then((_responseText) => {
-            let result500: any = null;
-            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = CreateEntryResult.fromJS(resultData500);
-            return throwException("Document creation is complete failure.", status, _responseText, _headers, result500);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
             let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result429 = ProblemDetails.fromJS(resultData429);
             return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = CreateEntryResult.fromJS(resultData500);
+            return throwException("Document creation is complete failure.", status, _responseText, _headers, result500);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -455,6 +455,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -468,13 +475,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Requested entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -542,19 +542,19 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -633,6 +633,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -660,13 +667,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -770,6 +770,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -783,13 +790,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -867,6 +867,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -887,13 +894,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result409 = ProblemDetails.fromJS(resultData409);
             return throwException("Entry name conflicts.", status, _responseText, _headers, result409);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -990,6 +990,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1003,13 +1010,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1081,6 +1081,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1101,13 +1108,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1193,6 +1193,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1206,13 +1213,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1280,6 +1280,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1300,13 +1307,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1374,6 +1374,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1394,13 +1401,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1486,6 +1486,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1499,13 +1506,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1583,19 +1583,19 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1658,6 +1658,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1678,13 +1685,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1743,6 +1743,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1763,13 +1770,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1838,6 +1838,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1858,13 +1865,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1930,6 +1930,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1950,13 +1957,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2030,6 +2030,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2050,13 +2057,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2133,6 +2133,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2146,13 +2153,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2215,6 +2215,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2235,13 +2242,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2313,6 +2313,13 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2333,13 +2340,6 @@ export class EntriesClient extends ClientBase implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2457,6 +2457,13 @@ export class AttributesClient extends ClientBase implements IAttributesClient {
             result200 = ODataValueContextOfListOfAttribute.fromJS(resultData200);
             return result200;
             });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
@@ -2477,13 +2484,6 @@ export class AttributesClient extends ClientBase implements IAttributesClient {
             let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result429 = ProblemDetails.fromJS(resultData429);
             return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -2544,6 +2544,13 @@ export class AttributesClient extends ClientBase implements IAttributesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2557,13 +2564,6 @@ export class AttributesClient extends ClientBase implements IAttributesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Requested attribute key not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2674,6 +2674,13 @@ export class FieldDefinitionsClient extends ClientBase implements IFieldDefiniti
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2687,13 +2694,6 @@ export class FieldDefinitionsClient extends ClientBase implements IFieldDefiniti
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Requested field definition id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3212,13 +3212,6 @@ export class TasksClient extends ClientBase implements ITasksClient {
             result202 = OperationProgress.fromJS(resultData202);
             return result202;
             });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("Request operation token not found.", status, _responseText, _headers, result404);
-            });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             let result400: any = null;
@@ -3239,6 +3232,13 @@ export class TasksClient extends ClientBase implements ITasksClient {
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Request operation token not found.", status, _responseText, _headers, result404);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3297,13 +3297,6 @@ export class TasksClient extends ClientBase implements ITasksClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("Request operation token not found.", status, _responseText, _headers, result404);
-            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
@@ -3317,6 +3310,13 @@ export class TasksClient extends ClientBase implements ITasksClient {
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Request operation token not found.", status, _responseText, _headers, result404);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3637,6 +3637,13 @@ export class SearchesClient extends ClientBase implements ISearchesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -3650,13 +3657,6 @@ export class SearchesClient extends ClientBase implements ISearchesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request search token not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3719,6 +3719,13 @@ export class SearchesClient extends ClientBase implements ISearchesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -3732,13 +3739,6 @@ export class SearchesClient extends ClientBase implements ISearchesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request search token not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3847,6 +3847,13 @@ export class SearchesClient extends ClientBase implements ISearchesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -3860,13 +3867,6 @@ export class SearchesClient extends ClientBase implements ISearchesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request search token not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3956,6 +3956,13 @@ export class SearchesClient extends ClientBase implements ISearchesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -3969,13 +3976,6 @@ export class SearchesClient extends ClientBase implements ISearchesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request search token not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4330,6 +4330,13 @@ export class TagDefinitionsClient extends ClientBase implements ITagDefinitionsC
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -4343,13 +4350,6 @@ export class TagDefinitionsClient extends ClientBase implements ITagDefinitionsC
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request tag definition id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4505,6 +4505,13 @@ export class TemplateDefinitionsClient extends ClientBase implements ITemplateDe
             result200 = ODataValueContextOfIListOfWTemplateInfo.fromJS(resultData200);
             return result200;
             });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
@@ -4519,26 +4526,19 @@ export class TemplateDefinitionsClient extends ClientBase implements ITemplateDe
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request template name not found.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 429) {
+            return response.text().then((_responseText) => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ProblemDetails.fromJS(resultData429);
+            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -4601,6 +4601,13 @@ export class TemplateDefinitionsClient extends ClientBase implements ITemplateDe
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -4614,13 +4621,6 @@ export class TemplateDefinitionsClient extends ClientBase implements ITemplateDe
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request template id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4710,6 +4710,13 @@ export class TemplateDefinitionsClient extends ClientBase implements ITemplateDe
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -4723,13 +4730,6 @@ export class TemplateDefinitionsClient extends ClientBase implements ITemplateDe
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request template id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4820,6 +4820,13 @@ export class TemplateDefinitionsClient extends ClientBase implements ITemplateDe
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -4833,13 +4840,6 @@ export class TemplateDefinitionsClient extends ClientBase implements ITemplateDe
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request template name not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
