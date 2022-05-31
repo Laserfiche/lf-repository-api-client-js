@@ -1,6 +1,5 @@
 import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
-import { RepositoryInfo } from '../../src/index.js';
 
 describe('Get Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

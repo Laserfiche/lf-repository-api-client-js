@@ -1,7 +1,6 @@
 import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
-import { CreateEntry } from '../BaseTest.js';
-import { DeleteEntryWithAuditReason, GetDynamicFieldLogicValueRequest, ODataValueContextOfIListOfWTemplateInfo } from '../../src/index.js';
+import { GetDynamicFieldLogicValueRequest, ODataValueContextOfIListOfWTemplateInfo } from '../../src/index.js';
 
 describe('Dynamic Fields Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
