@@ -4,7 +4,7 @@ import { AdvancedSearchRequest } from '../../src/index.js';
 import {jest} from '@jest/globals'
 
 let searchToken = 'test';
-describe.skip('Search Integration Tests Part 2', () => {
+describe('Search Integration Tests Part 2', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
     _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);

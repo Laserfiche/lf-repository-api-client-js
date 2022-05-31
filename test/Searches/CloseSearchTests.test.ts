@@ -2,7 +2,7 @@ import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testH
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { AdvancedSearchRequest } from '../../src/index.js';
 
-describe.skip('Search Integration Tests', () => {
+describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
     _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
