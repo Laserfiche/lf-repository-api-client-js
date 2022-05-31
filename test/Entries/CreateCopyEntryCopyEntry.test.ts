@@ -13,7 +13,7 @@ import {
 import { jest } from '@jest/globals';
 import { CreateEntry } from '../BaseTest.js';
 
-describe('Create Copy Entry Tests', () => {
+describe('Create Copy Entry Test', () => {
     let _RepositoryApiClient: IRepositoryApiClient;
     let createdEntries: Array<Entry> = new Array();
     beforeEach(() => {
