@@ -1,4 +1,4 @@
-import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { AdvancedSearchRequest } from '../../src/index.js';
 import {jest} from '@jest/globals'
@@ -7,7 +7,7 @@ let searchToken = 'test';
 describe('Search Integration Tests Part 2', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
   jest.setTimeout(20000);
   afterEach(async () => {
