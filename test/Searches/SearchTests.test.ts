@@ -16,20 +16,6 @@ describe('Search Integration Tests Part 2', () => {
       await new Promise((r) => setTimeout(r, 5000));
     }
   });
-  // //not done yet
-  // test.skip("Create Search Operation", async () => {
-
-  //     //create search
-  //     let request = new AdvancedSearchRequest();
-  //     request.searchCommand = "({LF:Basic ~= \"search text\", option=\"DFANLT\"})";
-  //     var response = await client.createSearchOperation(repoId,request);
-  //     searchToken = response.toJSON().token;
-  //     expect(searchToken).not.toBeNull();
-  //     expect(searchToken).not.toBe("");
-  //     let webURL = response.toJSON().Headers;
-  //     console.log(response);
-  //     console.log(webURL);
-  // });
 
   jest.setTimeout(20000);
   test('Get Search Context Hits', async () => {

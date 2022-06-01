@@ -1,7 +1,6 @@
 import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { ODataValueOfBoolean, ODataValueOfDateTime } from '../../src/index.js';
-import exp from 'constants';
 
 describe('Access Token Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
