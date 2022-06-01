@@ -1,7 +1,6 @@
 import * as generated from './index';
 import { UrlUtils } from '@laserfiche/lf-js-utils';
 import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils } from '@laserfiche/lf-api-client-core';
-import { testKey } from '../test/testHelper.js';
 
 class ClientBase {}
 export interface IRepositoryApiClient {
@@ -78,8 +77,8 @@ export class RepositoryApiClient {
   public static create(servicePrincipalKey: string, accessKey: string, baseUrlDebug?: string): RepositoryApiClient {
     let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
     if (!baseUrlDebug) {
-      let domain: string = JSON.stringify(testKey.domain).replace(/"/g, '');
-      baseUrlDebug = DomainUtils.getRepositoryEndpoint(domain);
+      let accessKeyDomain: string = JSON.parse(accessKey).domain;
+      baseUrlDebug = DomainUtils.getRepositoryEndpoint(accessKeyDomain);
     }
     return RepositoryApiClient.createClientFromHttpRequestHandler(handler, baseUrlDebug);
   }
