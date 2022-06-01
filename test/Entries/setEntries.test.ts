@@ -27,7 +27,7 @@ describe('Set Entries Integration Tests', () => {
     }
   });
 
-  test.only('Set fields', async () => {
+  test('Set fields', async () => {
     let field = null;
     let fieldValue = 'a';
     let fieldDefinitionsResponse = await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId });
