@@ -1,13 +1,10 @@
-import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   AcceptedOperation,
   DeleteEntryWithAuditReason,
   Entry,
-  ODataValueContextOfIListOfWTagInfo,
-  OperationStatus,
-  ProblemDetails,
-  WTagInfo,
+  OperationStatus
 } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
 import { jest } from '@jest/globals';
@@ -15,7 +12,7 @@ import { jest } from '@jest/globals';
 describe('Task Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
   jest.setTimeout(20000);
   test('Cancel Operation', async () => {

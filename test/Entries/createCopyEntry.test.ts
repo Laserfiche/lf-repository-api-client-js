@@ -1,4 +1,4 @@
-import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   DeleteEntryWithAuditReason,
@@ -14,7 +14,7 @@ describe('Create Copy Entry Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
 
   jest.setTimeout(200000);

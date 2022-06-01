@@ -1,11 +1,11 @@
-import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { ODataValueContextOfIListOfWTagInfo, WTagInfo } from '../../src/index.js';
 
 describe('Tag Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
   test('Get Tag Definitions', async () => {
     let TagDefinitionsResponse: ODataValueContextOfIListOfWTagInfo =

@@ -1,4 +1,4 @@
-import {Entry,PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType, FileParameter, PostEntryWithEdocMetadataRequest} from "../src";
+import {Entry,PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType} from "../src";
 import {repoId } from './testHelper.js';
 import {IRepositoryApiClient} from '../src/ClientBase.js';
 

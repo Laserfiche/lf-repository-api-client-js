@@ -10,9 +10,9 @@
 
 import { UrlUtils } from '@laserfiche/lf-js-utils';
 import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils } from '@laserfiche/lf-api-client-core';
+import { testKey } from '../test/testHelper.js';
 export class ClientBase {}
-export interface IRepositoryApiClient{
-
+export interface IRepositoryApiClient {
   attributesClient: IAttributesClient;
   auditReasonsClient: IAuditReasonsClient;
   entriesClient: IEntriesClient;
@@ -8809,7 +8809,7 @@ function throwException(message: string, status: number, response: string, heade
 }
 
 // @ts-ignore
-export class RepositoryApiClient{
+export class RepositoryApiClient {
   private baseUrl: string;
 
   public attributesClient: IAttributesClient;
@@ -8863,16 +8863,15 @@ export class RepositoryApiClient{
   ): RepositoryApiClient {
     if (!httpRequestHandler) throw new Error('Argument cannot be null: httpRequestHandler');
     let repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
-
     return repoClient;
   }
 
-  public static create(
-    servicePrincipalKey: string,
-    accessKey: string,
-    baseUrlDebug?: string
-  ): RepositoryApiClient {
-    let handler = new OAuthClientCredentialsHandler(servicePrincipalKey,accessKey);
+  public static create(servicePrincipalKey: string, accessKey: string, baseUrlDebug?: string): RepositoryApiClient {
+    let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
+    if (!baseUrlDebug) {
+      let domain: string = JSON.stringify(testKey.domain).replace(/"/g, '');
+      baseUrlDebug = DomainUtils.getRepositoryEndpoint(domain);
+    }
     return RepositoryApiClient.createClientFromHttpRequestHandler(handler, baseUrlDebug);
   }
 }

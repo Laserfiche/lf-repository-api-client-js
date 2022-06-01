@@ -1,11 +1,11 @@
-import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { AdvancedSearchRequest } from '../../src/index.js';
 
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
   test('Close Search Operations', async () => {
     //create search

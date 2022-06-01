@@ -1,11 +1,11 @@
-import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 
 describe('Get Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
   test('Get Entry Fields', async () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId, entryId });
