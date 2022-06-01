@@ -49,20 +49,18 @@ export class RepositoryApiClient {
     let http = {
       fetch,
     };
-
     this.baseUrl = baseUrlDebug ?? '';
-
-    this.attributesClient = new generated.AttributesClient(baseUrlDebug, http);
-    this.auditReasonsClient = new generated.AuditReasonsClient(baseUrlDebug, http);
-    this.entriesClient = new generated.EntriesClient(baseUrlDebug, http);
-    this.fieldDefinitionsClient = new generated.FieldDefinitionsClient(baseUrlDebug, http);
-    this.repositoriesClient = new generated.RepositoriesClient(baseUrlDebug, http);
-    this.searchesClient = new generated.SearchesClient(baseUrlDebug, http);
-    this.serverSessionClient = new generated.ServerSessionClient(baseUrlDebug, http);
-    this.simpleSearchesClient = new generated.SimpleSearchesClient(baseUrlDebug, http);
-    this.tagDefinitionsClient = new generated.TagDefinitionsClient(baseUrlDebug, http);
-    this.tasksClient = new generated.TasksClient(baseUrlDebug, http);
-    this.templateDefinitionsClient = new generated.TemplateDefinitionsClient(baseUrlDebug, http);
+    this.attributesClient = new generated.AttributesClient(this.baseUrl, http);
+    this.auditReasonsClient = new generated.AuditReasonsClient(this.baseUrl, http);
+    this.entriesClient = new generated.EntriesClient(this.baseUrl, http);
+    this.fieldDefinitionsClient = new generated.FieldDefinitionsClient(this.baseUrl, http);
+    this.repositoriesClient = new generated.RepositoriesClient(this.baseUrl, http);
+    this.searchesClient = new generated.SearchesClient(this.baseUrl, http);
+    this.serverSessionClient = new generated.ServerSessionClient(this.baseUrl, http);
+    this.simpleSearchesClient = new generated.SimpleSearchesClient(this.baseUrl, http);
+    this.tagDefinitionsClient = new generated.TagDefinitionsClient(this.baseUrl, http);
+    this.tasksClient = new generated.TasksClient(this.baseUrl, http);
+    this.templateDefinitionsClient = new generated.TemplateDefinitionsClient(this.baseUrl, http);
   }
 
   public static createClientFromHttpRequestHandler(
@@ -76,10 +74,6 @@ export class RepositoryApiClient {
 
   public static create(servicePrincipalKey: string, accessKey: string, baseUrlDebug?: string): RepositoryApiClient {
     let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
-    if (!baseUrlDebug) {
-      let accessKeyDomain: string = JSON.parse(accessKey).domain;
-      baseUrlDebug = DomainUtils.getRepositoryEndpoint(accessKeyDomain);
-    }
     return RepositoryApiClient.createClientFromHttpRequestHandler(handler, baseUrlDebug);
   }
 }
