@@ -11,7 +11,7 @@ describe('Template Definitions Integration Tests', () => {
   beforeEach(() => {
     _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
-  test.only('Get Template Definition', async () => {
+  test('Get Template Definition', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });
     if (!templateDefinitionResponse.value) {
@@ -28,7 +28,6 @@ describe('Template Definitions Integration Tests', () => {
       throw new Error('result.value is undefined');
     }
     let templateInfo: WTemplateInfo = result.value[0];
-    console.log(templateInfo.id);
     expect(result).not.toBeNull;
     expect(result.value.length).toBe(1);
     expect(templateInfo.id).toBe(firstTemplateDefinition.id);
