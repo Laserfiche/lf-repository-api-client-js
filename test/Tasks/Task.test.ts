@@ -1,11 +1,6 @@
-import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
-import {
-  AcceptedOperation,
-  DeleteEntryWithAuditReason,
-  Entry,
-  OperationStatus
-} from '../../src/index.js';
+import { AcceptedOperation, DeleteEntryWithAuditReason, Entry, OperationStatus } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
 import { jest } from '@jest/globals';
 
@@ -20,15 +15,15 @@ describe('Task Integration Tests', () => {
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let result: AcceptedOperation = await _RepositoryApiClient.entriesClient.deleteEntryInfo({
       repoId,
-      entryId: deleteEntry.toJSON().id,
+      entryId: deleteEntry.id ?? -1,
       request: body,
     });
-    let token: string = result.toJSON().token;
+    let token: string | undefined = result.token;
     expect(token).not.toBeNull;
     expect(token).not.toBe('');
     try {
       await new Promise((r) => setTimeout(r, 5000));
-      await _RepositoryApiClient.tasksClient.cancelOperation({ repoId, operationToken: token });
+      await _RepositoryApiClient.tasksClient.cancelOperation({ repoId, operationToken: token ?? '' });
     } catch (err: any) {
       expect(err.title.includes('Cannot cancel ended operation'));
     }
@@ -42,16 +37,16 @@ describe('Task Integration Tests', () => {
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let result = await _RepositoryApiClient.entriesClient.deleteEntryInfo({
       repoId,
-      entryId: deleteEntry.toJSON().id,
+      entryId: deleteEntry.id ?? -1,
       request: body,
     });
-    let token: string = result.toJSON().token;
+    let token: string | undefined = result.token;
     expect(token).not.toBeNull;
     expect(token).not.toBe('');
     await new Promise((r) => setTimeout(r, 5000));
     let operationProgress = await _RepositoryApiClient.tasksClient.getOperationStatusAndProgress({
       repoId,
-      operationToken: token,
+      operationToken: token ?? '',
     });
     expect(operationProgress).not.toBeNull;
     expect(operationProgress.status).toBe(OperationStatus.Completed);
