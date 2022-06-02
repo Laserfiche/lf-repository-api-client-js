@@ -1,4 +1,4 @@
-import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { DeleteEntryWithAuditReason, Entry, Folder, PatchEntryRequest, RepositoryInfo } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
@@ -8,7 +8,7 @@ describe('Move Entries Integration Tests', () => {
   var entry = new Entry();
   let createdEntries: Array<Entry> = new Array();
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
   });
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
@@ -30,9 +30,9 @@ describe('Move Entries Integration Tests', () => {
     request.parentId = parentFolder.id;
     request.name = 'APIServerClientIntegrationTest MovedFolder';
 
-    var movedEntry:Entry = await _RepositoryApiClient.entriesClient.moveOrRenameDocument({
+    let movedEntry: Entry = await _RepositoryApiClient.entriesClient.moveOrRenameDocument({
       repoId,
-      entryId: childFolder.toJSON().id,
+      entryId: childFolder.id ?? -1,
       request,
       autoRename: true,
     });

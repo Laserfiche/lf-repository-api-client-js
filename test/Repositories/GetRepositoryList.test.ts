@@ -5,19 +5,19 @@ import { RepositoryInfo } from '../../src/index.js';
 describe('Repo List Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
   });
   test('Get Repo Lists', async () => {
     let RepoListResponse: RepositoryInfo[] = await _RepositoryApiClient.repositoriesClient.getRepositoryList({});
-    let foundrepo = false;
+    let foundRepo = false;
     for (let i = 0; i < RepoListResponse.length; i++) {
       expect(RepoListResponse[i].repoId).not.toBeNull();
       expect(RepoListResponse[i].webclientUrl).not.toBeNull();
       expect(RepoListResponse[i].webclientUrl).toContain(RepoListResponse[i].repoId);
       if (RepoListResponse[i].repoId == repoId) {
-        foundrepo = true;
+        foundRepo = true;
       }
     }
-    expect(foundrepo).toBe(true);
+    expect(foundRepo).toBe(true);
   });
 });

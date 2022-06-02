@@ -1,24 +1,25 @@
-import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { ODataValueOfBoolean, ODataValueOfDateTime } from '../../src/index.js';
 
 describe('Access Token Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
   });
   test('Refresh Server Session', async () => {
     let currentTime: string = new Date().toISOString();
     let refreshResponse: ODataValueOfDateTime = await _RepositoryApiClient.serverSessionClient.refreshServerSession({
       repoId,
     });
-    let expireTime = refreshResponse.toJSON().value;
+    let expireTime: Date | undefined = refreshResponse.value;
+    let expireTimeInStr = expireTime?.toString() ?? '';
     expect(expireTime).not.toBeNull;
-    expect(currentTime < expireTime).toBe(true);
+    expect(currentTime < expireTimeInStr).toBe(true);
   });
   test('Invalidate Server Session', async () => {
     let invalidateResponse: ODataValueOfBoolean =
       await _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
-      expect(invalidateResponse.value).toBe(true);
-    });
+    expect(invalidateResponse.value).toBe(true);
+  });
 });
