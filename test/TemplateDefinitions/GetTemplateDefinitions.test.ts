@@ -1,38 +1,49 @@
-import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   ODataValueContextOfIListOfTemplateFieldInfo,
-  ODataValueContextOfIListOfWTemplateInfo
+  ODataValueContextOfIListOfWTemplateInfo,
+  WTemplateInfo,
 } from '../../src/index.js';
 
 describe('Template Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
   test('Get Template Definition', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });
-    let firstTemplateDefinition = templateDefinitionResponse.toJSON().value[0];
+    if (!templateDefinitionResponse.value) {
+      throw new Error('templateDefinitionResponse.value');
+    }
+    let firstTemplateDefinition = templateDefinitionResponse.value[0];
     expect(firstTemplateDefinition).not.toBeNull;
     let result: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({
         repoId,
         templateName: firstTemplateDefinition.name,
       });
+    if (!result.value) {
+      throw new Error('result.value is undefined');
+    }
+    let templateInfo: WTemplateInfo = result.value[0];
     expect(result).not.toBeNull;
-    expect(result.toJSON().value.length).toBe(1);
-    expect(result.toJSON().value[0].id).toBe(firstTemplateDefinition.id);
+    expect(result.value.length).toBe(1);
+    expect(templateInfo.id).toBe(firstTemplateDefinition.id);
   });
   test('Get Template Definition Fields', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });
-    let firstTemplateDefinition = templateDefinitionResponse.toJSON().value[0];
+    if (!templateDefinitionResponse.value) {
+      throw new Error('templateDefinitionResponse.value');
+    }
+    let firstTemplateDefinition = templateDefinitionResponse.value[0];
     expect(firstTemplateDefinition).not.toBeNull;
     let result: ODataValueContextOfIListOfTemplateFieldInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitions({
         repoId,
-        templateId: firstTemplateDefinition.id,
+        templateId: firstTemplateDefinition.id ?? -1,
       });
     let templateDefinitions = result.value;
     expect(templateDefinitions).not.toBeNull;
@@ -42,12 +53,15 @@ describe('Template Definitions Integration Tests', () => {
   test('Get Template Definition Fields by Template Name', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });
-    let firstTemplateDefinition = templateDefinitionResponse.toJSON().value[0];
+    if (!templateDefinitionResponse.value) {
+      throw new Error('templateDefinitionResponse.value');
+    }
+    let firstTemplateDefinition = templateDefinitionResponse.value[0];
     expect(firstTemplateDefinition).not.toBeNull;
     let result: ODataValueContextOfIListOfTemplateFieldInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitionsByTemplateName({
         repoId,
-        templateName: firstTemplateDefinition.name,
+        templateName: firstTemplateDefinition.name ?? '',
       });
     let templateDefinitions = result.value;
     expect(templateDefinitions).not.toBeNull;
@@ -57,11 +71,14 @@ describe('Template Definitions Integration Tests', () => {
   test('Get Template Definition Fields by Id', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });
-    let firstTemplateDefinition = templateDefinitionResponse.toJSON().value[0];
+    if (!templateDefinitionResponse.value) {
+      throw new Error('templateDefinitionResponse.value');
+    }
+    let firstTemplateDefinition = templateDefinitionResponse.value[0];
     expect(firstTemplateDefinition).not.toBeNull;
     let result = await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitionById({
       repoId,
-      templateId: firstTemplateDefinition.id,
+      templateId: firstTemplateDefinition.id ?? -1,
     });
     expect(result).not.toBeNull;
     expect(result.id).toBe(firstTemplateDefinition.id);

@@ -3,8 +3,7 @@ import { UrlUtils } from '@laserfiche/lf-js-utils';
 import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils } from '@laserfiche/lf-api-client-core';
 
 class ClientBase {}
-export interface IRepositoryApiClient{
-
+export interface IRepositoryApiClient {
   attributesClient: generated.IAttributesClient;
   auditReasonsClient: generated.IAuditReasonsClient;
   entriesClient: generated.IEntriesClient;
@@ -18,7 +17,7 @@ export interface IRepositoryApiClient{
   templateDefinitionsClient: generated.ITemplateDefinitionsClient;
 }
 // @ts-ignore
-export class RepositoryApiClient{
+export class RepositoryApiClient {
   private baseUrl: string;
 
   public attributesClient: generated.IAttributesClient;
@@ -50,20 +49,18 @@ export class RepositoryApiClient{
     let http = {
       fetch,
     };
-
     this.baseUrl = baseUrlDebug ?? '';
-
-    this.attributesClient = new generated.AttributesClient(baseUrlDebug, http);
-    this.auditReasonsClient = new generated.AuditReasonsClient(baseUrlDebug, http);
-    this.entriesClient = new generated.EntriesClient(baseUrlDebug, http);
-    this.fieldDefinitionsClient = new generated.FieldDefinitionsClient(baseUrlDebug, http);
-    this.repositoriesClient = new generated.RepositoriesClient(baseUrlDebug, http);
-    this.searchesClient = new generated.SearchesClient(baseUrlDebug, http);
-    this.serverSessionClient = new generated.ServerSessionClient(baseUrlDebug, http);
-    this.simpleSearchesClient = new generated.SimpleSearchesClient(baseUrlDebug, http);
-    this.tagDefinitionsClient = new generated.TagDefinitionsClient(baseUrlDebug, http);
-    this.tasksClient = new generated.TasksClient(baseUrlDebug, http);
-    this.templateDefinitionsClient = new generated.TemplateDefinitionsClient(baseUrlDebug, http);
+    this.attributesClient = new generated.AttributesClient(this.baseUrl, http);
+    this.auditReasonsClient = new generated.AuditReasonsClient(this.baseUrl, http);
+    this.entriesClient = new generated.EntriesClient(this.baseUrl, http);
+    this.fieldDefinitionsClient = new generated.FieldDefinitionsClient(this.baseUrl, http);
+    this.repositoriesClient = new generated.RepositoriesClient(this.baseUrl, http);
+    this.searchesClient = new generated.SearchesClient(this.baseUrl, http);
+    this.serverSessionClient = new generated.ServerSessionClient(this.baseUrl, http);
+    this.simpleSearchesClient = new generated.SimpleSearchesClient(this.baseUrl, http);
+    this.tagDefinitionsClient = new generated.TagDefinitionsClient(this.baseUrl, http);
+    this.tasksClient = new generated.TasksClient(this.baseUrl, http);
+    this.templateDefinitionsClient = new generated.TemplateDefinitionsClient(this.baseUrl, http);
   }
 
   public static createClientFromHttpRequestHandler(
@@ -72,16 +69,11 @@ export class RepositoryApiClient{
   ): RepositoryApiClient {
     if (!httpRequestHandler) throw new Error('Argument cannot be null: httpRequestHandler');
     let repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
-
     return repoClient;
   }
 
-  public static create(
-    servicePrincipalKey: string,
-    accessKey: string,
-    baseUrlDebug?: string
-  ): RepositoryApiClient {
-    let handler = new OAuthClientCredentialsHandler(servicePrincipalKey,accessKey);
+  public static create(servicePrincipalKey: string, accessKey: string, baseUrlDebug?: string): RepositoryApiClient {
+    let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
     return RepositoryApiClient.createClientFromHttpRequestHandler(handler, baseUrlDebug);
   }
 }

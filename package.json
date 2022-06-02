@@ -3,12 +3,11 @@
   "type": "module",
   "version": "1.0.0",
   "description": "Laserfiche Repository API Client library for TypeScript.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "files": [
-    "dist/index.js",
-    "dist/index.d.ts",
-    "dist/ClientUtils.js"
+    "dist/src/index.js",
+    "dist/src/index.d.ts"
   ],
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js",
@@ -33,7 +32,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@laserfiche/lf-api-client-core": "^1.0.0--preview-2398559110",
+    "@laserfiche/lf-api-client-core": "^1.0.0",
     "@laserfiche/lf-js-utils": "^3.0.5"
   }
 }

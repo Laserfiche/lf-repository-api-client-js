@@ -1,4 +1,4 @@
-import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   DeleteEntryWithAuditReason,
@@ -14,15 +14,15 @@ describe('Create Copy Entry Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
 
   jest.setTimeout(200000);
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {
-        let body:DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
-        let num:number = Number(createdEntries[i].id);
+        let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
+        let num: number = Number(createdEntries[i].id);
         await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
         await new Promise((r) => setTimeout(r, 5000));
       }
@@ -41,7 +41,7 @@ describe('Create Copy Entry Tests', () => {
       request,
       autoRename: true,
     });
-    let entry = response.toJSON();
+    let entry: Entry = response;
     expect(entry).not.toBeNull();
     createdEntries.push(entry);
     expect(parentEntryId).toBe(entry.parentId);
@@ -62,25 +62,25 @@ describe('Create Copy Entry Tests', () => {
       request,
       autoRename: true,
     });
-    let targetentry = response.toJSON();
-    expect(targetentry).not.toBeNull();
-    createdEntries.push(targetentry);
-    expect(parentEntryId).toBe(targetentry.parentId);
-    expect(EntryType.Folder).toBe(targetentry.entryType);
+    let targetEntry: Entry = response;
+    expect(targetEntry).not.toBeNull();
+    createdEntries.push(targetEntry);
+    expect(parentEntryId).toBe(targetEntry.parentId);
+    expect(EntryType.Folder).toBe(targetEntry.entryType);
 
     //create a shortcut to the new entry
     newEntryName = 'APIServerClientIntegrationTest CreateShortcut';
     request = new PostEntryChildrenRequest();
     request.entryType = PostEntryChildrenEntryType.Shortcut;
     request.name = newEntryName;
-    request.targetId = targetentry.id;
+    request.targetId = targetEntry.id;
     response = await _RepositoryApiClient.entriesClient.createOrCopyEntry({
       repoId,
       entryId: parentEntryId,
       request,
       autoRename: true,
     });
-    let shortcut: Shortcut = response.toJSON();
+    let shortcut: Shortcut = response;
     expect(shortcut).not.toBeNull();
     createdEntries.push(shortcut);
     expect(parentEntryId).toBe(shortcut.parentId);

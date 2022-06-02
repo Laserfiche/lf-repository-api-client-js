@@ -1,11 +1,11 @@
-import { testKey, testServicePrincipalKey, repoId, baseUrlDebug } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
-import { ODataValueContextOfIListOfWFieldInfo } from '../../src/index';
+import { ODataValueContextOfIListOfWFieldInfo, WFieldFormat, WFieldInfo } from '../../src/index';
 
-describe('Field Defintions Integration Tests', () => {
+describe('Field Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey), baseUrlDebug);
+    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
   });
 
   test('Get Field Definitions', async () => {
@@ -17,13 +17,19 @@ describe('Field Defintions Integration Tests', () => {
   test('Get Field Definitions by Id', async () => {
     let FieldDefResponse: ODataValueContextOfIListOfWFieldInfo =
       await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId });
-    let firstFieldDef = FieldDefResponse.toJSON().value[0];
+    if (!FieldDefResponse.value) {
+      throw new Error('FieldDefResponse.value is undefined');
+    }
+    let firstFieldDef: WFieldInfo = FieldDefResponse.value[0];
+    if (!firstFieldDef) {
+      throw new Error('firstFieldDef is undefined');
+    }
     expect(firstFieldDef).not.toBeNull();
     let response = await await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitionById({
       repoId,
-      fieldDefinitionId: firstFieldDef.id,
+      fieldDefinitionId: firstFieldDef.id ?? -1,
     });
-    let fieldDef = response.toJSON();
+    let fieldDef = response;
     expect(fieldDef.id).toBe(firstFieldDef.id);
   });
 });
