@@ -6,9 +6,7 @@ import { DeleteEntryWithAuditReason } from '../../src/index.js';
 describe('Delete Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   test('Delete Entry', async () => {
     let deleteEntry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest DeleteFolder');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();

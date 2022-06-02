@@ -4,9 +4,7 @@ import { ODataValueContextOfListOfAttribute } from '../../src/index.js';
 
 describe('Attribute Key Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
 
   test('Get the attribute keys', async () => {
     let result: ODataValueContextOfListOfAttribute =

@@ -4,9 +4,7 @@ import { AdvancedSearchRequest } from '../../src/index.js';
 
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   test('Close Search Operations', async () => {
     //create search
     let request = new AdvancedSearchRequest();

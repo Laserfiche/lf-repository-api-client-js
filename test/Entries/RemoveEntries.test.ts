@@ -6,9 +6,7 @@ import { allFalse, CreateEntry } from '../BaseTest.js';
 describe('Remove Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entry = new Entry();
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   afterEach(async () => {
     if (entry != null) {
       let body = new DeleteEntryWithAuditReason();
