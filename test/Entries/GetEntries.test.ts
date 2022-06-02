@@ -1,4 +1,4 @@
-import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 
 describe('Get Entries Integration Tests', () => {

@@ -1,4 +1,4 @@
-import { testKey, testServicePrincipalKey, repoId} from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { ODataValueContextOfListOfAttribute } from '../../src/index.js';
 
@@ -17,12 +17,15 @@ describe('Attribute Key Integration Tests', () => {
   test('Get the attribute value by Key', async () => {
     let result: ODataValueContextOfListOfAttribute =
       await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId });
-    let attributeKeys = result.toJSON().value;
+    let attributeKeys = result.value;
+    if (!attributeKeys) {
+      throw new Error('attributeKeys is undefined');
+    }
     expect(attributeKeys).not.toBeNull();
     expect(attributeKeys.length).toBeGreaterThan(0);
     let attributeValueResponse = await _RepositoryApiClient.attributesClient.getTrusteeAttributeValueByKey({
       repoId,
-      attributeKey: attributeKeys[0].key,
+      attributeKey: attributeKeys[0].key ?? '',
     });
     expect(attributeValueResponse).not.toBeNull();
     expect(attributeValueResponse).not.toBe('');
