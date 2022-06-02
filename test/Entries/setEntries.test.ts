@@ -19,7 +19,7 @@ describe('Set Entries Integration Tests', () => {
   var entry = new Entry();
   let createdEntries: Array<Entry> = new Array();
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
   });
   jest.setTimeout(200000);
   afterEach(async () => {

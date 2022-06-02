@@ -8,7 +8,7 @@ describe('Move Entries Integration Tests', () => {
   var entry = new Entry();
   let createdEntries: Array<Entry> = new Array();
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
   });
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {

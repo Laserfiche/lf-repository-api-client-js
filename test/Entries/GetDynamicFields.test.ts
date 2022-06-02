@@ -6,7 +6,7 @@ describe('Dynamic Fields Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
   });
   test('Get Dynamic Fields Entry', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =

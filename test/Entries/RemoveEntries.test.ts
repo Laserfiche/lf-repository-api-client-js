@@ -7,7 +7,7 @@ describe('Remove Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entry = new Entry();
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
   });
   afterEach(async () => {
     if (entry != null) {

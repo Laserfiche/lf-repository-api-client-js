@@ -5,7 +5,7 @@ import { ODataValueContextOfIListOfWFieldInfo, WFieldFormat, WFieldInfo } from '
 describe('Field Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
   });
 
   test('Get Field Definitions', async () => {

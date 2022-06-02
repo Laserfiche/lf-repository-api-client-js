@@ -5,7 +5,7 @@ import { ODataValueOfBoolean, ODataValueOfDateTime } from '../../src/index.js';
 describe('Access Token Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, JSON.stringify(testKey));
   });
   test('Refresh Server Session', async () => {
     let currentTime: string = new Date().toISOString();
