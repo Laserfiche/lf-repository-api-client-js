@@ -1,7 +1,7 @@
 import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
-import { DeleteEntryWithAuditReason, Entry, PutLinksRequest } from '../../src/index.js';
-import { allFalse, CreateEntry } from '../BaseTest';
+import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo } from '../../src/index.js';
+import { CreateEntry } from '../BaseTest';
 import { jest } from '@jest/globals';
 
 describe('Set Entries Integration Tests', () => {
@@ -30,11 +30,19 @@ describe('Set Entries Integration Tests', () => {
     putLinks.targetId = targetEntry.id;
     putLinks.linkTypeId = 1;
     let request = new Array<Entry>(putLinks);
-
     let result = await _RepositoryApiClient.entriesClient.assignEntryLinks({
       repoId,
       entryId: sourceEntry.id ?? -1,
       linksToAdd: request,
     });
+
+    let links: WEntryLinkInfo[] | undefined = result.value;
+    if (!links) {
+      throw new Error('links is undefined');
+    }
+    expect(links).not.toBeNull;
+    expect(request.length).toBe(links.length);
+    expect(sourceEntry.id).toBe(links[0].sourceId);
+    expect(targetEntry.id).toBe(links[0].targetId);
   });
 });
