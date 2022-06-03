@@ -6,9 +6,7 @@ import { jest } from '@jest/globals';
 let searchToken = 'test';
 describe('Search Integration Tests Part 2', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   jest.setTimeout(20000);
   afterEach(async () => {
     if (searchToken != '' || searchToken != null) {

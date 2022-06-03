@@ -4,9 +4,7 @@ import { RepositoryInfo } from '../../src/index.js';
 
 describe('Repo List Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   test('Get Repo Lists', async () => {
     let RepoListResponse: RepositoryInfo[] = await _RepositoryApiClient.repositoriesClient.getRepositoryList({});
     let foundRepo = false;

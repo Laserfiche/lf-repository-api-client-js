@@ -13,9 +13,7 @@ import { jest } from '@jest/globals';
 describe('Create Copy Entry Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
 
   jest.setTimeout(200000);
   afterEach(async () => {

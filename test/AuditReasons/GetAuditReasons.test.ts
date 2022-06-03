@@ -4,9 +4,7 @@ import { AuditReasons } from '../../src/index';
 
 describe('Audit Reasons Integration Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
 
   test('Get the Audit Reasons', async () => {
     let result: AuditReasons = await _RepositoryApiClient.auditReasonsClient.getAuditReasons({ repoId });

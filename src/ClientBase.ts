@@ -1,6 +1,6 @@
 import * as generated from './index';
 import { UrlUtils } from '@laserfiche/lf-js-utils';
-import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils } from '@laserfiche/lf-api-client-core';
+import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils, AccessKey } from '@laserfiche/lf-api-client-core';
 
 class ClientBase {}
 export interface IRepositoryApiClient {
@@ -63,7 +63,7 @@ export class RepositoryApiClient {
     this.templateDefinitionsClient = new generated.TemplateDefinitionsClient(this.baseUrl, http);
   }
 
-  public static createClientFromHttpRequestHandler(
+  public static createFromHttpRequestHandler(
     httpRequestHandler: HttpRequestHandler,
     baseUrlDebug?: string
   ): RepositoryApiClient {
@@ -72,9 +72,9 @@ export class RepositoryApiClient {
     return repoClient;
   }
 
-  public static create(servicePrincipalKey: string, accessKey: string, baseUrlDebug?: string): RepositoryApiClient {
+  public static createFromAccessKey(servicePrincipalKey: string, accessKey: AccessKey, baseUrlDebug?: string): RepositoryApiClient {
     let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
-    return RepositoryApiClient.createClientFromHttpRequestHandler(handler, baseUrlDebug);
+    return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
   }
 }
 

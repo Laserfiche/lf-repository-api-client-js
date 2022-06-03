@@ -6,9 +6,7 @@ import { jest } from '@jest/globals';
 
 describe('Task Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   jest.setTimeout(20000);
   test('Cancel Operation', async () => {
     let deleteEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest CancelOperation');

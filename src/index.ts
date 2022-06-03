@@ -9,7 +9,7 @@
 // ReSharper disable InconsistentNaming
 
 import { UrlUtils } from '@laserfiche/lf-js-utils';
-import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils } from '@laserfiche/lf-api-client-core';
+import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils, AccessKey } from '@laserfiche/lf-api-client-core';
 export class ClientBase {}
 export interface IRepositoryApiClient {
   attributesClient: IAttributesClient;
@@ -9149,7 +9149,7 @@ export class RepositoryApiClient {
     this.templateDefinitionsClient = new TemplateDefinitionsClient(this.baseUrl, http);
   }
 
-  public static createClientFromHttpRequestHandler(
+  public static createFromHttpRequestHandler(
     httpRequestHandler: HttpRequestHandler,
     baseUrlDebug?: string
   ): RepositoryApiClient {
@@ -9158,9 +9158,9 @@ export class RepositoryApiClient {
     return repoClient;
   }
 
-  public static create(servicePrincipalKey: string, accessKey: string, baseUrlDebug?: string): RepositoryApiClient {
+  public static createFromAccessKey(servicePrincipalKey: string, accessKey: AccessKey, baseUrlDebug?: string): RepositoryApiClient {
     let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
-    return RepositoryApiClient.createClientFromHttpRequestHandler(handler, baseUrlDebug);
+    return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
   }
 }
 

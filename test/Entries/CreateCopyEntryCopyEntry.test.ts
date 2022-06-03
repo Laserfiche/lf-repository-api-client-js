@@ -16,9 +16,7 @@ import { CreateEntry } from '../BaseTest.js';
 describe('Create Copy Entry Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
 
   jest.setTimeout(200000);
   afterEach(async () => {

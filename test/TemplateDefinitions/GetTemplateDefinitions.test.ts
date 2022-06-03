@@ -8,9 +8,7 @@ import {
 
 describe('Template Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(() => {
-    _RepositoryApiClient = RepositoryApiClient.create(testServicePrincipalKey, JSON.stringify(testKey));
-  });
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   test('Get Template Definition', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });
