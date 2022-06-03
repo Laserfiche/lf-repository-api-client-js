@@ -9,10 +9,16 @@
 // ReSharper disable InconsistentNaming
 
 import { UrlUtils } from '@laserfiche/lf-js-utils';
-import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils, AccessKey } from '@laserfiche/lf-api-client-core';
+import {
+  OAuthClientCredentialsHandler,
+  HttpRequestHandler,
+  DomainUtils,
+  AccessKey,
+} from '@laserfiche/lf-api-client-core';
+import { getNextLinkListing } from './ClientHelper.js';
 export class ClientBase {}
 export interface IRepositoryApiClient {
-  attributesClient: IAttributesClient;
+  attributesClient: IAttributeClientEx;
   auditReasonsClient: IAuditReasonsClient;
   entriesClient: IEntriesClient;
   fieldDefinitionsClient: IFieldDefinitionsClient;
@@ -6820,171 +6826,6 @@ export interface IODataValueContextOfIListOfEntry extends IODataValueOfIListOfEn
     odataCount?: number;
 }
 
-export class GetEntryChildren implements IGetEntryChildren {
-    /** The ID of the entry. */
-    id?: number;
-    /** The name of the entry. */
-    name?: string | undefined;
-    /** The ID of the parent entry. */
-    parentId?: number | undefined;
-    /** The full path in the Laserfiche repository to the entry. */
-    fullPath?: string | undefined;
-    /** The path in the Laserfiche repository to the parent folder. */
-    folderPath?: string | undefined;
-    /** The name of the user that created this entry. */
-    creator?: string | undefined;
-    /** The creation time of the entry. */
-    creationTime?: Date;
-    /** The last modification time of the entry. */
-    lastModifiedTime?: Date;
-    /** The type of the entry. */
-    entryType?: EntryType;
-    /** A boolean indicating if this entry is a container object; it can have other entries as children. */
-    readonly isContainer?: boolean;
-    /** A boolean indicating if this entry is a leaf object; it cannot have other entries as children. */
-    readonly isLeaf?: boolean;
-    /** The name of the template assigned to this entry. */
-    templateName?: string | undefined;
-    /** The id of the template assigned to this entry. */
-    templateId?: number;
-    /** The name of the volume that this entry is associated with. */
-    volumeName?: string | undefined;
-    /** Row number assigned to this entry in the listing. */
-    rowNumber?: number;
-
-    constructor(data?: IGetEntryChildren) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.parentId = _data["parentId"];
-            this.fullPath = _data["fullPath"];
-            this.folderPath = _data["folderPath"];
-            this.creator = _data["creator"];
-            this.creationTime = _data["creationTime"] ? new Date(_data["creationTime"].toString()) : <any>undefined;
-            this.lastModifiedTime = _data["lastModifiedTime"] ? new Date(_data["lastModifiedTime"].toString()) : <any>undefined;
-            this.entryType = _data["entryType"];
-            (<any>this).isContainer = _data["isContainer"];
-            (<any>this).isLeaf = _data["isLeaf"];
-            this.templateName = _data["templateName"];
-            this.templateId = _data["templateId"];
-            this.volumeName = _data["volumeName"];
-            this.rowNumber = _data["rowNumber"];
-        }
-    }
-
-    static fromJS(data: any): GetEntryChildren {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetEntryChildren();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["parentId"] = this.parentId;
-        data["fullPath"] = this.fullPath;
-        data["folderPath"] = this.folderPath;
-        data["creator"] = this.creator;
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-        data["lastModifiedTime"] = this.lastModifiedTime ? this.lastModifiedTime.toISOString() : <any>undefined;
-        data["entryType"] = this.entryType;
-        data["isContainer"] = this.isContainer;
-        data["isLeaf"] = this.isLeaf;
-        data["templateName"] = this.templateName;
-        data["templateId"] = this.templateId;
-        data["volumeName"] = this.volumeName;
-        data["rowNumber"] = this.rowNumber;
-        return data;
-    }
-}
-
-export interface IGetEntryChildren {
-    /** The ID of the entry. */
-    id?: number;
-    /** The name of the entry. */
-    name?: string | undefined;
-    /** The ID of the parent entry. */
-    parentId?: number | undefined;
-    /** The full path in the Laserfiche repository to the entry. */
-    fullPath?: string | undefined;
-    /** The path in the Laserfiche repository to the parent folder. */
-    folderPath?: string | undefined;
-    /** The name of the user that created this entry. */
-    creator?: string | undefined;
-    /** The creation time of the entry. */
-    creationTime?: Date;
-    /** The last modification time of the entry. */
-    lastModifiedTime?: Date;
-    /** The type of the entry. */
-    entryType?: EntryType;
-    /** A boolean indicating if this entry is a container object; it can have other entries as children. */
-    isContainer?: boolean;
-    /** A boolean indicating if this entry is a leaf object; it cannot have other entries as children. */
-    isLeaf?: boolean;
-    /** The name of the template assigned to this entry. */
-    templateName?: string | undefined;
-    /** The id of the template assigned to this entry. */
-    templateId?: number;
-    /** The name of the volume that this entry is associated with. */
-    volumeName?: string | undefined;
-    /** Row number assigned to this entry in the listing. */
-    rowNumber?: number;
-}
-
-export class ODataGetEntryChildren extends GetEntryChildren implements IODataGetEntryChildren {
-    /** The fields assigned to this entry. */
-    fields?: EntryFieldValue[] | undefined;
-
-    constructor(data?: IODataGetEntryChildren) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            if (Array.isArray(_data["fields"])) {
-                this.fields = [] as any;
-                for (let item of _data["fields"])
-                    this.fields!.push(EntryFieldValue.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ODataGetEntryChildren {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataGetEntryChildren();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.fields)) {
-            data["fields"] = [];
-            for (let item of this.fields)
-                data["fields"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data;
-    }
-}
-
-export interface IODataGetEntryChildren extends IGetEntryChildren {
-    /** The fields assigned to this entry. */
-    fields?: EntryFieldValue[] | undefined;
-}
-
 export class ODataValueOfIListOfFieldValue implements IODataValueOfIListOfFieldValue {
     value?: FieldValue[];
 
@@ -8308,136 +8149,6 @@ export enum FuzzyType {
     NumberOfLetters = 2,
 }
 
-export class ODataValueOfIListOfODataGetSearchResults implements IODataValueOfIListOfODataGetSearchResults {
-    value?: ODataGetSearchResults[];
-
-    constructor(data?: IODataValueOfIListOfODataGetSearchResults) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["value"])) {
-                this.value = [] as any;
-                for (let item of _data["value"])
-                    this.value!.push(ODataGetSearchResults.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ODataValueOfIListOfODataGetSearchResults {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataValueOfIListOfODataGetSearchResults();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.value)) {
-            data["value"] = [];
-            for (let item of this.value)
-                data["value"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IODataValueOfIListOfODataGetSearchResults {
-    value?: ODataGetSearchResults[];
-}
-
-/** A wrapper around the ODataValue with extra odata.nextLink and odata.count. */
-export class ODataValueContextOfIListOfODataGetSearchResults extends ODataValueOfIListOfODataGetSearchResults implements IODataValueContextOfIListOfODataGetSearchResults {
-    /** It contains a URL that allows retrieving the next subset of the requested collection. */
-    odataNextLink?: string | undefined;
-    /** It contains the count of a collection of entities or a collection of entity references. */
-    odataCount?: number;
-
-    constructor(data?: IODataValueContextOfIListOfODataGetSearchResults) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.odataNextLink = _data["@odata.nextLink"];
-            this.odataCount = _data["@odata.count"];
-        }
-    }
-
-    static fromJS(data: any): ODataValueContextOfIListOfODataGetSearchResults {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataValueContextOfIListOfODataGetSearchResults();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["@odata.nextLink"] = this.odataNextLink;
-        data["@odata.count"] = this.odataCount;
-        super.toJSON(data);
-        return data;
-    }
-}
-
-/** A wrapper around the ODataValue with extra odata.nextLink and odata.count. */
-export interface IODataValueContextOfIListOfODataGetSearchResults extends IODataValueOfIListOfODataGetSearchResults {
-    /** It contains a URL that allows retrieving the next subset of the requested collection. */
-    odataNextLink?: string | undefined;
-    /** It contains the count of a collection of entities or a collection of entity references. */
-    odataCount?: number;
-}
-
-export class ODataGetSearchResults extends GetEntryChildren implements IODataGetSearchResults {
-    /** The fields assigned to this entry. */
-    fields?: EntryFieldValue[] | undefined;
-
-    constructor(data?: IODataGetSearchResults) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            if (Array.isArray(_data["fields"])) {
-                this.fields = [] as any;
-                for (let item of _data["fields"])
-                    this.fields!.push(EntryFieldValue.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ODataGetSearchResults {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataGetSearchResults();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.fields)) {
-            data["fields"] = [];
-            for (let item of this.fields)
-                data["fields"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data;
-    }
-}
-
-export interface IODataGetSearchResults extends IGetEntryChildren {
-    /** The fields assigned to this entry. */
-    fields?: EntryFieldValue[] | undefined;
-}
-
 export class ODataValueOfIListOfContextHit implements IODataValueOfIListOfContextHit {
     value?: ContextHit[];
 
@@ -9103,10 +8814,10 @@ function throwException(message: string, status: number, response: string, heade
 }
 
 // @ts-ignore
-export class RepositoryApiClient {
+export class RepositoryApiClient implements IRepositoryApiClient {
   private baseUrl: string;
 
-  public attributesClient: IAttributesClient;
+  public attributesClient: IAttributeClientEx;
   public auditReasonsClient: IAuditReasonsClient;
   public entriesClient: IEntriesClient;
   public fieldDefinitionsClient: IFieldDefinitionsClient;
@@ -9136,7 +8847,7 @@ export class RepositoryApiClient {
       fetch,
     };
     this.baseUrl = baseUrlDebug ?? '';
-    this.attributesClient = new AttributesClient(this.baseUrl, http);
+    this.attributesClient = new AttributeClientEx(this.baseUrl, http);
     this.auditReasonsClient = new AuditReasonsClient(this.baseUrl, http);
     this.entriesClient = new EntriesClient(this.baseUrl, http);
     this.fieldDefinitionsClient = new FieldDefinitionsClient(this.baseUrl, http);
@@ -9158,12 +8869,15 @@ export class RepositoryApiClient {
     return repoClient;
   }
 
-  public static createFromAccessKey(servicePrincipalKey: string, accessKey: AccessKey, baseUrlDebug?: string): RepositoryApiClient {
+  public static createFromAccessKey(
+    servicePrincipalKey: string,
+    accessKey: AccessKey,
+    baseUrlDebug?: string
+  ): RepositoryApiClient {
     let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
     return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
   }
 }
-
 /** @internal */
 export class RepositoryApiClientHttpHandler {
   private _httpRequestHandler: HttpRequestHandler;
@@ -9222,4 +8936,190 @@ export class RepositoryApiClientHttpHandler {
 function isRetryable(response: Response, init: RequestInit): boolean {
   const isIdempotent = init.method != 'POST';
   return (response.status >= 500 || response.status == 408) && isIdempotent;
+}
+
+export interface IAttributeClientEx extends IAttributesClient {
+  getTrusteeAttributeKeyValuePairsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfListOfAttribute>;
+}
+export class AttributeClientEx extends AttributesClient implements IAttributeClientEx {
+  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    super(baseUrl, http);
+    if (!http) {
+      throw new Error(`http is undefined`);
+    }
+    this._http = http;
+  }
+  async getTrusteeAttributeKeyValuePairsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfListOfAttribute> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfListOfAttribute>(
+      this._http,
+      this.processGetTrusteeAttributeKeyValuePairs,
+      nextLink,
+      maxPageSize
+    );
+  }
+}
+
+export interface IEntriesClientEx extends IEntriesClient {
+  getEntryListingNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfEntry>;
+  getFieldValuesNextLink(
+    nextLink: string,
+    maxPageSize?: number
+  ): Promise<ODataValueContextOfIListOfFieldValue>;
+  getLinkValuesFromEntryNextLink(
+    nextLink: string,
+    maxPageSize?: number
+  ): Promise<ODataValueContextOfIListOfWEntryLinkInfo>;
+  getTagsAssignedToEntryNextLink(
+    nextLink: string,
+    maxPageSize?: number
+  ): Promise<ODataValueContextOfIListOfWTagInfo>;
+}
+export class EntriesClientEx extends EntriesClient implements IEntriesClientEx {
+  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    super(baseUrl, http);
+    if (!http) {
+      throw new Error(`http is undefined`);
+    }
+    this._http = http;
+  }
+  async getEntryListingNextLink(
+    nextLink: string,
+    maxPageSize?: number
+  ): Promise<ODataValueContextOfIListOfEntry> {
+    return await getNextLinkListing<ODataValueContextOfIListOfEntry>(
+      this._http,
+      this.processGetEntryListing,
+      nextLink,
+      maxPageSize
+    );
+  }
+
+  async getFieldValuesNextLink(
+    nextLink: string,
+    maxPageSize?: number
+  ): Promise<ODataValueContextOfIListOfFieldValue> {
+    return await getNextLinkListing<ODataValueContextOfIListOfFieldValue>(
+      this._http,
+      this.processGetFieldValues,
+      nextLink,
+      maxPageSize
+    );
+  }
+
+  async getLinkValuesFromEntryNextLink(
+    nextLink: string,
+    maxPageSize?: number
+  ): Promise<ODataValueContextOfIListOfWEntryLinkInfo> {
+    return await getNextLinkListing<ODataValueContextOfIListOfWEntryLinkInfo>(
+      this._http,
+      this.processGetLinkValuesFromEntry,
+      nextLink,
+      maxPageSize
+    );
+  }
+
+  async getTagsAssignedToEntryNextLink(
+    nextLink: string,
+    maxPageSize?: number
+  ): Promise<ODataValueContextOfIListOfWTagInfo> {
+    return await getNextLinkListing<ODataValueContextOfIListOfWEntryLinkInfo>(
+      this._http,
+      this.processGetTagsAssignedToEntry,
+      nextLink,
+      maxPageSize
+    );
+  }
+}
+
+export interface IFieldDefinitionsEx extends IFieldDefinitionsClient {
+  getEntryListingNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfEntry>;
+}
+
+export class FieldDefinitionClient extends FieldDefinitionsClient{
+  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    super(baseUrl, http);
+    if (!http) {
+      throw new Error(`http is undefined`);
+    }
+    this._http = http;
+  }
+    async getFieldDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfWFieldInfo> {
+        return await getNextLinkListing<ODataValueContextOfIListOfWFieldInfo>(this._http, this.processGetFieldDefinitions, nextLink, maxPageSize);
+    }
+}
+
+export interface ISearchEx extends ISearchesClient {
+  GetSearchResultsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfEntry>;
+  GetSearchContextHitsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfContextHit>;
+}
+
+export class SearchClient extends SearchesClient{
+  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    super(baseUrl, http);
+    if (!http) {
+      throw new Error(`http is undefined`);
+    }
+    this._http = http;
+  }
+    async GetSearchResultsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfEntry> {
+        return await getNextLinkListing<ODataValueContextOfIListOfEntry>(this._http, this.processGetSearchResults, nextLink, maxPageSize);
+    }
+    async GetSearchContextHitsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfContextHit> {
+        return await getNextLinkListing<ODataValueContextOfIListOfContextHit>(this._http, this.processGetSearchContextHits, nextLink, maxPageSize);
+    }
+}
+
+export interface ITagDefinitionsEx extends ITagDefinitionsClient {
+  getTagDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfWTagInfo>;
+}
+
+export class TagDefinitionsEx extends TagDefinitionsClient{
+  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    super(baseUrl, http);
+    if (!http) {
+      throw new Error(`http is undefined`);
+    }
+    this._http = http;
+  }
+  async getTagDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfWTagInfo> {
+    return await getNextLinkListing<ODataValueContextOfIListOfWTagInfo>(this._http, this.processGetTagDefinitions, nextLink, maxPageSize);
+}
+}
+
+export interface ITemplateDefinitionsEx extends ITemplateDefinitionsClient {
+  getTemplateDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfWTemplateInfo>;
+  getTemplateFieldDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
+  getTemplateFieldDefinitionsByTemplateNameNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
+}
+
+export class TemplateDefinitionsEx extends TemplateDefinitionsClient{
+  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    super(baseUrl, http);
+    if (!http) {
+      throw new Error(`http is undefined`);
+    }
+    this._http = http;
+  }
+    async getTemplateDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfWTemplateInfo> {
+        return await getNextLinkListing<ODataValueContextOfIListOfWTemplateInfo>(this._http, this.processGetTemplateDefinitions, nextLink, maxPageSize);
+    }
+    async getTemplateFieldDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
+        return await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(this._http, this.processGetTemplateFieldDefinitions, nextLink, maxPageSize);
+    }
+    async getTemplateFieldDefinitionsByTemplateNameNextLink(nextLink: string, maxPageSize?: number): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
+        return await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(this._http, this.processGetTemplateFieldDefinitionsByTemplateName, nextLink, maxPageSize);
+    }
 }

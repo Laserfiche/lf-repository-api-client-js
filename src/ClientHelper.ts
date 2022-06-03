@@ -1,15 +1,10 @@
-import { AttributeClient } from './AttributeClient';
-import {IODataValueContextOfIListOfODataGetEntryChildren, Client} from './index';
+import {IODataValueContextOfIListOfEntry} from './index';
 
-export class ClientOptions extends Client{
-
-    getNextLinkListing<T extends IODataValueContextOfIListOfODataGetEntryChildren>(http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }, processListing: (response: Response) => Promise<T>, nextLink: string, maxPageSize?: number): Promise<T> {
-        console.log(nextLink);
+export async function getNextLinkListing<T extends IODataValueContextOfIListOfEntry>(http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }, processListing: (response: Response) => Promise<T>, nextLink: string, maxPageSize?: number): Promise<T> {
         if (!nextLink) {
             throw new Error("Next Link is undefined");
         }
-        const prefer = this.CreateMaxPageSizePreferHeaderPayload(maxPageSize);
-        //console.log(prefer);
+        const prefer = CreateMaxPageSizePreferHeaderPayload(maxPageSize);
         let options_ = <RequestInit>{
             method: "GET",
             headers: {
@@ -17,14 +12,14 @@ export class ClientOptions extends Client{
                 "Accept": "application/json"
             }
         };
-        let processListingTwo = processListing.bind(this);
-        console.log(processListingTwo);
+        console.log(processListing);
+        let processListingTwo = processListing.bind(http);
         return http.fetch(nextLink, options_).then((_response: Response) => {
             return processListingTwo(_response);
         });
 
-    }
-    CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefined {
+
+function CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefined {
         //puts the max size into the prefer header of the GET request
         if (!maxSize) {
             return undefined;
@@ -33,6 +28,4 @@ export class ClientOptions extends Client{
             return `maxpagesize=${maxSize}`;
         }
     }
-
-
 }
