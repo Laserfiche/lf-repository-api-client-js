@@ -7,9 +7,8 @@ import {
   AccessKey,
 } from '@laserfiche/lf-api-client-core';
 import { getNextLinkListing } from './ClientHelper.js';
-class ClientBase {}
 export interface IRepositoryApiClient {
-  attributesClient: IAttributeClientEx;
+  attributesClient: IAttributesClient;
   auditReasonsClient: generated.IAuditReasonsClient;
   entriesClient: generated.IEntriesClient;
   fieldDefinitionsClient: generated.IFieldDefinitionsClient;
@@ -25,7 +24,7 @@ export interface IRepositoryApiClient {
 export class RepositoryApiClient implements IRepositoryApiClient {
   private baseUrl: string;
 
-  public attributesClient: IAttributeClientEx;
+  public attributesClient: IAttributesClient;
   public auditReasonsClient: generated.IAuditReasonsClient;
   public entriesClient: generated.IEntriesClient;
   public fieldDefinitionsClient: generated.IFieldDefinitionsClient;
@@ -55,7 +54,7 @@ export class RepositoryApiClient implements IRepositoryApiClient {
       fetch,
     };
     this.baseUrl = baseUrlDebug ?? '';
-    this.attributesClient = new AttributeClientEx(this.baseUrl, http);
+    this.attributesClient = new AttributesClient(this.baseUrl, http);
     this.auditReasonsClient = new generated.AuditReasonsClient(this.baseUrl, http);
     this.entriesClient = new generated.EntriesClient(this.baseUrl, http);
     this.fieldDefinitionsClient = new generated.FieldDefinitionsClient(this.baseUrl, http);
@@ -146,28 +145,21 @@ function isRetryable(response: Response, init: RequestInit): boolean {
   return (response.status >= 500 || response.status == 408) && isIdempotent;
 }
 
-export interface IAttributeClientEx extends generated.IAttributesClient {
+export interface IAttributesClient {
   getTrusteeAttributeKeyValuePairsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfListOfAttribute>;
 }
-export class AttributeClientEx extends generated.AttributesClient implements IAttributeClientEx {
-  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-    super(baseUrl, http);
-    if (!http) {
-      throw new Error(`http is undefined`);
-    }
-    this._http = http;
-  }
+export class AttributesClient extends generated.AttributesClient {
   async getTrusteeAttributeKeyValuePairsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfListOfAttribute> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfListOfAttribute>(
-      this._http,
+      // @ts-ignore:
+      this.http,
       this.processGetTrusteeAttributeKeyValuePairs,
       nextLink,
       maxPageSize
