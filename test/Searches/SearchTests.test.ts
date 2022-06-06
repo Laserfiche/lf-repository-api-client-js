@@ -8,7 +8,7 @@ import {
 import { jest } from '@jest/globals';
 
 let searchToken = 'test';
-describe('Search Integration Tests Part 2', () => {
+describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
   jest.setTimeout(20000);
@@ -47,10 +47,10 @@ describe('Search Integration Tests Part 2', () => {
   });
 
   jest.setTimeout(30000);
-  test.only('Get Search Results for each Paging', async () => {
+  test('Get Search Results for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
-    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="NLT"})';
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
       repoId,
       request: searchRequest,
@@ -75,10 +75,10 @@ describe('Search Integration Tests Part 2', () => {
   });
 
   jest.setTimeout(30000);
-  test.only('Get Search Context Hits for each Paging', async () => {
+  test('Get Search Context Hits for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
-    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="NLT"})';
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
       repoId,
       request: searchRequest,

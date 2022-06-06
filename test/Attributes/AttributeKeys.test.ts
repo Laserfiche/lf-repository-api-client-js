@@ -35,7 +35,7 @@ describe('Attribute Key Integration Tests', () => {
     expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
 
-  test.only('Get Attribute for each paging', async () => {
+  test('Get Attribute for each paging', async () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
