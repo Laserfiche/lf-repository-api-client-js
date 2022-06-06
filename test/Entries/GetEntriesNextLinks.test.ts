@@ -1,5 +1,4 @@
 import { OauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { ODataValueContextOfListOfAttribute } from '../../src/index.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase';
 
 describe('Get Entry Next Links Tests', () => {
