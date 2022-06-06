@@ -1,10 +1,10 @@
-import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { OauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { ODataValueContextOfIListOfWFieldInfo, WFieldFormat, WFieldInfo } from '../../src/index';
 
 describe('Field Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OauthAccessKey);
 
   test('Get Field Definitions', async () => {
     let result: ODataValueContextOfIListOfWFieldInfo =

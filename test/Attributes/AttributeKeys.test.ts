@@ -1,10 +1,10 @@
-import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { OauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { ODataValueContextOfListOfAttribute } from '../../src/index.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase';
 
 describe('Attribute Key Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OauthAccessKey);
   test('Get the attribute keys', async () => {
     let result: ODataValueContextOfListOfAttribute =
       await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId, everyone: true });

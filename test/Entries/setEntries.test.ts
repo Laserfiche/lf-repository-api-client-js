@@ -1,4 +1,4 @@
-import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { OauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   DeleteEntryWithAuditReason,
@@ -18,7 +18,7 @@ describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OauthAccessKey);
   jest.setTimeout(200000);
   afterEach(async () => {
     if (entry != null) {

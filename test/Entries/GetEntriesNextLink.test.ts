@@ -1,11 +1,11 @@
-import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { OauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { ODataValueContextOfListOfAttribute } from '../../src/index.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase';
 
 describe('Get Entry Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OauthAccessKey);
 
   test('Get Entry Field simple paging', async () => {
     let maxPageSize = 1;
