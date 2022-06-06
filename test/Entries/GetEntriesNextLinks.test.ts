@@ -2,7 +2,7 @@ import { OauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.j
 import { ODataValueContextOfListOfAttribute } from '../../src/index.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase';
 
-describe('Get Entry Tests', () => {
+describe('Get Entry Next Links Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
   _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OauthAccessKey);
