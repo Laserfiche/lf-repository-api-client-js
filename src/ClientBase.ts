@@ -6,9 +6,10 @@ import {
   DomainUtils,
   AccessKey,
 } from '@laserfiche/lf-api-client-core';
-import { getNextLinkListing } from './ClientHelper.js';
+import {IAttributeClientEx,AttributesClient} from './AttributeClientEx';
+class ClientBase {}
 export interface IRepositoryApiClient {
-  attributesClient: IAttributesClient;
+  attributesClient: IAttributeClientEx;
   auditReasonsClient: generated.IAuditReasonsClient;
   entriesClient: generated.IEntriesClient;
   fieldDefinitionsClient: generated.IFieldDefinitionsClient;
@@ -24,7 +25,7 @@ export interface IRepositoryApiClient {
 export class RepositoryApiClient implements IRepositoryApiClient {
   private baseUrl: string;
 
-  public attributesClient: IAttributesClient;
+  public attributesClient: IAttributeClientEx;
   public auditReasonsClient: generated.IAuditReasonsClient;
   public entriesClient: generated.IEntriesClient;
   public fieldDefinitionsClient: generated.IFieldDefinitionsClient;
@@ -145,182 +146,189 @@ function isRetryable(response: Response, init: RequestInit): boolean {
   return (response.status >= 500 || response.status == 408) && isIdempotent;
 }
 
-export interface IAttributesClient {
-  getTrusteeAttributeKeyValuePairsNextLink(args: {
-    nextLink: string;
-    maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfListOfAttribute>;
-}
-export class AttributesClient extends generated.AttributesClient {
-  async getTrusteeAttributeKeyValuePairsNextLink(args: {
-    nextLink: string;
-    maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfListOfAttribute> {
-    let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfListOfAttribute>(
-      // @ts-ignore:
-      this.http,
-      this.processGetTrusteeAttributeKeyValuePairs,
-      nextLink,
-      maxPageSize
-    );
-  }
-}
+// export interface IAttributeClientEx extends generated.IAttributesClient {
+//   getTrusteeAttributeKeyValuePairsNextLink(args: {
+//     nextLink: string;
+//     maxPageSize?: number;
+//   }): Promise<generated.ODataValueContextOfListOfAttribute>;
+// }
+// export class AttributeClientEx extends generated.AttributesClient implements IAttributeClientEx {
+//   private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+//   constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+//     super(baseUrl, http);
+//     if (!http) {
+//       throw new Error(`http is undefined`);
+//     }
+//     this._http = http;
+//   }
+//   async getTrusteeAttributeKeyValuePairsNextLink(args: {
+//     nextLink: string;
+//     maxPageSize?: number;
+//   }): Promise<generated.ODataValueContextOfListOfAttribute> {
+//     let { nextLink, maxPageSize } = args;
+//     return await getNextLinkListing<generated.ODataValueContextOfListOfAttribute>(
+//       this._http,
+//       this.processGetTrusteeAttributeKeyValuePairs,
+//       nextLink,
+//       maxPageSize
+//     );
+//   }
+// }
 
-export interface IEntriesClientEx extends generated.IEntriesClient {
-  getEntryListingNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfEntry>;
-  getFieldValuesNextLink(
-    nextLink: string,
-    maxPageSize?: number
-  ): Promise<generated.ODataValueContextOfIListOfFieldValue>;
-  getLinkValuesFromEntryNextLink(
-    nextLink: string,
-    maxPageSize?: number
-  ): Promise<generated.ODataValueContextOfIListOfWEntryLinkInfo>;
-  getTagsAssignedToEntryNextLink(
-    nextLink: string,
-    maxPageSize?: number
-  ): Promise<generated.ODataValueContextOfIListOfWTagInfo>;
-}
-export class EntriesClientEx extends generated.EntriesClient implements IEntriesClientEx {
-  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-    super(baseUrl, http);
-    if (!http) {
-      throw new Error(`http is undefined`);
-    }
-    this._http = http;
-  }
-  async getEntryListingNextLink(
-    nextLink: string,
-    maxPageSize?: number
-  ): Promise<generated.ODataValueContextOfIListOfEntry> {
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
-      this._http,
-      this.processGetEntryListing,
-      nextLink,
-      maxPageSize
-    );
-  }
+// export interface IEntriesClientEx extends generated.IEntriesClient {
+//   getEntryListingNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfEntry>;
+//   getFieldValuesNextLink(
+//     nextLink: string,
+//     maxPageSize?: number
+//   ): Promise<generated.ODataValueContextOfIListOfFieldValue>;
+//   getLinkValuesFromEntryNextLink(
+//     nextLink: string,
+//     maxPageSize?: number
+//   ): Promise<generated.ODataValueContextOfIListOfWEntryLinkInfo>;
+//   getTagsAssignedToEntryNextLink(
+//     nextLink: string,
+//     maxPageSize?: number
+//   ): Promise<generated.ODataValueContextOfIListOfWTagInfo>;
+// }
+// export class EntriesClientEx extends generated.EntriesClient implements IEntriesClientEx {
+//   private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+//   constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+//     super(baseUrl, http);
+//     if (!http) {
+//       throw new Error(`http is undefined`);
+//     }
+//     this._http = http;
+//   }
+//   async getEntryListingNextLink(
+//     nextLink: string,
+//     maxPageSize?: number
+//   ): Promise<generated.ODataValueContextOfIListOfEntry> {
+//     return await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
+//       this._http,
+//       this.processGetEntryListing,
+//       nextLink,
+//       maxPageSize
+//     );
+//   }
 
-  async getFieldValuesNextLink(
-    nextLink: string,
-    maxPageSize?: number
-  ): Promise<generated.ODataValueContextOfIListOfFieldValue> {
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfFieldValue>(
-      this._http,
-      this.processGetFieldValues,
-      nextLink,
-      maxPageSize
-    );
-  }
+//   async getFieldValuesNextLink(
+//     nextLink: string,
+//     maxPageSize?: number
+//   ): Promise<generated.ODataValueContextOfIListOfFieldValue> {
+//     return await getNextLinkListing<generated.ODataValueContextOfIListOfFieldValue>(
+//       this._http,
+//       this.processGetFieldValues,
+//       nextLink,
+//       maxPageSize
+//     );
+//   }
 
-  async getLinkValuesFromEntryNextLink(
-    nextLink: string,
-    maxPageSize?: number
-  ): Promise<generated.ODataValueContextOfIListOfWEntryLinkInfo> {
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
-      this._http,
-      this.processGetLinkValuesFromEntry,
-      nextLink,
-      maxPageSize
-    );
-  }
+//   async getLinkValuesFromEntryNextLink(
+//     nextLink: string,
+//     maxPageSize?: number
+//   ): Promise<generated.ODataValueContextOfIListOfWEntryLinkInfo> {
+//     return await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
+//       this._http,
+//       this.processGetLinkValuesFromEntry,
+//       nextLink,
+//       maxPageSize
+//     );
+//   }
 
-  async getTagsAssignedToEntryNextLink(
-    nextLink: string,
-    maxPageSize?: number
-  ): Promise<generated.ODataValueContextOfIListOfWTagInfo> {
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
-      this._http,
-      this.processGetTagsAssignedToEntry,
-      nextLink,
-      maxPageSize
-    );
-  }
-}
+//   async getTagsAssignedToEntryNextLink(
+//     nextLink: string,
+//     maxPageSize?: number
+//   ): Promise<generated.ODataValueContextOfIListOfWTagInfo> {
+//     return await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
+//       this._http,
+//       this.processGetTagsAssignedToEntry,
+//       nextLink,
+//       maxPageSize
+//     );
+//   }
+// }
 
-export interface IFieldDefinitionsEx extends generated.IFieldDefinitionsClient {
-  getEntryListingNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfEntry>;
-}
+// export interface IFieldDefinitionsEx extends generated.IFieldDefinitionsClient {
+//   getEntryListingNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfEntry>;
+// }
 
-export class FieldDefinitionClient extends generated.FieldDefinitionsClient{
-  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-    super(baseUrl, http);
-    if (!http) {
-      throw new Error(`http is undefined`);
-    }
-    this._http = http;
-  }
-    async getFieldDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWFieldInfo> {
-        return await getNextLinkListing<generated.ODataValueContextOfIListOfWFieldInfo>(this._http, this.processGetFieldDefinitions, nextLink, maxPageSize);
-    }
-}
+// export class FieldDefinitionClient extends generated.FieldDefinitionsClient{
+//   private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+//   constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+//     super(baseUrl, http);
+//     if (!http) {
+//       throw new Error(`http is undefined`);
+//     }
+//     this._http = http;
+//   }
+//     async getFieldDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWFieldInfo> {
+//         return await getNextLinkListing<generated.ODataValueContextOfIListOfWFieldInfo>(this._http, this.processGetFieldDefinitions, nextLink, maxPageSize);
+//     }
+// }
 
-export interface ISearchEx extends generated.ISearchesClient {
-  GetSearchResultsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfEntry>;
-  GetSearchContextHitsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfContextHit>;
-}
+// export interface ISearchEx extends generated.ISearchesClient {
+//   GetSearchResultsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfEntry>;
+//   GetSearchContextHitsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfContextHit>;
+// }
 
-export class SearchClient extends generated.SearchesClient{
-  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-    super(baseUrl, http);
-    if (!http) {
-      throw new Error(`http is undefined`);
-    }
-    this._http = http;
-  }
-    async GetSearchResultsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfEntry> {
-        return await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(this._http, this.processGetSearchResults, nextLink, maxPageSize);
-    }
-    async GetSearchContextHitsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfContextHit> {
-        return await getNextLinkListing<generated.ODataValueContextOfIListOfContextHit>(this._http, this.processGetSearchContextHits, nextLink, maxPageSize);
-    }
-}
+// export class SearchClient extends generated.SearchesClient{
+//   private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+//   constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+//     super(baseUrl, http);
+//     if (!http) {
+//       throw new Error(`http is undefined`);
+//     }
+//     this._http = http;
+//   }
+//     async GetSearchResultsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfEntry> {
+//         return await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(this._http, this.processGetSearchResults, nextLink, maxPageSize);
+//     }
+//     async GetSearchContextHitsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfContextHit> {
+//         return await getNextLinkListing<generated.ODataValueContextOfIListOfContextHit>(this._http, this.processGetSearchContextHits, nextLink, maxPageSize);
+//     }
+// }
 
 
-export interface ITagDefinitionsEx extends generated.ITagDefinitionsClient {
-  getTagDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWTagInfo>;
-}
+// export interface ITagDefinitionsEx extends generated.ITagDefinitionsClient {
+//   getTagDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWTagInfo>;
+// }
 
-export class TagDefinitionsEx extends generated.TagDefinitionsClient{
-  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-    super(baseUrl, http);
-    if (!http) {
-      throw new Error(`http is undefined`);
-    }
-    this._http = http;
-  }
-  async getTagDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWTagInfo> {
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfWTagInfo>(this._http, this.processGetTagDefinitions, nextLink, maxPageSize);
-}
-}
+// export class TagDefinitionsEx extends generated.TagDefinitionsClient{
+//   private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+//   constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+//     super(baseUrl, http);
+//     if (!http) {
+//       throw new Error(`http is undefined`);
+//     }
+//     this._http = http;
+//   }
+//   async getTagDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWTagInfo> {
+//     return await getNextLinkListing<generated.ODataValueContextOfIListOfWTagInfo>(this._http, this.processGetTagDefinitions, nextLink, maxPageSize);
+// }
+// }
 
-export interface ITemplateDefinitionsEx extends generated.ITemplateDefinitionsClient {
-  getTemplateDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWTemplateInfo>;
-  getTemplateFieldDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo>;
-  getTemplateFieldDefinitionsByTemplateNameNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo>;
-}
+// export interface ITemplateDefinitionsEx extends generated.ITemplateDefinitionsClient {
+//   getTemplateDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWTemplateInfo>;
+//   getTemplateFieldDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo>;
+//   getTemplateFieldDefinitionsByTemplateNameNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo>;
+// }
 
-export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient{
-  private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-    super(baseUrl, http);
-    if (!http) {
-      throw new Error(`http is undefined`);
-    }
-    this._http = http;
-  }
-    async getTemplateDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWTemplateInfo> {
-        return await getNextLinkListing<generated.ODataValueContextOfIListOfWTemplateInfo>(this._http, this.processGetTemplateDefinitions, nextLink, maxPageSize);
-    }
-    async getTemplateFieldDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo> {
-        return await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(this._http, this.processGetTemplateFieldDefinitions, nextLink, maxPageSize);
-    }
-    async getTemplateFieldDefinitionsByTemplateNameNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo> {
-        return await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(this._http, this.processGetTemplateFieldDefinitionsByTemplateName, nextLink, maxPageSize);
-    }
-}
+// export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient{
+//   private _http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+//   constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+//     super(baseUrl, http);
+//     if (!http) {
+//       throw new Error(`http is undefined`);
+//     }
+//     this._http = http;
+//   }
+//     async getTemplateDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfWTemplateInfo> {
+//         return await getNextLinkListing<generated.ODataValueContextOfIListOfWTemplateInfo>(this._http, this.processGetTemplateDefinitions, nextLink, maxPageSize);
+//     }
+//     async getTemplateFieldDefinitionsNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo> {
+//         return await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(this._http, this.processGetTemplateFieldDefinitions, nextLink, maxPageSize);
+//     }
+//     async getTemplateFieldDefinitionsByTemplateNameNextLink(nextLink: string, maxPageSize?: number): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo> {
+//         return await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(this._http, this.processGetTemplateFieldDefinitionsByTemplateName, nextLink, maxPageSize);
+//     }
+// }

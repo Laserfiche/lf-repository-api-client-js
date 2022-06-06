@@ -1,5 +1,6 @@
 import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient, ODataValueContextOfListOfAttribute } from '../../src/index.js';
+import {ODataValueContextOfListOfAttribute } from '../../src/index.js';
+import {RepositoryApiClient, IRepositoryApiClient} from '../../src/ClientBase';
 
 describe('Attribute Key Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
