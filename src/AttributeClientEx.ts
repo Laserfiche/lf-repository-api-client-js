@@ -7,7 +7,7 @@ export interface IAttributeClientEx extends generated.IAttributesClient {
   }): Promise<generated.ODataValueContextOfListOfAttribute>;
 }
  
-export class AttributesClient extends generated.AttributesClient{
+export class AttributesClient extends generated.AttributesClient implements IAttributeClientEx{
     async getTrusteeAttributeKeyValuePairsNextLink(args: {
       nextLink: string;
       maxPageSize?: number;

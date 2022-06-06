@@ -12,7 +12,6 @@ export async function getNextLinkListing<T extends IODataValueContextOfIListOfEn
                 "Accept": "application/json"
             }
         };
-        console.log(processListing);
         let processListingTwo = processListing.bind(http);
         return http.fetch(nextLink, options_).then((_response: Response) => {
             return processListingTwo(_response);

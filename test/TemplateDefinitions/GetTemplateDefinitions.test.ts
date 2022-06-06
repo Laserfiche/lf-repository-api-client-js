@@ -48,6 +48,28 @@ describe('Template Definitions Integration Tests', () => {
     expect(templateDefinitions?.length).toBe(firstTemplateDefinition.fieldCount);
   });
 
+  test('Get Template Definition Fields Simple Paging', async () => {
+    let maxPageSize = 1;
+    let prefer = `maxpagesize=${maxPageSize}`;
+    let response = await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId, prefer });
+    if (!response.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response).not.toBeNull();
+    let nextLink = response.odataNextLink ?? '';
+    expect(nextLink).not.toBeNull();
+    expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
+    let response2 = await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitionsNextLink({
+      nextLink,
+      maxPageSize,
+    });
+    if (!response2.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response2).not.toBeNull();
+    expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
+  });
+
   test('Get Template Definition Fields by Template Name', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });
@@ -66,6 +88,28 @@ describe('Template Definitions Integration Tests', () => {
     expect(templateDefinitions?.length).toBe(firstTemplateDefinition.fieldCount);
   });
 
+  test('Get Template Field Definition Fields Simple Paging', async () => {
+    let maxPageSize = 1;
+    let prefer = `maxpagesize=${maxPageSize}`;
+    let response = await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId, prefer });
+    if (!response.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response).not.toBeNull();
+    let nextLink = response.odataNextLink ?? '';
+    expect(nextLink).not.toBeNull();
+    expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
+    let response2 = await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitionsNextLink({
+      nextLink,
+      maxPageSize,
+    });
+    if (!response2.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response2).not.toBeNull();
+    expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
+  });
+
   test('Get Template Definition Fields by Id', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });
@@ -80,5 +124,28 @@ describe('Template Definitions Integration Tests', () => {
     });
     expect(result).not.toBeNull;
     expect(result.id).toBe(firstTemplateDefinition.id);
+  });
+
+  test('Get Template Field Definition by Template Name Simple Paging', async () => {
+    let maxPageSize = 1;
+    let prefer = `maxpagesize=${maxPageSize}`;
+    let response = await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId, prefer });
+    if (!response.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response).not.toBeNull();
+    let nextLink = response.odataNextLink ?? '';
+    expect(nextLink).not.toBeNull();
+    expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
+    let response2 =
+      await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitionsByTemplateNameNextLink({
+        nextLink,
+        maxPageSize,
+      });
+    if (!response2.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response2).not.toBeNull();
+    expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
 });

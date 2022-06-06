@@ -12,6 +12,28 @@ describe('Field Definitions Integration Tests', () => {
     expect(result.value).not.toBeNull();
   });
 
+  test('Get Field Definitions simple paging', async () => {
+    let maxPageSize = 1;
+    let prefer = `maxpagesize=${maxPageSize}`;
+    let response = await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId, prefer });
+    if (!response.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response).not.toBeNull();
+    let nextLink: string = response.odataNextLink ?? '';
+    expect(nextLink).not.toBeNull();
+    expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
+    let response2 = await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitionsNextLink({
+      nextLink,
+      maxPageSize,
+    });
+    if (!response2.value) {
+      throw new Error('response2.value is undefined');
+    }
+    expect(response2).not.toBeNull();
+    expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
+  });
+
   test('Get Field Definitions by Id', async () => {
     let FieldDefResponse: ODataValueContextOfIListOfWFieldInfo =
       await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId });
@@ -23,7 +45,7 @@ describe('Field Definitions Integration Tests', () => {
       throw new Error('firstFieldDef is undefined');
     }
     expect(firstFieldDef).not.toBeNull();
-    let response = await await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitionById({
+    let response = await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitionById({
       repoId,
       fieldDefinitionId: firstFieldDef.id ?? -1,
     });

@@ -1,6 +1,7 @@
 import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
-import { AdvancedSearchRequest } from '../../src/index.js';
+import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
+import { jest } from '@jest/globals';
 
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
@@ -19,5 +20,39 @@ describe('Search Integration Tests', () => {
       searchToken: searchToken ?? '',
     });
     expect(closeSearchResponse.value).toBe(true);
+  });
+
+  jest.setTimeout(30000);
+  test('Get Search Results simple Paging', async () => {
+    let maxPageSize = 1;
+    let searchRequest = new AdvancedSearchRequest();
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
+    let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
+      repoId,
+      request: searchRequest,
+    });
+    let searchToken: string = searchResponse.token ?? '';
+    expect(searchToken).not.toBe('');
+    expect(searchToken).not.toBeNull();
+    await new Promise((r) => setTimeout(r, 5000));
+    let prefer = `maxpagesize=${maxPageSize}`;
+    let response: ODataValueContextOfIListOfEntry = await _RepositoryApiClient.searchesClient.getSearchResults({
+      repoId,
+      searchToken,
+      prefer,
+    });
+    if (!response.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response).not.toBeNull();
+    let nextLink: string = response.odataNextLink ?? '';
+    expect(nextLink).not.toBeNull();
+    expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
+    let response2 = await _RepositoryApiClient.searchesClient.GetSearchResultsNextLink({ nextLink, maxPageSize });
+    if (!response2.value) {
+      throw new Error('response2.value is undefined');
+    }
+    expect(response2).not.toBeNull();
+    expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
 });

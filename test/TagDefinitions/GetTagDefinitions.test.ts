@@ -10,6 +10,27 @@ describe('Tag Definitions Integration Tests', () => {
       await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId });
     expect(TagDefinitionsResponse.value).not.toBeNull;
   });
+  test('Get Tag Definitions Simple Paging', async () => {
+    let maxPageSize = 1;
+    let prefer = `maxpagesize=${maxPageSize}`;
+    let response = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId, prefer });
+    if (!response.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response).not.toBeNull();
+    let nextLink = response.odataNextLink ?? '';
+    expect(nextLink).not.toBeNull();
+    expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
+    let response2 = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitionsNextLink({
+      nextLink,
+      maxPageSize,
+    });
+    if (!response2.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response2).not.toBeNull();
+    expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
+  });
   test('Get Tag Definitions by Id', async () => {
     let allTagDefinitionsResponse: ODataValueContextOfIListOfWTagInfo =
       await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId });
