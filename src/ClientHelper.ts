@@ -18,13 +18,14 @@ export async function getNextLinkListing<T extends IODataValueContextOfIListOfEn
         });
 
 
-function CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefined {
-        //puts the max size into the prefer header of the GET request
-        if (!maxSize) {
-            return undefined;
-        }
-        else {
-            return `maxpagesize=${maxSize}`;
-        }
+}
+
+export function CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefined {
+    //puts the max size into the prefer header of the GET request
+    if (!maxSize) {
+        return undefined;
+    }
+    else {
+        return `maxpagesize=${maxSize}`;
     }
 }

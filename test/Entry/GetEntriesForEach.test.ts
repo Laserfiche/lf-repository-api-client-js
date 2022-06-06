@@ -1,38 +1,28 @@
-import {client, getAccessTokenForTests, repoId,options, repoBaseUrl, entryId} from "../config";
-import {EntryClient} from '../../src/EntryClients'; 
-import {ODataValueContextOfIListOfFieldValue, ODataValueContextOfIListOfODataGetEntryChildren, 
+import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import {ODataValueContextOfIListOfFieldValue, ODataValueContextOfIListOfEntry, 
     ODataValueContextOfIListOfWEntryLinkInfo,ODataValueContextOfIListOfWTagInfo} from '../../src/index';
-//import {} from '../../src/ClientHelper';
+import { IRepositoryApiClient, RepositoryApiClient } from '../../src/ClientBase.js';
 
 describe("Get Entry Tests", () => {
-    let token:string;
-    let client2:EntryClient;
-    beforeEach(async()=>{
-        token = await getAccessTokenForTests();
-        client2 = new EntryClient(options, repoBaseUrl);
-    });
-
-    afterEach(async()=>{
-        token = "";
-    });
+    let _RepositoryApiClient: IRepositoryApiClient;
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+    let entryId: number = 1;
 
     test("Get Entry Listing for each paging", async()=>{
-        let client2 = new EntryClient(options, repoBaseUrl);
         let maxPageSize = 20;
         let entries = 0;
         let pages = 0;
-        const callback = async(response: ODataValueContextOfIListOfODataGetEntryChildren) =>{
+        const callback = async(response: ODataValueContextOfIListOfEntry) =>{
             entries += response.toJSON().value.length;
             pages += 1;
             return true;
         }
-        await client2.GetEntryListingForEach(callback,repoId,entryId, undefined,undefined,undefined,undefined, undefined,undefined,undefined,undefined,undefined,undefined,maxPageSize);
+        await _RepositoryApiClient.entriesClient.GetEntryListingForEach({callback,repoId, entryId, maxPageSize});
         expect(entries).toBeGreaterThan(0);
         expect(pages).toBeGreaterThan(0);
     });
 
     test("Get Entry Field for each paging", async()=>{
-        let client2 = new EntryClient(options, repoBaseUrl);
         let maxPageSize = 20;
         let entries = 0;
         let pages = 0;
@@ -41,13 +31,12 @@ describe("Get Entry Tests", () => {
             pages += 1;
             return true;
         }
-        await client2.GetFieldValuesForEach(callback,repoId,entryId, undefined,undefined,undefined,undefined, undefined,undefined,undefined,undefined,maxPageSize);
+        await _RepositoryApiClient.entriesClient.GetFieldValuesForEach({callback,repoId,entryId, maxPageSize});
         expect(entries).toBeGreaterThan(0);
         expect(pages).toBeGreaterThan(0);
     });
 
     test("Get Entry Links for each paging", async()=>{
-        let client2 = new EntryClient(options, repoBaseUrl);
         let maxPageSize = 20;
         let entries = 0;
         let pages = 0;
@@ -56,13 +45,12 @@ describe("Get Entry Tests", () => {
             pages += 1;
             return true;
         }
-        await client2.GetLinkValuesFromEntryForEach(callback, repoId, entryId, undefined, undefined, undefined, undefined, undefined, undefined, maxPageSize);
+        await _RepositoryApiClient.entriesClient.GetLinkValuesFromEntryForEach({callback, repoId, entryId, maxPageSize});
         expect(entries).toBeGreaterThan(0);
         expect(pages).toBeGreaterThan(0);
     });
 
     test("Get Entry Tags for each paging", async()=>{
-        let client2 = new EntryClient(options, repoBaseUrl);
         let maxPageSize = 20;
         let entries = 0;
         let pages = 0;
@@ -71,7 +59,7 @@ describe("Get Entry Tests", () => {
             pages += 1;
             return true;
         }
-        await client2.GetTagsAssignedToEntryForEach(callback, repoId, entryId, undefined, undefined, undefined, undefined,undefined, undefined, maxPageSize);
+        await _RepositoryApiClient.entriesClient.GetTagsAssignedToEntryForEach({callback, repoId, entryId, maxPageSize});
         expect(entries).toBeGreaterThan(0);
         expect(pages).toBeGreaterThan(0);
     });
