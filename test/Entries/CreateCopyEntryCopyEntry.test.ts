@@ -1,4 +1,4 @@
-import { OauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   CopyAsyncRequest,
@@ -16,7 +16,7 @@ import { CreateEntry } from '../BaseTest.js';
 describe('Create Copy Entry Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OauthAccessKey);
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
 
   jest.setTimeout(200000);
   afterEach(async () => {

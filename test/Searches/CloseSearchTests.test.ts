@@ -1,11 +1,11 @@
-import { OauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
 import { jest } from '@jest/globals';
 
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OauthAccessKey);
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
   test('Close Search Operations', async () => {
     //create search
     let request = new AdvancedSearchRequest();
