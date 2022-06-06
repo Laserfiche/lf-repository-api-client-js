@@ -1,18 +1,17 @@
 {
   "name": "@laserfiche/lf-repository-api-client",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Laserfiche Repository API Client library for TypeScript.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "files": [
-    "dist/index.js",
-    "dist/index.d.ts",
-    "dist/ClientUtils.js"
+    "dist/src/index.js",
+    "dist/src/index.d.ts"
   ],
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:ci": "npm run test -- --watchAll=false --reporters=default --reporters=jest-junit",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js",
+    "test:all": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js && node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.jsdom.config.js",
     "build": "nswag run && npm run clean && tsc -b",
     "build:watch": "nswag run && tsc -b --watch",
     "clean": "tsc -b --clean",
@@ -33,6 +32,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
+    "@laserfiche/lf-api-client-core": "^1.0.1",
     "@laserfiche/lf-js-utils": "^3.0.5"
   }
 }

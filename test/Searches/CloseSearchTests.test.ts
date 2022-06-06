@@ -1,74 +1,58 @@
-import {client, getAccessTokenForTests, repoId, repoBaseUrl,options} from "../config";
-import {AdvancedSearchRequest} from "../../src";
-import {SearchClient} from '../../src/SearchClient';
-import {jest} from '@jest/globals';
-import {ODataValueContextOfIListOfODataGetSearchResults, ODataValueContextOfIListOfContextHit} from '../../src/index';
+import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
+import { jest } from '@jest/globals';
 
+describe('Search Integration Tests', () => {
+  let _RepositoryApiClient: IRepositoryApiClient;
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+  test('Close Search Operations', async () => {
+    //create search
+    let request = new AdvancedSearchRequest();
+    request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
+    var response = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId, request });
+    let searchToken = response.token;
+    expect(searchToken).not.toBeNull();
 
-describe.skip("Search Tests", () => {
-    let token = "";
-    beforeEach(async() =>{
-        token = await getAccessTokenForTests();
+    //close the search
+    var closeSearchResponse = await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({
+      repoId,
+      searchToken: searchToken ?? '',
     });
-    afterEach(async() =>{
-        token = "";
-    });
+    expect(closeSearchResponse.value).toBe(true);
+  });
 
-    test("Close Search Operations", async () => {
-
-        //create search
-        let request = new AdvancedSearchRequest();
-        request.searchCommand = "({LF:Basic ~= \"search text\", option=\"DFANLT\"})";
-        var response = await client.createSearchOperation(repoId,request);
-        let searchToken = response.toJSON().token;
-        expect(searchToken).not.toBeNull();
-
-        //close the search
-        var closeSearchResponse = await client.cancelOrCloseSearch(repoId, searchToken);
-        expect(closeSearchResponse.toJSON().value).toBe(true);
+  jest.setTimeout(30000);
+  test('Get Search Results simple Paging', async () => {
+    let maxPageSize = 1;
+    let searchRequest = new AdvancedSearchRequest();
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
+    let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
+      repoId,
+      request: searchRequest,
     });
-    jest.setTimeout(30000);
-    test("Get Search Results simple Paging", async()=>{
-        let client2 = new SearchClient(options, repoBaseUrl);
-        let maxPageSize = 1;
-        let searchRequest = new AdvancedSearchRequest();
-        searchRequest.searchCommand = "({LF:Basic ~= \"search text\", option=\"NLT\"})";
-        let searchResponse = await client.createSearchOperation(repoId,searchRequest);
-        let searchToken = searchResponse.toJSON().token;
-        expect(searchToken).not.toBe("");
-        expect(searchToken).not.toBeNull();
-        await new Promise((r) => setTimeout(r, 10000));
-        let prefer = `maxpagesize=${maxPageSize}`;
-        let response = await client.getSearchResults(repoId, searchToken, undefined, undefined, undefined, undefined, prefer);
-        expect(response).not.toBeNull();
-        let nextLink = response.toJSON()["@odata.nextLink"];
-        expect(nextLink).not.toBeNull();
-        expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
-        let response2 = await client2.GetSearchResultsNextLink(nextLink,maxPageSize);
-        expect(response2).not.toBeNull();
-        expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
+    let searchToken: string = searchResponse.token ?? '';
+    expect(searchToken).not.toBe('');
+    expect(searchToken).not.toBeNull();
+    await new Promise((r) => setTimeout(r, 5000));
+    let prefer = `maxpagesize=${maxPageSize}`;
+    let response: ODataValueContextOfIListOfEntry = await _RepositoryApiClient.searchesClient.getSearchResults({
+      repoId,
+      searchToken,
+      prefer,
     });
-
-    jest.setTimeout(30000);
-    test.only("Get Search Results for each Paging", async()=>{
-        let client2 = new SearchClient(options, repoBaseUrl);
-        let maxPageSize = 20;
-        let searchRequest = new AdvancedSearchRequest();
-        searchRequest.searchCommand = "({LF:Basic ~= \"search text\", option=\"NLT\"})";
-        let searchResponse = await client.createSearchOperation(repoId,searchRequest);
-        let searchToken = searchResponse.toJSON().token;
-        expect(searchToken).not.toBe("");
-        expect(searchToken).not.toBeNull();
-        await new Promise((r) => setTimeout(r, 10000));
-        let searchResults = 0;
-        let pages = 0;
-        const callback = async(response: ODataValueContextOfIListOfODataGetSearchResults) =>{
-            searchResults += response.toJSON().value.length;
-            pages += 1;
-            return true;
-        }
-        await client2.GetSearchResultsForEach(callback, repoId, searchToken, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,undefined, undefined, maxPageSize);
-        expect(searchResults).toBeGreaterThan(0);
-        expect(pages).toBeGreaterThan(0);
-    });
-})
+    if (!response.value) {
+      throw new Error('response.value is undefined');
+    }
+    expect(response).not.toBeNull();
+    let nextLink: string = response.odataNextLink ?? '';
+    expect(nextLink).not.toBeNull();
+    expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
+    let response2 = await _RepositoryApiClient.searchesClient.GetSearchResultsNextLink({ nextLink, maxPageSize });
+    if (!response2.value) {
+      throw new Error('response2.value is undefined');
+    }
+    expect(response2).not.toBeNull();
+    expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
+  });
+});

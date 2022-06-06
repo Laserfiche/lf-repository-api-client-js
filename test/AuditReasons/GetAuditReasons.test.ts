@@ -1,15 +1,15 @@
-import {client, getAccessTokenForTests, repoId} from "../config";
+import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { AuditReasons } from '../../src/index';
 
-describe("Get Audit Reasons", () => {
+describe('Audit Reasons Integration Test', () => {
+  let _RepositoryApiClient: IRepositoryApiClient;
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
 
-    test("Get the attribute keys", async () => {
-        let token = await getAccessTokenForTests();
-        //config.client.accessToken = token?.access_token;
-        let auditReasonResponse = await client.getAuditReasons(repoId);
-        
-        expect(auditReasonResponse).not.toBeNull();
-        expect(auditReasonResponse.deleteEntry).not.toBeNull();
-        expect(auditReasonResponse.exportDocument).not.toBeNull();
-        token = "";
-    });
-})
+  test('Get the Audit Reasons', async () => {
+    let result: AuditReasons = await _RepositoryApiClient.auditReasonsClient.getAuditReasons({ repoId });
+    expect(result).not.toBeNull();
+    expect(result.deleteEntry).not.toBeNull();
+    expect(result.exportDocument).not.toBeNull();
+  });
+});
