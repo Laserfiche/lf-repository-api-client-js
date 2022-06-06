@@ -35,6 +35,25 @@ describe('Attribute Key Integration Tests', () => {
     expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
 
+  test.only('Get Attribute for each paging', async () => {
+    let maxPageSize = 10;
+    let entries = 0;
+    let pages = 0;
+    const callback = async (response: ODataValueContextOfListOfAttribute) => {
+      entries += response.toJSON().value.length;
+      pages += 1;
+      return true;
+    };
+    await _RepositoryApiClient.attributesClient.GetTrusteeAttributeKeyValuePairsForEach({
+      callback,
+      repoId,
+      everyone: true,
+      maxPageSize,
+    });
+    expect(entries).toBeGreaterThan(0);
+    expect(pages).toBeGreaterThan(0);
+  });
+
   test('Get the attribute value by Key', async () => {
     let result: ODataValueContextOfListOfAttribute =
       await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId });

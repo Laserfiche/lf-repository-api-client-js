@@ -1,6 +1,10 @@
 import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
-import { AdvancedSearchRequest } from '../../src/index.js';
+import {
+  AdvancedSearchRequest,
+  ODataValueContextOfIListOfContextHit,
+  ODataValueContextOfIListOfEntry,
+} from '../../src/index.js';
 import { jest } from '@jest/globals';
 
 let searchToken = 'test';
@@ -40,6 +44,76 @@ describe('Search Integration Tests Part 2', () => {
     });
     var contextHits = contextHitResponse.value;
     expect(contextHits).not.toBeNull();
+  });
+
+  jest.setTimeout(30000);
+  test.only('Get Search Results for each Paging', async () => {
+    let maxPageSize = 20;
+    let searchRequest = new AdvancedSearchRequest();
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="NLT"})';
+    let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
+      repoId,
+      request: searchRequest,
+    });
+    let searchToken = searchResponse.token ?? '';
+    expect(searchToken).not.toBe('');
+    expect(searchToken).not.toBeNull();
+    await new Promise((r) => setTimeout(r, 10000));
+    let searchResults = 0;
+    let pages = 0;
+    const callback = async (response: ODataValueContextOfIListOfEntry) => {
+      if (!response.value) {
+        throw new Error('response.value is undefined');
+      }
+      searchResults += response.value.length;
+      pages += 1;
+      return true;
+    };
+    await _RepositoryApiClient.searchesClient.GetSearchResultsForEach({ callback, repoId, searchToken, maxPageSize });
+    expect(searchResults).toBeGreaterThan(0);
+    expect(pages).toBeGreaterThan(0);
+  });
+
+  jest.setTimeout(30000);
+  test.only('Get Search Context Hits for each Paging', async () => {
+    let maxPageSize = 20;
+    let searchRequest = new AdvancedSearchRequest();
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="NLT"})';
+    let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
+      repoId,
+      request: searchRequest,
+    });
+    let searchToken = searchResponse.token ?? '';
+    expect(searchToken).not.toBe('');
+    expect(searchToken).not.toBeNull();
+    await new Promise((r) => setTimeout(r, 5000));
+    var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId, searchToken });
+    if (!searchResultsResponse.value) {
+      throw new Error('searchResultsResponse.value is undefined');
+    }
+    var searchResults = searchResultsResponse.value;
+    expect(searchResults).not.toBeNull();
+    expect(searchResults.length > 0).toBeTruthy();
+    let rowNum = searchResults[0].rowNumber ?? 0;
+    let searchContextHits = 0;
+    let pages = 0;
+    const callback = async (response: ODataValueContextOfIListOfContextHit) => {
+      if (!response.value) {
+        throw new Error('response.value is undefined');
+      }
+      searchContextHits += response.value.length;
+      pages += 1;
+      return true;
+    };
+    await _RepositoryApiClient.searchesClient.GetSearchContextHitsForEach({
+      callback,
+      repoId,
+      searchToken,
+      rowNumber: rowNum,
+      maxPageSize,
+    });
+    expect(searchContextHits).toBeGreaterThan(0);
+    expect(pages).toBeGreaterThan(0);
   });
 
   jest.setTimeout(20000);

@@ -33,6 +33,23 @@ describe('Field Definitions Integration Tests', () => {
     expect(response2).not.toBeNull();
     expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
+  
+  test('Get Field Definitions for each paging', async () => {
+    let maxPageSize = 10;
+    let entries = 0;
+    let pages = 0;
+    const callback = async (response: ODataValueContextOfIListOfWFieldInfo) => {
+      if (!response.value){
+        throw new Error('response.value is undefined');
+      }
+      entries += response.value.length;
+      pages += 1;
+      return true;
+    };
+    await _RepositoryApiClient.fieldDefinitionsClient.GetFieldDefinitionsForEach({callback,repoId,maxPageSize});
+    expect(entries).toBeGreaterThan(0);
+    expect(pages).toBeGreaterThan(0);
+  });
 
   test('Get Field Definitions by Id', async () => {
     let FieldDefResponse: ODataValueContextOfIListOfWFieldInfo =

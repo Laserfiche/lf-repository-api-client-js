@@ -10,6 +10,24 @@ describe('Tag Definitions Integration Tests', () => {
       await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId });
     expect(TagDefinitionsResponse.value).not.toBeNull;
   });
+
+  test('Get Tag Definitions for each paging', async () => {
+    let maxPageSize = 10;
+    let entries = 0;
+    let pages = 0;
+    const callback = async (response: ODataValueContextOfIListOfWTagInfo) => {
+      if (!response.value) {
+        throw new Error('response.value is undefined');
+      }
+      entries += response.value.length;
+      pages += 1;
+      return true;
+    };
+    await _RepositoryApiClient.tagDefinitionsClient.GetTagDefinitionsForEach({ callback, repoId, maxPageSize });
+    expect(entries).toBeGreaterThan(0);
+    expect(pages).toBeGreaterThan(0);
+  });
+
   test('Get Tag Definitions Simple Paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;

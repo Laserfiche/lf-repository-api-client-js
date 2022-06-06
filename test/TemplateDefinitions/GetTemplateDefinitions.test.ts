@@ -48,6 +48,23 @@ describe('Template Definitions Integration Tests', () => {
     expect(templateDefinitions?.length).toBe(firstTemplateDefinition.fieldCount);
   });
 
+  test('Get Template Definitions for each paging', async () => {
+    let maxPageSize = 10;
+    let entries = 0;
+    let pages = 0;
+    const callback = async (response: ODataValueContextOfIListOfWTemplateInfo) => {
+      if (!response.value){
+        throw new Error('response.value is undefined');
+      }
+      entries += response.value.length;
+      pages += 1;
+      return true;
+    };
+    await _RepositoryApiClient.templateDefinitionsClient.GetTemplateDefinitionsForEach({callback,repoId,maxPageSize});
+    expect(entries).toBeGreaterThan(0);
+    expect(pages).toBeGreaterThan(0);
+  });
+
   test('Get Template Definition Fields Simple Paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;

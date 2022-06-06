@@ -9,11 +9,14 @@ describe("Get Entry Tests", () => {
     let entryId: number = 1;
 
     test("Get Entry Listing for each paging", async()=>{
-        let maxPageSize = 20;
+        let maxPageSize = 10;
         let entries = 0;
         let pages = 0;
         const callback = async(response: ODataValueContextOfIListOfEntry) =>{
-            entries += response.toJSON().value.length;
+            if (!response.value){
+                throw new Error('response.value is undefined');
+              }
+            entries += response.value.length;
             pages += 1;
             return true;
         }
@@ -23,11 +26,14 @@ describe("Get Entry Tests", () => {
     });
 
     test("Get Entry Field for each paging", async()=>{
-        let maxPageSize = 20;
+        let maxPageSize = 10;
         let entries = 0;
         let pages = 0;
         const callback = async(response: ODataValueContextOfIListOfFieldValue) =>{
-            entries += response.toJSON().value.length;
+            if (!response.value){
+                throw new Error('response.value is undefined');
+              }
+            entries += response.value.length;
             pages += 1;
             return true;
         }
@@ -37,11 +43,14 @@ describe("Get Entry Tests", () => {
     });
 
     test("Get Entry Links for each paging", async()=>{
-        let maxPageSize = 20;
+        let maxPageSize = 10;
         let entries = 0;
         let pages = 0;
         const callback = async(response: ODataValueContextOfIListOfWEntryLinkInfo) =>{
-            entries += response.toJSON().value.length;
+            if (!response.value){
+                throw new Error('response.value is undefined');
+              }
+            entries += response.value.length;
             pages += 1;
             return true;
         }
@@ -51,11 +60,14 @@ describe("Get Entry Tests", () => {
     });
 
     test("Get Entry Tags for each paging", async()=>{
-        let maxPageSize = 20;
+        let maxPageSize = 10;
         let entries = 0;
         let pages = 0;
         const callback = async(response: ODataValueContextOfIListOfWTagInfo) =>{
-            entries += response.toJSON().value.length;
+            if (!response.value){
+                throw new Error('response.value is undefined');
+              }
+            entries += response.value.length;
             pages += 1;
             return true;
         }
