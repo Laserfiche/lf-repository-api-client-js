@@ -18,7 +18,7 @@ describe('Create Copy Entry Test', () => {
   let createdEntries: Array<Entry> = new Array();
   _RepositoryApiClient = createTestRepoApiClient();
 
-  jest.setTimeout(200000);
+  
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {
@@ -31,7 +31,7 @@ describe('Create Copy Entry Test', () => {
     createdEntries = [];
   });
 
-  jest.setTimeout(20000);
+  
   test('Create Copy Entry Copy Entry', async () => {
     // Create a new folder that contains the created entry
     let testFolderName: string = 'CreateCopyEntry_CopyEntry_test_folder';

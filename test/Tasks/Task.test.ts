@@ -7,7 +7,7 @@ import { jest } from '@jest/globals';
 describe('Task Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
-  jest.setTimeout(20000);
+  
   test('Cancel Operation', async () => {
     let deleteEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest CancelOperation');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
@@ -26,7 +26,7 @@ describe('Task Integration Tests', () => {
       expect(err.title.includes('Cannot cancel ended operation'));
     }
   });
-  jest.setTimeout(20000);
+  
   test('Get Operation Status', async () => {
     let deleteEntry: Entry = await CreateEntry(
       _RepositoryApiClient,

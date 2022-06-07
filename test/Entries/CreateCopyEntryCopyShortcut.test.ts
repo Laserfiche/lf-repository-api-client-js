@@ -15,7 +15,7 @@ describe('Create Copy Entry Test', () => {
   let createdEntries: Array<Entry> = new Array();
   _RepositoryApiClient = createTestRepoApiClient();
 
-  jest.setTimeout(200000);
+  
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {

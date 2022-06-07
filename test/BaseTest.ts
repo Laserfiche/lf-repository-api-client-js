@@ -2,6 +2,7 @@ import {Entry,PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildren
 import {OAuthAccessKey, repoId, testServicePrincipalKey } from './testHelper.js';
 import {IRepositoryApiClient, RepositoryApiClient} from '../src/ClientBase.js';
 import { OAuthClientCredentialsHandler } from "@laserfiche/lf-api-client-core";
+import { BeforeFetchResult } from "@laserfiche/lf-api-client-core/dist/lib/HttpHandlers/BeforeFetchResult";
 
 export async function CreateEntry(client: IRepositoryApiClient, entryName: string | undefined, parentEntryId:number = 1, autoRename:boolean = true):Promise<Entry>{
     var request = new PostEntryChildrenRequest();
@@ -30,6 +31,9 @@ export function createTestRepoApiClient():IRepositoryApiClient{
 }
 
 class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
+    async beforeFetchRequestAsync(url: string, request: RequestInit): Promise<BeforeFetchResult> {
+        return super.beforeFetchRequestAsync(url,request);
+    }
     async afterFetchResponseAsync(url: string, response: Response, request: RequestInit): Promise<boolean> {
         if (response.status === 429){
             console.warn('Rate Limiting Triggered, waiting 60 seconds to clear {http 429}');

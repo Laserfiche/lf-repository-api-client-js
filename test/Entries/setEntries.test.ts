@@ -18,7 +18,7 @@ describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
   _RepositoryApiClient = createTestRepoApiClient();
-  jest.setTimeout(200000);
+  
   afterEach(async () => {
     if (entry != null) {
       let body = new DeleteEntryWithAuditReason();

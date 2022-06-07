@@ -12,7 +12,7 @@ let searchToken = 'test';
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
-  jest.setTimeout(20000);
+  
   afterEach(async () => {
     if (searchToken != '' || searchToken != null) {
       await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({ repoId, searchToken });
@@ -20,7 +20,7 @@ describe('Search Integration Tests', () => {
     }
   });
 
-  jest.setTimeout(20000);
+  
   test('Get Search Context Hits', async () => {
     let request = new AdvancedSearchRequest();
     request.searchCommand = '({LF:Basic ~= "*", option="DFANLT"})';
@@ -47,7 +47,7 @@ describe('Search Integration Tests', () => {
     expect(contextHits).not.toBeNull();
   });
 
-  jest.setTimeout(30000);
+  
   test('Get Search Results for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
@@ -75,7 +75,7 @@ describe('Search Integration Tests', () => {
     expect(pages).toBeGreaterThan(0);
   });
 
-  jest.setTimeout(30000);
+  
   test('Get Search Context Hits for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
@@ -117,7 +117,7 @@ describe('Search Integration Tests', () => {
     expect(pages).toBeGreaterThan(0);
   });
 
-  jest.setTimeout(20000);
+  
   test('Get Search Results', async () => {
     let request = new AdvancedSearchRequest();
     request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
@@ -130,7 +130,7 @@ describe('Search Integration Tests', () => {
     var searchResults = searchResultsResponse.value;
     expect(searchResults).not.toBeNull();
   });
-  jest.setTimeout(20000);
+  
   test('Get Search Status', async () => {
     let request = new AdvancedSearchRequest();
     request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
