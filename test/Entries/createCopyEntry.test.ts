@@ -26,6 +26,7 @@ describe('Create Copy Entry Tests', () => {
         await new Promise((r) => setTimeout(r, 5000));
       }
     }
+    createdEntries = [];
   });
 
   test('Create Copy Entry Create Folder', async () => {

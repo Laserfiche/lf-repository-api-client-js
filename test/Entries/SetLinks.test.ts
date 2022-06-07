@@ -18,6 +18,7 @@ describe('Set Entries Integration Tests', () => {
         await new Promise((r) => setTimeout(r, 5000));
       }
     }
+    createdEntries = [];
   });
   test('Set Links', async () => {
     let sourceEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetLinks Source');

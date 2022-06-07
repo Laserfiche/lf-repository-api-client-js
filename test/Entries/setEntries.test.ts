@@ -17,7 +17,6 @@ import { jest } from '@jest/globals';
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
-  let createdEntries: Array<Entry> = new Array();
   _RepositoryApiClient = createTestRepoApiClient();
   jest.setTimeout(200000);
   afterEach(async () => {

@@ -23,7 +23,7 @@ describe('Search Integration Tests', () => {
     expect(closeSearchResponse.value).toBe(true);
   });
 
-  jest.setTimeout(30000);
+  jest.setTimeout(90000);
   test('Get Search Results simple Paging', async () => {
     let maxPageSize = 1;
     let searchRequest = new AdvancedSearchRequest();

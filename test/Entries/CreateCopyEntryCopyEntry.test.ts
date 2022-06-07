@@ -28,6 +28,7 @@ describe('Create Copy Entry Test', () => {
         await new Promise((r) => setTimeout(r, 5000));
       }
     }
+    createdEntries = [];
   });
 
   jest.setTimeout(20000);

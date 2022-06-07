@@ -25,6 +25,7 @@ describe('Create Copy Entry Test', () => {
         await new Promise((r) => setTimeout(r, 5000));
       }
     }
+    createdEntries = [];
   });
   test('Create Copy Entry Copy Shortcut', async () => {
     //Create new entry
