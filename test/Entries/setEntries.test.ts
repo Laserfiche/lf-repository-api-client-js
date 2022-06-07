@@ -11,14 +11,14 @@ import {
   WFieldType,
   WTagInfo,
 } from '../../src/index.js';
-import { allFalse, CreateEntry } from '../BaseTest';
+import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest';
 import { jest } from '@jest/globals';
 
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+  _RepositoryApiClient = createTestRepoApiClient();
   jest.setTimeout(200000);
   afterEach(async () => {
     if (entry != null) {

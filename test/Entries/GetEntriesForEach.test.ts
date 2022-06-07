@@ -2,10 +2,11 @@ import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.j
 import {ODataValueContextOfIListOfFieldValue, ODataValueContextOfIListOfEntry, 
     ODataValueContextOfIListOfWEntryLinkInfo,ODataValueContextOfIListOfWTagInfo} from '../../src/index';
 import { IRepositoryApiClient, RepositoryApiClient } from '../../src/ClientBase.js';
+import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe("Get Entry Tests", () => {
     let _RepositoryApiClient: IRepositoryApiClient;
-    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+    _RepositoryApiClient = createTestRepoApiClient();
     let entryId: number = 1;
 
     test("Get Entry Listing for each paging", async()=>{

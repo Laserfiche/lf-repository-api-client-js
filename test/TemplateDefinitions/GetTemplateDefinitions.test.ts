@@ -5,10 +5,11 @@ import {
   ODataValueContextOfIListOfWTemplateInfo,
   WTemplateInfo,
 } from '../../src/index.js';
+import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Template Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+  _RepositoryApiClient = createTestRepoApiClient();
   test('Get Template Definition', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });

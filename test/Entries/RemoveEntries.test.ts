@@ -1,12 +1,12 @@
 import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { DeleteEntryWithAuditReason, Entry, PutTemplateRequest } from '../../src/index.js';
-import { allFalse, CreateEntry } from '../BaseTest.js';
+import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Remove Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entry = new Entry();
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+  _RepositoryApiClient = createTestRepoApiClient();
   afterEach(async () => {
     if (entry != null) {
       let body = new DeleteEntryWithAuditReason();

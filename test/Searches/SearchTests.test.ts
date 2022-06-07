@@ -6,11 +6,12 @@ import {
   ODataValueContextOfIListOfEntry,
 } from '../../src/index.js';
 import { jest } from '@jest/globals';
+import { createTestRepoApiClient } from '../BaseTest.js';
 
 let searchToken = 'test';
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+  _RepositoryApiClient = createTestRepoApiClient();
   jest.setTimeout(20000);
   afterEach(async () => {
     if (searchToken != '' || searchToken != null) {

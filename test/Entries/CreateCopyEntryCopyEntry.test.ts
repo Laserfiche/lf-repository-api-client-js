@@ -11,12 +11,12 @@ import {
   PostEntryChildrenRequest,
 } from '../../src/index.js';
 import { jest } from '@jest/globals';
-import { CreateEntry } from '../BaseTest.js';
+import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Create Copy Entry Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+  _RepositoryApiClient = createTestRepoApiClient();
 
   jest.setTimeout(200000);
   afterEach(async () => {
