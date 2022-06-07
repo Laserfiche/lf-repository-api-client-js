@@ -4,7 +4,7 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 import { jest } from '@jest/globals';
 
 
-describe.skip('Get Entries Integration Tests', () => {
+describe('Get Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
   _RepositoryApiClient = createTestRepoApiClient();
@@ -12,7 +12,7 @@ describe.skip('Get Entries Integration Tests', () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId, entryId });
     expect(entryFieldResponse?.value).not.toBeNull;
   });
-  test('Get Entry Listing', async () => {
+  test.skip('Get Entry Listing', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryListing({
       repoId,
       entryId,
