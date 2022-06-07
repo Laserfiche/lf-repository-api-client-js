@@ -1,10 +1,10 @@
-import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { oauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { AdvancedSearchRequest } from '../../src/index.js';
 
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, oauthAccessKey);
   test('Close Search Operations', async () => {
     //create search
     let request = new AdvancedSearchRequest();
