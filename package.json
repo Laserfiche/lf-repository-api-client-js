@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js",
-    "test:all": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js && node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test/Repositories/ --config jest.jsdom.config.js",
+    "test:all": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js && node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.jsdom.config.js",
     "build": "nswag run && npm run clean && tsc -b",
     "build:watch": "nswag run && tsc -b --watch",
     "clean": "tsc -b --clean",
