@@ -36,8 +36,8 @@ class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
     }
     async afterFetchResponseAsync(url: string, response: Response, request: RequestInit): Promise<boolean> {
         if (response.status === 429){
-            console.warn('Rate Limiting Triggered, waiting 60 seconds to clear {http 429}');
-          await new Promise((r) => setTimeout(r, 60000));
+            console.warn('Rate Limiting Triggered, waiting 75 seconds to clear {http 429}');
+          await new Promise((r) => setTimeout(r, 75000));
           return true;
         }
         else{
