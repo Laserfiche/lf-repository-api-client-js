@@ -1,7 +1,7 @@
 {
   "name": "@laserfiche/lf-repository-api-client",
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Laserfiche Repository API Client library for TypeScript.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,7 +33,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@laserfiche/lf-api-client-core": "^1.0.2--preview-2457956871",
+    "@laserfiche/lf-api-client-core": "^1.0.2",
     "@laserfiche/lf-js-utils": "^3.0.5"
   }
 }
