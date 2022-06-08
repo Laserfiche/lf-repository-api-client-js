@@ -1,5 +1,5 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   DeleteEntryWithAuditReason,
   Entry,
@@ -8,7 +8,6 @@ import {
   PostEntryChildrenRequest,
   Shortcut,
 } from '../../src/index.js';
-import { jest } from '@jest/globals';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Create Copy Entry Tests', () => {
@@ -16,7 +15,6 @@ describe('Create Copy Entry Tests', () => {
   let createdEntries: Array<Entry> = new Array();
   _RepositoryApiClient = createTestRepoApiClient();
 
-  
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {

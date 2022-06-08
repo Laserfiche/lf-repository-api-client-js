@@ -1,5 +1,5 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
 import { jest } from '@jest/globals';
 import { createTestRepoApiClient } from '../BaseTest.js';

@@ -1,5 +1,5 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import { AcceptedOperation, DeleteEntryWithAuditReason, Entry, OperationStatus } from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 import { jest } from '@jest/globals';
@@ -7,7 +7,7 @@ import { jest } from '@jest/globals';
 describe('Task Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
-  
+
   test('Cancel Operation', async () => {
     let deleteEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest CancelOperation');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
@@ -26,7 +26,7 @@ describe('Task Integration Tests', () => {
       expect(err.title.includes('Cannot cancel ended operation'));
     }
   });
-  
+
   test('Get Operation Status', async () => {
     let deleteEntry: Entry = await CreateEntry(
       _RepositoryApiClient,

@@ -1,9 +1,8 @@
-import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper';
+import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper.js';
 import * as generated from './index.js';
-import { ODataValueContextOfIListOfTemplateFieldInfo, ODataValueContextOfIListOfWTemplateInfo } from './index.js';
 export interface ITemplateDefinitionsEx extends generated.ITemplateDefinitionsClient {
   GetTemplateDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
     repoId: string;
     templateName?: string;
     prefer?: string;
@@ -16,7 +15,7 @@ export interface ITemplateDefinitionsEx extends generated.ITemplateDefinitionsCl
     maxPageSize?: number;
   }): Promise<void>;
   GetTemplateFieldDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
     repoId: string;
     templateId: number;
     prefer?: string;
@@ -29,7 +28,7 @@ export interface ITemplateDefinitionsEx extends generated.ITemplateDefinitionsCl
     maxPageSize?: number;
   }): Promise<void>;
   GetTemplateFieldDefinitionsByTemplateNameForEach(args: {
-    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
     repoId: string;
     templateName: string;
     prefer?: string;
@@ -57,7 +56,7 @@ export interface ITemplateDefinitionsEx extends generated.ITemplateDefinitionsCl
 
 export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
   async GetTemplateDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
     repoId: string;
     templateName?: string;
     prefer?: string;
@@ -69,7 +68,7 @@ export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, templateName,prefer,culture,select,orderby,top,skip,count,maxPageSize } = args;
+    let { callback, repoId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.getTemplateDefinitions({
       repoId,
       templateName,
@@ -83,8 +82,8 @@ export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWTemplateInfo>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfWTemplateInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTemplateDefinitions,
         nextLink,
@@ -95,7 +94,7 @@ export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
   }
 
   async GetTemplateFieldDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
     repoId: string;
     templateId: number;
     prefer?: string;
@@ -121,8 +120,8 @@ export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTemplateFieldDefinitions,
         nextLink,
@@ -133,7 +132,7 @@ export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
   }
 
   async GetTemplateFieldDefinitionsByTemplateNameForEach(args: {
-    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
     repoId: string;
     templateName: string;
     prefer?: string;
@@ -159,8 +158,8 @@ export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTemplateFieldDefinitionsByTemplateName,
         nextLink,
@@ -175,7 +174,7 @@ export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
   }): Promise<generated.ODataValueContextOfIListOfWTemplateInfo> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfWTemplateInfo>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTemplateDefinitions,
       nextLink,
@@ -188,7 +187,7 @@ export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
   }): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTemplateFieldDefinitions,
       nextLink,
@@ -201,7 +200,7 @@ export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
   }): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTemplateFieldDefinitionsByTemplateName,
       nextLink,

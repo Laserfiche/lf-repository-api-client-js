@@ -1,5 +1,5 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo } from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest';
 import { jest } from '@jest/globals';
@@ -8,7 +8,7 @@ describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
   _RepositoryApiClient = createTestRepoApiClient();
-  
+
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {

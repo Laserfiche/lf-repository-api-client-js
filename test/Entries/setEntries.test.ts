@@ -1,5 +1,5 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   DeleteEntryWithAuditReason,
   Entry,
@@ -18,7 +18,7 @@ describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
   _RepositoryApiClient = createTestRepoApiClient();
-  
+
   afterEach(async () => {
     if (entry != null) {
       let body = new DeleteEntryWithAuditReason();

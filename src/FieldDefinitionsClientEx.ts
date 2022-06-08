@@ -1,9 +1,8 @@
-import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper';
+import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper.js';
 import * as generated from './index.js';
-import { ODataValueContextOfIListOfWFieldInfo } from './index.js';
 export interface IFieldDefinitionsClientEx extends generated.IFieldDefinitionsClient {
   GetFieldDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -22,7 +21,7 @@ export interface IFieldDefinitionsClientEx extends generated.IFieldDefinitionsCl
 
 export class FieldDefinitionClient extends generated.FieldDefinitionsClient implements IFieldDefinitionsClientEx {
   async GetFieldDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -46,8 +45,8 @@ export class FieldDefinitionClient extends generated.FieldDefinitionsClient impl
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWFieldInfo>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfWFieldInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetFieldDefinitions,
         nextLink,
@@ -62,7 +61,7 @@ export class FieldDefinitionClient extends generated.FieldDefinitionsClient impl
   }): Promise<generated.ODataValueContextOfIListOfWFieldInfo> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfWFieldInfo>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetFieldDefinitions,
       nextLink,

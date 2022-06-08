@@ -6,12 +6,12 @@ import {
   DomainUtils,
   AccessKey,
 } from '@laserfiche/lf-api-client-core';
-import {IAttributeClientEx,AttributesClient} from './AttributeClientEx';
+import { IAttributeClientEx, AttributesClient } from './AttributeClientEx';
 import { EntriesClientEx, IEntriesClientEx } from './EntriesClientEx.js';
-import {IFieldDefinitionsClientEx,FieldDefinitionClient} from './FieldDefinitionsClientEx';
+import { IFieldDefinitionsClientEx, FieldDefinitionClient } from './FieldDefinitionsClientEx';
 import { ISearchEx, SearchClientEx } from './SearchesClientEx.js';
 import { ITagDefinitionsEx, TagDefinitionsEx } from './TagDefinitionsEx.js';
-import {ITemplateDefinitionsEx,TemplateDefinitionsEx} from './TemplateDefinitions.js'
+import { ITemplateDefinitionsEx, TemplateDefinitionsEx } from './TemplateDefinitions.js';
 class ClientBase {}
 export interface IRepositoryApiClient {
   attributesClient: IAttributeClientEx;

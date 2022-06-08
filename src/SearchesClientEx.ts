@@ -1,9 +1,8 @@
-import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper';
+import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper.js';
 import * as generated from './index.js';
-import { ODataValueContextOfIListOfContextHit, ODataValueContextOfIListOfEntry } from './index.js';
 export interface ISearchEx extends generated.ISearchesClient {
   GetSearchResultsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     groupByEntryType?: boolean;
@@ -20,7 +19,7 @@ export interface ISearchEx extends generated.ISearchesClient {
     maxPageSize?: number;
   }): Promise<void>;
   GetSearchContextHitsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfContextHit) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfContextHit) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     rowNumber: number;
@@ -44,7 +43,7 @@ export interface ISearchEx extends generated.ISearchesClient {
 
 export class SearchClientEx extends generated.SearchesClient implements ISearchEx {
   async GetSearchResultsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     groupByEntryType?: boolean;
@@ -94,8 +93,8 @@ export class SearchClientEx extends generated.SearchesClient implements ISearchE
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfEntry>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetSearchResults,
         nextLink,
@@ -105,7 +104,7 @@ export class SearchClientEx extends generated.SearchesClient implements ISearchE
     }
   }
   async GetSearchContextHitsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfContextHit) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfContextHit) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     rowNumber: number;
@@ -131,8 +130,8 @@ export class SearchClientEx extends generated.SearchesClient implements ISearchE
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfContextHit>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfContextHit>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetSearchContextHits,
         nextLink,
@@ -147,7 +146,7 @@ export class SearchClientEx extends generated.SearchesClient implements ISearchE
   }): Promise<generated.ODataValueContextOfIListOfEntry> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetSearchResults,
       nextLink,
@@ -160,7 +159,7 @@ export class SearchClientEx extends generated.SearchesClient implements ISearchE
   }): Promise<generated.ODataValueContextOfIListOfContextHit> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfContextHit>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetSearchContextHits,
       nextLink,

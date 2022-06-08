@@ -1,15 +1,9 @@
-import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper';
+import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper.js';
 import * as generated from './index.js';
-import {
-  ODataValueContextOfIListOfEntry,
-  ODataValueContextOfIListOfFieldValue,
-  ODataValueContextOfIListOfWEntryLinkInfo,
-  ODataValueContextOfIListOfWTagInfo,
-} from './index.js';
 
 export interface IEntriesClientEx extends generated.IEntriesClient {
   GetEntryListingForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
     entryId: number;
     groupByEntryType?: boolean;
@@ -26,7 +20,7 @@ export interface IEntriesClientEx extends generated.IEntriesClient {
   }): Promise<void>;
 
   GetFieldValuesForEach(args: {
-    callback: (response: ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -41,7 +35,7 @@ export interface IEntriesClientEx extends generated.IEntriesClient {
   }): Promise<void>;
 
   GetLinkValuesFromEntryForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -54,7 +48,7 @@ export interface IEntriesClientEx extends generated.IEntriesClient {
   }): Promise<void>;
 
   GetTagsAssignedToEntryForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -85,7 +79,7 @@ export interface IEntriesClientEx extends generated.IEntriesClient {
 }
 export class EntriesClientEx extends generated.EntriesClient implements IEntriesClientEx {
   async GetEntryListingForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
     entryId: number;
     groupByEntryType?: boolean;
@@ -132,8 +126,8 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfEntry>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetEntryListing,
         nextLink,
@@ -144,7 +138,7 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
   }
 
   async GetFieldValuesForEach(args: {
-    callback: (response: ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -173,8 +167,8 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfFieldValue>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfFieldValue>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetFieldValues,
         nextLink,
@@ -185,7 +179,7 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
   }
 
   async GetLinkValuesFromEntryForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -209,8 +203,8 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWEntryLinkInfo>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetLinkValuesFromEntry,
         nextLink,
@@ -221,7 +215,7 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
   }
 
   async GetTagsAssignedToEntryForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -245,8 +239,8 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWTagInfo>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfWTagInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTagsAssignedToEntry,
         nextLink,
@@ -262,7 +256,7 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
   }): Promise<generated.ODataValueContextOfIListOfEntry> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetEntryListing,
       nextLink,
@@ -276,7 +270,7 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
   }): Promise<generated.ODataValueContextOfIListOfFieldValue> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfFieldValue>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetFieldValues,
       nextLink,
@@ -290,7 +284,7 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
   }): Promise<generated.ODataValueContextOfIListOfWEntryLinkInfo> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetLinkValuesFromEntry,
       nextLink,
@@ -304,7 +298,7 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
   }): Promise<generated.ODataValueContextOfIListOfWTagInfo> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTagsAssignedToEntry,
       nextLink,

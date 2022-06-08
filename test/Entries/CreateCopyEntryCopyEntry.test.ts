@@ -1,5 +1,5 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   CopyAsyncRequest,
   DeleteEntryWithAuditReason,
@@ -10,7 +10,6 @@ import {
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest,
 } from '../../src/index.js';
-import { jest } from '@jest/globals';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Create Copy Entry Test', () => {
@@ -18,7 +17,6 @@ describe('Create Copy Entry Test', () => {
   let createdEntries: Array<Entry> = new Array();
   _RepositoryApiClient = createTestRepoApiClient();
 
-  
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {
@@ -31,7 +29,6 @@ describe('Create Copy Entry Test', () => {
     createdEntries = [];
   });
 
-  
   test('Create Copy Entry Copy Entry', async () => {
     // Create a new folder that contains the created entry
     let testFolderName: string = 'CreateCopyEntry_CopyEntry_test_folder';

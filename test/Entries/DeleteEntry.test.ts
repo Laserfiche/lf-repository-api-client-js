@@ -1,5 +1,5 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 import { DeleteEntryWithAuditReason } from '../../src/index.js';
 

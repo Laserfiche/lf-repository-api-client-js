@@ -1,5 +1,5 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import { ODataValueContextOfIListOfWFieldInfo, WFieldFormat, WFieldInfo } from '../../src/index';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
@@ -34,20 +34,20 @@ describe('Field Definitions Integration Tests', () => {
     expect(response2).not.toBeNull();
     expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
-  
+
   test('Get Field Definitions for each paging', async () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
     const callback = async (response: ODataValueContextOfIListOfWFieldInfo) => {
-      if (!response.value){
+      if (!response.value) {
         throw new Error('response.value is undefined');
       }
       entries += response.value.length;
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.fieldDefinitionsClient.GetFieldDefinitionsForEach({callback,repoId,maxPageSize});
+    await _RepositoryApiClient.fieldDefinitionsClient.GetFieldDefinitionsForEach({ callback, repoId, maxPageSize });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });

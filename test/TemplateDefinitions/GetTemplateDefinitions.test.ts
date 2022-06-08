@@ -1,5 +1,5 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   ODataValueContextOfIListOfTemplateFieldInfo,
   ODataValueContextOfIListOfWTemplateInfo,
@@ -54,14 +54,18 @@ describe('Template Definitions Integration Tests', () => {
     let entries = 0;
     let pages = 0;
     const callback = async (response: ODataValueContextOfIListOfWTemplateInfo) => {
-      if (!response.value){
+      if (!response.value) {
         throw new Error('response.value is undefined');
       }
       entries += response.value.length;
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.templateDefinitionsClient.GetTemplateDefinitionsForEach({callback,repoId,maxPageSize});
+    await _RepositoryApiClient.templateDefinitionsClient.GetTemplateDefinitionsForEach({
+      callback,
+      repoId,
+      maxPageSize,
+    });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });

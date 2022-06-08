@@ -1,8 +1,7 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 import { jest } from '@jest/globals';
-
 
 describe('Get Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

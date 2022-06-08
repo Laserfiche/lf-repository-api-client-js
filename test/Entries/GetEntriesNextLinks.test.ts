@@ -1,4 +1,4 @@
-import { OAuthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase';
 import { createTestRepoApiClient } from '../BaseTest.js';
 

@@ -1,9 +1,8 @@
-import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper';
+import { CreateMaxPageSizePreferHeaderPayload, getNextLinkListing } from './ClientHelper.js';
 import * as generated from './index.js';
-import { ODataValueContextOfIListOfWTagInfo } from './index.js';
 export interface ITagDefinitionsEx extends generated.ITagDefinitionsClient {
   GetTagDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -22,7 +21,7 @@ export interface ITagDefinitionsEx extends generated.ITagDefinitionsClient {
 
 export class TagDefinitionsEx extends generated.TagDefinitionsClient {
   async GetTagDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    callback: (response: generated.ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -46,8 +45,8 @@ export class TagDefinitionsEx extends generated.TagDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink != null) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWTagInfo>(
-        // @ts-ignore:
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfWTagInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTagDefinitions,
         nextLink,
@@ -62,7 +61,7 @@ export class TagDefinitionsEx extends generated.TagDefinitionsClient {
   }): Promise<generated.ODataValueContextOfIListOfWTagInfo> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<generated.ODataValueContextOfIListOfWTagInfo>(
-      // @ts-ignore:
+      // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTagDefinitions,
       nextLink,
