@@ -1,10 +1,11 @@
-import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import { SimpleSearchRequest } from '../../src/index.js';
+import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Simple Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
+  _RepositoryApiClient = createTestRepoApiClient();
 
   test('Create Simple Search', async () => {
     let request: SimpleSearchRequest = new SimpleSearchRequest();
