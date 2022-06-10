@@ -1,5 +1,5 @@
-import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   DeleteEntryWithAuditReason,
   Entry,
@@ -7,13 +7,14 @@ import {
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest,
 } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { jest } from '@jest/globals';
 
 describe('Create Copy Entry Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
 
+  jest.setTimeout(200000);
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {
@@ -23,7 +24,6 @@ describe('Create Copy Entry Test', () => {
         await new Promise((r) => setTimeout(r, 5000));
       }
     }
-    createdEntries = [];
   });
   test('Create Copy Entry Copy Shortcut', async () => {
     //Create new entry

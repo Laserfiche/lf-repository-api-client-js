@@ -1,58 +1,15 @@
-import { repoId } from '../testHelper.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { ODataValueContextOfListOfAttribute } from '../../src/index.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Attribute Key Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
+
   test('Get the attribute keys', async () => {
     let result: ODataValueContextOfListOfAttribute =
-      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId, everyone: true });
+      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId });
     expect(result).not.toBeNull();
-  });
-
-  test('Get the attribute keys simple paging', async () => {
-    let maxPageSize = 1;
-    let prefer = `maxpagesize=${maxPageSize}`;
-    let result: ODataValueContextOfListOfAttribute =
-      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId, everyone: true, prefer });
-    if (!result.value) {
-      throw new Error('result.value is undefined');
-    }
-    expect(result).not.toBeNull();
-    expect(result).not.toBeNull();
-    let nextLink = result.odataNextLink ?? '';
-    expect(nextLink).not.toBeNull();
-    expect(result.value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairsNextLink({
-      nextLink,
-      maxPageSize,
-    });
-    if (!response2.value) {
-      throw new Error('result.value is undefined');
-    }
-    expect(response2).not.toBeNull();
-    expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
-  });
-
-  test('Get Attribute for each paging', async () => {
-    let maxPageSize = 10;
-    let entries = 0;
-    let pages = 0;
-    const callback = async (response: ODataValueContextOfListOfAttribute) => {
-      entries += response.toJSON().value.length;
-      pages += 1;
-      return true;
-    };
-    await _RepositoryApiClient.attributesClient.GetTrusteeAttributeKeyValuePairsForEach({
-      callback,
-      repoId,
-      everyone: true,
-      maxPageSize,
-    });
-    expect(entries).toBeGreaterThan(0);
-    expect(pages).toBeGreaterThan(0);
   });
 
   test('Get the attribute value by Key', async () => {

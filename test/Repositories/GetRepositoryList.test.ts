@@ -1,12 +1,10 @@
-import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { RepositoryInfo } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Repo List Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-  //create from request handler
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   test('Get Repo Lists', async () => {
     let RepoListResponse: RepositoryInfo[] = await _RepositoryApiClient.repositoriesClient.getRepositoryList({});
     let foundRepo = false;

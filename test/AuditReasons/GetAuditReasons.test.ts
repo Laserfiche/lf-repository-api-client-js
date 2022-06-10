@@ -1,11 +1,10 @@
-import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { AuditReasons } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { AuditReasons } from '../../src/index';
 
 describe('Audit Reasons Integration Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
 
   test('Get the Audit Reasons', async () => {
     let result: AuditReasons = await _RepositoryApiClient.auditReasonsClient.getAuditReasons({ repoId });

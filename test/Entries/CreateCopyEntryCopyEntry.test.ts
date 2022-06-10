@@ -1,5 +1,5 @@
-import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   CopyAsyncRequest,
   DeleteEntryWithAuditReason,
@@ -10,13 +10,15 @@ import {
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest,
 } from '../../src/index.js';
-import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
+import { jest } from '@jest/globals';
+import { CreateEntry } from '../BaseTest.js';
 
 describe('Create Copy Entry Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
 
+  jest.setTimeout(200000);
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {
@@ -26,9 +28,9 @@ describe('Create Copy Entry Test', () => {
         await new Promise((r) => setTimeout(r, 5000));
       }
     }
-    createdEntries = [];
   });
 
+  jest.setTimeout(20000);
   test('Create Copy Entry Copy Entry', async () => {
     // Create a new folder that contains the created entry
     let testFolderName: string = 'CreateCopyEntry_CopyEntry_test_folder';

@@ -1,17 +1,16 @@
-import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
-import { jest } from '@jest/globals';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 
 describe('Get Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
-  _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   test('Get Entry Fields', async () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId, entryId });
     expect(entryFieldResponse?.value).not.toBeNull;
   });
-  test.skip('Get Entry Listing', async () => {
+
+  test('Get Entry Listing', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryListing({
       repoId,
       entryId,

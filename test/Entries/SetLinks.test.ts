@@ -1,14 +1,14 @@
-import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo } from '../../src/index.js';
-import { CreateEntry, createTestRepoApiClient } from '../BaseTest';
+import { CreateEntry } from '../BaseTest';
 import { jest } from '@jest/globals';
 
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = createTestRepoApiClient();
-
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
+  jest.setTimeout(200000);
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
       if (createdEntries[i] != null) {
@@ -18,7 +18,6 @@ describe('Set Entries Integration Tests', () => {
         await new Promise((r) => setTimeout(r, 5000));
       }
     }
-    createdEntries = [];
   });
   test('Set Links', async () => {
     let sourceEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetLinks Source');

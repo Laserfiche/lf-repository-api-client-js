@@ -1,54 +1,14 @@
-import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
+import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
+import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { ODataValueContextOfIListOfWTagInfo, WTagInfo } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Tag Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
   test('Get Tag Definitions', async () => {
     let TagDefinitionsResponse: ODataValueContextOfIListOfWTagInfo =
       await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId });
     expect(TagDefinitionsResponse.value).not.toBeNull;
-  });
-
-  test('Get Tag Definitions for each paging', async () => {
-    let maxPageSize = 10;
-    let entries = 0;
-    let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfWTagInfo) => {
-      if (!response.value) {
-        throw new Error('response.value is undefined');
-      }
-      entries += response.value.length;
-      pages += 1;
-      return true;
-    };
-    await _RepositoryApiClient.tagDefinitionsClient.GetTagDefinitionsForEach({ callback, repoId, maxPageSize });
-    expect(entries).toBeGreaterThan(0);
-    expect(pages).toBeGreaterThan(0);
-  });
-
-  test('Get Tag Definitions Simple Paging', async () => {
-    let maxPageSize = 1;
-    let prefer = `maxpagesize=${maxPageSize}`;
-    let response = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId, prefer });
-    if (!response.value) {
-      throw new Error('response.value is undefined');
-    }
-    expect(response).not.toBeNull();
-    let nextLink = response.odataNextLink ?? '';
-    expect(nextLink).not.toBeNull();
-    expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitionsNextLink({
-      nextLink,
-      maxPageSize,
-    });
-    if (!response2.value) {
-      throw new Error('response.value is undefined');
-    }
-    expect(response2).not.toBeNull();
-    expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
   test('Get Tag Definitions by Id', async () => {
     let allTagDefinitionsResponse: ODataValueContextOfIListOfWTagInfo =

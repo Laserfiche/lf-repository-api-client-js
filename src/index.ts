@@ -8,6 +8,23 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+import { UrlUtils } from '@laserfiche/lf-js-utils';
+import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils, AccessKey } from '@laserfiche/lf-api-client-core';
+export class ClientBase {}
+export interface IRepositoryApiClient {
+  attributesClient: IAttributesClient;
+  auditReasonsClient: IAuditReasonsClient;
+  entriesClient: IEntriesClient;
+  fieldDefinitionsClient: IFieldDefinitionsClient;
+  repositoriesClient: IRepositoriesClient;
+  searchesClient: ISearchesClient;
+  serverSessionClient: IServerSessionClient;
+  simpleSearchesClient: ISimpleSearchesClient;
+  tagDefinitionsClient: ITagDefinitionsClient;
+  tasksClient: ITasksClient;
+  templateDefinitionsClient: ITemplateDefinitionsClient;
+}
+
 export interface IEntriesClient {
 
     /**
@@ -254,12 +271,13 @@ export interface IEntriesClient {
     writeTemplateValueToEntry(args: { repoId: string, entryId: number, request?: PutTemplateRequest | undefined, culture?: string | null | undefined }): Promise<Entry>;
 }
 
-export class EntriesClient implements IEntriesClient {
+export class EntriesClient extends ClientBase implements IEntriesClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -2364,12 +2382,13 @@ export interface IAttributesClient {
     getTrusteeAttributeValueByKey(args: { repoId: string, attributeKey: string, everyone?: boolean | undefined }): Promise<Attribute>;
 }
 
-export class AttributesClient implements IAttributesClient {
+export class AttributesClient extends ClientBase implements IAttributesClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -2590,12 +2609,13 @@ export interface IFieldDefinitionsClient {
     getFieldDefinitions(args: { repoId: string, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWFieldInfo>;
 }
 
-export class FieldDefinitionsClient implements IFieldDefinitionsClient {
+export class FieldDefinitionsClient extends ClientBase implements IFieldDefinitionsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -2797,12 +2817,13 @@ export interface IRepositoriesClient {
     getRepositoryList(args: {  }): Promise<RepositoryInfo[]>;
 }
 
-export class RepositoriesClient implements IRepositoriesClient {
+export class RepositoriesClient extends ClientBase implements IRepositoriesClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -2903,12 +2924,13 @@ export interface IServerSessionClient {
     createServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
 }
 
-export class ServerSessionClient implements IServerSessionClient {
+export class ServerSessionClient extends ClientBase implements IServerSessionClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -3125,12 +3147,13 @@ export interface ITasksClient {
     cancelOperation(args: { repoId: string, operationToken: string }): Promise<void>;
 }
 
-export class TasksClient implements ITasksClient {
+export class TasksClient extends ClientBase implements ITasksClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -3320,12 +3343,13 @@ export interface IAuditReasonsClient {
     getAuditReasons(args: { repoId: string }): Promise<AuditReasons>;
 }
 
-export class AuditReasonsClient implements IAuditReasonsClient {
+export class AuditReasonsClient extends ClientBase implements IAuditReasonsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -3465,12 +3489,13 @@ export interface ISearchesClient {
     getSearchContextHits(args: { repoId: string, searchToken: string, rowNumber: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfContextHit>;
 }
 
-export class SearchesClient implements ISearchesClient {
+export class SearchesClient extends ClientBase implements ISearchesClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -3986,12 +4011,13 @@ export interface ISimpleSearchesClient {
     createSimpleSearchOperation(args: { repoId: string, select?: string | undefined, orderby?: string | undefined, count?: boolean | undefined, fields?: string[] | null | undefined, formatFields?: boolean | undefined, request?: SimpleSearchRequest | undefined, culture?: string | null | undefined }): Promise<ODataValueOfIListOfEntry>;
 }
 
-export class SimpleSearchesClient implements ISimpleSearchesClient {
+export class SimpleSearchesClient extends ClientBase implements ISimpleSearchesClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -4141,12 +4167,13 @@ export interface ITagDefinitionsClient {
     getTagDefinitionById(args: { repoId: string, tagId: number, culture?: string | null | undefined, select?: string | null | undefined }): Promise<WTagInfo>;
 }
 
-export class TagDefinitionsClient implements ITagDefinitionsClient {
+export class TagDefinitionsClient extends ClientBase implements ITagDefinitionsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -4401,12 +4428,13 @@ export interface ITemplateDefinitionsClient {
     getTemplateFieldDefinitionsByTemplateName(args: { repoId: string, templateName: string | null, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
 }
 
-export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
+export class TemplateDefinitionsClient extends ClientBase implements ITemplateDefinitionsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
@@ -8777,4 +8805,126 @@ function throwException(message: string, status: number, response: string, heade
         throw result;
     else
         throw new ApiException(message, status, response, headers, null);
+}
+
+// @ts-ignore
+export class RepositoryApiClient {
+  private baseUrl: string;
+
+  public attributesClient: IAttributesClient;
+  public auditReasonsClient: IAuditReasonsClient;
+  public entriesClient: IEntriesClient;
+  public fieldDefinitionsClient: IFieldDefinitionsClient;
+  public repositoriesClient: IRepositoriesClient;
+  public searchesClient: ISearchesClient;
+  public serverSessionClient: IServerSessionClient;
+  public simpleSearchesClient: ISimpleSearchesClient;
+  public tagDefinitionsClient: ITagDefinitionsClient;
+  public tasksClient: ITasksClient;
+  public templateDefinitionsClient: ITemplateDefinitionsClient;
+
+  private repoClientHandler: RepositoryApiClientHttpHandler;
+
+  public get defaultRequestHeaders(): Record<string, string> {
+    return this.repoClientHandler.defaultRequestHeaders;
+  }
+
+  public set defaultRequestHeaders(headers: Record<string, string>) {
+    this.repoClientHandler.defaultRequestHeaders = headers;
+  }
+
+  private constructor(httpRequestHandler: HttpRequestHandler, baseUrlDebug?: string) {
+    this.repoClientHandler = new RepositoryApiClientHttpHandler(httpRequestHandler);
+    let fetch = this.repoClientHandler.httpHandler;
+    fetch = fetch.bind(this.repoClientHandler);
+    let http = {
+      fetch,
+    };
+    this.baseUrl = baseUrlDebug ?? '';
+    this.attributesClient = new AttributesClient(this.baseUrl, http);
+    this.auditReasonsClient = new AuditReasonsClient(this.baseUrl, http);
+    this.entriesClient = new EntriesClient(this.baseUrl, http);
+    this.fieldDefinitionsClient = new FieldDefinitionsClient(this.baseUrl, http);
+    this.repositoriesClient = new RepositoriesClient(this.baseUrl, http);
+    this.searchesClient = new SearchesClient(this.baseUrl, http);
+    this.serverSessionClient = new ServerSessionClient(this.baseUrl, http);
+    this.simpleSearchesClient = new SimpleSearchesClient(this.baseUrl, http);
+    this.tagDefinitionsClient = new TagDefinitionsClient(this.baseUrl, http);
+    this.tasksClient = new TasksClient(this.baseUrl, http);
+    this.templateDefinitionsClient = new TemplateDefinitionsClient(this.baseUrl, http);
+  }
+
+  public static createFromHttpRequestHandler(
+    httpRequestHandler: HttpRequestHandler,
+    baseUrlDebug?: string
+  ): RepositoryApiClient {
+    if (!httpRequestHandler) throw new Error('Argument cannot be null: httpRequestHandler');
+    let repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
+    return repoClient;
+  }
+
+  public static createFromAccessKey(servicePrincipalKey: string, accessKey: AccessKey, baseUrlDebug?: string): RepositoryApiClient {
+    let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
+    return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
+  }
+}
+
+/** @internal */
+export class RepositoryApiClientHttpHandler {
+  private _httpRequestHandler: HttpRequestHandler;
+  public defaultRequestHeaders: Record<string, string>;
+
+  constructor(httpRequestHandler: HttpRequestHandler) {
+    this._httpRequestHandler = httpRequestHandler;
+    this.defaultRequestHeaders = {};
+  }
+
+  public async httpHandler(url: string, init: RequestInit): Promise<Response> {
+    const maxRetries = 1;
+    let retryCount = 0;
+    let shouldRetry = true;
+
+    if (this.defaultRequestHeaders) {
+      init.headers = Object.assign({}, this.defaultRequestHeaders, init.headers);
+    }
+
+    let response: Response | undefined;
+    while (retryCount <= maxRetries && shouldRetry) {
+      const beforeSendResult = await this._httpRequestHandler.beforeFetchRequestAsync(url, init);
+      let absoluteUrl: string;
+      if (url.startsWith('http')) {
+        absoluteUrl = url;
+      } else {
+        const apiBasedAddress = DomainUtils.getRepositoryEndpoint(beforeSendResult.regionalDomain);
+        absoluteUrl = UrlUtils.combineURLs(apiBasedAddress, url);
+      }
+
+      try {
+        response = await fetch(absoluteUrl, init);
+        shouldRetry =
+          (await this._httpRequestHandler.afterFetchResponseAsync(absoluteUrl, response, init)) ||
+          isRetryable(response, init);
+        if (!shouldRetry) {
+          return response;
+        }
+      } catch (err) {
+        if (retryCount >= maxRetries) {
+          throw err;
+        }
+        shouldRetry = true;
+        console.warn(`Retrying fetch due to exception: ${err}`);
+      } finally {
+        retryCount++;
+      }
+    }
+    if (!response) {
+      throw new Error('Undefined response, there is a bug!');
+    }
+    return response;
+  }
+}
+
+function isRetryable(response: Response, init: RequestInit): boolean {
+  const isIdempotent = init.method != 'POST';
+  return (response.status >= 500 || response.status == 408) && isIdempotent;
 }
