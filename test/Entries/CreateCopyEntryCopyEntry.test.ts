@@ -1,5 +1,4 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   CopyAsyncRequest,
   DeleteEntryWithAuditReason,
@@ -9,10 +8,11 @@ import {
   OperationStatus,
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest,
+  IRepositoryApiClient
 } from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
-describe('Create Copy Entry Test', () => {
+describe.skip('Create Copy Entry Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
   _RepositoryApiClient = createTestRepoApiClient();

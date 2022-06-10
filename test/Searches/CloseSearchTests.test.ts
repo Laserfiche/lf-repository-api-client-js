@@ -1,10 +1,9 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
-import { jest } from '@jest/globals';
+import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry,IRepositoryApiClient } from '../../src/index.js';
+
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe('Search Integration Tests', () => {
+describe.skip('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
   test('Close Search Operations', async () => {

@@ -1,9 +1,8 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { GetDynamicFieldLogicValueRequest, ODataValueContextOfIListOfWTemplateInfo } from '../../src/index.js';
+import { GetDynamicFieldLogicValueRequest, ODataValueContextOfIListOfWTemplateInfo,IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe('Dynamic Fields Integration Tests', () => {
+describe.skip('Dynamic Fields Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
   _RepositoryApiClient = createTestRepoApiClient();

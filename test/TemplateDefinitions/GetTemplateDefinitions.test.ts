@@ -1,13 +1,13 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   ODataValueContextOfIListOfTemplateFieldInfo,
   ODataValueContextOfIListOfWTemplateInfo,
   WTemplateInfo,
+  IRepositoryApiClient
 } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe('Template Definitions Integration Tests', () => {
+describe.skip('Template Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
   test('Get Template Definition', async () => {

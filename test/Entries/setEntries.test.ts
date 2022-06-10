@@ -1,5 +1,4 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   DeleteEntryWithAuditReason,
   Entry,
@@ -10,11 +9,12 @@ import {
   WFieldInfo,
   WFieldType,
   WTagInfo,
+  IRepositoryApiClient
 } from '../../src/index.js';
-import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest';
-import { jest } from '@jest/globals';
+import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
-describe('Set Entries Integration Tests', () => {
+
+describe.skip('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
   _RepositoryApiClient = createTestRepoApiClient();

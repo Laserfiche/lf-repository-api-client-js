@@ -1,9 +1,8 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { AuditReasons } from '../../src/index.js';
+import { AuditReasons,  IRepositoryApiClient} from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe('Audit Reasons Integration Test', () => {
+describe.skip('Audit Reasons Integration Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
 

@@ -1,8 +1,8 @@
 import { repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase';
+import { IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe('Get Entry Next Links Tests', () => {
+describe.skip('Get Entry Next Links Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
   _RepositoryApiClient = createTestRepoApiClient();

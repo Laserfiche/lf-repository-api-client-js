@@ -1,10 +1,14 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { AcceptedOperation, DeleteEntryWithAuditReason, Entry, OperationStatus } from '../../src/index.js';
+import {
+  AcceptedOperation,
+  DeleteEntryWithAuditReason,
+  Entry,
+  OperationStatus,
+  IRepositoryApiClient,
+} from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
-import { jest } from '@jest/globals';
 
-describe('Task Integration Tests', () => {
+describe.skip('Task Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
 

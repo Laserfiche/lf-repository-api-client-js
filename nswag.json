@@ -14,6 +14,7 @@
       "generateClientInterfaces": true,
       "className": "{controller}Client",
       "configurationClass": null,
+      "extensionCode": "src/ClientBase.ts",
       "output": "src/index.ts",
       "useTransformOptionsMethod": false,
       "useTransformResultMethod": false,

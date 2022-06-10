@@ -1,9 +1,9 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
+import { IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
-import { jest } from '@jest/globals';
 
-describe('Get Entries Integration Tests', () => {
+
+describe.skip('Get Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
   _RepositoryApiClient = createTestRepoApiClient();
