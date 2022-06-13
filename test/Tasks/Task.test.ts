@@ -1,3 +1,4 @@
+import "isomorphic-fetch";
 import { oauthAccessKey, testServicePrincipalKey, repoId } from '../testHelper.js';
 import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
 import { AcceptedOperation, DeleteEntryWithAuditReason, Entry, OperationStatus } from '../../src/index.js';
