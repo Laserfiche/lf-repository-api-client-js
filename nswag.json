@@ -14,6 +14,8 @@
       "generateClientInterfaces": true,
       "className": "{controller}Client",
       "configurationClass": null,
+      "extensionCode": "src/ClientBase.ts",
+      "extendedClasses": ["AttributesClient","EntriesClient","FieldDefinitionsClient","SearchesClient","TagDefinitionsClient", "TemplateDefinitionsClient"],
       "output": "src/index.ts",
       "useTransformOptionsMethod": false,
       "useTransformResultMethod": false,

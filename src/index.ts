@@ -8,6 +8,14 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+import { UrlUtils } from '@laserfiche/lf-js-utils';
+import {
+  OAuthClientCredentialsHandler,
+  HttpRequestHandler,
+  DomainUtils,
+  AccessKey,
+} from '@laserfiche/lf-api-client-core';
+
 export interface IEntriesClient {
 
     /**
@@ -263,6 +271,235 @@ export class EntriesClient implements IEntriesClient {
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
+
+    
+  async GetEntryListingForEach(args: {
+    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    repoId: string;
+    entryId: number;
+    groupByEntryType?: boolean;
+    fields?: string[];
+    formatFields?: boolean;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let {
+      callback,
+      repoId,
+      entryId,
+      groupByEntryType,
+      fields,
+      formatFields,
+      prefer,
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+      maxPageSize,
+    } = args;
+    var response = await this.getEntryListing({
+      repoId,
+      entryId,
+      groupByEntryType,
+      fields,
+      formatFields,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfEntry>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetEntryListing,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+
+  async GetFieldValuesForEach(args: {
+    callback: (response: ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
+    repoId: string;
+    entryId: number;
+    prefer?: string;
+    formatValue?: boolean;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, entryId, prefer, formatValue, culture, select, orderby, top, skip, count, maxPageSize } =
+      args;
+    var response = await this.getFieldValues({
+      repoId,
+      entryId,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      formatValue,
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfFieldValue>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetFieldValues,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+
+  async GetLinkValuesFromEntryForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
+    repoId: string;
+    entryId: number;
+    prefer?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getLinkValuesFromEntry({
+      repoId,
+      entryId,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfWEntryLinkInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetLinkValuesFromEntry,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+
+  async GetTagsAssignedToEntryForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    repoId: string;
+    entryId: number;
+    prefer?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getTagsAssignedToEntry({
+      repoId,
+      entryId,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfWTagInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetTagsAssignedToEntry,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+
+  async getEntryListingNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfEntry> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfEntry>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetEntryListing,
+      nextLink,
+      maxPageSize
+    );
+  }
+
+  async getFieldValuesNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfFieldValue> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfFieldValue>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetFieldValues,
+      nextLink,
+      maxPageSize
+    );
+  }
+
+  async getLinkValuesFromEntryNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfWEntryLinkInfo> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfWEntryLinkInfo>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetLinkValuesFromEntry,
+      nextLink,
+      maxPageSize
+    );
+  }
+
+  async getTagsAssignedToEntryNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfWTagInfo> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfWEntryLinkInfo>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetTagsAssignedToEntry,
+      nextLink,
+      maxPageSize
+    );
+  }
 
     /**
      * Creates a new document in the specified folder. Optionally sets metadata and electronic document component. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. With this route, partial success is possible. The response returns multiple operation (entryCreate operation, setEdoc operation, setLinks operation, etc..) objects, which contain information about any errors that may have occurred during the creation. As long as the entryCreate operation succeeds, the entry will be created, even if all other operations fail.
@@ -2374,6 +2611,55 @@ export class AttributesClient implements IAttributesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
+    
+  async GetTrusteeAttributeKeyValuePairsForEach(args: {
+    callback: (response: ODataValueContextOfListOfAttribute) => Promise<boolean>;
+    repoId: string;
+    everyone?: boolean;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, everyone, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getTrusteeAttributeKeyValuePairs({
+      repoId,
+      everyone,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfListOfAttribute>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetTrusteeAttributeKeyValuePairs,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+  async getTrusteeAttributeKeyValuePairsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfListOfAttribute> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfListOfAttribute>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetTrusteeAttributeKeyValuePairs,
+      nextLink,
+      maxPageSize
+    );
+  }
+
     /**
      * Returns the attribute key value pairs associated with the authenticated user. Alternatively, return only the attribute key value pairs that are associated with the "Everyone" group. Attribute keys can be used with subsequent calls to get specific attribute values. Default page size: 100. Allowed OData query options: Select, Count, OrderBy, Skip, Top, SkipToken, Prefer. Optional query parameters: everyone (bool, default false). When true, this route does not return the attributes that are tied to the currently authenticated user, but rather the attributes assigned to the "Everyone" group. Note when this is true, the response does not include both the "Everyone" groups attribute and the currently authenticated user, but only the "Everyone" groups.
      * @param repoId The requested repository ID.
@@ -2599,6 +2885,56 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
+
+    
+  async GetFieldDefinitionsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
+    repoId: string;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getFieldDefinitions({
+      repoId,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfWFieldInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetFieldDefinitions,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+  async getFieldDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfWFieldInfo> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfWFieldInfo>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetFieldDefinitions,
+      nextLink,
+      maxPageSize
+    );
+  }
 
     /**
      * Returns a single field definition associated with the specified ID.  Useful when a route provides a minimal amount of details and more information about the specific field definition is needed. Allowed OData query options: Select
@@ -3475,6 +3811,132 @@ export class SearchesClient implements ISearchesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
+    
+  async GetSearchResultsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    repoId: string;
+    searchToken: string;
+    groupByEntryType?: boolean;
+    refresh?: boolean;
+    fields?: string[];
+    formatFields?: boolean;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let {
+      callback,
+      repoId,
+      searchToken,
+      groupByEntryType,
+      refresh,
+      fields,
+      formatFields,
+      prefer,
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+      maxPageSize,
+    } = args;
+    var response = await this.getSearchResults({
+      repoId,
+      searchToken,
+      groupByEntryType,
+      refresh,
+      fields,
+      formatFields,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfEntry>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetSearchResults,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+  async GetSearchContextHitsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfContextHit) => Promise<boolean>;
+    repoId: string;
+    searchToken: string;
+    rowNumber: number;
+    prefer?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, searchToken, rowNumber, prefer, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getSearchContextHits({
+      repoId,
+      searchToken,
+      rowNumber,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfContextHit>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetSearchContextHits,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+  async GetSearchResultsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfEntry> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfEntry>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetSearchResults,
+      nextLink,
+      maxPageSize
+    );
+  }
+  async GetSearchContextHitsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfContextHit> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfContextHit>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetSearchContextHits,
+      nextLink,
+      maxPageSize
+    );
+  }
+
     /**
      * Runs a search operation on the repository. Optional body parameters: FuzzyType: (default none), which can be used to determine what is considered a match by number of letters or percentage. FuzzyFactor: integer value that determines the degree to which a search will be considered a match (integer value for NumberOfLetters, or int value representing a percentage). The status for search operations must be checked via the Search specific status checking route.
      * @param repoId The requested repository ID.
@@ -4151,6 +4613,56 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
+    
+  async GetTagDefinitionsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    repoId: string;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getTagDefinitions({
+      repoId,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfWTagInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetTagDefinitions,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+  async getTagDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfWTagInfo> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfWTagInfo>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetTagDefinitions,
+      nextLink,
+      maxPageSize
+    );
+  }
+
     /**
      * Returns all tag definitions in the repository. Provide a repository ID and get a paged listing of tag definitions available in the repository. Useful when trying to display all tag definitions available, not only tags assigned to a specific entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
@@ -4410,6 +4922,160 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
+
+    
+  async GetTemplateDefinitionsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
+    repoId: string;
+    templateName?: string;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getTemplateDefinitions({
+      repoId,
+      templateName,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfWTemplateInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetTemplateDefinitions,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+
+  async GetTemplateFieldDefinitionsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    repoId: string;
+    templateId: number;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, templateId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getTemplateFieldDefinitions({
+      repoId,
+      templateId,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetTemplateFieldDefinitions,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+
+  async GetTemplateFieldDefinitionsByTemplateNameForEach(args: {
+    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    repoId: string;
+    templateName: string;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getTemplateFieldDefinitionsByTemplateName({
+      repoId,
+      templateName,
+      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      culture,
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink != null) {
+      response = await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetTemplateFieldDefinitionsByTemplateName,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+  async getTemplateDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfWTemplateInfo> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfWTemplateInfo>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetTemplateDefinitions,
+      nextLink,
+      maxPageSize
+    );
+  }
+  async getTemplateFieldDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetTemplateFieldDefinitions,
+      nextLink,
+      maxPageSize
+    );
+  }
+  async getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetTemplateFieldDefinitionsByTemplateName,
+      nextLink,
+      maxPageSize
+    );
+  }
 
     /**
      * Returns all template definitions (including field definitions) in the repository. If a template name query parameter is given, then a single template definition is returned. Provide a repository ID, and get a paged listing of template definitions available in the repository. Useful when trying to find a list of all template definitions available, rather than a specific one. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
@@ -8777,4 +9443,402 @@ function throwException(message: string, status: number, response: string, heade
         throw result;
     else
         throw new ApiException(message, status, response, headers, null);
+}
+
+class ClientBase {}
+export interface IRepositoryApiClient {
+  attributesClient: IAttributesClient;
+  auditReasonsClient: IAuditReasonsClient;
+  entriesClient: IEntriesClient;
+  fieldDefinitionsClient: IFieldDefinitionsClient;
+  repositoriesClient: IRepositoriesClient;
+  searchesClient: ISearchesClient;
+  serverSessionClient: IServerSessionClient;
+  simpleSearchesClient: ISimpleSearchesClient;
+  tagDefinitionsClient: ITagDefinitionsClient;
+  tasksClient: ITasksClient;
+  templateDefinitionsClient: ITemplateDefinitionsClient;
+}
+// @ts-ignore
+export class RepositoryApiClient implements IRepositoryApiClient {
+  private baseUrl: string;
+
+  public attributesClient: IAttributesClient;
+  public auditReasonsClient: IAuditReasonsClient;
+  public entriesClient: IEntriesClient;
+  public fieldDefinitionsClient: IFieldDefinitionsClient;
+  public repositoriesClient: IRepositoriesClient;
+  public searchesClient: ISearchesClient;
+  public serverSessionClient: IServerSessionClient;
+  public simpleSearchesClient: ISimpleSearchesClient;
+  public tagDefinitionsClient: ITagDefinitionsClient;
+  public tasksClient: ITasksClient;
+  public templateDefinitionsClient: ITemplateDefinitionsClient;
+
+  private repoClientHandler: RepositoryApiClientHttpHandler;
+
+  public get defaultRequestHeaders(): Record<string, string> {
+    return this.repoClientHandler.defaultRequestHeaders;
+  }
+
+  public set defaultRequestHeaders(headers: Record<string, string>) {
+    this.repoClientHandler.defaultRequestHeaders = headers;
+  }
+
+  private constructor(httpRequestHandler: HttpRequestHandler, baseUrlDebug?: string) {
+    this.repoClientHandler = new RepositoryApiClientHttpHandler(httpRequestHandler);
+    let fetch = this.repoClientHandler.httpHandler;
+    fetch = fetch.bind(this.repoClientHandler);
+    let http = {
+      fetch,
+    };
+    this.baseUrl = baseUrlDebug ?? '';
+    this.attributesClient = new AttributesClient(this.baseUrl, http);
+    this.auditReasonsClient = new AuditReasonsClient(this.baseUrl, http);
+    this.entriesClient = new EntriesClient(this.baseUrl, http);
+    this.fieldDefinitionsClient = new FieldDefinitionsClient(this.baseUrl, http);
+    this.repositoriesClient = new RepositoriesClient(this.baseUrl, http);
+    this.searchesClient = new SearchesClient(this.baseUrl, http);
+    this.serverSessionClient = new ServerSessionClient(this.baseUrl, http);
+    this.simpleSearchesClient = new SimpleSearchesClient(this.baseUrl, http);
+    this.tagDefinitionsClient = new TagDefinitionsClient(this.baseUrl, http);
+    this.tasksClient = new TasksClient(this.baseUrl, http);
+    this.templateDefinitionsClient = new TemplateDefinitionsClient(this.baseUrl, http);
+  }
+
+  public static createFromHttpRequestHandler(
+    httpRequestHandler: HttpRequestHandler,
+    baseUrlDebug?: string
+  ): RepositoryApiClient {
+    if (!httpRequestHandler) throw new Error('Argument cannot be null: httpRequestHandler');
+    let repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
+    return repoClient;
+  }
+
+  public static createFromAccessKey(
+    servicePrincipalKey: string,
+    accessKey: AccessKey,
+    baseUrlDebug?: string
+  ): RepositoryApiClient {
+    let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
+    return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
+  }
+}
+/** @internal */
+export class RepositoryApiClientHttpHandler {
+  private _httpRequestHandler: HttpRequestHandler;
+  public defaultRequestHeaders: Record<string, string>;
+
+  constructor(httpRequestHandler: HttpRequestHandler) {
+    this._httpRequestHandler = httpRequestHandler;
+    this.defaultRequestHeaders = {};
+  }
+
+  public async httpHandler(url: string, init: RequestInit): Promise<Response> {
+    const maxRetries = 1;
+    let retryCount = 0;
+    let shouldRetry = true;
+
+    if (this.defaultRequestHeaders) {
+      init.headers = Object.assign({}, this.defaultRequestHeaders, init.headers);
+    }
+    let response: Response | undefined;
+    while (retryCount <= maxRetries && shouldRetry) {
+      const beforeSendResult = await this._httpRequestHandler.beforeFetchRequestAsync(url, init);
+      let absoluteUrl: string;
+      if (url.startsWith('http')) {
+        absoluteUrl = url;
+      } else {
+        const apiBasedAddress = DomainUtils.getRepositoryEndpoint(beforeSendResult.regionalDomain);
+        absoluteUrl = UrlUtils.combineURLs(apiBasedAddress, url);
+      }
+
+      try {
+        response = await fetch(absoluteUrl, init);
+        shouldRetry =
+          (await this._httpRequestHandler.afterFetchResponseAsync(absoluteUrl, response, init)) ||
+          isRetryable(response, init);
+        if (!shouldRetry) {
+          return response;
+        }
+      } catch (err) {
+        if (retryCount >= maxRetries) {
+          throw err;
+        }
+        shouldRetry = true;
+        console.warn(`Retrying fetch due to exception: ${err}`);
+      } finally {
+        retryCount++;
+      }
+    }
+    if (!response) {
+      throw new Error('Undefined response, there is a bug!');
+    }
+    return response;
+  }
+}
+
+function isRetryable(response: Response, init: RequestInit): boolean {
+  const isIdempotent = init.method != 'POST';
+  return (response.status >= 500 || response.status == 408) && isIdempotent;
+}
+
+async function getNextLinkListing<T extends IODataValueContextOfIListOfEntry>(
+  http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> },
+  processListing: (response: Response) => Promise<T>,
+  nextLink: string,
+  maxPageSize?: number
+): Promise<T> {
+  if (!nextLink) {
+    throw new Error('Next Link is undefined');
+  }
+  const prefer = CreateMaxPageSizePreferHeaderPayload(maxPageSize);
+  let options_ = <RequestInit>{
+    method: 'GET',
+    headers: {
+      Prefer: prefer !== undefined && prefer !== null ? prefer : '',
+      Accept: 'application/json',
+    },
+  };
+  let processListingTwo = processListing.bind(http);
+  return http.fetch(nextLink, options_).then((_response: Response) => {
+    return processListingTwo(_response);
+  });
+}
+
+function CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefined {
+  //puts the max size into the prefer header of the GET request
+  if (!maxSize) {
+    return undefined;
+  } else {
+    return `maxpagesize=${maxSize}`;
+  }
+}
+
+export interface IAttributesClient {
+  getTrusteeAttributeKeyValuePairsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfListOfAttribute>;
+  GetTrusteeAttributeKeyValuePairsForEach(args: {
+    callback: (response: ODataValueContextOfListOfAttribute) => Promise<boolean>;
+    repoId: string;
+    everyone?: boolean;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+}
+
+export interface IEntriesClient {
+  GetEntryListingForEach(args: {
+    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    repoId: string;
+    entryId: number;
+    groupByEntryType?: boolean;
+    fields?: string[];
+    formatFields?: boolean;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+
+  GetFieldValuesForEach(args: {
+    callback: (response: ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
+    repoId: string;
+    entryId: number;
+    prefer?: string;
+    formatValue?: boolean;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+
+  GetLinkValuesFromEntryForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
+    repoId: string;
+    entryId: number;
+    prefer?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+
+  GetTagsAssignedToEntryForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    repoId: string;
+    entryId: number;
+    prefer?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+
+  getEntryListingNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfEntry>;
+  getFieldValuesNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfFieldValue>;
+  getLinkValuesFromEntryNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfWEntryLinkInfo>;
+  getTagsAssignedToEntryNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfWTagInfo>;
+}
+
+export interface IFieldDefinitionsClient {
+  GetFieldDefinitionsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
+    repoId: string;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+  getFieldDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfEntry>;
+}
+
+export interface ISearchesClient {
+  GetSearchResultsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    repoId: string;
+    searchToken: string;
+    groupByEntryType?: boolean;
+    refresh?: boolean;
+    fields?: string[];
+    formatFields?: boolean;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+  GetSearchContextHitsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfContextHit) => Promise<boolean>;
+    repoId: string;
+    searchToken: string;
+    rowNumber: number;
+    prefer?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+  GetSearchResultsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfEntry>;
+  GetSearchContextHitsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfContextHit>;
+}
+
+export interface ITagDefinitionsClient {
+  GetTagDefinitionsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    repoId: string;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+  getTagDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfWTagInfo>;
+}
+
+export interface ITemplateDefinitionsClient {
+  GetTemplateDefinitionsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
+    repoId: string;
+    templateName?: string;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+  GetTemplateFieldDefinitionsForEach(args: {
+    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    repoId: string;
+    templateId: number;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+  GetTemplateFieldDefinitionsByTemplateNameForEach(args: {
+    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    repoId: string;
+    templateName: string;
+    prefer?: string;
+    culture?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+  getTemplateDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfWTemplateInfo>;
+  getTemplateFieldDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
+  getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
 }

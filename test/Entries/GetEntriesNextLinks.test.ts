@@ -1,5 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase';
+import { IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Get Entry Next Links Tests', () => {

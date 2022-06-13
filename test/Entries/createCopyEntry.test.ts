@@ -1,5 +1,4 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   DeleteEntryWithAuditReason,
   Entry,
@@ -7,6 +6,7 @@ import {
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest,
   Shortcut,
+  IRepositoryApiClient
 } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 

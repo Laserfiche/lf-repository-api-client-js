@@ -1,8 +1,7 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo } from '../../src/index.js';
-import { CreateEntry, createTestRepoApiClient } from '../BaseTest';
-import { jest } from '@jest/globals';
+import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo,IRepositoryApiClient } from '../../src/index.js';
+import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
+
 
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

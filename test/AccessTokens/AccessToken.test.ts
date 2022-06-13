@@ -1,6 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { ODataValueOfBoolean, ODataValueOfDateTime } from '../../src/index.js';
+import { ODataValueOfBoolean, ODataValueOfDateTime, IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Access Token Integration Tests', () => {

@@ -1,9 +1,9 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   ODataValueContextOfIListOfTemplateFieldInfo,
   ODataValueContextOfIListOfWTemplateInfo,
   WTemplateInfo,
+  IRepositoryApiClient
 } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 

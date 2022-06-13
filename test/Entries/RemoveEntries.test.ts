@@ -1,6 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { DeleteEntryWithAuditReason, Entry, PutTemplateRequest } from '../../src/index.js';
+import { DeleteEntryWithAuditReason, Entry, PutTemplateRequest,IRepositoryApiClient } from '../../src/index.js';
 import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Remove Entries Integration Tests', () => {

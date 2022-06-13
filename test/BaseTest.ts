@@ -1,6 +1,6 @@
 import {Entry,PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType} from "../src";
 import {OAuthAccessKey, repoId, testServicePrincipalKey } from './testHelper.js';
-import {IRepositoryApiClient, RepositoryApiClient} from '../src/ClientBase.js';
+import {IRepositoryApiClient, RepositoryApiClient} from '../src/index.js';
 import { OAuthClientCredentialsHandler } from "@laserfiche/lf-api-client-core";
 import { BeforeFetchResult } from "@laserfiche/lf-api-client-core/dist/lib/HttpHandlers/BeforeFetchResult";
 

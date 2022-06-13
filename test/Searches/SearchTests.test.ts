@@ -1,11 +1,11 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   AdvancedSearchRequest,
   ODataValueContextOfIListOfContextHit,
   ODataValueContextOfIListOfEntry,
+  IRepositoryApiClient
 } from '../../src/index.js';
-import { jest } from '@jest/globals';
+
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 let searchToken = 'test';
