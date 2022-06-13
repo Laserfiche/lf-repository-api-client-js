@@ -19,6 +19,7 @@
     "nswag": "nswag run"
   },
   "author": "Laserfiche",
+  "url": "https://www.laserfiche.com/",
   "license": "MIT",
   "repository": {
     "type": "git",
