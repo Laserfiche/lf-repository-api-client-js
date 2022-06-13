@@ -8,33 +8,33 @@ import {
 } from '@laserfiche/lf-api-client-core';
 class ClientBase {}
 export interface IRepositoryApiClient {
-  attributesClient: IAttributeClient;
+  attributesClient: IAttributesClient;
   auditReasonsClient: generated.IAuditReasonsClient;
-  entriesClient: IEntriesClientEx;
-  fieldDefinitionsClient: IFieldDefinitionsClientEx;
+  entriesClient: IEntriesClient;
+  fieldDefinitionsClient: IFieldDefinitionsClient;
   repositoriesClient: generated.IRepositoriesClient;
-  searchesClient: ISearchEx;
+  searchesClient: ISearchesClient;
   serverSessionClient: generated.IServerSessionClient;
   simpleSearchesClient: generated.ISimpleSearchesClient;
-  tagDefinitionsClient: ITagDefinitionsEx;
+  tagDefinitionsClient: ITagDefinitionsClient;
   tasksClient: generated.ITasksClient;
-  templateDefinitionsClient: ITemplateDefinitionsEx;
+  templateDefinitionsClient: ITemplateDefinitionsClient;
 }
 // @ts-ignore
 export class RepositoryApiClient implements IRepositoryApiClient {
   private baseUrl: string;
 
-  public attributesClient: IAttributeClient;
+  public attributesClient: IAttributesClient;
   public auditReasonsClient: generated.IAuditReasonsClient;
-  public entriesClient: IEntriesClientEx;
-  public fieldDefinitionsClient: IFieldDefinitionsClientEx;
+  public entriesClient: IEntriesClient;
+  public fieldDefinitionsClient: IFieldDefinitionsClient;
   public repositoriesClient: generated.IRepositoriesClient;
-  public searchesClient: ISearchEx;
+  public searchesClient: ISearchesClient;
   public serverSessionClient: generated.IServerSessionClient;
   public simpleSearchesClient: generated.ISimpleSearchesClient;
-  public tagDefinitionsClient: ITagDefinitionsEx;
+  public tagDefinitionsClient: ITagDefinitionsClient;
   public tasksClient: generated.ITasksClient;
-  public templateDefinitionsClient: ITemplateDefinitionsEx;
+  public templateDefinitionsClient: ITemplateDefinitionsClient;
 
   private repoClientHandler: RepositoryApiClientHttpHandler;
 
@@ -54,17 +54,17 @@ export class RepositoryApiClient implements IRepositoryApiClient {
       fetch,
     };
     this.baseUrl = baseUrlDebug ?? '';
-    this.attributesClient = new AttributesClientEx(this.baseUrl, http);
+    this.attributesClient = new AttributesClient(this.baseUrl, http);
     this.auditReasonsClient = new generated.AuditReasonsClient(this.baseUrl, http);
-    this.entriesClient = new EntriesClientEx(this.baseUrl, http);
-    this.fieldDefinitionsClient = new FieldDefinitionClient(this.baseUrl, http);
+    this.entriesClient = new EntriesClient(this.baseUrl, http);
+    this.fieldDefinitionsClient = new FieldDefinitionsClient(this.baseUrl, http);
     this.repositoriesClient = new generated.RepositoriesClient(this.baseUrl, http);
-    this.searchesClient = new SearchClientEx(this.baseUrl, http);
+    this.searchesClient = new SearchesClient(this.baseUrl, http);
     this.serverSessionClient = new generated.ServerSessionClient(this.baseUrl, http);
     this.simpleSearchesClient = new generated.SimpleSearchesClient(this.baseUrl, http);
-    this.tagDefinitionsClient = new TagDefinitionsEx(this.baseUrl, http);
+    this.tagDefinitionsClient = new TagDefinitionsClient(this.baseUrl, http);
     this.tasksClient = new generated.TasksClient(this.baseUrl, http);
-    this.templateDefinitionsClient = new TemplateDefinitionsEx(this.baseUrl, http);
+    this.templateDefinitionsClient = new TemplateDefinitionsClient(this.baseUrl, http);
   }
 
   public static createFromHttpRequestHandler(
@@ -176,7 +176,7 @@ function CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefi
   }
 }
 
-export interface IAttributeClient extends generated.IAttributesClient {
+export interface IAttributesClient {
   getTrusteeAttributeKeyValuePairsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -194,7 +194,7 @@ export interface IAttributeClient extends generated.IAttributesClient {
   }): Promise<void>;
 }
 
-export class AttributesClientEx extends generated.AttributesClient implements IAttributeClient {
+export class AttributesClient extends generated.AttributesClient implements IAttributesClient{
   async GetTrusteeAttributeKeyValuePairsForEach(args: {
     callback: (response: generated.ODataValueContextOfListOfAttribute) => Promise<boolean>;
     repoId: string;
@@ -245,7 +245,7 @@ export class AttributesClientEx extends generated.AttributesClient implements IA
 }
 
 
-export interface IEntriesClientEx extends generated.IEntriesClient {
+export interface IEntriesClient {
   GetEntryListingForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
@@ -321,7 +321,7 @@ export interface IEntriesClientEx extends generated.IEntriesClient {
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfIListOfWTagInfo>;
 }
-export class EntriesClientEx extends generated.EntriesClient implements IEntriesClientEx {
+export class EntriesClient extends generated.EntriesClient implements IEntriesClient {
   async GetEntryListingForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
@@ -552,7 +552,7 @@ export class EntriesClientEx extends generated.EntriesClient implements IEntries
 }
 
 
-export interface IFieldDefinitionsClientEx extends generated.IFieldDefinitionsClient {
+export interface IFieldDefinitionsClient {
   GetFieldDefinitionsForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
     repoId: string;
@@ -571,7 +571,7 @@ export interface IFieldDefinitionsClientEx extends generated.IFieldDefinitionsCl
   }): Promise<generated.ODataValueContextOfIListOfEntry>;
 }
 
-export class FieldDefinitionClient extends generated.FieldDefinitionsClient implements IFieldDefinitionsClientEx {
+export class FieldDefinitionsClient extends generated.FieldDefinitionsClient implements IFieldDefinitionsClient {
   async GetFieldDefinitionsForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
     repoId: string;
@@ -623,7 +623,7 @@ export class FieldDefinitionClient extends generated.FieldDefinitionsClient impl
 }
 
 
-export interface ISearchEx extends generated.ISearchesClient {
+export interface ISearchesClient {
   GetSearchResultsForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
@@ -664,7 +664,7 @@ export interface ISearchEx extends generated.ISearchesClient {
   }): Promise<generated.ODataValueContextOfIListOfContextHit>;
 }
 
-export class SearchClientEx extends generated.SearchesClient implements ISearchEx {
+export class SearchesClient extends generated.SearchesClient implements ISearchesClient {
   async GetSearchResultsForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
@@ -791,7 +791,7 @@ export class SearchClientEx extends generated.SearchesClient implements ISearchE
   }
 }
 
-export interface ITagDefinitionsEx extends generated.ITagDefinitionsClient {
+export interface ITagDefinitionsClient {
   GetTagDefinitionsForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
@@ -810,7 +810,7 @@ export interface ITagDefinitionsEx extends generated.ITagDefinitionsClient {
   }): Promise<generated.ODataValueContextOfIListOfWTagInfo>;
 }
 
-export class TagDefinitionsEx extends generated.TagDefinitionsClient {
+export class TagDefinitionsClient extends generated.TagDefinitionsClient implements ITagDefinitionsClient{
   async GetTagDefinitionsForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
@@ -862,7 +862,7 @@ export class TagDefinitionsEx extends generated.TagDefinitionsClient {
 }
 
 
-export interface ITemplateDefinitionsEx extends generated.ITemplateDefinitionsClient {
+export interface ITemplateDefinitionsClient {
   GetTemplateDefinitionsForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
     repoId: string;
@@ -916,7 +916,7 @@ export interface ITemplateDefinitionsEx extends generated.ITemplateDefinitionsCl
   }): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo>;
 }
 
-export class TemplateDefinitionsEx extends generated.TemplateDefinitionsClient {
+export class TemplateDefinitionsClient extends generated.TemplateDefinitionsClient implements ITemplateDefinitionsClient{
   async GetTemplateDefinitionsForEach(args: {
     callback: (response: generated.ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
     repoId: string;
