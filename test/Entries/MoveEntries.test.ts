@@ -1,6 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
-import { DeleteEntryWithAuditReason, Entry, Folder, PatchEntryRequest, RepositoryInfo } from '../../src/index.js';
+import { DeleteEntryWithAuditReason, Entry, PatchEntryRequest, IRepositoryApiClient } from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Move Entries Integration Tests', () => {

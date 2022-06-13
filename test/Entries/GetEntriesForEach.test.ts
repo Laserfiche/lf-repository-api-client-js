@@ -4,8 +4,8 @@ import {
   ODataValueContextOfIListOfEntry,
   ODataValueContextOfIListOfWEntryLinkInfo,
   ODataValueContextOfIListOfWTagInfo,
-} from '../../src/index';
-import { IRepositoryApiClient, RepositoryApiClient } from '../../src/ClientBase.js';
+  IRepositoryApiClient
+} from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Get Entry Tests', () => {

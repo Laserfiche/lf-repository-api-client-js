@@ -1,12 +1,11 @@
 import { repoId } from '../testHelper.js';
-import { ODataValueContextOfListOfAttribute } from '../../src/index.js';
-import { IRepositoryApiClient } from '../../src/ClientBase.js';
+import { ODataValueContextOfListOfAttribute,IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Attribute Key Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
-  test('Get the attribute keys', async () => {
+  test.only('Get the attribute keys', async () => {
     let result: ODataValueContextOfListOfAttribute =
       await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId, everyone: true });
     expect(result).not.toBeNull();
