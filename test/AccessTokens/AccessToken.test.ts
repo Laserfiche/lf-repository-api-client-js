@@ -1,6 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { ODataValueOfBoolean, ODataValueOfDateTime, IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
+import "isomorphic-fetch";
 
 describe('Access Token Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

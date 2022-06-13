@@ -1,7 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo,IRepositoryApiClient } from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
-
+import "isomorphic-fetch";
 
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

@@ -5,8 +5,8 @@ import {
   ODataValueContextOfIListOfEntry,
   IRepositoryApiClient
 } from '../../src/index.js';
-
 import { createTestRepoApiClient } from '../BaseTest.js';
+import "isomorphic-fetch";
 
 let searchToken = 'test';
 describe('Search Integration Tests', () => {

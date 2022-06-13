@@ -1,6 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { SimpleSearchRequest,IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
+import "isomorphic-fetch";
 
 describe('Simple Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

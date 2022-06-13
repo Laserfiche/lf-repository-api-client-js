@@ -11,6 +11,7 @@ import {
   IRepositoryApiClient
 } from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
+import "isomorphic-fetch";
 
 describe('Create Copy Entry Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

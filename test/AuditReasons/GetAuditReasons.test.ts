@@ -1,6 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { AuditReasons,  IRepositoryApiClient} from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
+import "isomorphic-fetch";
 
 describe('Audit Reasons Integration Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

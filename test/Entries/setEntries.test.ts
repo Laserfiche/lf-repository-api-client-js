@@ -12,7 +12,7 @@ import {
   IRepositoryApiClient
 } from '../../src/index.js';
 import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
-
+import "isomorphic-fetch";
 
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

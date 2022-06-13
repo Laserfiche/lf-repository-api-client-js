@@ -7,6 +7,7 @@ import {
   IRepositoryApiClient,
 } from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
+import "isomorphic-fetch";
 
 describe('Task Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

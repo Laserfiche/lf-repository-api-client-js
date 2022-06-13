@@ -1,7 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
-
+import "isomorphic-fetch";
 
 describe('Get Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

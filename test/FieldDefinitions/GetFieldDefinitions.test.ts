@@ -1,6 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { ODataValueContextOfIListOfWFieldInfo, IRepositoryApiClient, WFieldInfo } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
+import "isomorphic-fetch";
 
 describe('Field Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;

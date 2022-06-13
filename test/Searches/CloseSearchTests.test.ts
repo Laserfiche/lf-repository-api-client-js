@@ -1,7 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry,IRepositoryApiClient } from '../../src/index.js';
-
 import { createTestRepoApiClient } from '../BaseTest.js';
+import "isomorphic-fetch";
 
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
