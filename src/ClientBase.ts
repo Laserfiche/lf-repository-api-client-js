@@ -1,36 +1,46 @@
-import * as generated from './index';
+import * as generated from './index.js';
 import { UrlUtils } from '@laserfiche/lf-js-utils';
-import { OAuthClientCredentialsHandler, HttpRequestHandler, DomainUtils, AccessKey } from '@laserfiche/lf-api-client-core';
-
+import {
+  OAuthClientCredentialsHandler,
+  HttpRequestHandler,
+  DomainUtils,
+  AccessKey,
+} from '@laserfiche/lf-api-client-core';
+import { IAttributeClientEx, AttributesClient } from './AttributeClientEx';
+import { EntriesClientEx, IEntriesClientEx } from './EntriesClientEx.js';
+import { IFieldDefinitionsClientEx, FieldDefinitionClient } from './FieldDefinitionsClientEx';
+import { ISearchEx, SearchClientEx } from './SearchesClientEx.js';
+import { ITagDefinitionsEx, TagDefinitionsEx } from './TagDefinitionsEx.js';
+import { ITemplateDefinitionsEx, TemplateDefinitionsEx } from './TemplateDefinitions.js';
 class ClientBase {}
 export interface IRepositoryApiClient {
-  attributesClient: generated.IAttributesClient;
+  attributesClient: IAttributeClientEx;
   auditReasonsClient: generated.IAuditReasonsClient;
-  entriesClient: generated.IEntriesClient;
-  fieldDefinitionsClient: generated.IFieldDefinitionsClient;
+  entriesClient: IEntriesClientEx;
+  fieldDefinitionsClient: IFieldDefinitionsClientEx;
   repositoriesClient: generated.IRepositoriesClient;
-  searchesClient: generated.ISearchesClient;
+  searchesClient: ISearchEx;
   serverSessionClient: generated.IServerSessionClient;
   simpleSearchesClient: generated.ISimpleSearchesClient;
-  tagDefinitionsClient: generated.ITagDefinitionsClient;
+  tagDefinitionsClient: ITagDefinitionsEx;
   tasksClient: generated.ITasksClient;
-  templateDefinitionsClient: generated.ITemplateDefinitionsClient;
+  templateDefinitionsClient: ITemplateDefinitionsEx;
 }
 // @ts-ignore
-export class RepositoryApiClient {
+export class RepositoryApiClient implements IRepositoryApiClient {
   private baseUrl: string;
 
-  public attributesClient: generated.IAttributesClient;
+  public attributesClient: IAttributeClientEx;
   public auditReasonsClient: generated.IAuditReasonsClient;
-  public entriesClient: generated.IEntriesClient;
-  public fieldDefinitionsClient: generated.IFieldDefinitionsClient;
+  public entriesClient: IEntriesClientEx;
+  public fieldDefinitionsClient: IFieldDefinitionsClientEx;
   public repositoriesClient: generated.IRepositoriesClient;
-  public searchesClient: generated.ISearchesClient;
+  public searchesClient: ISearchEx;
   public serverSessionClient: generated.IServerSessionClient;
   public simpleSearchesClient: generated.ISimpleSearchesClient;
-  public tagDefinitionsClient: generated.ITagDefinitionsClient;
+  public tagDefinitionsClient: ITagDefinitionsEx;
   public tasksClient: generated.ITasksClient;
-  public templateDefinitionsClient: generated.ITemplateDefinitionsClient;
+  public templateDefinitionsClient: ITemplateDefinitionsEx;
 
   private repoClientHandler: RepositoryApiClientHttpHandler;
 
@@ -50,17 +60,17 @@ export class RepositoryApiClient {
       fetch,
     };
     this.baseUrl = baseUrlDebug ?? '';
-    this.attributesClient = new generated.AttributesClient(this.baseUrl, http);
+    this.attributesClient = new AttributesClient(this.baseUrl, http);
     this.auditReasonsClient = new generated.AuditReasonsClient(this.baseUrl, http);
-    this.entriesClient = new generated.EntriesClient(this.baseUrl, http);
-    this.fieldDefinitionsClient = new generated.FieldDefinitionsClient(this.baseUrl, http);
+    this.entriesClient = new EntriesClientEx(this.baseUrl, http);
+    this.fieldDefinitionsClient = new FieldDefinitionClient(this.baseUrl, http);
     this.repositoriesClient = new generated.RepositoriesClient(this.baseUrl, http);
-    this.searchesClient = new generated.SearchesClient(this.baseUrl, http);
+    this.searchesClient = new SearchClientEx(this.baseUrl, http);
     this.serverSessionClient = new generated.ServerSessionClient(this.baseUrl, http);
     this.simpleSearchesClient = new generated.SimpleSearchesClient(this.baseUrl, http);
-    this.tagDefinitionsClient = new generated.TagDefinitionsClient(this.baseUrl, http);
+    this.tagDefinitionsClient = new TagDefinitionsEx(this.baseUrl, http);
     this.tasksClient = new generated.TasksClient(this.baseUrl, http);
-    this.templateDefinitionsClient = new generated.TemplateDefinitionsClient(this.baseUrl, http);
+    this.templateDefinitionsClient = new TemplateDefinitionsEx(this.baseUrl, http);
   }
 
   public static createFromHttpRequestHandler(
@@ -72,12 +82,15 @@ export class RepositoryApiClient {
     return repoClient;
   }
 
-  public static createFromAccessKey(servicePrincipalKey: string, accessKey: AccessKey, baseUrlDebug?: string): RepositoryApiClient {
+  public static createFromAccessKey(
+    servicePrincipalKey: string,
+    accessKey: AccessKey,
+    baseUrlDebug?: string
+  ): RepositoryApiClient {
     let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
     return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
   }
 }
-
 /** @internal */
 export class RepositoryApiClientHttpHandler {
   private _httpRequestHandler: HttpRequestHandler;
