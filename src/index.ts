@@ -9447,33 +9447,33 @@ function throwException(message: string, status: number, response: string, heade
 
 class ClientBase {}
 export interface IRepositoryApiClient {
-  attributesClient: IAttributeClient;
+  attributesClient: IAttributesClient;
   auditReasonsClient: IAuditReasonsClient;
-  entriesClient: IEntries;
-  fieldDefinitionsClient: IFieldDefinitions;
+  entriesClient: IEntriesClient;
+  fieldDefinitionsClient: IFieldDefinitionsClient;
   repositoriesClient: IRepositoriesClient;
-  searchesClient: ISearch;
+  searchesClient: ISearchesClient;
   serverSessionClient: IServerSessionClient;
   simpleSearchesClient: ISimpleSearchesClient;
-  tagDefinitionsClient: ITagDefinitions;
+  tagDefinitionsClient: ITagDefinitionsClient;
   tasksClient: ITasksClient;
-  templateDefinitionsClient: ITemplateDefinitions;
+  templateDefinitionsClient: ITemplateDefinitionsClient;
 }
 // @ts-ignore
 export class RepositoryApiClient implements IRepositoryApiClient {
   private baseUrl: string;
 
-  public attributesClient: IAttributeClient;
+  public attributesClient: IAttributesClient;
   public auditReasonsClient: IAuditReasonsClient;
-  public entriesClient: IEntries;
-  public fieldDefinitionsClient: IFieldDefinitions;
+  public entriesClient: IEntriesClient;
+  public fieldDefinitionsClient: IFieldDefinitionsClient;
   public repositoriesClient: IRepositoriesClient;
-  public searchesClient: ISearch;
+  public searchesClient: ISearchesClient;
   public serverSessionClient: IServerSessionClient;
   public simpleSearchesClient: ISimpleSearchesClient;
-  public tagDefinitionsClient: ITagDefinitions;
+  public tagDefinitionsClient: ITagDefinitionsClient;
   public tasksClient: ITasksClient;
-  public templateDefinitionsClient: ITemplateDefinitions;
+  public templateDefinitionsClient: ITemplateDefinitionsClient;
 
   private repoClientHandler: RepositoryApiClientHttpHandler;
 
@@ -9615,7 +9615,7 @@ function CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefi
   }
 }
 
-export interface IAttributeClient extends IAttributesClient {
+export interface IAttributesClient {
   getTrusteeAttributeKeyValuePairsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -9633,7 +9633,7 @@ export interface IAttributeClient extends IAttributesClient {
   }): Promise<void>;
 }
 
-export interface IEntries extends IEntriesClient {
+export interface IEntriesClient {
   GetEntryListingForEach(args: {
     callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
@@ -9710,7 +9710,7 @@ export interface IEntries extends IEntriesClient {
   }): Promise<ODataValueContextOfIListOfWTagInfo>;
 }
 
-export interface IFieldDefinitions extends IFieldDefinitionsClient {
+export interface IFieldDefinitionsClient {
   GetFieldDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
     repoId: string;
@@ -9729,7 +9729,7 @@ export interface IFieldDefinitions extends IFieldDefinitionsClient {
   }): Promise<ODataValueContextOfIListOfEntry>;
 }
 
-export interface ISearch extends ISearchesClient {
+export interface ISearchesClient {
   GetSearchResultsForEach(args: {
     callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
@@ -9770,7 +9770,7 @@ export interface ISearch extends ISearchesClient {
   }): Promise<ODataValueContextOfIListOfContextHit>;
 }
 
-export interface ITagDefinitions extends ITagDefinitionsClient {
+export interface ITagDefinitionsClient {
   GetTagDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
@@ -9789,7 +9789,7 @@ export interface ITagDefinitions extends ITagDefinitionsClient {
   }): Promise<ODataValueContextOfIListOfWTagInfo>;
 }
 
-export interface ITemplateDefinitions extends ITemplateDefinitionsClient {
+export interface ITemplateDefinitionsClient {
   GetTemplateDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
     repoId: string;
