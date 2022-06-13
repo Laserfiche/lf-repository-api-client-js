@@ -13,6 +13,7 @@ env:
   NPM_VERSION: "1.0.5"
 
 
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
@@ -76,9 +77,9 @@ jobs:
 
       - name: Npm test
         env:
-          DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
-          DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY:  ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
-          DEV_CA_PUBLIC_USE_REPOSITORY_ID_1:  ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_1 }}
+          ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
+          SERVICE_PRINCIPAL_KEY:  ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
+          REPOSITORY_ID:  ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_1 }}
         run: npm run test:all
 
       - name: Test Report

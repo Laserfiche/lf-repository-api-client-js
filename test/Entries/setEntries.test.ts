@@ -1,5 +1,5 @@
-import { testKey, testServicePrincipalKey, repoId } from '../testHelper.js';
-import { RepositoryApiClient, IRepositoryApiClient } from '../../src/ClientBase.js';
+import { repoId } from '../testHelper.js';
+import { IRepositoryApiClient } from '../../src/ClientBase.js';
 import {
   DeleteEntryWithAuditReason,
   Entry,
@@ -11,15 +11,14 @@ import {
   WFieldType,
   WTagInfo,
 } from '../../src/index.js';
-import { allFalse, CreateEntry } from '../BaseTest';
+import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest';
 import { jest } from '@jest/globals';
 
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
-  let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, testKey);
-  jest.setTimeout(200000);
+  _RepositoryApiClient = createTestRepoApiClient();
+
   afterEach(async () => {
     if (entry != null) {
       let body = new DeleteEntryWithAuditReason();
