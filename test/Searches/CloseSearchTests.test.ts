@@ -3,7 +3,7 @@ import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry,IRepositoryApiCl
 
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe.skip('Search Integration Tests', () => {
+describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
   test('Close Search Operations', async () => {

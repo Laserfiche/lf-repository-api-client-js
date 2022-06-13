@@ -14,7 +14,7 @@ import {
 import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
 
-describe.skip('Set Entries Integration Tests', () => {
+describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
   _RepositoryApiClient = createTestRepoApiClient();

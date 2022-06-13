@@ -3,7 +3,7 @@ import { IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 
-describe.skip('Get Entries Integration Tests', () => {
+describe('Get Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
   _RepositoryApiClient = createTestRepoApiClient();

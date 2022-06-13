@@ -3,7 +3,7 @@ import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo,IRep
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
 
-describe.skip('Set Entries Integration Tests', () => {
+describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
   _RepositoryApiClient = createTestRepoApiClient();

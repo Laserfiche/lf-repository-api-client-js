@@ -9,7 +9,7 @@ import {
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 let searchToken = 'test';
-describe.skip('Search Integration Tests', () => {
+describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
 

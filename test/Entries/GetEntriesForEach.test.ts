@@ -8,7 +8,7 @@ import {
 } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe.skip('Get Entry Tests', () => {
+describe('Get Entry Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
   let entryId: number = 1;

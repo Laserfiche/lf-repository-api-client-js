@@ -2,7 +2,7 @@ import { repoId } from '../testHelper.js';
 import { ODataValueContextOfIListOfWFieldInfo, IRepositoryApiClient, WFieldInfo } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe.skip('Field Definitions Integration Tests', () => {
+describe('Field Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
 

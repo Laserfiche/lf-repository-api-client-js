@@ -2,7 +2,7 @@ import { repoId } from '../testHelper.js';
 import { SimpleSearchRequest,IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe.skip('Simple Search Integration Tests', () => {
+describe('Simple Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
 

@@ -7,7 +7,7 @@ import {
 } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe.skip('Template Definitions Integration Tests', () => {
+describe('Template Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
   test('Get Template Definition', async () => {

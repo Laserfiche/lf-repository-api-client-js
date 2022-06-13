@@ -2,7 +2,7 @@ import { repoId } from '../testHelper.js';
 import { ODataValueOfBoolean, ODataValueOfDateTime, IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe.skip('Access Token Integration Tests', () => {
+describe('Access Token Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
   test('Refresh Server Session', async () => {

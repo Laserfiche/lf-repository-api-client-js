@@ -2,7 +2,7 @@ import { repoId } from '../testHelper.js';
 import { RepositoryInfo,IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe.skip('Repo List Integration Tests', () => {
+describe('Repo List Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
   //create from request handler

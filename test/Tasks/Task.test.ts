@@ -8,7 +8,7 @@ import {
 } from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
-describe.skip('Task Integration Tests', () => {
+describe('Task Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
 

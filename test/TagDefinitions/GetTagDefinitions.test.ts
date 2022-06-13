@@ -2,7 +2,7 @@ import { repoId } from '../testHelper.js';
 import { ODataValueContextOfIListOfWTagInfo, WTagInfo,IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-describe.skip('Tag Definitions Integration Tests', () => {
+describe('Tag Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
   test('Get Tag Definitions', async () => {

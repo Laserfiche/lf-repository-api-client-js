@@ -2,7 +2,7 @@ import { repoId } from '../testHelper.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 import { DeleteEntryWithAuditReason,IRepositoryApiClient } from '../../src/index.js';
 
-describe.skip('Delete Entries Integration Tests', () => {
+describe('Delete Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
   _RepositoryApiClient = createTestRepoApiClient();
