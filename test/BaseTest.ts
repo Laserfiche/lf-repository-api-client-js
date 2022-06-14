@@ -32,6 +32,13 @@ export function createTestRepoApiClient():IRepositoryApiClient{
 
 class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
     async beforeFetchRequestAsync(url: string, request: RequestInit): Promise<BeforeFetchResult> {
+        //console.log(request.headers);
+        const loadTest = {
+            Accept: 'application/json',
+            LoadTest: "true"
+        };
+        request.headers = loadTest;
+        //console.log(request.headers);
         return super.beforeFetchRequestAsync(url,request);
     }
     async afterFetchResponseAsync(url: string, response: Response, request: RequestInit): Promise<boolean> {
