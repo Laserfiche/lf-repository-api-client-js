@@ -7,7 +7,8 @@
   "types": "dist/src/index.d.ts",
   "files": [
     "dist/src/index.js",
-    "dist/src/index.d.js"
+    "dist/src/index.d.ts",
+    "README.md"
   ],
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js",
@@ -18,7 +19,12 @@
     "nswag": "nswag run"
   },
   "author": "Laserfiche",
+  "url": "https://www.laserfiche.com/",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Laserfiche/lf-repository-api-client-js"
+  },
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.35",
     "@types/jest": "^27.4.0",
