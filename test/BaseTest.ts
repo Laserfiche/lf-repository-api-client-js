@@ -53,7 +53,7 @@ class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
         JsonHeaders["LoadTest"] = 'true'; 
         //console.log(JsonHeaders);
         request.headers = JsonHeaders;
-        console.log(request);
+        //console.log(request);
         //let headers2:HeadersInit = JsonHeaders;
         // if (JsonHeaders.Prefer == "maxpagesize=1"){
         //     request.headers = preferLoadTest;
