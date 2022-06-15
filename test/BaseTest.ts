@@ -48,12 +48,14 @@ export function createTestRepoApiClient():IRepositoryApiClient{
 class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
     async beforeFetchRequestAsync(url: string, request: RequestInit): Promise<BeforeFetchResult> {
         //console.log(request);
-        let headers:string = JSON.stringify(request.headers);
-        let JsonHeaders = JSON.parse(headers);
-        JsonHeaders["LoadTest"] = "true"; 
+        //let headers:string = JSON.stringify(request.headers);
+        //let JsonHeaders = JSON.parse(headers);
+        //JsonHeaders["LoadTest"] = "true"; 
         //console.log(JsonHeaders);
-        request.headers = JsonHeaders;
+        //request.headers = JsonHeaders;
         //console.log(request);
+        request.headers = Object.assign({LoadTest:'true'},request.headers);
+        console.log(request.headers);
         //let headers2:HeadersInit = JsonHeaders;
         // if (JsonHeaders.Prefer == "maxpagesize=1"){
         //     request.headers = preferLoadTest;
