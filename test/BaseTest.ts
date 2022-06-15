@@ -26,13 +26,13 @@ export async function allFalse(arr:WFieldInfo[]):Promise<boolean>{
 let _RepositoryApiClient: IRepositoryApiClient | undefined;
 const preferLoadTest:HeadersInit={
     Accept:'application/json',
-    Prefer:'1',
+    Prefer:'maxpagesize=1',
     LoadTest:'true'
 }
 
 const preferLoadTest10:HeadersInit={
     Accept:'application/json',
-    Prefer:'10',
+    Prefer:'maxpagesize=10',
     LoadTest:'true'
 }
 
@@ -49,17 +49,17 @@ export function createTestRepoApiClient():IRepositoryApiClient{
 class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
     async beforeFetchRequestAsync(url: string, request: RequestInit): Promise<BeforeFetchResult> {
         console.log(request);
-        let headers:String = JSON.stringify(request.headers);
-        if (headers.includes("1")){
+        let headers:string = JSON.stringify(request.headers);
+        let JsonHeaders = JSON.parse(headers);
+        if (JsonHeaders.Prefer == "maxpagesize=1"){
             request.headers = preferLoadTest;
         } 
-        else if (headers.includes("10")){
+        else if (JsonHeaders.Prefer == "maxpagesize=10"){
             request.headers = preferLoadTest10;
         }
         else{
             request.headers = loadTest;
         }
-        console.log(JSON.stringify(request.headers));
         console.log(request.headers);
         //for()
         return super.beforeFetchRequestAsync(url,request);
