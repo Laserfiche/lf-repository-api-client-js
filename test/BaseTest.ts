@@ -24,21 +24,7 @@ export async function allFalse(arr:WFieldInfo[]):Promise<boolean>{
     return true;
 }
 let _RepositoryApiClient: IRepositoryApiClient | undefined;
-const preferLoadTest:HeadersInit={
-    Accept:'application/json',
-    Prefer:'maxpagesize=1',
-    LoadTest:'true'
-}
-
-const preferLoadTest10:HeadersInit={
-    Accept:'application/json',
-    Prefer:'maxpagesize=10',
-    LoadTest:'true'
-}
-
-const loadTest:HeadersInit={
-    LoadTest:'true'
-}
+const defaultRequestHeaders: Record<string, string> = {'LoadTest':'true'};
 export function createTestRepoApiClient():IRepositoryApiClient{
     let handler = new TestOAuthClientCredentialsHandler(testServicePrincipalKey, OAuthAccessKey);
     _RepositoryApiClient = _RepositoryApiClient ?? RepositoryApiClient.createFromHttpRequestHandler(handler);
@@ -54,7 +40,7 @@ class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
         //console.log(JsonHeaders);
         //request.headers = JsonHeaders;
         //console.log(request);
-        request.headers = Object.assign({LoadTest:'true'},request.headers);
+        request.headers = Object.assign({},defaultRequestHeaders,request.headers);
         console.log(request.headers);
         //let headers2:HeadersInit = JsonHeaders;
         // if (JsonHeaders.Prefer == "maxpagesize=1"){
