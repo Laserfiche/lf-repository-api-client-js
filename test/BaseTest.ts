@@ -37,7 +37,6 @@ const preferLoadTest10:HeadersInit={
 }
 
 const loadTest:HeadersInit={
-    Accept:'application/json',
     LoadTest:'true'
 }
 export function createTestRepoApiClient():IRepositoryApiClient{
@@ -51,12 +50,17 @@ class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
         //console.log(request);
         let headers:string = JSON.stringify(request.headers);
         let JsonHeaders = JSON.parse(headers);
-        if (JsonHeaders.Prefer == "maxpagesize=1"){
-            request.headers = preferLoadTest;
-        } 
-        else if (JsonHeaders.Prefer == "maxpagesize=10"){
-            request.headers = preferLoadTest10;
-        }
+        JsonHeaders["LoadTest"] = 'true'; 
+        //console.log(JsonHeaders);
+        request.headers = JsonHeaders;
+        console.log(request);
+        //let headers2:HeadersInit = JsonHeaders;
+        // if (JsonHeaders.Prefer == "maxpagesize=1"){
+        //     request.headers = preferLoadTest;
+        // } 
+        // else if (JsonHeaders.Prefer == "maxpagesize=10"){
+        //     request.headers = preferLoadTest10;
+        // }
         //console.log(request.headers);
         //for()
         return super.beforeFetchRequestAsync(url,request);
