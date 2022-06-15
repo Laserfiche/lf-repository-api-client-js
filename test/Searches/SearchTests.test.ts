@@ -73,7 +73,7 @@ describe('Search Integration Tests', () => {
     expect(pages).toBeGreaterThan(0);
   });
 
-  test.only('Get Search Context Hits for each Paging', async () => {
+  test.skip('Get Search Context Hits for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
     searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';
@@ -86,6 +86,7 @@ describe('Search Integration Tests', () => {
     expect(searchToken).not.toBeNull();
     await new Promise((r) => setTimeout(r, 5000));
     var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId, searchToken });
+    console.log(searchResultsResponse);
     if (!searchResultsResponse.value) {
       throw new Error('searchResultsResponse.value is undefined');
     }
