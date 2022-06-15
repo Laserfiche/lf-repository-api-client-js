@@ -158,8 +158,7 @@ async function getNextLinkListing<T extends generated.IODataValueContextOfIListO
     method: 'GET',
     headers: {
       Prefer: prefer !== undefined && prefer !== null ? prefer : '',
-      Accept: 'application/json',
-      LoadTest: 'true'
+      Accept: 'application/json'
     },
   };
   let processListingTwo = processListing.bind(http);

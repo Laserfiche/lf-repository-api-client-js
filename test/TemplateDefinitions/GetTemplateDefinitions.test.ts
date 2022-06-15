@@ -77,7 +77,6 @@ describe('Template Definitions Integration Tests', () => {
     if (!response.value) {
       throw new Error('response.value is undefined');
     }
-    console.log(response);
     expect(response).not.toBeNull();
     let nextLink = response.odataNextLink ?? '';
     expect(nextLink).not.toBeNull();
