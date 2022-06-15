@@ -50,10 +50,10 @@ class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
         //console.log(request);
         let headers:string = JSON.stringify(request.headers);
         let JsonHeaders = JSON.parse(headers);
-        JsonHeaders["LoadTest"] = 'true'; 
+        JsonHeaders["LoadTest"] = true; 
         //console.log(JsonHeaders);
         request.headers = JsonHeaders;
-        console.log(request);
+        //console.log(request);
         //let headers2:HeadersInit = JsonHeaders;
         // if (JsonHeaders.Prefer == "maxpagesize=1"){
         //     request.headers = preferLoadTest;
@@ -68,7 +68,7 @@ class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
     async afterFetchResponseAsync(url: string, response: Response, request: RequestInit): Promise<boolean> {
         if (response.status === 429){
             console.warn('Rate Limiting Triggered, waiting 75 seconds to clear {http 429}');
-          await new Promise((r) => setTimeout(r, 75000));
+          //await new Promise((r) => setTimeout(r, 75000));
           return true;
         }
         else{
