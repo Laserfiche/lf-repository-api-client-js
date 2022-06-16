@@ -8,13 +8,13 @@ import {
 
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-let searchToken = 'test';
+let searchToken:string = "";
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   _RepositoryApiClient = createTestRepoApiClient();
 
   afterEach(async () => {
-    if (searchToken != '' || searchToken != null) {
+    if (searchToken.length != 0) {
       await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({ repoId, searchToken });
       await new Promise((r) => setTimeout(r, 5000));
     }
@@ -49,7 +49,7 @@ describe('Search Integration Tests', () => {
   test('Get Search Results for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
-    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
+    searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
       repoId,
       request: searchRequest,

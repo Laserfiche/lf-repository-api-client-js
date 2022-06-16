@@ -27,6 +27,5 @@ export function createTestRepoApiClient():IRepositoryApiClient{
     if (testHeader) {
         _RepositoryApiClient.defaultRequestHeaders = { [testHeader]: "true" };
     }
-    console.log(_RepositoryApiClient);
     return _RepositoryApiClient;
 }
