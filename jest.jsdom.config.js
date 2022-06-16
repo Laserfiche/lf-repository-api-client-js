@@ -9,7 +9,6 @@ export default {
     testEnvironment: 'jsdom',
     reporters: ["default", ["jest-junit", { outputName: "junit-jsdom.xml" }]],
     testTimeout:200000,
-    runInBand: true,
     moduleNameMapper: {
       '^(\\.{1,2}/.*)\\.js$': '$1',
     }
