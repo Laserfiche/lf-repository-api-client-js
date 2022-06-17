@@ -1,5 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry,IRepositoryApiClient } from '../../src/index.js';
+import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry, IRepositoryApiClient } from '../../src/index.js';
 
 import { createTestRepoApiClient } from '../BaseTest.js';
 
@@ -12,7 +12,7 @@ describe('Search Integration Tests', () => {
   test('Close Search Operations', async () => {
     //create search
     let request = new AdvancedSearchRequest();
-    request.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';
+    request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     var response = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId, request });
     let searchToken = response.token;
     expect(searchToken).not.toBeNull();
@@ -28,7 +28,7 @@ describe('Search Integration Tests', () => {
   test('Get Search Results simple Paging', async () => {
     let maxPageSize = 1;
     let searchRequest = new AdvancedSearchRequest();
-    searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
       repoId,
       request: searchRequest,

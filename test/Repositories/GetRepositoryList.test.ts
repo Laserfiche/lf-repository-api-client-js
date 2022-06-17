@@ -1,5 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { RepositoryInfo,IRepositoryApiClient } from '../../src/index.js';
+import { RepositoryInfo, IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Repo List Integration Tests', () => {

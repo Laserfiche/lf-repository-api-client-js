@@ -16,7 +16,7 @@ describe('Move Entries Integration Tests', () => {
       }
     }
   });
-  afterAll(async()=>{
+  afterAll(async () => {
     _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
 

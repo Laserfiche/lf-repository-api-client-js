@@ -3,17 +3,17 @@ import {
   AdvancedSearchRequest,
   ODataValueContextOfIListOfContextHit,
   ODataValueContextOfIListOfEntry,
-  IRepositoryApiClient
+  IRepositoryApiClient,
 } from '../../src/index.js';
 
 import { createTestRepoApiClient } from '../BaseTest.js';
 
-let searchToken:string;
+let searchToken: string;
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(async()=>{
+  beforeEach(async () => {
     _RepositoryApiClient = createTestRepoApiClient();
-    searchToken = "";
+    searchToken = '';
   });
 
   afterEach(async () => {
@@ -53,7 +53,7 @@ describe('Search Integration Tests', () => {
   test('Get Search Results for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
-    searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
       repoId,
       request: searchRequest,
@@ -80,7 +80,7 @@ describe('Search Integration Tests', () => {
   test('Get Search Context Hits for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
-    searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
       repoId,
       request: searchRequest,
@@ -122,7 +122,7 @@ describe('Search Integration Tests', () => {
 
   test('Get Search Results', async () => {
     let request = new AdvancedSearchRequest();
-    request.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';
+    request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     var searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId, request });
     searchToken = searchResponse.token ?? '';
     expect(searchToken).not.toBeNull();
@@ -135,7 +135,7 @@ describe('Search Integration Tests', () => {
 
   test('Get Search Status', async () => {
     let request = new AdvancedSearchRequest();
-    request.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';
+    request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     var searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId, request });
     searchToken = searchResponse.token ?? '';
     expect(searchToken).not.toBeNull();

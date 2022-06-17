@@ -1,5 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { ODataValueContextOfIListOfWTagInfo, WTagInfo,IRepositoryApiClient } from '../../src/index.js';
+import { ODataValueContextOfIListOfWTagInfo, WTagInfo, IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Tag Definitions Integration Tests', () => {

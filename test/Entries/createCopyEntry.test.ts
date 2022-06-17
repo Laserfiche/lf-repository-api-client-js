@@ -6,7 +6,7 @@ import {
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest,
   Shortcut,
-  IRepositoryApiClient
+  IRepositoryApiClient,
 } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 

@@ -1,7 +1,12 @@
 import { repoId } from '../testHelper.js';
-import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo,IRepositoryApiClient } from '../../src/index.js';
+import {
+  DeleteEntryWithAuditReason,
+  Entry,
+  PutLinksRequest,
+  WEntryLinkInfo,
+  IRepositoryApiClient,
+} from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
-
 
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
@@ -18,9 +23,9 @@ describe('Set Entries Integration Tests', () => {
       }
     }
     createdEntries = [];
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({repoId});
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
-  afterAll(async()=>{
+  afterAll(async () => {
     _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
   test('Set Links', async () => {

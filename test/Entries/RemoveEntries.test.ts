@@ -1,5 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { DeleteEntryWithAuditReason, Entry, PutTemplateRequest,IRepositoryApiClient } from '../../src/index.js';
+import { DeleteEntryWithAuditReason, Entry, PutTemplateRequest, IRepositoryApiClient } from '../../src/index.js';
 import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Remove Entries Integration Tests', () => {
@@ -13,7 +13,7 @@ describe('Remove Entries Integration Tests', () => {
       await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
     }
   });
-  afterAll(async()=>{
+  afterAll(async () => {
     _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
   test('Remove Template from Entry Return Entry', async () => {

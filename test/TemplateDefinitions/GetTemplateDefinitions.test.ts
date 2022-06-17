@@ -3,7 +3,7 @@ import {
   ODataValueContextOfIListOfTemplateFieldInfo,
   ODataValueContextOfIListOfWTemplateInfo,
   WTemplateInfo,
-  IRepositoryApiClient
+  IRepositoryApiClient,
 } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 

@@ -1,5 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { AuditReasons,  IRepositoryApiClient} from '../../src/index.js';
+import { AuditReasons, IRepositoryApiClient } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Audit Reasons Integration Test', () => {

@@ -8,7 +8,7 @@ import {
   OperationStatus,
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest,
-  IRepositoryApiClient
+  IRepositoryApiClient,
 } from '../../src/index.js';
 import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
