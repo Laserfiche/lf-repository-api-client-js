@@ -10,8 +10,10 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Get Entry Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
   let entryId: number = 1;
+  beforeEach(async()=>{
+    _RepositoryApiClient = createTestRepoApiClient();
+  });
 
   test('Get Entry Listing for each paging', async () => {
     let maxPageSize = 10;

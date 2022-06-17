@@ -11,9 +11,8 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 let searchToken:string;
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-
-  beforeEach(async ()=>{
+  beforeEach(async()=>{
+    _RepositoryApiClient = createTestRepoApiClient();
     searchToken = "";
   });
 

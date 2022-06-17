@@ -9,7 +9,9 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Template Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
+  beforeEach(async()=>{
+    _RepositoryApiClient = createTestRepoApiClient();
+  });
   test('Get Template Definition', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });

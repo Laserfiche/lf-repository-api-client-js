@@ -4,7 +4,9 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Simple Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
+  beforeEach(async()=>{
+    _RepositoryApiClient = createTestRepoApiClient();
+  });
 
   test('Create Simple Search', async () => {
     let request: SimpleSearchRequest = new SimpleSearchRequest();

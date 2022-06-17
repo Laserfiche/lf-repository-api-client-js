@@ -6,7 +6,9 @@ import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = createTestRepoApiClient();
+  beforeEach(async()=>{
+    _RepositoryApiClient = createTestRepoApiClient();
+  });
 
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {

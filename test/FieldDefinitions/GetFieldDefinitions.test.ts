@@ -4,7 +4,9 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Field Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
+  beforeEach(async()=>{
+    _RepositoryApiClient = createTestRepoApiClient();
+  });
 
   test('Get Field Definitions', async () => {
     let result: ODataValueContextOfIListOfWFieldInfo =

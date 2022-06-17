@@ -5,7 +5,9 @@ import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 describe('Remove Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entry = new Entry();
-  _RepositoryApiClient = createTestRepoApiClient();
+  beforeEach(async()=>{
+    _RepositoryApiClient = createTestRepoApiClient();
+  });
   afterEach(async () => {
     if (entry != null) {
       let body = new DeleteEntryWithAuditReason();

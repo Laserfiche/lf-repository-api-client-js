@@ -9,7 +9,6 @@ export default {
   testEnvironment: 'node',
   reporters: ['default', ['jest-junit', { outputName: 'junit-node.xml' }]],
   testTimeout: 200000,
-  roots: ['test/Attributes/', 'test/AccessTokens/', 'test/FieldDefinitions/'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
