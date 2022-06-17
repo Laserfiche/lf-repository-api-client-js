@@ -180,8 +180,8 @@ function CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefi
 
 export interface IAttributesClient {
   /**
-   * Given a maximum page size, it will continue to make the same call to get a list of attributes of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined)
-   * @param callback callback function that will increment pagesize and the number of attributes inside the response schema after each next link API call
+   * Given a maximum page size, it will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined)
+   * @param callback callback function that will increment pagesize and the number of attributes key value pairs inside the response schema after each next link API call
    * @param repoId The requested repository ID.
    * @param everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
    * @param select (optional) Limits the properties returned in the result.
@@ -189,7 +189,7 @@ export interface IAttributesClient {
    * @param top (optional) Limits the number of items returned from a collection.
    * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
    * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
-   * @param maxPageSize the maximum page size or number of attribute keys allowed per API response schema
+   * @param maxPageSize the maximum page size or number of attributes key value pairs allowed per API response schema
    */
   GetTrusteeAttributeKeyValuePairsForEach(args: {
     callback: (response: generated.ODataValueContextOfListOfAttribute) => Promise<boolean>;
@@ -217,8 +217,8 @@ export interface IAttributesClient {
 
 export class AttributesClient extends generated.AttributesClient implements IAttributesClient {
   /**
-   * Given a maximum page size, it will continue to make the same call to get a list of attributes of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined).
-   * @param callback callback function that will increment pagesize and the number of attributes inside the response schema after each next link API call.
+   * Given a maximum page size, it will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined).
+   * @param callback callback function that will increment pagesize and the number of attributes key value pairs inside the response schema after each next link API call.
    * @param repoId The requested repository ID.
    * @param everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
    * @param select (optional) Limits the properties returned in the result.
@@ -226,7 +226,7 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
    * @param top (optional) Limits the number of items returned from a collection.
    * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
    * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
-   * @param maxPageSize the maximum page size or number of attribute keys allowed per API response schema.
+   * @param maxPageSize the maximum page size or number of attributes key value pairs allowed per API response schema.
    */
   async GetTrusteeAttributeKeyValuePairsForEach(args: {
     callback: (response: generated.ODataValueContextOfListOfAttribute) => Promise<boolean>;
