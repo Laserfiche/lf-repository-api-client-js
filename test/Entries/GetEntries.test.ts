@@ -13,7 +13,7 @@ describe('Get Entries Integration Tests', () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId, entryId });
     expect(entryFieldResponse?.value).not.toBeNull;
   });
-  test.skip('Get Entry Listing', async () => {
+  test('Get Entry Listing', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryListing({
       repoId,
       entryId,
