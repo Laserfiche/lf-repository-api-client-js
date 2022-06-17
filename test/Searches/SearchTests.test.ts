@@ -76,7 +76,7 @@ describe('Search Integration Tests', () => {
     expect(pages).toBeGreaterThan(0);
   });
 
-  test.skip('Get Search Context Hits for each Paging', async () => {
+  test('Get Search Context Hits for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
     searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';

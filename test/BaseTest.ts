@@ -22,7 +22,6 @@ export async function allFalse(arr:WFieldInfo[]):Promise<boolean>{
     return true;
 }
 let _RepositoryApiClient: IRepositoryApiClient | undefined;
-const defaultRequestHeaders: Record<string, string> = {'LoadTest':'true'};
 export function createTestRepoApiClient():IRepositoryApiClient{
     _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
     if (testHeader) {
