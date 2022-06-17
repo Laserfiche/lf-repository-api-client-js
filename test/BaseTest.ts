@@ -1,8 +1,6 @@
 import {Entry,PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType} from "../src";
-import {OAuthAccessKey, repoId, testServicePrincipalKey } from './testHelper.js';
+import {OAuthAccessKey, repoId, testServicePrincipalKey, testHeader } from './testHelper.js';
 import {IRepositoryApiClient, RepositoryApiClient} from '../src/index.js';
-import { OAuthClientCredentialsHandler } from "@laserfiche/lf-api-client-core";
-import { BeforeFetchResult } from "@laserfiche/lf-api-client-core/dist/lib/HttpHandlers/BeforeFetchResult";
 
 export async function CreateEntry(client: IRepositoryApiClient, entryName: string | undefined, parentEntryId:number = 1, autoRename:boolean = true):Promise<Entry>{
     var request = new PostEntryChildrenRequest();
@@ -26,41 +24,9 @@ export async function allFalse(arr:WFieldInfo[]):Promise<boolean>{
 let _RepositoryApiClient: IRepositoryApiClient | undefined;
 const defaultRequestHeaders: Record<string, string> = {'LoadTest':'true'};
 export function createTestRepoApiClient():IRepositoryApiClient{
-    let handler = new TestOAuthClientCredentialsHandler(testServicePrincipalKey, OAuthAccessKey);
-    _RepositoryApiClient = _RepositoryApiClient ?? RepositoryApiClient.createFromHttpRequestHandler(handler);
-    return _RepositoryApiClient;
-}
-
-class TestOAuthClientCredentialsHandler extends OAuthClientCredentialsHandler{
-    async beforeFetchRequestAsync(url: string, request: RequestInit): Promise<BeforeFetchResult> {
-        //console.log(request);
-        //let headers:string = JSON.stringify(request.headers);
-        //let JsonHeaders = JSON.parse(headers);
-        //JsonHeaders["LoadTest"] = "true"; 
-        //console.log(JsonHeaders);
-        //request.headers = JsonHeaders;
-        //console.log(request);
-        request.headers = Object.assign({},request.headers,defaultRequestHeaders);
-        //console.log(request.headers);
-        //let headers2:HeadersInit = JsonHeaders;
-        // if (JsonHeaders.Prefer == "maxpagesize=1"){
-        //     request.headers = preferLoadTest;
-        // } 
-        // else if (JsonHeaders.Prefer == "maxpagesize=10"){
-        //     request.headers = preferLoadTest10;
-        // }
-        //console.log(request.headers);
-        //for()
-        return super.beforeFetchRequestAsync(url,request);
+    _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+    if (testHeader) {
+        _RepositoryApiClient.defaultRequestHeaders = { [testHeader]: "true" };
     }
-    async afterFetchResponseAsync(url: string, response: Response, request: RequestInit): Promise<boolean> {
-        if (response.status === 429){
-            console.warn('Rate Limiting Triggered, waiting 75 seconds to clear {http 429}');
-          //await new Promise((r) => setTimeout(r, 75000));
-          return true;
-        }
-        else{
-            return super.afterFetchResponseAsync(url,response, request);
-        }
-      }
+    return _RepositoryApiClient;
 }

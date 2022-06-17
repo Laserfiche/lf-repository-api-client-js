@@ -12,4 +12,5 @@ if (!accessKeyBase64){
 }
 export const OAuthAccessKey: AccessKey = JSON.parse(StringUtils.base64toString(accessKeyBase64) ?? '');
 export const repoId: string = process.env.REPOSITORY_ID ?? '';
+export const testHeader: string = process.env.TEST_HEADER ?? '';
 
