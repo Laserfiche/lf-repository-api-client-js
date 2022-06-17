@@ -6,6 +6,7 @@ This package contains the Laserfiche Repository API Client library for Typescrip
 
 - [Developer Documentation](https://developer.laserfiche.com/)
 - [Sample Node Project](https://github.com/Laserfiche/lf-sample-repository-api-nodejs)
+- [Js Repository API Client Lib Documentation](https://developer.laserfiche.com/client_reference/lf-repository-api-client-js/docs/1.x/index.html)
 
 ## Installation
 
