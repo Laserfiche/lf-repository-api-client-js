@@ -9,6 +9,9 @@ describe('Get Entries Integration Tests', () => {
   beforeEach(async()=>{
     _RepositoryApiClient = createTestRepoApiClient();
   });
+  afterEach(async()=>{
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({repoId});
+  })
   test('Get Entry Fields', async () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId, entryId });
     expect(entryFieldResponse?.value).not.toBeNull;

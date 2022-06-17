@@ -20,6 +20,7 @@ describe('Set Entries Integration Tests', () => {
       }
     }
     createdEntries = [];
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({repoId});
   });
   test('Set Links', async () => {
     let sourceEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetLinks Source');
