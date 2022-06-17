@@ -7,7 +7,9 @@ describe('Simple Search Integration Tests', () => {
   beforeEach(async()=>{
     _RepositoryApiClient = createTestRepoApiClient();
   });
-
+  afterEach(async()=>{
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
+  });
   test('Create Simple Search', async () => {
     let request: SimpleSearchRequest = new SimpleSearchRequest();
     request.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';

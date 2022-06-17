@@ -4,10 +4,10 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Field Definitions Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = createTestRepoApiClient();
+  afterAll(async () => {
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
-
   test('Get Field Definitions', async () => {
     let result: ODataValueContextOfIListOfWFieldInfo =
       await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId });

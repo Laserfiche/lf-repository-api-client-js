@@ -10,10 +10,10 @@ import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Task Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = createTestRepoApiClient();
+  afterAll(async () => {
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
-
   test('Cancel Operation', async () => {
     let deleteEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest CancelOperation');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();

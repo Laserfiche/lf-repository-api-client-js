@@ -4,8 +4,9 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Attribute Key Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = createTestRepoApiClient();
+  afterAll(async () => {
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
   test('Get the attribute keys', async () => {
     let result: ODataValueContextOfListOfAttribute =

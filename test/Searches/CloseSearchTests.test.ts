@@ -5,8 +5,9 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Search Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = createTestRepoApiClient();
+  afterAll(async () => {
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
   test('Close Search Operations', async () => {
     //create search

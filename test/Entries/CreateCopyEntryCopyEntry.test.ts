@@ -15,9 +15,7 @@ import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 describe('Create Copy Entry Test', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
-  });
+  _RepositoryApiClient = createTestRepoApiClient();
 
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {

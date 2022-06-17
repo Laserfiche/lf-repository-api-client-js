@@ -4,9 +4,7 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Access Token Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
-  });
+  _RepositoryApiClient = createTestRepoApiClient();
   test('Refresh Server Session', async () => {
     let currentTime: string = new Date().toISOString();
     let refreshResponse: ODataValueOfDateTime = await _RepositoryApiClient.serverSessionClient.refreshServerSession({

@@ -5,15 +5,16 @@ import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 describe('Remove Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entry = new Entry();
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
-  });
+  _RepositoryApiClient = createTestRepoApiClient();
   afterEach(async () => {
     if (entry != null) {
       let body = new DeleteEntryWithAuditReason();
       let num = Number(entry.id);
       await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
     }
+  });
+  afterAll(async()=>{
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
   test('Remove Template from Entry Return Entry', async () => {
     // Find a template definition with no required fields

@@ -4,8 +4,9 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Repo List Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = createTestRepoApiClient();
+  afterAll(async () => {
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
   //create from request handler
   test('Get Repo Lists', async () => {

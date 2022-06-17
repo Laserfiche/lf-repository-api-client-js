@@ -17,9 +17,7 @@ import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
-  });
+  _RepositoryApiClient = createTestRepoApiClient();
 
   afterEach(async () => {
     if (entry != null) {
@@ -28,7 +26,9 @@ describe('Set Entries Integration Tests', () => {
       await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
     }
   });
-
+  afterAll(async()=>{
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
+  });
   test('Set fields', async () => {
     let field = null;
     let fieldValue = 'a';

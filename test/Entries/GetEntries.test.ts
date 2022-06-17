@@ -6,10 +6,8 @@ import { createTestRepoApiClient } from '../BaseTest.js';
 describe('Get Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
-  });
-  afterEach(async()=>{
+  _RepositoryApiClient = createTestRepoApiClient();
+  afterAll(async()=>{
     _RepositoryApiClient.serverSessionClient.invalidateServerSession({repoId});
   })
   test('Get Entry Fields', async () => {

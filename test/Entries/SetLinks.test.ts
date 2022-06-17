@@ -6,9 +6,7 @@ import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
 describe('Set Entries Integration Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
-  });
+  _RepositoryApiClient = createTestRepoApiClient();
 
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
@@ -21,6 +19,9 @@ describe('Set Entries Integration Tests', () => {
     }
     createdEntries = [];
     _RepositoryApiClient.serverSessionClient.invalidateServerSession({repoId});
+  });
+  afterAll(async()=>{
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
   test('Set Links', async () => {
     let sourceEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetLinks Source');

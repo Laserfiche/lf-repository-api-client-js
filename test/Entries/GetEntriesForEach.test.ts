@@ -4,17 +4,17 @@ import {
   ODataValueContextOfIListOfEntry,
   ODataValueContextOfIListOfWEntryLinkInfo,
   ODataValueContextOfIListOfWTagInfo,
-  IRepositoryApiClient
+  IRepositoryApiClient,
 } from '../../src/index.js';
 import { createTestRepoApiClient } from '../BaseTest.js';
 
 describe('Get Entry Tests', () => {
   let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
-  beforeEach(async()=>{
-    _RepositoryApiClient = createTestRepoApiClient();
+  _RepositoryApiClient = createTestRepoApiClient();
+  afterAll(async () => {
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
-
   test('Get Entry Listing for each paging', async () => {
     let maxPageSize = 10;
     let entries = 0;
