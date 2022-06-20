@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js --runInBand",
-    "test:all": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js && node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.jsdom.config.js --runInBand",
+    "test:all": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js --runInBand && node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.jsdom.config.js --runInBand",
     "build": "nswag run && npm run clean && tsc -b",
     "build:watch": "nswag run && tsc -b --watch",
     "clean": "tsc -b --clean",
