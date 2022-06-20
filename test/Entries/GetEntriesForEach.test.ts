@@ -6,15 +6,11 @@ import {
   ODataValueContextOfIListOfWTagInfo,
   IRepositoryApiClient,
 } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Get Entry Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
-  _RepositoryApiClient = createTestRepoApiClient();
-  afterAll(async () => {
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
-  });
+
   test('Get Entry Listing for each paging', async () => {
     let maxPageSize = 10;
     let entries = 0;

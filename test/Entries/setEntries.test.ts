@@ -9,14 +9,12 @@ import {
   WFieldInfo,
   WFieldType,
   WTagInfo,
-  IRepositoryApiClient,
 } from '../../src/index.js';
-import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
+import { allFalse, CreateEntry } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Set Entries Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
   var entry = new Entry();
-  _RepositoryApiClient = createTestRepoApiClient();
 
   afterEach(async () => {
     if (entry != null) {
@@ -25,9 +23,7 @@ describe('Set Entries Integration Tests', () => {
       await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
     }
   });
-  afterAll(async () => {
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
-  });
+
   test('Set fields', async () => {
     let field = null;
     let fieldValue = 'a';

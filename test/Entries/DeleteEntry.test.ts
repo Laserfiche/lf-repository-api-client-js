@@ -1,11 +1,9 @@
 import { repoId } from '../testHelper.js';
-import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
-import { DeleteEntryWithAuditReason, IRepositoryApiClient } from '../../src/index.js';
+import { CreateEntry} from '../BaseTest.js';
+import { DeleteEntryWithAuditReason } from '../../src/index.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Delete Entries Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  let entryId: number = 1;
-  _RepositoryApiClient = createTestRepoApiClient();
   test('Delete Entry', async () => {
     let deleteEntry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest DeleteFolder');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();

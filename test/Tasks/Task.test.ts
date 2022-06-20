@@ -3,17 +3,12 @@ import {
   AcceptedOperation,
   DeleteEntryWithAuditReason,
   Entry,
-  OperationStatus,
-  IRepositoryApiClient,
+  OperationStatus
 } from '../../src/index.js';
-import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
+import { CreateEntry } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Task Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-  afterAll(async () => {
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
-  });
   test('Cancel Operation', async () => {
     let deleteEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest CancelOperation');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();

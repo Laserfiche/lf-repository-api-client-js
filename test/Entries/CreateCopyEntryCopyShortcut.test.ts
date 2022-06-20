@@ -4,15 +4,14 @@ import {
   Entry,
   EntryType,
   PostEntryChildrenEntryType,
-  PostEntryChildrenRequest,
-  IRepositoryApiClient,
+  PostEntryChildrenRequest
 } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Create Copy Entry Test', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
+  
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = createTestRepoApiClient();
+  
 
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
@@ -25,6 +24,9 @@ describe('Create Copy Entry Test', () => {
     }
     createdEntries = [];
   });
+
+
+
   test('Create Copy Entry Copy Shortcut', async () => {
     //Create new entry
     let newEntryName: string = 'APIServerClientIntegrationTest CreateFolder';

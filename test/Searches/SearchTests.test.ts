@@ -2,17 +2,14 @@ import { repoId } from '../testHelper.js';
 import {
   AdvancedSearchRequest,
   ODataValueContextOfIListOfContextHit,
-  ODataValueContextOfIListOfEntry,
-  IRepositoryApiClient,
+  ODataValueContextOfIListOfEntry
 } from '../../src/index.js';
-
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 let searchToken: string;
 describe('Search Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
+  
   beforeEach(async () => {
-    _RepositoryApiClient = createTestRepoApiClient();
     searchToken = '';
   });
 
@@ -21,7 +18,6 @@ describe('Search Integration Tests', () => {
       await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({ repoId, searchToken });
       await new Promise((r) => setTimeout(r, 5000));
     }
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
   });
 
   test('Get Search Context Hits', async () => {

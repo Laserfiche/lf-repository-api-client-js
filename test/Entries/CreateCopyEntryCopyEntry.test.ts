@@ -7,15 +7,13 @@ import {
   OperationProgress,
   OperationStatus,
   PostEntryChildrenEntryType,
-  PostEntryChildrenRequest,
-  IRepositoryApiClient,
+  PostEntryChildrenRequest
 } from '../../src/index.js';
-import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
+import { CreateEntry } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Create Copy Entry Test', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = createTestRepoApiClient();
 
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {

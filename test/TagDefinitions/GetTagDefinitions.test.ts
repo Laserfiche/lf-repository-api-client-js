@@ -1,13 +1,8 @@
 import { repoId } from '../testHelper.js';
-import { ODataValueContextOfIListOfWTagInfo, WTagInfo, IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { ODataValueContextOfIListOfWTagInfo, WTagInfo } from '../../src/index.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Tag Definitions Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-  afterAll(async () => {
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
-  });
   test('Get Tag Definitions', async () => {
     let TagDefinitionsResponse: ODataValueContextOfIListOfWTagInfo =
       await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId });

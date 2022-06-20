@@ -1,11 +1,10 @@
 import { repoId } from '../testHelper.js';
-import { DeleteEntryWithAuditReason, Entry, PutTemplateRequest, IRepositoryApiClient } from '../../src/index.js';
-import { allFalse, CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
+import { DeleteEntryWithAuditReason, Entry, PutTemplateRequest } from '../../src/index.js';
+import { allFalse, CreateEntry } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Remove Entries Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
   let entry = new Entry();
-  _RepositoryApiClient = createTestRepoApiClient();
   afterEach(async () => {
     if (entry != null) {
       let body = new DeleteEntryWithAuditReason();
@@ -13,9 +12,7 @@ describe('Remove Entries Integration Tests', () => {
       await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
     }
   });
-  afterAll(async () => {
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
-  });
+
   test('Remove Template from Entry Return Entry', async () => {
     // Find a template definition with no required fields
     let template = null;

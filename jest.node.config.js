@@ -8,6 +8,8 @@ export default {
   },
   testEnvironment: 'node',
   reporters: ['default', ['jest-junit', { outputName: 'junit-node.xml' }]],
+  setupFiles:['./setup.ts'],
+  setupFilesAfterEnv:['./teardown.ts'],
   testTimeout: 200000,
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',

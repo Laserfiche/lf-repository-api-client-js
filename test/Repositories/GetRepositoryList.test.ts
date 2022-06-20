@@ -1,13 +1,8 @@
 import { repoId } from '../testHelper.js';
-import { RepositoryInfo, IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { RepositoryInfo } from '../../src/index.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Repo List Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-  afterAll(async () => {
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
-  });
   //create from request handler
   test('Get Repo Lists', async () => {
     let RepoListResponse: RepositoryInfo[] = await _RepositoryApiClient.repositoriesClient.getRepositoryList({});

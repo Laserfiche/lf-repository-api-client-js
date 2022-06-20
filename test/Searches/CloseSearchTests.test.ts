@@ -1,14 +1,8 @@
 import { repoId } from '../testHelper.js';
-import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry, IRepositoryApiClient } from '../../src/index.js';
-
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
+import { _RepositoryApiClient } from '../setup.js';
 
 describe('Search Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-  afterAll(async () => {
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
-  });
   test('Close Search Operations', async () => {
     //create search
     let request = new AdvancedSearchRequest();
