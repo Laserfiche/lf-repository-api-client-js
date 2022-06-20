@@ -204,10 +204,10 @@ export interface IAttributesClient {
   }): Promise<void>;
 
   /**
-   * Returns a promise containing the next link value of the attribute keys
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the attribute key value pairs using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of attribute keys allowed per API response schema
-   * @return get attribute key API response with the maximum page size above being set
+   * @return Get trustee attribute keys with the next link successfully
    */
   getTrusteeAttributeKeyValuePairsNextLink(args: {
     nextLink: string;
@@ -263,10 +263,10 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
     }
   }
   /**
-   * Returns a promise containing the next link value of the attribute keys.
-   * @param nextLink the string in the next link property of the API response schema.
+   * Returns the attribute key value pairs using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection.
    * @param maxPageSize the maximum page size or number of attribute keys allowed per API response schema.
-   * @return get attribute key API response with the maximum page size above being set.
+   * @return Get trustee attribute keys with the next link successfully
    */
   async getTrusteeAttributeKeyValuePairsNextLink(args: {
     nextLink: string;
@@ -402,40 +402,40 @@ export interface IEntriesClient {
     maxPageSize?: number;
   }): Promise<void>;
   /**
-   * Returns a promise containing the next link value of the entry listings
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the children entries of a folder in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of entry listings allowed per API response schema
-   * @return get entry listings API response with the maximum page size above being set
+   * @return Get the children entries of a Folder with the next link successfully
    */
   getEntryListingNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfIListOfEntry>;
   /**
-   * Returns a promise containing the next link value of the field values
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the fields assigned to an entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of field values allowed per API response schema
-   * @return get field values API response with the maximum page size above being set
+   * @return Get field values with the next link successfully
    */
   getFieldValuesNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfIListOfFieldValue>;
   /**
-   * Returns a promise containing the next link value of the link values from entry
-   * @param nextLink the string in the next link property of the API response schema
+   * Get the links assigned to an entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of link values from entry allowed per API response schema
-   * @return get link values from entry API response with the maximum page size above being set
+   * @return Get links with the next link successfully 
    */
   getLinkValuesFromEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfIListOfWEntryLinkInfo>;
   /**
-   * Returns a promise containing the next link value of the tags assigned to entry
-   * @param nextLink the string in the next link property of the API response schema
+   * Get the tags assigned to an entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of tags assigned to entry allowed per API response schema
-   * @return get tags assigned to entry API response with the maximum page size above being set
+   * @return Get entry tags with the next link successfully
    */
   getTagsAssignedToEntryNextLink(args: {
     nextLink: string;
@@ -675,10 +675,10 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     }
   }
   /**
-   * Returns a promise containing the next link value of the entry listings
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the children entries of a folder in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of entry listings allowed per API response schema
-   * @return get entry listings API response with the maximum page size above being set
+   * @return Get the children entries of a Folder with the next link successfully
    */
   async getEntryListingNextLink(args: {
     nextLink: string;
@@ -694,10 +694,10 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     );
   }
   /**
-   * Returns a promise containing the next link value of the field values
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the fields assigned to an entry using a next link 
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of field values allowed per API response schema
-   * @return get field values API response with the maximum page size above being set
+   * @return Get field values with the next link successfully
    */
   async getFieldValuesNextLink(args: {
     nextLink: string;
@@ -713,10 +713,10 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     );
   }
   /**
-   * Returns a promise containing the next link value of the link values from entry
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the links assigned to an entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of link values from entry allowed per API response schema
-   * @return get link values from entry API response with the maximum page size above being set
+   * @return Get links with the next link successfully
    */
   async getLinkValuesFromEntryNextLink(args: {
     nextLink: string;
@@ -732,10 +732,10 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     );
   }
   /**
-   * Returns a promise containing the next link value of the tags assigned to entry
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the entry tags assigned to an entry using a link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of tags assigned to entry allowed per API response schema
-   * @return get tags assigned to entry API response with the maximum page size above being set
+   * @return Get entry tags with the next link successfully
    */
   async getTagsAssignedToEntryNextLink(args: {
     nextLink: string;
@@ -781,10 +781,10 @@ export interface IFieldDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void>;
   /**
-   * Returns a promise containing the next link value of the field definitions
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns a paged listing of field definitions available in the specified repository using a next link 
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of field definitions allowed per API response schema
-   * @return get field definitions API response with the maximum page size above being set
+   * @return Get field definitions with the next link successfully
    */
   getFieldDefinitionsNextLink(args: {
     nextLink: string;
@@ -844,10 +844,10 @@ export class FieldDefinitionsClient extends generated.FieldDefinitionsClient imp
     }
   }
   /**
-   * Returns a promise containing the next link value of the field definitions
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns a paged listing of field definitions available in the specified repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of field definitions allowed per API response schema
-   * @return get field definitions API response with the maximum page size above being set
+   * @return Get field definitions with the next link successfully
    */
   async getFieldDefinitionsNextLink(args: {
     nextLink: string;
@@ -930,20 +930,20 @@ export interface ISearchesClient {
     maxPageSize?: number;
   }): Promise<void>;
   /**
-   * Returns a promise containing the next link value of the search results
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns a search result listing if the search is completed using a next link 
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of search results allowed per API response schema
-   * @return get search results API response with the maximum page size above being set
+   * @return Get search result with the next link successfully
    */
   getSearchResultsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfIListOfEntry>;
   /**
-   * Returns a promise containing the next link value of the search context hits
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the context hits associated with a search result entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of search context hits allowed per API response schema
-   * @return get search context hits API response with the maximum page size above being set
+   * @return Get search context hits with the next link successfully
    */
   getSearchContextHitsNextLink(args: {
     nextLink: string;
@@ -1085,10 +1085,10 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
     }
   }
   /**
-   * Returns a promise containing the next link value of the search results
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns a search result listing if the search is completed using a next link 
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of search results allowed per API response schema
-   * @return get search results API response with the maximum page size above being set
+   * @return Get search result with the next link successfully
    */
   async getSearchResultsNextLink(args: {
     nextLink: string;
@@ -1104,10 +1104,10 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
     );
   }
   /**
-   * Returns a promise containing the next link value of the search context hits
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the context hits associated with a search result entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of search context hits allowed per API response schema
-   * @return get search context hits API response with the maximum page size above being set
+   * @return Get search context hits with the next link successfully
    */
   async getSearchContextHitsNextLink(args: {
     nextLink: string;
@@ -1153,10 +1153,10 @@ export interface ITagDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void>;
   /**
-   * Returns a promise containing the next link value of the tag definitions
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns all tag definitions in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of tag definitions allowed per API response schema
-   * @return get tag definitions API response with the maximum page size above being set
+   * @return Get tag definitions with the next link successfully
    */
   getTagDefinitionsNextLink(args: {
     nextLink: string;
@@ -1216,10 +1216,10 @@ export class TagDefinitionsClient extends generated.TagDefinitionsClient impleme
     }
   }
   /**
-   * Returns a promise containing the next link value of the tag definitions
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns all tag definitions in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of tag definitions allowed per API response schema
-   * @return get tag definitions API response with the maximum page size above being set
+   * @return Get tag definitions with the next link successfully
    */
   async getTagDefinitionsNextLink(args: {
     nextLink: string;
@@ -1325,30 +1325,30 @@ export interface ITemplateDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void>;
   /**
-   * Returns a promise containing the next link value of the template definitions
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns all template definitions (including field definitions) in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of template definitions allowed per API response schema
-   * @return get template definitions API response with the maximum page size above being set
+   * @return Get template definitions with the next link successfully
    */
   getTemplateDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfIListOfWTemplateInfo>;
   /**
-   * Returns a promise containing the next link value of the template field definitions
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the field definitions assigned to a template definition using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of template field definitions allowed per API response schema
-   * @return get template field definitions API response with the maximum page size above being set
+   * @return Get field definitions with the next link successfully
    */
   getTemplateFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfIListOfTemplateFieldInfo>;
   /**
-   * Returns a promise containing the next link value of the template field definitions by template name
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the field definitions assigned to a template definition by template name using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of template field definitions by template name allowed per API response schema
-   * @return get template field definitions by template name API response with the maximum page size above being set
+   * @return Get field definitions by template name with the next link successfully
    */
   getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
@@ -1520,10 +1520,10 @@ export class TemplateDefinitionsClient
     }
   }
   /**
-   * Returns a promise containing the next link value of the template definitions
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns all template definitions (including field definitions) in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of template definitions allowed per API response schema
-   * @return get template definitions API response with the maximum page size above being set
+   * @return Get template definitions with the next link successfully
    */
   async getTemplateDefinitionsNextLink(args: {
     nextLink: string;
@@ -1539,10 +1539,10 @@ export class TemplateDefinitionsClient
     );
   }
   /**
-   * Returns a promise containing the next link value of the template field definitions
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the field definitions assigned to a template definition using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of template field definitions allowed per API response schema
-   * @return get template field definitions API response with the maximum page size above being set
+   * @return Get field definitions with the next link successfully
    */
   async getTemplateFieldDefinitionsNextLink(args: {
     nextLink: string;
@@ -1558,10 +1558,10 @@ export class TemplateDefinitionsClient
     );
   }
   /**
-   * Returns a promise containing the next link value of the template field definitions by template name
-   * @param nextLink the string in the next link property of the API response schema
+   * Returns the field definitions assigned to a template definition by template name using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of template field definitions by template name allowed per API response schema
-   * @return get template field definitions by template name API response with the maximum page size above being set
+   * @return Get field definitions by template name with the next link successfully
    */
   async getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
