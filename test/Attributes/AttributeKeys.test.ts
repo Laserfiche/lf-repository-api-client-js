@@ -44,7 +44,7 @@ describe('Attribute Key Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.attributesClient.GetTrusteeAttributeKeyValuePairsForEach({
+    await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairsForEach({
       callback,
       repoId,
       everyone: true,
