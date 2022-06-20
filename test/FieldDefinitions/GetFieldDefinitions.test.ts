@@ -46,7 +46,7 @@ describe('Field Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.fieldDefinitionsClient.GetFieldDefinitionsForEach({ callback, repoId, maxPageSize });
+    await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitionsForEach({ callback, repoId, maxPageSize });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
