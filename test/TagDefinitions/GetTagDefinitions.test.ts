@@ -26,7 +26,7 @@ describe('Tag Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.tagDefinitionsClient.GetTagDefinitionsForEach({ callback, repoId, maxPageSize });
+    await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitionsForEach({ callback, repoId, maxPageSize });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });

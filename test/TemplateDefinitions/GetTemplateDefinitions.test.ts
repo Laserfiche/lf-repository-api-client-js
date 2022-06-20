@@ -64,7 +64,7 @@ describe('Template Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.templateDefinitionsClient.GetTemplateDefinitionsForEach({
+    await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitionsForEach({
       callback,
       repoId,
       maxPageSize,
