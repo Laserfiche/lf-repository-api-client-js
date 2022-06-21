@@ -6,7 +6,7 @@ import {
   ODataValueContextOfIListOfWTagInfo,
   IRepositoryApiClient,
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Get Entry Tests', () => {
   let entryId: number = 1;

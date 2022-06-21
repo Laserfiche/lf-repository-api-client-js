@@ -11,7 +11,7 @@ import {
   WTagInfo,
 } from '../../src/index.js';
 import { allFalse, CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Set Entries Integration Tests', () => {
   var entry = new Entry();

@@ -1,7 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { DeleteEntryWithAuditReason, Entry, PatchEntryRequest } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Move Entries Integration Tests', () => {
   let createdEntries: Array<Entry> = new Array();

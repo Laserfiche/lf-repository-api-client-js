@@ -1,7 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { CreateEntry} from '../BaseTest.js';
 import { DeleteEntryWithAuditReason } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Delete Entries Integration Tests', () => {
   test('Delete Entry', async () => {

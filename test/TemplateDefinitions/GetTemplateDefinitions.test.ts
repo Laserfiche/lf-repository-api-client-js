@@ -4,7 +4,7 @@ import {
   ODataValueContextOfIListOfWTemplateInfo,
   WTemplateInfo
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Template Definitions Integration Tests', () => {
   test('Get Template Definition', async () => {

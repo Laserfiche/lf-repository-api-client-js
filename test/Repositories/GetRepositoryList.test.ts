@@ -1,6 +1,6 @@
 import { repoId } from '../testHelper.js';
 import { RepositoryInfo } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Repo List Integration Tests', () => {
   //create from request handler

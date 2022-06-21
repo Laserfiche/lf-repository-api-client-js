@@ -1,6 +1,6 @@
 import { repoId } from '../testHelper.js';
 import { AuditReasons } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Audit Reasons Integration Test', () => {
   test('Get the Audit Reasons', async () => {

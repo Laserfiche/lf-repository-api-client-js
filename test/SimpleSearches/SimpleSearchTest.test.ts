@@ -1,6 +1,6 @@
 import { repoId } from '../testHelper.js';
 import { SimpleSearchRequest } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Simple Search Integration Tests', () => {
   test('Create Simple Search', async () => {

@@ -4,7 +4,7 @@ import {
   ODataValueContextOfIListOfContextHit,
   ODataValueContextOfIListOfEntry
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 let searchToken: string;
 describe('Search Integration Tests', () => {

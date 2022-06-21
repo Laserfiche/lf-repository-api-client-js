@@ -6,7 +6,7 @@ import {
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Create Copy Entry Test', () => {
   

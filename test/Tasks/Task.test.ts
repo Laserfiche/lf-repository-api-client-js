@@ -6,7 +6,7 @@ import {
   OperationStatus
 } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Task Integration Tests', () => {
   test('Cancel Operation', async () => {

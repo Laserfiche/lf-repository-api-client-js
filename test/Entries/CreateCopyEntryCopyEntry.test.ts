@@ -10,7 +10,7 @@ import {
   PostEntryChildrenRequest
 } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Create Copy Entry Test', () => {
   let createdEntries: Array<Entry> = new Array();

@@ -7,7 +7,7 @@ import {
   IRepositoryApiClient,
 } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Set Entries Integration Tests', () => {
   let createdEntries: Array<Entry> = new Array();

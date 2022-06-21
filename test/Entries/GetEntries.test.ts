@@ -1,5 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Get Entries Integration Tests', () => {
   let entryId: number = 1;

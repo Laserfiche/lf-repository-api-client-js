@@ -1,6 +1,6 @@
 import { repoId } from '../testHelper.js';
 import { ODataValueContextOfIListOfWTagInfo, WTagInfo } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Tag Definitions Integration Tests', () => {
   test('Get Tag Definitions', async () => {

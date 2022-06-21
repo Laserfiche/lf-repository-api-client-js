@@ -3,7 +3,7 @@ import {
   GetDynamicFieldLogicValueRequest,
   ODataValueContextOfIListOfWTemplateInfo,
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Dynamic Fields Integration Tests', () => {
   let entryId: number = 1;

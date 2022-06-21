@@ -1,6 +1,6 @@
 import { repoId } from '../testHelper.js';
 import { ODataValueOfBoolean, ODataValueOfDateTime, IRepositoryApiClient } from '../../src/index.js';
-import { _RepositoryApiClient } from '../setup.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Access Token Integration Tests', () => {
   test('Refresh Server Session', async () => {
