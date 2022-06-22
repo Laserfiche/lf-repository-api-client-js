@@ -5,15 +5,12 @@ import {
   EntryType,
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest,
-  Shortcut,
-  IRepositoryApiClient
+  Shortcut
 } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Create Copy Entry Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
   let createdEntries: Array<Entry> = new Array();
-  _RepositoryApiClient = createTestRepoApiClient();
 
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {

@@ -1,11 +1,8 @@
 import { repoId } from '../testHelper.js';
 import { ODataValueContextOfIListOfWFieldInfo, IRepositoryApiClient, WFieldInfo } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Field Definitions Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-
   test('Get Field Definitions', async () => {
     let result: ODataValueContextOfIListOfWFieldInfo =
       await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId });

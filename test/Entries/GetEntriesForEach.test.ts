@@ -4,13 +4,11 @@ import {
   ODataValueContextOfIListOfEntry,
   ODataValueContextOfIListOfWEntryLinkInfo,
   ODataValueContextOfIListOfWTagInfo,
-  IRepositoryApiClient
+  IRepositoryApiClient,
 } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Get Entry Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
   let entryId: number = 1;
 
   test('Get Entry Listing for each paging', async () => {

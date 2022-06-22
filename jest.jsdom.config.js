@@ -8,8 +8,9 @@ export default {
   },
   testEnvironment: 'jsdom',
   reporters: ['default', ['jest-junit', { outputName: 'junit-jsdom.xml' }]],
+  setupFiles:['./createSession.ts'],
+  setupFilesAfterEnv:['./logout.ts'],
   testTimeout: 200000,
-  roots: ['test/Attributes/', 'test/AccessTokens/', 'test/FieldDefinitions/'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },

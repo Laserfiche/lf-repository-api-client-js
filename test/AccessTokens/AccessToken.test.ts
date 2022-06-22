@@ -1,10 +1,8 @@
 import { repoId } from '../testHelper.js';
 import { ODataValueOfBoolean, ODataValueOfDateTime, IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Access Token Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
   test('Refresh Server Session', async () => {
     let currentTime: string = new Date().toISOString();
     let refreshResponse: ODataValueOfDateTime = await _RepositoryApiClient.serverSessionClient.refreshServerSession({

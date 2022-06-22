@@ -1,11 +1,12 @@
 import { repoId } from '../testHelper.js';
-import { GetDynamicFieldLogicValueRequest, ODataValueContextOfIListOfWTemplateInfo,IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import {
+  GetDynamicFieldLogicValueRequest,
+  ODataValueContextOfIListOfWTemplateInfo,
+} from '../../src/index.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
 describe('Dynamic Fields Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
-  _RepositoryApiClient = createTestRepoApiClient();
   test('Get Dynamic Fields Entry', async () => {
     let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId });

@@ -2,19 +2,15 @@ import { repoId } from '../testHelper.js';
 import {
   AdvancedSearchRequest,
   ODataValueContextOfIListOfContextHit,
-  ODataValueContextOfIListOfEntry,
-  IRepositoryApiClient
+  ODataValueContextOfIListOfEntry
 } from '../../src/index.js';
+import { _RepositoryApiClient } from '../createSession.js';
 
-import { createTestRepoApiClient } from '../BaseTest.js';
-
-let searchToken:string;
+let searchToken: string;
 describe('Search Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-
-  beforeEach(async ()=>{
-    searchToken = "";
+  
+  beforeEach(async () => {
+    searchToken = '';
   });
 
   afterEach(async () => {
@@ -53,7 +49,7 @@ describe('Search Integration Tests', () => {
   test('Get Search Results for each Paging', async () => {
     let maxPageSize = 20;
     let searchRequest = new AdvancedSearchRequest();
-    searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option=\"DFANLT\"})';
+    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
       repoId,
       request: searchRequest,
@@ -90,10 +86,12 @@ describe('Search Integration Tests', () => {
     expect(searchToken).not.toBeNull();
     await new Promise((r) => setTimeout(r, 5000));
     var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId, searchToken });
+    //console.log(searchResultsResponse);
     if (!searchResultsResponse.value) {
       throw new Error('searchResultsResponse.value is undefined');
     }
     var searchResults = searchResultsResponse.value;
+    //console.log(searchResults);
     expect(searchResults).not.toBeNull();
     expect(searchResults.length > 0).toBeTruthy();
     let rowNum = searchResults[0].rowNumber ?? 0;

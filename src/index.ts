@@ -9849,7 +9849,7 @@ async function getNextLinkListing<T extends IODataValueContextOfIListOfEntry>(
     method: 'GET',
     headers: {
       Prefer: prefer !== undefined && prefer !== null ? prefer : '',
-      Accept: 'application/json',
+      Accept: 'application/json'
     },
   };
   let processListingTwo = processListing.bind(http);
