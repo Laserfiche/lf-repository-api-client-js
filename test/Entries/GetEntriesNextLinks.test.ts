@@ -1,12 +1,9 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Get Entry Next Links Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
-  _RepositoryApiClient = createTestRepoApiClient();
 
   test('Get Entry Field simple paging', async () => {
     let maxPageSize = 1;

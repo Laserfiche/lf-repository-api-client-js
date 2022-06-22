@@ -1,12 +1,9 @@
 import { repoId } from '../testHelper.js';
-import { SimpleSearchRequest,IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { SimpleSearchRequest } from '../../src/index.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Simple Search Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-
   test('Create Simple Search', async () => {
     let request: SimpleSearchRequest = new SimpleSearchRequest();
     request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';

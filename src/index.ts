@@ -273,7 +273,26 @@ export class EntriesClient implements IEntriesClient {
     }
 
     
-  async GetEntryListingForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param entryId The requested entry ID.
+   * @param groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
+   * @param fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
+   * @param formatFields (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting. 
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of entry listings allowed per API response schema.
+   */
+  async getEntryListingForEach(args: {
     callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -311,7 +330,7 @@ export class EntriesClient implements IEntriesClient {
       groupByEntryType,
       fields,
       formatFields,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
       orderby,
@@ -331,8 +350,25 @@ export class EntriesClient implements IEntriesClient {
       nextLink = response.odataNextLink;
     }
   }
-
-  async GetFieldValuesForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of field values of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param entryId The requested entry ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param formatValue (optional) An optional query parameter used to indicate if the field values should be formatted.
+          The default value is false. 
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting. 
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of field values allowed per API response schema.
+   */
+  async getFieldValuesForEach(args: {
     callback: (response: ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -351,7 +387,7 @@ export class EntriesClient implements IEntriesClient {
     var response = await this.getFieldValues({
       repoId,
       entryId,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       formatValue,
       culture,
       select,
@@ -372,8 +408,20 @@ export class EntriesClient implements IEntriesClient {
       nextLink = response.odataNextLink;
     }
   }
-
-  async GetLinkValuesFromEntryForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of link values from entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param entryId The requested entry ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of link values from entry allowed per API response schema.
+   */
+  async getLinkValuesFromEntryForEach(args: {
     callback: (response: ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -389,7 +437,7 @@ export class EntriesClient implements IEntriesClient {
     var response = await this.getLinkValuesFromEntry({
       repoId,
       entryId,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
       orderby,
       top,
@@ -408,8 +456,20 @@ export class EntriesClient implements IEntriesClient {
       nextLink = response.odataNextLink;
     }
   }
-
-  async GetTagsAssignedToEntryForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of tags assigned to entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param entryId The requested entry ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of tags assigned to entry allowed per API response schema.
+   */
+  async getTagsAssignedToEntryForEach(args: {
     callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -425,7 +485,7 @@ export class EntriesClient implements IEntriesClient {
     var response = await this.getTagsAssignedToEntry({
       repoId,
       entryId,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
       orderby,
       top,
@@ -444,7 +504,12 @@ export class EntriesClient implements IEntriesClient {
       nextLink = response.odataNextLink;
     }
   }
-
+  /**
+   * Returns the children entries of a folder in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of entry listings allowed per API response schema
+   * @return Get the children entries of a Folder with the next link successfully
+   */
   async getEntryListingNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -458,7 +523,12 @@ export class EntriesClient implements IEntriesClient {
       maxPageSize
     );
   }
-
+  /**
+   * Returns the fields assigned to an entry using a next link 
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of field values allowed per API response schema
+   * @return Get field values with the next link successfully
+   */
   async getFieldValuesNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -472,7 +542,12 @@ export class EntriesClient implements IEntriesClient {
       maxPageSize
     );
   }
-
+  /**
+   * Returns the links assigned to an entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of link values from entry allowed per API response schema
+   * @return Get links with the next link successfully
+   */
   async getLinkValuesFromEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -486,7 +561,12 @@ export class EntriesClient implements IEntriesClient {
       maxPageSize
     );
   }
-
+  /**
+   * Returns the entry tags assigned to an entry using a link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of tags assigned to entry allowed per API response schema
+   * @return Get entry tags with the next link successfully
+   */
   async getTagsAssignedToEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -2612,7 +2692,19 @@ export class AttributesClient implements IAttributesClient {
     }
 
     
-  async GetTrusteeAttributeKeyValuePairsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of attributes key value pairs allowed per API response schema
+   */
+  async getTrusteeAttributeKeyValuePairsForEach(args: {
     callback: (response: ODataValueContextOfListOfAttribute) => Promise<boolean>;
     repoId: string;
     everyone?: boolean;
@@ -2627,7 +2719,7 @@ export class AttributesClient implements IAttributesClient {
     var response = await this.getTrusteeAttributeKeyValuePairs({
       repoId,
       everyone,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
       orderby,
       top,
@@ -2646,6 +2738,12 @@ export class AttributesClient implements IAttributesClient {
       nextLink = response.odataNextLink;
     }
   }
+  /**
+   * Returns the attribute key value pairs using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection.
+   * @param maxPageSize the maximum page size or number of attribute keys allowed per API response schema.
+   * @return Get trustee attribute keys with the next link successfully
+   */
   async getTrusteeAttributeKeyValuePairsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -2887,7 +2985,22 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
     }
 
     
-  async GetFieldDefinitionsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of field definitions allowed per API response schema.
+   */
+  async getFieldDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
@@ -2902,7 +3015,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
     let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.getFieldDefinitions({
       repoId,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
       orderby,
@@ -2922,6 +3035,12 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
       nextLink = response.odataNextLink;
     }
   }
+  /**
+   * Returns a paged listing of field definitions available in the specified repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of field definitions allowed per API response schema
+   * @return Get field definitions with the next link successfully
+   */
   async getFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -3812,7 +3931,27 @@ export class SearchesClient implements ISearchesClient {
     }
 
     
-  async GetSearchResultsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param searchToken The requested searchToken.
+   * @param groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
+   * @param refresh (optional) If the search listing should be refreshed to show updated values.
+   * @param fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
+   * @param formatFields (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of search results allowed per API response schema.
+   */
+  async getSearchResultsForEach(args: {
     callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
     searchToken: string;
@@ -3853,7 +3992,7 @@ export class SearchesClient implements ISearchesClient {
       refresh,
       fields,
       formatFields,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
       orderby,
@@ -3873,7 +4012,21 @@ export class SearchesClient implements ISearchesClient {
       nextLink = response.odataNextLink;
     }
   }
-  async GetSearchContextHitsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param searchToken The requested searchToken.
+   * @param rowNumber The search result listing row number to get context hits for.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of search context hits allowed per API response schema.
+   */
+  async getSearchContextHitsForEach(args: {
     callback: (response: ODataValueContextOfIListOfContextHit) => Promise<boolean>;
     repoId: string;
     searchToken: string;
@@ -3891,7 +4044,7 @@ export class SearchesClient implements ISearchesClient {
       repoId,
       searchToken,
       rowNumber,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
       orderby,
       top,
@@ -3910,7 +4063,13 @@ export class SearchesClient implements ISearchesClient {
       nextLink = response.odataNextLink;
     }
   }
-  async GetSearchResultsNextLink(args: {
+  /**
+   * Returns a search result listing if the search is completed using a next link 
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of search results allowed per API response schema
+   * @return Get search result with the next link successfully
+   */
+  async getSearchResultsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfEntry> {
@@ -3923,7 +4082,13 @@ export class SearchesClient implements ISearchesClient {
       maxPageSize
     );
   }
-  async GetSearchContextHitsNextLink(args: {
+  /**
+   * Returns the context hits associated with a search result entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of search context hits allowed per API response schema
+   * @return Get search context hits with the next link successfully
+   */
+  async getSearchContextHitsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfContextHit> {
@@ -4614,7 +4779,22 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
     }
 
     
-  async GetTagDefinitionsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of tag definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of tag definitions allowed per API response schema.
+   */
+  async getTagDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
@@ -4629,7 +4809,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
     let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.getTagDefinitions({
       repoId,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
       orderby,
@@ -4649,6 +4829,12 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
       nextLink = response.odataNextLink;
     }
   }
+  /**
+   * Returns all tag definitions in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of tag definitions allowed per API response schema
+   * @return Get tag definitions with the next link successfully
+   */
   async getTagDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -4924,7 +5110,23 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     }
 
     
-  async GetTemplateDefinitionsForEach(args: {
+  /**
+   * Given a maximum page size, it will continue to make the same call to get a list of template definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of template definitions allowed per API response schema.
+   */
+  async getTemplateDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
     repoId: string;
     templateName?: string;
@@ -4941,7 +5143,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     var response = await this.getTemplateDefinitions({
       repoId,
       templateName,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
       orderby,
@@ -4961,8 +5163,23 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
       nextLink = response.odataNextLink;
     }
   }
-
-  async GetTemplateFieldDefinitionsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of template field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of template field definitions allowed per API response schema.
+   */
+  async getTemplateFieldDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
     repoId: string;
     templateId: number;
@@ -4979,7 +5196,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     var response = await this.getTemplateFieldDefinitions({
       repoId,
       templateId,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
       orderby,
@@ -4999,8 +5216,23 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
       nextLink = response.odataNextLink;
     }
   }
-
-  async GetTemplateFieldDefinitionsByTemplateNameForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of template field definitions by template name of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of template field definitions by template name allowed per API response schema.
+   */
+  async getTemplateFieldDefinitionsByTemplateNameForEach(args: {
     callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
     repoId: string;
     templateName: string;
@@ -5017,7 +5249,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     var response = await this.getTemplateFieldDefinitionsByTemplateName({
       repoId,
       templateName,
-      prefer: CreateMaxPageSizePreferHeaderPayload(maxPageSize),
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
       orderby,
@@ -5037,6 +5269,12 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
       nextLink = response.odataNextLink;
     }
   }
+  /**
+   * Returns all template definitions (including field definitions) in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of template definitions allowed per API response schema
+   * @return Get template definitions with the next link successfully
+   */
   async getTemplateDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -5050,6 +5288,12 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
       maxPageSize
     );
   }
+  /**
+   * Returns the field definitions assigned to a template definition using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of template field definitions allowed per API response schema
+   * @return Get field definitions with the next link successfully
+   */
   async getTemplateFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -5063,6 +5307,12 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
       maxPageSize
     );
   }
+  /**
+   * Returns the field definitions assigned to a template definition by template name using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of template field definitions by template name allowed per API response schema
+   * @return Get field definitions by template name with the next link successfully
+   */
   async getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -9458,6 +9708,8 @@ export interface IRepositoryApiClient {
   tagDefinitionsClient: ITagDefinitionsClient;
   tasksClient: ITasksClient;
   templateDefinitionsClient: ITemplateDefinitionsClient;
+  get defaultRequestHeaders(): Record<string, string>;
+  set defaultRequestHeaders(headers: Record<string, string>);
 }
 // @ts-ignore
 export class RepositoryApiClient implements IRepositoryApiClient {
@@ -9592,12 +9844,12 @@ async function getNextLinkListing<T extends IODataValueContextOfIListOfEntry>(
   if (!nextLink) {
     throw new Error('Next Link is undefined');
   }
-  const prefer = CreateMaxPageSizePreferHeaderPayload(maxPageSize);
+  const prefer = createMaxPageSizePreferHeaderPayload(maxPageSize);
   let options_ = <RequestInit>{
     method: 'GET',
     headers: {
       Prefer: prefer !== undefined && prefer !== null ? prefer : '',
-      Accept: 'application/json',
+      Accept: 'application/json'
     },
   };
   let processListingTwo = processListing.bind(http);
@@ -9606,7 +9858,7 @@ async function getNextLinkListing<T extends IODataValueContextOfIListOfEntry>(
   });
 }
 
-function CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefined {
+function createMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefined {
   //puts the max size into the prefer header of the GET request
   if (!maxSize) {
     return undefined;
@@ -9616,11 +9868,19 @@ function CreateMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefi
 }
 
 export interface IAttributesClient {
-  getTrusteeAttributeKeyValuePairsNextLink(args: {
-    nextLink: string;
-    maxPageSize?: number;
-  }): Promise<ODataValueContextOfListOfAttribute>;
-  GetTrusteeAttributeKeyValuePairsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of attributes key value pairs allowed per API response schema
+   */
+  getTrusteeAttributeKeyValuePairsForEach(args: {
     callback: (response: ODataValueContextOfListOfAttribute) => Promise<boolean>;
     repoId: string;
     everyone?: boolean;
@@ -9631,10 +9891,40 @@ export interface IAttributesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
+
+  /**
+   * Returns the attribute key value pairs using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of attribute keys allowed per API response schema
+   * @return Get trustee attribute keys with the next link successfully
+   */
+  getTrusteeAttributeKeyValuePairsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<ODataValueContextOfListOfAttribute>;
 }
 
 export interface IEntriesClient {
-  GetEntryListingForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param entryId The requested entry ID.
+   * @param groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
+   * @param fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
+   * @param formatFields (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting. 
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of entry listings allowed per API response schema.
+   */
+  getEntryListingForEach(args: {
     callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -9650,8 +9940,25 @@ export interface IEntriesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-
-  GetFieldValuesForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of field values of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param entryId The requested entry ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param formatValue (optional) An optional query parameter used to indicate if the field values should be formatted.
+          The default value is false. 
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting. 
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of field values allowed per API response schema.
+   */
+  getFieldValuesForEach(args: {
     callback: (response: ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -9665,8 +9972,20 @@ export interface IEntriesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-
-  GetLinkValuesFromEntryForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of link values from entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param entryId The requested entry ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of link values from entry allowed per API response schema.
+   */
+  getLinkValuesFromEntryForEach(args: {
     callback: (response: ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -9678,8 +9997,20 @@ export interface IEntriesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-
-  GetTagsAssignedToEntryForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of tags assigned to entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param entryId The requested entry ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of tags assigned to entry allowed per API response schema.
+   */
+  getTagsAssignedToEntryForEach(args: {
     callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -9691,19 +10022,42 @@ export interface IEntriesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-
+  /**
+   * Returns the children entries of a folder in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of entry listings allowed per API response schema
+   * @return Get the children entries of a Folder with the next link successfully
+   */
   getEntryListingNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfEntry>;
+  /**
+   * Returns the fields assigned to an entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of field values allowed per API response schema
+   * @return Get field values with the next link successfully
+   */
   getFieldValuesNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfFieldValue>;
+  /**
+   * Get the links assigned to an entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of link values from entry allowed per API response schema
+   * @return Get links with the next link successfully 
+   */
   getLinkValuesFromEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfWEntryLinkInfo>;
+  /**
+   * Get the tags assigned to an entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of tags assigned to entry allowed per API response schema
+   * @return Get entry tags with the next link successfully
+   */
   getTagsAssignedToEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -9711,7 +10065,22 @@ export interface IEntriesClient {
 }
 
 export interface IFieldDefinitionsClient {
-  GetFieldDefinitionsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of field definitions allowed per API response schema.
+   */
+  getFieldDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
@@ -9723,6 +10092,12 @@ export interface IFieldDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
+  /**
+   * Returns a paged listing of field definitions available in the specified repository using a next link 
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of field definitions allowed per API response schema
+   * @return Get field definitions with the next link successfully
+   */
   getFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -9730,7 +10105,27 @@ export interface IFieldDefinitionsClient {
 }
 
 export interface ISearchesClient {
-  GetSearchResultsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param searchToken The requested searchToken.
+   * @param groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
+   * @param refresh (optional) If the search listing should be refreshed to show updated values.
+   * @param fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
+   * @param formatFields (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of search results allowed per API response schema.
+   */
+  getSearchResultsForEach(args: {
     callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
     repoId: string;
     searchToken: string;
@@ -9747,7 +10142,21 @@ export interface ISearchesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-  GetSearchContextHitsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param searchToken The requested searchToken.
+   * @param rowNumber The search result listing row number to get context hits for.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of search context hits allowed per API response schema.
+   */
+  getSearchContextHitsForEach(args: {
     callback: (response: ODataValueContextOfIListOfContextHit) => Promise<boolean>;
     repoId: string;
     searchToken: string;
@@ -9760,18 +10169,45 @@ export interface ISearchesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-  GetSearchResultsNextLink(args: {
+  /**
+   * Returns a search result listing if the search is completed using a next link 
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of search results allowed per API response schema
+   * @return Get search result with the next link successfully
+   */
+  getSearchResultsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfEntry>;
-  GetSearchContextHitsNextLink(args: {
+  /**
+   * Returns the context hits associated with a search result entry using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of search context hits allowed per API response schema
+   * @return Get search context hits with the next link successfully
+   */
+  getSearchContextHitsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfContextHit>;
 }
 
 export interface ITagDefinitionsClient {
-  GetTagDefinitionsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of tag definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of tag definitions allowed per API response schema.
+   */
+  getTagDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
@@ -9783,6 +10219,12 @@ export interface ITagDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
+  /**
+   * Returns all tag definitions in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of tag definitions allowed per API response schema
+   * @return Get tag definitions with the next link successfully
+   */
   getTagDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
@@ -9790,7 +10232,23 @@ export interface ITagDefinitionsClient {
 }
 
 export interface ITemplateDefinitionsClient {
-  GetTemplateDefinitionsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of template definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of template definitions allowed per API response schema.
+   */
+  getTemplateDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
     repoId: string;
     templateName?: string;
@@ -9803,7 +10261,23 @@ export interface ITemplateDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-  GetTemplateFieldDefinitionsForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of template field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of template field definitions allowed per API response schema.
+   */
+  getTemplateFieldDefinitionsForEach(args: {
     callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
     repoId: string;
     templateId: number;
@@ -9816,7 +10290,23 @@ export interface ITemplateDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-  GetTemplateFieldDefinitionsByTemplateNameForEach(args: {
+  /**
+   * It will continue to make the same call to get a list of template field definitions by template name of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          culture will not be used for formatting.  
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of template field definitions by template name allowed per API response schema.
+   */
+  getTemplateFieldDefinitionsByTemplateNameForEach(args: {
     callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
     repoId: string;
     templateName: string;
@@ -9829,14 +10319,32 @@ export interface ITemplateDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
+  /**
+   * Returns all template definitions (including field definitions) in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of template definitions allowed per API response schema
+   * @return Get template definitions with the next link successfully
+   */
   getTemplateDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfWTemplateInfo>;
+  /**
+   * Returns the field definitions assigned to a template definition using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of template field definitions allowed per API response schema
+   * @return Get field definitions with the next link successfully
+   */
   getTemplateFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
+  /**
+   * Returns the field definitions assigned to a template definition by template name using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of template field definitions by template name allowed per API response schema
+   * @return Get field definitions by template name with the next link successfully
+   */
   getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
     maxPageSize?: number;

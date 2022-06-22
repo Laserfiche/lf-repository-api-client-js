@@ -1,11 +1,9 @@
 import { repoId } from '../testHelper.js';
-import { ODataValueContextOfListOfAttribute,IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { ODataValueContextOfListOfAttribute, IRepositoryApiClient } from '../../src/index.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Attribute Key Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
   test('Get the attribute keys', async () => {
     let result: ODataValueContextOfListOfAttribute =
       await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId, everyone: true });
@@ -45,7 +43,7 @@ describe('Attribute Key Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.attributesClient.GetTrusteeAttributeKeyValuePairsForEach({
+    await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairsForEach({
       callback,
       repoId,
       everyone: true,

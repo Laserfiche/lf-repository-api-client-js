@@ -1,11 +1,9 @@
 import { repoId } from '../testHelper.js';
-import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry,IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Search Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
   test('Close Search Operations', async () => {
     //create search
     let request = new AdvancedSearchRequest();
@@ -47,7 +45,7 @@ describe('Search Integration Tests', () => {
     let nextLink: string = response.odataNextLink ?? '';
     expect(nextLink).not.toBeNull();
     expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.searchesClient.GetSearchResultsNextLink({ nextLink, maxPageSize });
+    let response2 = await _RepositoryApiClient.searchesClient.getSearchResultsNextLink({ nextLink, maxPageSize });
     if (!response2.value) {
       throw new Error('response2.value is undefined');
     }

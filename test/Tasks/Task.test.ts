@@ -3,16 +3,13 @@ import {
   AcceptedOperation,
   DeleteEntryWithAuditReason,
   Entry,
-  OperationStatus,
-  IRepositoryApiClient,
+  OperationStatus
 } from '../../src/index.js';
-import { CreateEntry, createTestRepoApiClient } from '../BaseTest.js';
+import { CreateEntry } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Task Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-
   test('Cancel Operation', async () => {
     let deleteEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest CancelOperation');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();

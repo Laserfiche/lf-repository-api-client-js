@@ -5,3 +5,4 @@ node_modules/*
 .vs/*
 junit*.xml
 *.tgz
+launch.json

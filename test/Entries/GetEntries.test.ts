@@ -1,17 +1,14 @@
 import { repoId } from '../testHelper.js';
-import { IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Get Entries Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
   let entryId: number = 1;
-  _RepositoryApiClient = createTestRepoApiClient();
   test('Get Entry Fields', async () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId, entryId });
     expect(entryFieldResponse?.value).not.toBeNull;
   });
-  test.skip('Get Entry Listing', async () => {
+  test('Get Entry Listing', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryListing({
       repoId,
       entryId,

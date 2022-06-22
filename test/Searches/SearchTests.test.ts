@@ -2,19 +2,20 @@ import { repoId } from '../testHelper.js';
 import {
   AdvancedSearchRequest,
   ODataValueContextOfIListOfContextHit,
-  ODataValueContextOfIListOfEntry,
-  IRepositoryApiClient
+  ODataValueContextOfIListOfEntry
 } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
-let searchToken = 'test';
+let searchToken: string;
 describe('Search Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
+  
+  beforeEach(async () => {
+    searchToken = '';
+  });
 
   afterEach(async () => {
-    if (searchToken != '' || searchToken != null) {
+    if (searchToken) {
       await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({ repoId, searchToken });
       await new Promise((r) => setTimeout(r, 5000));
     }
@@ -54,7 +55,7 @@ describe('Search Integration Tests', () => {
       repoId,
       request: searchRequest,
     });
-    let searchToken = searchResponse.token ?? '';
+    searchToken = searchResponse.token ?? '';
     expect(searchToken).not.toBe('');
     expect(searchToken).not.toBeNull();
     await new Promise((r) => setTimeout(r, 10000));
@@ -68,7 +69,7 @@ describe('Search Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.searchesClient.GetSearchResultsForEach({ callback, repoId, searchToken, maxPageSize });
+    await _RepositoryApiClient.searchesClient.getSearchResultsForEach({ callback, repoId, searchToken, maxPageSize });
     expect(searchResults).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -81,15 +82,17 @@ describe('Search Integration Tests', () => {
       repoId,
       request: searchRequest,
     });
-    let searchToken = searchResponse.token ?? '';
+    searchToken = searchResponse.token ?? '';
     expect(searchToken).not.toBe('');
     expect(searchToken).not.toBeNull();
     await new Promise((r) => setTimeout(r, 5000));
     var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId, searchToken });
+    //console.log(searchResultsResponse);
     if (!searchResultsResponse.value) {
       throw new Error('searchResultsResponse.value is undefined');
     }
     var searchResults = searchResultsResponse.value;
+    //console.log(searchResults);
     expect(searchResults).not.toBeNull();
     expect(searchResults.length > 0).toBeTruthy();
     let rowNum = searchResults[0].rowNumber ?? 0;
@@ -103,7 +106,7 @@ describe('Search Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.searchesClient.GetSearchContextHitsForEach({
+    await _RepositoryApiClient.searchesClient.getSearchContextHitsForEach({
       callback,
       repoId,
       searchToken,

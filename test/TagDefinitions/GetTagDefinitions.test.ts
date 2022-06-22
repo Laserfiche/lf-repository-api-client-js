@@ -1,11 +1,9 @@
 import { repoId } from '../testHelper.js';
-import { ODataValueContextOfIListOfWTagInfo, WTagInfo,IRepositoryApiClient } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { ODataValueContextOfIListOfWTagInfo, WTagInfo } from '../../src/index.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Tag Definitions Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
   test('Get Tag Definitions', async () => {
     let TagDefinitionsResponse: ODataValueContextOfIListOfWTagInfo =
       await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId });
@@ -24,7 +22,7 @@ describe('Tag Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.tagDefinitionsClient.GetTagDefinitionsForEach({ callback, repoId, maxPageSize });
+    await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitionsForEach({ callback, repoId, maxPageSize });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });

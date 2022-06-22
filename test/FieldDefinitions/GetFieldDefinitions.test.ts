@@ -1,12 +1,9 @@
 import { repoId } from '../testHelper.js';
 import { ODataValueContextOfIListOfWFieldInfo, IRepositoryApiClient, WFieldInfo } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Field Definitions Integration Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
-
   test('Get Field Definitions', async () => {
     let result: ODataValueContextOfIListOfWFieldInfo =
       await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId });
@@ -47,7 +44,7 @@ describe('Field Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.fieldDefinitionsClient.GetFieldDefinitionsForEach({ callback, repoId, maxPageSize });
+    await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitionsForEach({ callback, repoId, maxPageSize });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });

@@ -4,14 +4,12 @@ import {
   ODataValueContextOfIListOfEntry,
   ODataValueContextOfIListOfWEntryLinkInfo,
   ODataValueContextOfIListOfWTagInfo,
-  IRepositoryApiClient
+  IRepositoryApiClient,
 } from '../../src/index.js';
-import { createTestRepoApiClient } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Get Entry Tests', () => {
-  let _RepositoryApiClient: IRepositoryApiClient;
-  _RepositoryApiClient = createTestRepoApiClient();
   let entryId: number = 1;
 
   test('Get Entry Listing for each paging', async () => {
@@ -26,7 +24,7 @@ describe('Get Entry Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.entriesClient.GetEntryListingForEach({ callback, repoId, entryId, maxPageSize });
+    await _RepositoryApiClient.entriesClient.getEntryListingForEach({ callback, repoId, entryId, maxPageSize });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -43,7 +41,7 @@ describe('Get Entry Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.entriesClient.GetFieldValuesForEach({ callback, repoId, entryId, maxPageSize });
+    await _RepositoryApiClient.entriesClient.getFieldValuesForEach({ callback, repoId, entryId, maxPageSize });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -60,7 +58,7 @@ describe('Get Entry Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.entriesClient.GetLinkValuesFromEntryForEach({ callback, repoId, entryId, maxPageSize });
+    await _RepositoryApiClient.entriesClient.getLinkValuesFromEntryForEach({ callback, repoId, entryId, maxPageSize });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -77,7 +75,7 @@ describe('Get Entry Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.entriesClient.GetTagsAssignedToEntryForEach({ callback, repoId, entryId, maxPageSize });
+    await _RepositoryApiClient.entriesClient.getTagsAssignedToEntryForEach({ callback, repoId, entryId, maxPageSize });
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });

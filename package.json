@@ -7,18 +7,24 @@
   "types": "dist/src/index.d.ts",
   "files": [
     "dist/src/index.js",
-    "dist/src/index.d.js"
+    "dist/src/index.d.ts",
+    "README.md"
   ],
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js",
-    "test:all": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js && node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.jsdom.config.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js --runInBand",
+    "test:all": "node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.node.config.js --runInBand && node --experimental-vm-modules node_modules/jest/bin/jest.js --rootDir=test --config jest.jsdom.config.js --runInBand",
     "build": "nswag run && npm run clean && tsc -b",
     "build:watch": "nswag run && tsc -b --watch",
     "clean": "tsc -b --clean",
     "nswag": "nswag run"
   },
   "author": "Laserfiche",
+  "url": "https://www.laserfiche.com/",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Laserfiche/lf-repository-api-client-js"
+  },
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.35",
     "@types/jest": "^27.4.0",
@@ -35,6 +41,6 @@
   },
   "dependencies": {
     "@laserfiche/lf-api-client-core": "^1.0.5",
-    "@laserfiche/lf-js-utils": "^3.0.5"
+    "@laserfiche/lf-js-utils": "^4.0.2"
   }
 }
