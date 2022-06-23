@@ -2,6 +2,7 @@ import { repoId } from '../testHelper.js';
 import { DeleteEntryWithAuditReason, Entry, PutTemplateRequest } from '../../src/index.js';
 import { allFalse, CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../createSession.js';
+import "isomorphic-fetch";
 
 describe('Remove Entries Integration Tests', () => {
   let entry = new Entry();

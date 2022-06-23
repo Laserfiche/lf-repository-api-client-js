@@ -11,6 +11,7 @@ import {
 } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../createSession.js';
+import "isomorphic-fetch";
 
 describe('Create Copy Entry Test', () => {
   let createdEntries: Array<Entry> = new Array();

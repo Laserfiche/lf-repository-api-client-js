@@ -1,5 +1,6 @@
 import { repoId } from '../testHelper.js';
 import { _RepositoryApiClient } from '../createSession.js';
+import "isomorphic-fetch";
 
 describe('Get Entry Next Links Tests', () => {
   let entryId: number = 1;
