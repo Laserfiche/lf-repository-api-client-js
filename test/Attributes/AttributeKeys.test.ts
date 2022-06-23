@@ -1,7 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { ODataValueContextOfListOfAttribute, IRepositoryApiClient } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
-
+import "isomorphic-fetch";
 
 describe('Attribute Key Integration Tests', () => {
   test('Get the attribute keys', async () => {

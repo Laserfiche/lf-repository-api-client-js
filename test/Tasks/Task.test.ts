@@ -7,6 +7,7 @@ import {
 } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../createSession.js';
+import "isomorphic-fetch";
 
 describe('Task Integration Tests', () => {
   test('Cancel Operation', async () => {
