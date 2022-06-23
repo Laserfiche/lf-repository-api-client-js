@@ -156,17 +156,17 @@ async function getNextLinkListing<T extends generated.IODataValueContextOfIListO
     throw new Error('Next Link is undefined');
   }
   const prefer = createMaxPageSizePreferHeaderPayload(maxPageSize);
-  let options_ = <RequestInit>{
+  const options_ = <RequestInit>{
     method: 'GET',
     headers: {
       Prefer: prefer !== undefined && prefer !== null ? prefer : '',
       Accept: 'application/json'
     },
   };
-  let processListingTwo = processListing.bind(http);
-  return http.fetch(nextLink, options_).then((_response: Response) => {
-    return processListingTwo(_response);
-  });
+  const processListingTwo = processListing.bind(http);
+
+  const resp = await http.fetch(nextLink, options_);
+  return await processListingTwo(resp);
 }
 
 function createMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefined {
