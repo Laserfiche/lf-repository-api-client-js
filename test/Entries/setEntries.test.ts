@@ -12,6 +12,7 @@ import {
 } from '../../src/index.js';
 import { allFalse, CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../createSession.js';
+import "isomorphic-fetch";
 
 describe('Set Entries Integration Tests', () => {
   var entry = new Entry();

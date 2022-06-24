@@ -5,6 +5,7 @@ import {
   WTemplateInfo
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
+import "isomorphic-fetch";
 
 describe('Template Definitions Integration Tests', () => {
   test('Get Template Definition', async () => {

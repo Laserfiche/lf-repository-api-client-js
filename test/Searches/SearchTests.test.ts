@@ -5,6 +5,7 @@ import {
   ODataValueContextOfIListOfEntry
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
+import "isomorphic-fetch";
 
 let searchToken: string;
 describe('Search Integration Tests', () => {

@@ -7,6 +7,7 @@ import {
   IRepositoryApiClient,
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
+import "isomorphic-fetch";
 
 describe('Get Entry Tests', () => {
   let entryId: number = 1;
