@@ -19,8 +19,7 @@ export interface IRepositoryApiClient {
   tagDefinitionsClient: ITagDefinitionsClient;
   tasksClient: generated.ITasksClient;
   templateDefinitionsClient: ITemplateDefinitionsClient;
-  get defaultRequestHeaders(): Record<string, string>;
-  set defaultRequestHeaders(headers: Record<string, string>);
+  defaultRequestHeaders: Record<string, string>;
 }
 // @ts-ignore
 export class RepositoryApiClient implements IRepositoryApiClient {
