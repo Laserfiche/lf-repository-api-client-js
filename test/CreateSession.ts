@@ -1,4 +1,4 @@
-import { repoId } from './testHelper';
+import { repoId } from './TestHelper';
 import { IRepositoryApiClient } from '../src/index.js';
 import { createTestRepoApiClient } from './BaseTest.js';
 let _RepositoryApiClient: IRepositoryApiClient;

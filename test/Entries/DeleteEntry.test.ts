@@ -1,4 +1,4 @@
-import { repoId } from '../testHelper.js';
+import { repoId } from '../TestHelper.js';
 import { CreateEntry } from '../BaseTest.js';
 import { DeleteEntryWithAuditReason } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';

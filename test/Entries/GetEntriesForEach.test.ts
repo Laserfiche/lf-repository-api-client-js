@@ -1,4 +1,4 @@
-import { repoId } from '../testHelper.js';
+import { repoId } from '../TestHelper.js';
 import {
   ODataValueContextOfIListOfFieldValue,
   ODataValueContextOfIListOfEntry,

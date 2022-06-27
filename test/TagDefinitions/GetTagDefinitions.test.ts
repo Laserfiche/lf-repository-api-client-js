@@ -1,4 +1,4 @@
-import { repoId } from '../testHelper.js';
+import { repoId } from '../TestHelper.js';
 import { ODataValueContextOfIListOfWTagInfo, WTagInfo } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
