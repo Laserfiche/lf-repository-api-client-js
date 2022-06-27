@@ -9,8 +9,8 @@ import {
   PostEntryChildrenEntryType,
   PostEntryChildrenRequest,
 } from '../../src/index.js';
-import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../CreateSession.js';
+import { CreateEntry } from '../BaseTest2.js';
+import { _RepositoryApiClient } from '../CreateSession2.js';
 import 'isomorphic-fetch';
 
 describe('Create Copy Entry Test', () => {

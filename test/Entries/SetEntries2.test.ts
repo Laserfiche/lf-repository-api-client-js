@@ -10,8 +10,8 @@ import {
   WFieldType,
   WTagInfo,
 } from '../../src/index.js';
-import { allFalse, CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../CreateSession.js';
+import { allFalse, CreateEntry } from '../BaseTest2.js';
+import { _RepositoryApiClient } from '../CreateSession2.js';
 import 'isomorphic-fetch';
 
 describe('Set Entries Integration Tests', () => {

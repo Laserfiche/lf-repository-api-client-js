@@ -7,7 +7,7 @@ import {
   PostEntryChildrenRequest,
   Shortcut,
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../CreateSession.js';
+import { _RepositoryApiClient } from '../CreateSession2.js';
 import 'isomorphic-fetch';
 
 describe('Create Copy Entry Tests', () => {
