@@ -5,7 +5,7 @@ import {
   ODataValueContextOfIListOfWEntryLinkInfo,
   ODataValueContextOfIListOfWTagInfo
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../createSession.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
 import "isomorphic-fetch";
 
 describe('Get Entry Tests', () => {

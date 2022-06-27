@@ -1,7 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { DeleteEntryWithAuditReason, Entry, PatchEntryRequest } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../createSession.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
 import "isomorphic-fetch";
 
 describe('Move Entries Integration Tests', () => {

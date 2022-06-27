@@ -1,5 +1,5 @@
 import { repoId } from '../testHelper.js';
-import { _RepositoryApiClient } from '../createSession.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Get Entry Next Links Tests', () => {

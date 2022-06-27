@@ -4,7 +4,7 @@ import {
   ODataValueContextOfIListOfContextHit,
   ODataValueContextOfIListOfEntry
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../createSession.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
 import "isomorphic-fetch";
 
 let searchToken: string;

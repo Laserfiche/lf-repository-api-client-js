@@ -1,7 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { AcceptedOperation, DeleteEntryWithAuditReason, Entry, OperationStatus } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../createSession.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Task Integration Tests', () => {
