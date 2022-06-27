@@ -42,7 +42,7 @@ describe('Remove Entries Integration Tests', () => {
     //Set the template on an entry
     let request = new PutTemplateRequest();
     request.templateName = template?.name;
-    entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest RemoveTemplateFromEntry');
+    entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS RemoveTemplateFromEntry');
     let setTemplateResponse = await _RepositoryApiClient.entriesClient.writeTemplateValueToEntry({
       repoId,
       entryId: Number(entry.id),

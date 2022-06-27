@@ -26,7 +26,7 @@ describe('Create Copy Entry Tests', () => {
   });
 
   test('Create Copy Entry Create Folder', async () => {
-    let newEntryName: string = 'APIServerClientIntegrationTest CreateFolder';
+    let newEntryName: string = 'RepositoryApiClientIntegrationTest JS CreateFolder';
     let parentEntryId: number = 1;
     let request: PostEntryChildrenRequest = new PostEntryChildrenRequest();
     request.entryType = PostEntryChildrenEntryType.Folder;
@@ -47,7 +47,7 @@ describe('Create Copy Entry Tests', () => {
 
   test('Create Copy Entry Create Shortcut', async () => {
     //Create new entry
-    let newEntryName: string = 'APIServerClientIntegrationTest CreateFolder';
+    let newEntryName: string = 'RepositoryApiClientIntegrationTest JS CreateFolder';
     let parentEntryId: number = 1;
     let request: PostEntryChildrenRequest = new PostEntryChildrenRequest();
     request.entryType = PostEntryChildrenEntryType.Folder;
@@ -65,7 +65,7 @@ describe('Create Copy Entry Tests', () => {
     expect(EntryType.Folder).toBe(targetEntry.entryType);
 
     //create a shortcut to the new entry
-    newEntryName = 'APIServerClientIntegrationTest CreateShortcut';
+    newEntryName = 'RepositoryApiClientIntegrationTest JS CreateShortcut';
     request = new PostEntryChildrenRequest();
     request.entryType = PostEntryChildrenEntryType.Shortcut;
     request.name = newEntryName;

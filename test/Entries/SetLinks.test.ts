@@ -27,9 +27,9 @@ describe('Set Entries Integration Tests', () => {
   });
 
   test('Set Links', async () => {
-    let sourceEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetLinks Source');
+    let sourceEntry: Entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetLinks Source');
     createdEntries.push(sourceEntry);
-    var targetEntry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetLinks Target');
+    var targetEntry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetLinks Target');
     createdEntries.push(targetEntry);
     let putLinks = new PutLinksRequest();
     putLinks.targetId = targetEntry.id;

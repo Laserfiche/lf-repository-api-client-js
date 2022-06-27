@@ -11,7 +11,7 @@ import "isomorphic-fetch";
 
 describe('Task Integration Tests', () => {
   test('Cancel Operation', async () => {
-    let deleteEntry: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest CancelOperation');
+    let deleteEntry: Entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS CancelOperation');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let result: AcceptedOperation = await _RepositoryApiClient.entriesClient.deleteEntryInfo({
       repoId,
@@ -32,7 +32,7 @@ describe('Task Integration Tests', () => {
   test('Get Operation Status', async () => {
     let deleteEntry: Entry = await CreateEntry(
       _RepositoryApiClient,
-      'APIServerClientIntegrationTest GetOperationStatus'
+      'RepositoryApiClientIntegrationTest JS GetOperationStatus'
     );
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let result = await _RepositoryApiClient.entriesClient.deleteEntryInfo({

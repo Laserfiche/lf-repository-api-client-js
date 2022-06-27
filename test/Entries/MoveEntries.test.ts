@@ -17,14 +17,14 @@ describe('Move Entries Integration Tests', () => {
   });
 
   test('Move and Rename Entry', async () => {
-    let parentFolder: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest ParentFolder');
+    let parentFolder: Entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS ParentFolder');
     createdEntries.push(parentFolder);
-    let childFolder: Entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest ChildFolder');
+    let childFolder: Entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS ChildFolder');
     createdEntries.push(childFolder);
 
     let request = new PatchEntryRequest();
     request.parentId = parentFolder.id;
-    request.name = 'APIServerClientIntegrationTest MovedFolder';
+    request.name = 'RepositoryApiClientIntegrationTest JS MovedFolder';
 
     let movedEntry: Entry = await _RepositoryApiClient.entriesClient.moveOrRenameDocument({
       repoId,

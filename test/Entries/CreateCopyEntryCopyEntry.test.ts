@@ -30,11 +30,11 @@ describe('Create Copy Entry Test', () => {
 
   test('Create Copy Entry Copy Entry', async () => {
     // Create a new folder that contains the created entry
-    let testFolderName: string = 'CreateCopyEntry_CopyEntry_test_folder';
+    let testFolderName: string = "RepositoryApiClientIntegrationTest JS CreateCopyEntry_CopyEntry_test_folder";
     let testFolder: Entry = await CreateEntry(_RepositoryApiClient, testFolderName);
 
     // Create new entry
-    let newEntryName: string = 'APIServerClientIntegrationTest CreateFolder';
+    let newEntryName: string = 'RepositoryApiClientIntegrationTest JS CreateFolder';
     let request: PostEntryChildrenRequest = new PostEntryChildrenRequest();
     request.entryType = PostEntryChildrenEntryType.Folder;
     request.name = newEntryName;
@@ -51,7 +51,7 @@ describe('Create Copy Entry Test', () => {
 
     // Copy entry
     let copyRequest: CopyAsyncRequest = new CopyAsyncRequest();
-    copyRequest.name = 'CopiedEntry';
+    copyRequest.name = "RepositoryApiClientIntegrationTest JS CopiedEntry";
     copyRequest.sourceId = targetEntry.id;
     let copyResult = await _RepositoryApiClient.entriesClient.copyEntry({
       repoId,
