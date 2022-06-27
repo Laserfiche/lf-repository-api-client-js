@@ -1,5 +1,5 @@
 import { Entry, PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType } from '../src';
-import { OAuthAccessKey, repoId, testServicePrincipalKey, testHeader } from './TestHelper.js';
+import { OAuthAccessKey, repoId, testServicePrincipalKey, testHeader } from './TestHelper2.js';
 import { IRepositoryApiClient, RepositoryApiClient } from '../src/index.js';
 
 export async function CreateEntry(

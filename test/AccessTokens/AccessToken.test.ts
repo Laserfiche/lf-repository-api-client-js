@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repoId } from '../TestHelper2.js';
 import { ODataValueOfBoolean, ODataValueOfDateTime } from '../../src/index.js';
 import "isomorphic-fetch";
 import { _RepositoryApiClient } from '../CreateSession.js';

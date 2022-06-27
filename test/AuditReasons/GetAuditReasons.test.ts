@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repoId } from '../TestHelper2.js';
 import { AuditReasons } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
