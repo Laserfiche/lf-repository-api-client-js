@@ -2,10 +2,10 @@ import { repoId } from '../testHelper.js';
 import {
   ODataValueContextOfIListOfTemplateFieldInfo,
   ODataValueContextOfIListOfWTemplateInfo,
-  WTemplateInfo
+  WTemplateInfo,
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import 'isomorphic-fetch';
 
 describe('Template Definitions Integration Tests', () => {
   test('Get Template Definition', async () => {

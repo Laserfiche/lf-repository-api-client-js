@@ -1,10 +1,7 @@
 import { repoId } from '../testHelper.js';
-import {
-  GetDynamicFieldLogicValueRequest,
-  ODataValueContextOfIListOfWTemplateInfo,
-} from '../../src/index.js';
+import { GetDynamicFieldLogicValueRequest, ODataValueContextOfIListOfWTemplateInfo } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import 'isomorphic-fetch';
 
 describe('Dynamic Fields Integration Tests', () => {
   let entryId: number = 1;

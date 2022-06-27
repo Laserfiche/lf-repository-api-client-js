@@ -18,7 +18,7 @@ describe('Set Entries Integration Tests', () => {
   var entry = new Entry();
 
   afterEach(async () => {
-    if (entry != null) {
+    if (entry ) {
       let body = new DeleteEntryWithAuditReason();
       let num = Number(entry.id);
       await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
@@ -111,7 +111,7 @@ describe('Set Entries Integration Tests', () => {
           repoId,
           templateId: templateDefinitions[i].id ?? -1,
         });
-      if (templateDefinitionFieldsResponse.value != null && (await allFalse(templateDefinitionFieldsResponse.value))) {
+      if (templateDefinitionFieldsResponse.value  && (await allFalse(templateDefinitionFieldsResponse.value))) {
         template = templateDefinitions[i];
         break;
       }

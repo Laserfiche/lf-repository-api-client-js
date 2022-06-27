@@ -4,18 +4,17 @@ import {
   Entry,
   EntryType,
   PostEntryChildrenEntryType,
-  PostEntryChildrenRequest
+  PostEntryChildrenRequest,
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import 'isomorphic-fetch';
 
 describe('Create Copy Entry Test', () => {
-
   let createdEntries: Array<Entry> = new Array();
 
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
-      if (createdEntries[i] != null) {
+      if (createdEntries[i]) {
         let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
         let num: number = Number(createdEntries[i].id);
         await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
@@ -64,7 +63,7 @@ describe('Create Copy Entry Test', () => {
 
     //Copy Entry
     request = new PostEntryChildrenRequest();
-    request.name = "RepositoryApiClientIntegrationTest JS CopiedEntry";
+    request.name = 'RepositoryApiClientIntegrationTest JS CopiedEntry';
     request.sourceId = shortcut.id;
     let newEntry: Entry = await _RepositoryApiClient.entriesClient.createOrCopyEntry({
       repoId,

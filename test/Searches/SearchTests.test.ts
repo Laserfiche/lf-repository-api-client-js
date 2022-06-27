@@ -17,7 +17,6 @@ describe('Search Integration Tests', () => {
   afterEach(async () => {
     if (searchToken) {
       await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({ repoId, searchToken });
-      await new Promise((r) => setTimeout(r, 5000));
     }
   });
 

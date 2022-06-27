@@ -20,7 +20,7 @@ export async function CreateEntry(
 
 export async function allFalse(arr: WFieldInfo[]): Promise<boolean> {
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i].isRequired == true) {
+    if (arr[i].isRequired) {
       return false;
     }
   }

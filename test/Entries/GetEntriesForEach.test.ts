@@ -3,8 +3,7 @@ import {
   ODataValueContextOfIListOfFieldValue,
   ODataValueContextOfIListOfEntry,
   ODataValueContextOfIListOfWEntryLinkInfo,
-  ODataValueContextOfIListOfWTagInfo,
-  IRepositoryApiClient,
+  ODataValueContextOfIListOfWTagInfo
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";

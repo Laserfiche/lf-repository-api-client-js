@@ -1,8 +1,8 @@
 import { repoId } from '../testHelper.js';
-import { CreateEntry} from '../BaseTest.js';
+import { CreateEntry } from '../BaseTest.js';
 import { DeleteEntryWithAuditReason } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import 'isomorphic-fetch';
 
 describe('Delete Entries Integration Tests', () => {
   test('Delete Entry', async () => {

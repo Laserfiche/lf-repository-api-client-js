@@ -8,7 +8,7 @@ describe('Move Entries Integration Tests', () => {
   let createdEntries: Array<Entry> = new Array();
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
-      if (createdEntries[i] != null) {
+      if (createdEntries[i]) {
         let body = new DeleteEntryWithAuditReason();
         let num = Number(createdEntries[i].id);
         await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });

@@ -1,4 +1,4 @@
-import {_RepositoryApiClient, repoId} from './createSession.js';
+import { _RepositoryApiClient, repoId } from './createSession.js';
 afterAll(async () => {
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
+  _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
 });

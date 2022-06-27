@@ -1,7 +1,7 @@
 import { repoId } from '../testHelper.js';
 import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
 import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import 'isomorphic-fetch';
 
 describe('Search Integration Tests', () => {
   test('Close Search Operations', async () => {
