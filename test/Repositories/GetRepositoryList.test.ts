@@ -1,6 +1,6 @@
-import { repoId } from '../TestHelper2.js';
+import { repoId } from '../TestHelper.js';
 import { RepositoryInfo } from '../../src/index.js';
-import { _RepositoryApiClient } from '../CreateSession2.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
 import "isomorphic-fetch";
 
 describe('Repo List Integration Tests', () => {

@@ -1,11 +1,11 @@
-import { repoId } from '../TestHelper2.js';
+import { repoId } from '../TestHelper.js';
 import {
   ODataValueContextOfIListOfFieldValue,
   ODataValueContextOfIListOfEntry,
   ODataValueContextOfIListOfWEntryLinkInfo,
   ODataValueContextOfIListOfWTagInfo
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../CreateSession2.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
 import "isomorphic-fetch";
 
 describe('Get Entry Tests', () => {

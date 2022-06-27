@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper2.js';
+import { repoId } from '../TestHelper.js';
 import {
   DeleteEntryWithAuditReason,
   Entry,
@@ -7,7 +7,7 @@ import {
   PostEntryChildrenRequest,
   Shortcut,
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../CreateSession2.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Create Copy Entry Tests', () => {
@@ -19,7 +19,6 @@ describe('Create Copy Entry Tests', () => {
         let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
         let num: number = Number(createdEntries[i].id);
         await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
-        await new Promise((r) => setTimeout(r, 5000));
       }
     }
     createdEntries = [];

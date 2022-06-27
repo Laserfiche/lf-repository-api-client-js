@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper2.js';
+import { repoId } from '../TestHelper.js';
 import {
   DeleteEntryWithAuditReason,
   Entry,
@@ -10,8 +10,8 @@ import {
   WFieldType,
   WTagInfo,
 } from '../../src/index.js';
-import { allFalse, CreateEntry } from '../BaseTest2.js';
-import { _RepositoryApiClient } from '../CreateSession2.js';
+import { allFalse, CreateEntry } from '../BaseTest.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Set Entries Integration Tests', () => {
