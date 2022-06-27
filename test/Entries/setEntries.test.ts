@@ -54,7 +54,7 @@ describe('Set Entries Integration Tests', () => {
     let name = new FieldToUpdate();
     name.values = [value];
     let requestBody = { [field.name]: name };
-    entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetFields');
+    entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetFields');
     let num = Number(entry.id);
     let response = await _RepositoryApiClient.entriesClient.assignFieldValues({
       repoId,
@@ -81,7 +81,7 @@ describe('Set Entries Integration Tests', () => {
     let tag: string | undefined = tagDefinitions[0].name ?? '';
     let request = new PutTagRequest();
     request.tags = new Array(tag);
-    entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest SetTags');
+    entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetTags');
     let num = Number(entry.id);
     let response = await _RepositoryApiClient.entriesClient.assignTags({ repoId, entryId: num, tagsToAdd: request });
     let tags: WTagInfo[] | undefined = response.value;
@@ -121,7 +121,7 @@ describe('Set Entries Integration Tests', () => {
     //Set the template on an entry
     let request = new PutTemplateRequest();
     request.templateName = template?.name;
-    entry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest DeleteTemplate');
+    entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS DeleteTemplate');
     let setTemplateResponse = await _RepositoryApiClient.entriesClient.writeTemplateValueToEntry({
       repoId,
       entryId: Number(entry.id),

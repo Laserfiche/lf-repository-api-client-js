@@ -6,7 +6,7 @@ import "isomorphic-fetch";
 
 describe('Delete Entries Integration Tests', () => {
   test('Delete Entry', async () => {
-    let deleteEntry = await CreateEntry(_RepositoryApiClient, 'APIServerClientIntegrationTest DeleteFolder');
+    let deleteEntry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS DeleteFolder');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let result = await _RepositoryApiClient.entriesClient.deleteEntryInfo({
       repoId,

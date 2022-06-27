@@ -10,9 +10,8 @@ import { _RepositoryApiClient } from '../createSession.js';
 import "isomorphic-fetch";
 
 describe('Create Copy Entry Test', () => {
-  
+
   let createdEntries: Array<Entry> = new Array();
-  
 
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
@@ -26,11 +25,9 @@ describe('Create Copy Entry Test', () => {
     createdEntries = [];
   });
 
-
-
   test('Create Copy Entry Copy Shortcut', async () => {
     //Create new entry
-    let newEntryName: string = 'APIServerClientIntegrationTest CreateFolder';
+    let newEntryName: string = 'RepositoryApiClientIntegrationTest JS CreateFolder';
     let parentEntryId: number = 1;
     let request: PostEntryChildrenRequest = new PostEntryChildrenRequest();
     request.entryType = PostEntryChildrenEntryType.Folder;
@@ -48,7 +45,7 @@ describe('Create Copy Entry Test', () => {
     expect(EntryType.Folder).toBe(targetEntry.entryType);
 
     //create a shortcut to the new entry
-    newEntryName = 'APIServerClientIntegrationTest CreateShortcut';
+    newEntryName = 'RepositoryApiClientIntegrationTest JS CreateShortcut';
     request = new PostEntryChildrenRequest();
     request.entryType = PostEntryChildrenEntryType.Shortcut;
     request.name = newEntryName;
@@ -67,7 +64,7 @@ describe('Create Copy Entry Test', () => {
 
     //Copy Entry
     request = new PostEntryChildrenRequest();
-    request.name = 'CopiedEntry';
+    request.name = "RepositoryApiClientIntegrationTest JS CopiedEntry";
     request.sourceId = shortcut.id;
     let newEntry: Entry = await _RepositoryApiClient.entriesClient.createOrCopyEntry({
       repoId,
