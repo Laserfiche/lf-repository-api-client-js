@@ -1,11 +1,11 @@
-import { repoId } from '../testHelper.js';
+import { repoId } from '../TestHelper.js';
 import {
   AdvancedSearchRequest,
   ODataValueContextOfIListOfContextHit,
   ODataValueContextOfIListOfEntry
 } from '../../src/index.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 let searchToken: string;
 describe('Search Integration Tests', () => {
@@ -17,7 +17,6 @@ describe('Search Integration Tests', () => {
   afterEach(async () => {
     if (searchToken) {
       await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({ repoId, searchToken });
-      await new Promise((r) => setTimeout(r, 5000));
     }
   });
 

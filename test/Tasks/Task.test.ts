@@ -1,17 +1,15 @@
-import { repoId } from '../testHelper.js';
-import {
-  AcceptedOperation,
-  DeleteEntryWithAuditReason,
-  Entry,
-  OperationStatus
-} from '../../src/index.js';
+import { repoId } from '../TestHelper.js';
+import { AcceptedOperation, DeleteEntryWithAuditReason, Entry, OperationStatus } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 describe('Task Integration Tests', () => {
   test('Cancel Operation', async () => {
-    let deleteEntry: Entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS CancelOperation');
+    let deleteEntry: Entry = await CreateEntry(
+      _RepositoryApiClient,
+      'RepositoryApiClientIntegrationTest JS CancelOperation'
+    );
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let result: AcceptedOperation = await _RepositoryApiClient.entriesClient.deleteEntryInfo({
       repoId,

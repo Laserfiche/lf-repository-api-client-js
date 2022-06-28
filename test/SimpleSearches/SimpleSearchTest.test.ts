@@ -1,7 +1,7 @@
-import { repoId } from '../testHelper.js';
+import { repoId } from '../TestHelper.js';
 import { SimpleSearchRequest } from '../../src/index.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 describe('Simple Search Integration Tests', () => {
   test('Create Simple Search', async () => {

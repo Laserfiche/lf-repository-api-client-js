@@ -1,7 +1,7 @@
-import { repoId } from '../testHelper.js';
+import { repoId } from '../TestHelper.js';
 import { ODataValueContextOfIListOfWTagInfo, WTagInfo } from '../../src/index.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 describe('Tag Definitions Integration Tests', () => {
   test('Get Tag Definitions', async () => {

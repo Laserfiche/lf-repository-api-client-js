@@ -1,14 +1,14 @@
-import { repoId } from '../testHelper.js';
+import { repoId } from '../TestHelper.js';
 import { DeleteEntryWithAuditReason, Entry, PatchEntryRequest } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 describe('Move Entries Integration Tests', () => {
   let createdEntries: Array<Entry> = new Array();
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
-      if (createdEntries[i] != null) {
+      if (createdEntries[i]) {
         let body = new DeleteEntryWithAuditReason();
         let num = Number(createdEntries[i].id);
         await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });

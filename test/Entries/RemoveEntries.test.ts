@@ -1,13 +1,13 @@
-import { repoId } from '../testHelper.js';
+import { repoId } from '../TestHelper.js';
 import { DeleteEntryWithAuditReason, Entry, PutTemplateRequest } from '../../src/index.js';
 import { allFalse, CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 describe('Remove Entries Integration Tests', () => {
   let entry = new Entry();
   afterEach(async () => {
-    if (entry != null) {
+    if (entry) {
       let body = new DeleteEntryWithAuditReason();
       let num = Number(entry.id);
       await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
@@ -32,7 +32,7 @@ describe('Remove Entries Integration Tests', () => {
           repoId,
           templateId: templateDefinitions[i].id ?? -1,
         });
-      if (templateDefinitionFieldsResponse.value != null && (await allFalse(templateDefinitionFieldsResponse.value))) {
+      if (templateDefinitionFieldsResponse.value && (await allFalse(templateDefinitionFieldsResponse.value))) {
         template = templateDefinitions[i];
         break;
       }

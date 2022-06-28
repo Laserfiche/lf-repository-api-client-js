@@ -1,7 +1,7 @@
-import { repoId } from '../testHelper.js';
-import { ODataValueContextOfIListOfWFieldInfo, IRepositoryApiClient, WFieldInfo } from '../../src/index.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { repoId } from '../TestHelper.js';
+import { ODataValueContextOfIListOfWFieldInfo, WFieldInfo } from '../../src/index.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 describe('Field Definitions Integration Tests', () => {
   test('Get Field Definitions', async () => {

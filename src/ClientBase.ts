@@ -159,7 +159,7 @@ async function getNextLinkListing<T extends generated.IODataValueContextOfIListO
     method: 'GET',
     headers: {
       Prefer: prefer !== undefined && prefer !== null ? prefer : '',
-      Accept: 'application/json'
+      Accept: 'application/json',
     },
   };
   const processListingTwo = processListing.bind(http);
@@ -250,7 +250,7 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfListOfAttribute>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -424,7 +424,7 @@ export interface IEntriesClient {
    * Get the links assigned to an entry using a next link
    * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of link values from entry allowed per API response schema
-   * @return Get links with the next link successfully 
+   * @return Get links with the next link successfully
    */
   getLinkValuesFromEntryNextLink(args: {
     nextLink: string;
@@ -508,7 +508,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -566,7 +566,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfFieldValue>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -614,7 +614,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -662,7 +662,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfWTagInfo>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -693,7 +693,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     );
   }
   /**
-   * Returns the fields assigned to an entry using a next link 
+   * Returns the fields assigned to an entry using a next link
    * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of field values allowed per API response schema
    * @return Get field values with the next link successfully
@@ -780,7 +780,7 @@ export interface IFieldDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void>;
   /**
-   * Returns a paged listing of field definitions available in the specified repository using a next link 
+   * Returns a paged listing of field definitions available in the specified repository using a next link
    * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of field definitions allowed per API response schema
    * @return Get field definitions with the next link successfully
@@ -831,7 +831,7 @@ export class FieldDefinitionsClient extends generated.FieldDefinitionsClient imp
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfWFieldInfo>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -929,7 +929,7 @@ export interface ISearchesClient {
     maxPageSize?: number;
   }): Promise<void>;
   /**
-   * Returns a search result listing if the search is completed using a next link 
+   * Returns a search result listing if the search is completed using a next link
    * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of search results allowed per API response schema
    * @return Get search result with the next link successfully
@@ -1021,7 +1021,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -1072,7 +1072,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfContextHit>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -1084,7 +1084,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
     }
   }
   /**
-   * Returns a search result listing if the search is completed using a next link 
+   * Returns a search result listing if the search is completed using a next link
    * @param nextLink a url that allows retrieving the next subset of the requested collection
    * @param maxPageSize the maximum page size or number of search results allowed per API response schema
    * @return Get search result with the next link successfully
@@ -1203,7 +1203,7 @@ export class TagDefinitionsClient extends generated.TagDefinitionsClient impleme
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfWTagInfo>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -1401,7 +1401,7 @@ export class TemplateDefinitionsClient
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfWTemplateInfo>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -1454,7 +1454,7 @@ export class TemplateDefinitionsClient
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
@@ -1507,7 +1507,7 @@ export class TemplateDefinitionsClient
       count,
     });
     let nextLink = response.odataNextLink;
-    while ((await callback(response)) && nextLink != null) {
+    while ((await callback(response)) && nextLink) {
       response = await getNextLinkListing<generated.ODataValueContextOfIListOfTemplateFieldInfo>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,

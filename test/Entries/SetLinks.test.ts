@@ -1,25 +1,18 @@
-import { repoId } from '../testHelper.js';
-import {
-  DeleteEntryWithAuditReason,
-  Entry,
-  PutLinksRequest,
-  WEntryLinkInfo,
-  IRepositoryApiClient,
-} from '../../src/index.js';
+import { repoId } from '../TestHelper.js';
+import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 describe('Set Entries Integration Tests', () => {
   let createdEntries: Array<Entry> = new Array();
 
   afterEach(async () => {
     for (let i = 0; i < createdEntries.length; i++) {
-      if (createdEntries[i] != null) {
+      if (createdEntries[i]) {
         let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
         let num: number = Number(createdEntries[i].id);
         await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
-        await new Promise((r) => setTimeout(r, 5000));
       }
     }
     createdEntries = [];
@@ -27,7 +20,10 @@ describe('Set Entries Integration Tests', () => {
   });
 
   test('Set Links', async () => {
-    let sourceEntry: Entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetLinks Source');
+    let sourceEntry: Entry = await CreateEntry(
+      _RepositoryApiClient,
+      'RepositoryApiClientIntegrationTest JS SetLinks Source'
+    );
     createdEntries.push(sourceEntry);
     var targetEntry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetLinks Target');
     createdEntries.push(targetEntry);

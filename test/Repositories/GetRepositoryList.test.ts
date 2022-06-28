@@ -1,10 +1,9 @@
-import { repoId } from '../testHelper.js';
+import { repoId } from '../TestHelper.js';
 import { RepositoryInfo } from '../../src/index.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 describe('Repo List Integration Tests', () => {
-  //create from request handler
   test('Get Repo Lists', async () => {
     let RepoListResponse: RepositoryInfo[] = await _RepositoryApiClient.repositoriesClient.getRepositoryList({});
     let foundRepo = false;

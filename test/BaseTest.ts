@@ -1,5 +1,5 @@
 import { Entry, PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType } from '../src';
-import { OAuthAccessKey, repoId, testServicePrincipalKey, testHeader } from './testHelper.js';
+import { OAuthAccessKey, repoId, testServicePrincipalKey, testHeader } from './TestHelper.js';
 import { IRepositoryApiClient, RepositoryApiClient } from '../src/index.js';
 
 export async function CreateEntry(
@@ -20,7 +20,7 @@ export async function CreateEntry(
 
 export async function allFalse(arr: WFieldInfo[]): Promise<boolean> {
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i].isRequired == true) {
+    if (arr[i].isRequired) {
       return false;
     }
   }

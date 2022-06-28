@@ -1,6 +1,6 @@
-import { repoId } from '../testHelper.js';
-import { _RepositoryApiClient } from '../createSession.js';
-import "isomorphic-fetch";
+import { repoId } from '../TestHelper.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
 
 describe('Get Entries Integration Tests', () => {
   let entryId: number = 1;

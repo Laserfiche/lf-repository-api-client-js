@@ -1,7 +1,7 @@
-import { repoId } from '../testHelper.js';
-import { ODataValueOfBoolean, ODataValueOfDateTime, IRepositoryApiClient } from '../../src/index.js';
-import "isomorphic-fetch";
-import { _RepositoryApiClient } from '../createSession.js';
+import { repoId } from '../TestHelper.js';
+import { ODataValueOfBoolean, ODataValueOfDateTime } from '../../src/index.js';
+import 'isomorphic-fetch';
+import { _RepositoryApiClient } from '../CreateSession.js';
 
 describe('Access Token Integration Tests', () => {
   test('Refresh Server Session', async () => {
