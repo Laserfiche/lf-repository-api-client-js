@@ -6,7 +6,7 @@ import {
   ODataValueContextOfIListOfWTagInfo
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
-import "isomorphic-fetch";
+import 'isomorphic-fetch';
 
 describe('Get Entry Tests', () => {
   let entryId: number = 1;

@@ -2,7 +2,7 @@ import { repoId } from '../TestHelper.js';
 import { DeleteEntryWithAuditReason, Entry, PatchEntryRequest } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
-import "isomorphic-fetch";
+import 'isomorphic-fetch';
 
 describe('Move Entries Integration Tests', () => {
   let createdEntries: Array<Entry> = new Array();
