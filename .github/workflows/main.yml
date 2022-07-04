@@ -2,16 +2,15 @@ name: lf-repository-api-client-js-CI
 
 on:
   push:
-    branches: [ '\d+.x' ]
+    branches: ['\d+.x']
   pull_request:
-    branches: [ '\d+.x' ]
+    branches: ['\d+.x']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
   NPM_VERSION: "1.0.7"
-
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -31,7 +30,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Npm tool install
         run: npm install -g npm@8
@@ -56,17 +55,16 @@ jobs:
             ./README.md
             ./LICENSE
 
-
   test:
     runs-on: ubuntu-latest
-    needs: [ build ]
+    needs: [build]
     steps:
       - uses: actions/checkout@v2
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Npm tool install
         run: npm install -g npm@8
@@ -77,32 +75,31 @@ jobs:
       - name: Npm test
         env:
           ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
-          SERVICE_PRINCIPAL_KEY:  ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
-          REPOSITORY_ID:  ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_3 }}
-          TEST_HEADER:  ${{ secrets.TEST_HEADER }}
+          SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
+          REPOSITORY_ID: ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_3 }}
+          TEST_HEADER: ${{ secrets.TEST_HEADER }}
         run: npm run test:all
 
       - name: Test Report
         uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
+        if: success() || failure() # run this step even if previous step failed
         with:
           name: Jest Test Results
           path: ./*.xml
           reporter: jest-junit
-          only-summary: 'true'
-          fail-on-error: 'false'
-
+          only-summary: "true"
+          fail-on-error: "false"
 
   build-documentation:
     runs-on: ubuntu-latest
-    needs: [ build, test ]
+    needs: [build, test]
     steps:
       - uses: actions/checkout@v2
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Npm tool install
         run: npm install -g npm@8
@@ -132,41 +129,39 @@ jobs:
       - name: delete temporary directory
         run: rm -r ./docs_temp
 
-
   publish-documentation:
     runs-on: ubuntu-latest
     environment: documentation
     if: ${{ github.run_attempt != 1 }}
-    needs: [ build, test, build-documentation ] # wait for build to finish
+    needs: [build, test, build-documentation] # wait for build to finish
     steps:
-    - name: Create temporary directory
-      run: mkdir -p ./docs_temp/${{ github.ref_name }}/
+      - name: Create temporary directory
+        run: mkdir -p ./docs_temp/${{ github.ref_name }}/
 
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v3.0.0
-      with:
-        name: documentation-artifact
-        path: ${{ github.workspace }}/docs_temp/${{ github.ref_name }}/
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        with:
+          name: documentation-artifact
+          path: ${{ github.workspace }}/docs_temp/${{ github.ref_name }}/
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-west-2 # Use your bucket region here
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2 # Use your bucket region here
 
-    - name: Upload docs to S3 bucket
-      run: aws s3 sync ./docs_temp/${{ github.ref_name }}/ s3://apiserver-publish-client-library-docs/${{ github.event.repository.name }}/docs/${{ github.ref_name }} --delete
+      - name: Upload docs to S3 bucket
+        run: aws s3 sync ./docs_temp/${{ github.ref_name }}/ s3://apiserver-publish-client-library-docs/${{ github.event.repository.name }}/docs/${{ github.ref_name }} --delete
 
-    - name: Delete temporary directory
-      run: rm -r ./docs_temp/${{ github.ref_name }}/
-
+      - name: Delete temporary directory
+        run: rm -r ./docs_temp/${{ github.ref_name }}/
 
   publish-preview-package:
     runs-on: ubuntu-latest
     environment: preview
     if: ${{ github.run_attempt != 1 }}
-    needs: [ build, test, build-documentation ] # wait for build to finish
+    needs: [build, test, build-documentation] # wait for build to finish
     steps:
       - uses: actions/checkout@v2
         with:
@@ -180,14 +175,13 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Npm tool install
         run: npm install -g npm@8
 
       - name: set NpmPackageVersion as preview version from downloaded artifact
         run: echo "NpmPackageVersion=${{ env.NPM_VERSION }}--preview-${{ github.run_id }}" >> $GITHUB_ENV
-
 
       - name: npm version
         run: npm version ${{ env.NpmPackageVersion }} --no-git-tag-version
@@ -212,12 +206,11 @@ jobs:
           commit_sha: ${{ github.sha }}
           message: Workflow run ${{github.server_url}}/${{github.repository}}/actions/runs/${{ github.run_id}}
 
-
   publish-production-package:
     runs-on: ubuntu-latest
     environment: production
     if: ${{ github.run_attempt != 1 }}
-    needs: [ build, test, build-documentation ]
+    needs: [build, test, build-documentation]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -231,7 +224,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Npm tool install
         run: npm install -g npm@8
