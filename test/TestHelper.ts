@@ -10,7 +10,5 @@ if (!accessKeyBase64) {
   throw new Error(`Unable to load ACCESS_KEY from .env`);
 }
 export const OAuthAccessKey: AccessKey = JSON.parse(StringUtils.base64toString(accessKeyBase64) ?? '');
-export const repoId: string = process.env.DEV_CA_PUBLIC_USE_REPOSITORY_ID_2 ?? '';
-console.log(process.env);
-console.log(repoId);
+export const repoId: string = process.env.REPOSITORY_ID ?? '';
 export const testHeader: string = process.env.TEST_HEADER ?? '';
