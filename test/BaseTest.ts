@@ -29,8 +29,10 @@ export async function allFalse(arr: WFieldInfo[]): Promise<boolean> {
 let _RepositoryApiClient: IRepositoryApiClient | undefined;
 export function createTestRepoApiClient(): IRepositoryApiClient {
   _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+  let defaultRequestHeaders: Record<string, string> = { 'X-LF-AppID': 'RepositoryApiClientIntegrationTest JS' };
   if (testHeader) {
-    _RepositoryApiClient.defaultRequestHeaders = { [testHeader]: 'true' };
+    defaultRequestHeaders[testHeader] = 'true';
   }
+  _RepositoryApiClient.defaultRequestHeaders = defaultRequestHeaders;
   return _RepositoryApiClient;
 }
