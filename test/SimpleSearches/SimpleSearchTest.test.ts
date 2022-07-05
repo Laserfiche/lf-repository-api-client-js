@@ -4,6 +4,7 @@ import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Simple Search Integration Tests', () => {
+
   test('Create Simple Search', async () => {
     let request: SimpleSearchRequest = new SimpleSearchRequest();
     request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
@@ -13,4 +14,5 @@ describe('Simple Search Integration Tests', () => {
     });
     expect(simpleSearchResponse.value).not.toBeNull;
   });
+  
 });
