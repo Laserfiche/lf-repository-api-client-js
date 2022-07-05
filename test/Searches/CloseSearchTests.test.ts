@@ -23,7 +23,7 @@ describe('Search Integration Tests', () => {
   test('Get Search Results simple Paging', async () => {
     let maxPageSize = 1;
     let searchRequest = new AdvancedSearchRequest();
-    searchRequest.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
+    searchRequest.searchCommand = '({LF:Basic ~= "*", option="DFANLT"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
       repoId,
       request: searchRequest,
