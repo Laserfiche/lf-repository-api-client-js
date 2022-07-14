@@ -19,6 +19,7 @@ export interface IRepositoryApiClient {
   tagDefinitionsClient: ITagDefinitionsClient;
   tasksClient: generated.ITasksClient;
   templateDefinitionsClient: ITemplateDefinitionsClient;
+  linkDefinitionsClient: ILinkDefinitionsClient;
   defaultRequestHeaders: Record<string, string>;
 }
 // @ts-ignore
@@ -36,6 +37,7 @@ export class RepositoryApiClient implements IRepositoryApiClient {
   public tagDefinitionsClient: ITagDefinitionsClient;
   public tasksClient: generated.ITasksClient;
   public templateDefinitionsClient: ITemplateDefinitionsClient;
+  public linkDefinitionsClient: ILinkDefinitionsClient;
 
   private repoClientHandler: RepositoryApiClientHttpHandler;
 
@@ -66,6 +68,7 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     this.tagDefinitionsClient = new TagDefinitionsClient(this.baseUrl, http);
     this.tasksClient = new generated.TasksClient(this.baseUrl, http);
     this.templateDefinitionsClient = new TemplateDefinitionsClient(this.baseUrl, http);
+    this.linkDefinitionsClient = new LinkDefinitionsClient(this.baseUrl, http);
   }
 
   public static createFromHttpRequestHandler(
@@ -1575,4 +1578,113 @@ export class TemplateDefinitionsClient
       maxPageSize
     );
   }
+}
+
+export interface ILinkDefinitionsClient {
+  /**
+   * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of template definitions allowed per API response schema.
+   */
+  getLinkDefinitionsForEach(args: {
+    callback: (response: generated.ODataValueContextOfIListOfEntryLinkTypeInfo) => Promise<boolean>;
+    repoId: string;
+    prefer?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void>;
+  
+  /**
+   * Returns all link definitions in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of link definitions allowed per API response schema
+   * @return Get link definitions with the next link successfully
+   */
+  getLinkDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<generated.ODataValueContextOfIListOfEntryLinkTypeInfo>;
+}
+
+export class LinkDefinitionsClient 
+  extends generated.LinkDefinitionsClient
+  implements ILinkDefinitionsClient 
+{
+ /**
+   * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param repoId The requested repository ID.
+   * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param select (optional) Limits the properties returned in the result.
+   * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param top (optional) Limits the number of items returned from a collection.
+   * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
+   * @param maxPageSize the maximum page size or number of template definitions allowed per API response schema.
+   */
+  async getLinkDefinitionsForEach(args: {
+    callback: (response: generated.ODataValueContextOfIListOfEntryLinkTypeInfo) => Promise<boolean>;
+    repoId: string;
+    prefer?: string;
+    select?: string;
+    orderby?: string;
+    top?: number;
+    skip?: number;
+    count?: boolean;
+    maxPageSize?: number;
+  }): Promise<void> {
+    let { callback, repoId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
+    var response = await this.getLinkDefinitions({
+      repoId,
+      prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
+      select,
+      orderby,
+      top,
+      skip,
+      count,
+    });
+    let nextLink = response.odataNextLink;
+    while ((await callback(response)) && nextLink) {
+      response = await getNextLinkListing<generated.ODataValueContextOfIListOfEntryLinkTypeInfo>(
+        // @ts-ignore: allow sub class to use private variable from the super class
+        this.http,
+        this.processGetLinkDefinitions,
+        nextLink,
+        maxPageSize
+      );
+      nextLink = response.odataNextLink;
+    }
+  }
+  
+  /**
+   * Returns all link definitions in the repository using a next link
+   * @param nextLink a url that allows retrieving the next subset of the requested collection
+   * @param maxPageSize the maximum page size or number of link definitions allowed per API response schema
+   * @return Get link definitions with the next link successfully
+   */
+  async getLinkDefinitionsNextLink(args: {
+    nextLink: string;
+    maxPageSize?: number;
+  }): Promise<generated.ODataValueContextOfIListOfEntryLinkTypeInfo> {
+    let { nextLink, maxPageSize } = args;
+    return await getNextLinkListing<generated.ODataValueContextOfIListOfEntryLinkTypeInfo>(
+      // @ts-ignore: allow sub class to use private variable from the super class
+      this.http,
+      this.processGetLinkDefinitions,
+      nextLink,
+      maxPageSize
+    );
+  }
+
 }
