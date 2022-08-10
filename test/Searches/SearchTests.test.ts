@@ -86,12 +86,10 @@ describe('Search Integration Tests', () => {
     expect(searchToken).not.toBeNull();
     await new Promise((r) => setTimeout(r, 5000));
     var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId, searchToken });
-    //console.log(searchResultsResponse);
     if (!searchResultsResponse.value) {
       throw new Error('searchResultsResponse.value is undefined');
     }
     var searchResults = searchResultsResponse.value;
-    //console.log(searchResults);
     expect(searchResults).not.toBeNull();
     expect(searchResults.length > 0).toBeTruthy();
     let rowNum = searchResults[0].rowNumber ?? 0;
