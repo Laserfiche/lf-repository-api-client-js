@@ -6492,7 +6492,18 @@
       },
       "Entry": {
         "type": "object",
+        "discriminator": {
+          "propertyName": "discriminator",
+          "mapping": {
+            "Document": "#/components/schemas/Document",
+            "Shortcut": "#/components/schemas/Shortcut",
+            "Folder": "#/components/schemas/Folder"
+          }
+        },
         "additionalProperties": false,
+        "required": [
+          "discriminator"
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -6588,6 +6599,9 @@
             "items": {
               "$ref": "#/components/schemas/EntryFieldValue"
             }
+          },
+          "discriminator": {
+            "type": "string"
           }
         }
       },

@@ -6030,7 +6030,7 @@ export class CreateEntryResult implements ICreateEntryResult {
     constructor(data?: ICreateEntryResult) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6076,7 +6076,7 @@ export class CreateEntryOperations implements ICreateEntryOperations {
     constructor(data?: ICreateEntryOperations) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6132,7 +6132,7 @@ export class EntryCreate implements IEntryCreate {
     constructor(data?: IEntryCreate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6193,7 +6193,7 @@ export class APIServerException implements IAPIServerException {
     constructor(data?: IAPIServerException) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6252,7 +6252,7 @@ export class SetEdoc implements ISetEdoc {
     constructor(data?: ISetEdoc) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6302,7 +6302,7 @@ export class SetTemplate implements ISetTemplate {
     constructor(data?: ISetTemplate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6356,7 +6356,7 @@ export class SetFields implements ISetFields {
     constructor(data?: ISetFields) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6410,7 +6410,7 @@ export class SetTags implements ISetTags {
     constructor(data?: ISetTags) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6472,7 +6472,7 @@ export class SetLinks implements ISetLinks {
     constructor(data?: ISetLinks) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6535,7 +6535,7 @@ export class ProblemDetails implements IProblemDetails {
     constructor(data?: IProblemDetails) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6599,7 +6599,7 @@ export abstract class IHeaderDictionary implements IIHeaderDictionary {
     constructor(data?: IIHeaderDictionary) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6646,7 +6646,7 @@ export class FieldToUpdate implements IFieldToUpdate {
     constructor(data?: IFieldToUpdate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6695,7 +6695,7 @@ export class ValueToUpdate implements IValueToUpdate {
     constructor(data?: IValueToUpdate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6741,7 +6741,7 @@ export class LinkToUpdate implements ILinkToUpdate {
     constructor(data?: ILinkToUpdate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6788,7 +6788,7 @@ export class PostEntryWithEdocMetadataRequest implements IPostEntryWithEdocMetad
     constructor(data?: IPostEntryWithEdocMetadataRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6831,7 +6831,7 @@ export class SimpleImportMetadata implements ISimpleImportMetadata {
     constructor(data?: ISimpleImportMetadata) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6893,6 +6893,12 @@ export class PutFieldValsRequest extends SimpleImportMetadata implements IPutFie
 
     constructor(data?: IPutFieldValsRequest) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -6937,7 +6943,7 @@ export class ODataValueOfListOfAttribute implements IODataValueOfListOfAttribute
     constructor(data?: IODataValueOfListOfAttribute) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6984,6 +6990,12 @@ export class ODataValueContextOfListOfAttribute extends ODataValueOfListOfAttrib
 
     constructor(data?: IODataValueContextOfListOfAttribute) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -7025,7 +7037,7 @@ export class Attribute implements IAttribute {
     constructor(data?: IAttribute) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7099,7 +7111,7 @@ use a custom format. */
     constructor(data?: IWFieldInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7234,7 +7246,7 @@ export class ODataValueOfIListOfWFieldInfo implements IODataValueOfIListOfWField
     constructor(data?: IODataValueOfIListOfWFieldInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7281,6 +7293,12 @@ export class ODataValueContextOfIListOfWFieldInfo extends ODataValueOfIListOfWFi
 
     constructor(data?: IODataValueContextOfIListOfWFieldInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -7321,7 +7339,7 @@ export class ODataValueOfIListOfEntryLinkTypeInfo implements IODataValueOfIListO
     constructor(data?: IODataValueOfIListOfEntryLinkTypeInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7368,6 +7386,12 @@ export class ODataValueContextOfIListOfEntryLinkTypeInfo extends ODataValueOfILi
 
     constructor(data?: IODataValueContextOfIListOfEntryLinkTypeInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -7415,7 +7439,7 @@ export class EntryLinkTypeInfo implements IEntryLinkTypeInfo {
     constructor(data?: IEntryLinkTypeInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7494,13 +7518,16 @@ export class Entry implements IEntry {
     /** The fields assigned to this entry. */
     fields?: EntryFieldValue[] | undefined;
 
+    protected _discriminator: string;
+
     constructor(data?: IEntry) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+        this._discriminator = "Entry";
     }
 
     init(_data?: any) {
@@ -7535,6 +7562,21 @@ export class Entry implements IEntry {
 
     static fromJS(data: any): Entry {
         data = typeof data === 'object' ? data : {};
+        if (data["discriminator"] === "Document") {
+            let result = new Document();
+            result.init(data);
+            return result;
+        }
+        if (data["discriminator"] === "Shortcut") {
+            let result = new Shortcut();
+            result.init(data);
+            return result;
+        }
+        if (data["discriminator"] === "Folder") {
+            let result = new Folder();
+            result.init(data);
+            return result;
+        }
         let result = new Entry();
         result.init(data);
         return result;
@@ -7542,6 +7584,7 @@ export class Entry implements IEntry {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["discriminator"] = this._discriminator;
         data["id"] = this.id;
         data["name"] = this.name;
         data["parentId"] = this.parentId;
@@ -7634,7 +7677,7 @@ export class EntryFieldValue implements IEntryFieldValue {
     constructor(data?: IEntryFieldValue) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7720,6 +7763,13 @@ if there is one, in bytes. */
 
     constructor(data?: IDocument) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        this._discriminator = "Document";
     }
 
     init(_data?: any) {
@@ -7787,7 +7837,7 @@ export class Edoc implements IEdoc {
     constructor(data?: IEdoc) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7822,6 +7872,13 @@ export class Shortcut extends Entry implements IShortcut {
 
     constructor(data?: IShortcut) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        this._discriminator = "Shortcut";
     }
 
     init(_data?: any) {
@@ -7871,6 +7928,13 @@ to directly or indirectly under a record series in the repository. */
 
     constructor(data?: IFolder) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        this._discriminator = "Folder";
     }
 
     init(_data?: any) {
@@ -7925,7 +7989,7 @@ export class AcceptedOperation implements IAcceptedOperation {
     constructor(data?: IAcceptedOperation) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7965,7 +8029,7 @@ export class DeleteEntryWithAuditReason implements IDeleteEntryWithAuditReason {
     constructor(data?: IDeleteEntryWithAuditReason) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8009,7 +8073,7 @@ export class PatchEntryRequest implements IPatchEntryRequest {
     constructor(data?: IPatchEntryRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8050,7 +8114,7 @@ export class ODataValueOfIListOfEntry implements IODataValueOfIListOfEntry {
     constructor(data?: IODataValueOfIListOfEntry) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8097,6 +8161,12 @@ export class ODataValueContextOfIListOfEntry extends ODataValueOfIListOfEntry im
 
     constructor(data?: IODataValueContextOfIListOfEntry) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -8137,7 +8207,7 @@ export class ODataValueOfIListOfFieldValue implements IODataValueOfIListOfFieldV
     constructor(data?: IODataValueOfIListOfFieldValue) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8184,6 +8254,12 @@ export class ODataValueContextOfIListOfFieldValue extends ODataValueOfIListOfFie
 
     constructor(data?: IODataValueContextOfIListOfFieldValue) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -8224,6 +8300,12 @@ export class FieldValue extends EntryFieldValue implements IFieldValue {
 
     constructor(data?: IFieldValue) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -8259,7 +8341,7 @@ export class ODataValueOfIListOfWTagInfo implements IODataValueOfIListOfWTagInfo
     constructor(data?: IODataValueOfIListOfWTagInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8306,6 +8388,12 @@ export class ODataValueContextOfIListOfWTagInfo extends ODataValueOfIListOfWTagI
 
     constructor(data?: IODataValueContextOfIListOfWTagInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -8358,7 +8446,7 @@ as a security tag (true) or an informational tag (false). */
     constructor(data?: IWTagInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8428,7 +8516,7 @@ ranges from 0 to 100, with -1 as the default values. */
     constructor(data?: IWatermark) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8499,7 +8587,7 @@ export class PutTagRequest implements IPutTagRequest {
     constructor(data?: IPutTagRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8544,7 +8632,7 @@ export class ODataValueOfIListOfWEntryLinkInfo implements IODataValueOfIListOfWE
     constructor(data?: IODataValueOfIListOfWEntryLinkInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8613,7 +8701,7 @@ export class WEntryLinkInfo implements IWEntryLinkInfo {
     constructor(data?: IWEntryLinkInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8715,7 +8803,7 @@ export class PutLinksRequest implements IPutLinksRequest {
     constructor(data?: IPutLinksRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8775,6 +8863,12 @@ export class ODataValueContextOfIListOfWEntryLinkInfo extends ODataValueOfIListO
 
     constructor(data?: IODataValueContextOfIListOfWEntryLinkInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -8822,7 +8916,7 @@ export class PostEntryChildrenRequest implements IPostEntryChildrenRequest {
     constructor(data?: IPostEntryChildrenRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8879,7 +8973,7 @@ export class CopyAsyncRequest implements ICopyAsyncRequest {
     constructor(data?: ICopyAsyncRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8920,7 +9014,7 @@ export class ODataValueOfBoolean implements IODataValueOfBoolean {
     constructor(data?: IODataValueOfBoolean) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8959,7 +9053,7 @@ export class GetEdocWithAuditReasonRequest implements IGetEdocWithAuditReasonReq
     constructor(data?: IGetEdocWithAuditReasonRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9003,7 +9097,7 @@ export class GetDynamicFieldLogicValueRequest implements IGetDynamicFieldLogicVa
     constructor(data?: IGetDynamicFieldLogicValueRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9059,7 +9153,7 @@ export class PutTemplateRequest implements IPutTemplateRequest {
     constructor(data?: IPutTemplateRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9117,7 +9211,7 @@ export class RepositoryInfo implements IRepositoryInfo {
     constructor(data?: IRepositoryInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9162,7 +9256,7 @@ export class ODataValueOfDateTime implements IODataValueOfDateTime {
     constructor(data?: IODataValueOfDateTime) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9213,7 +9307,7 @@ export class OperationProgress implements IOperationProgress {
     constructor(data?: IOperationProgress) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9297,7 +9391,7 @@ export class OperationErrorItem implements IOperationErrorItem {
     constructor(data?: IOperationErrorItem) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9341,7 +9435,7 @@ export class AuditReasons implements IAuditReasons {
     constructor(data?: IAuditReasons) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9401,7 +9495,7 @@ export class WAuditReason implements IWAuditReason {
     constructor(data?: IWAuditReason) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9447,7 +9541,7 @@ export class AdvancedSearchRequest implements IAdvancedSearchRequest {
     constructor(data?: IAdvancedSearchRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9498,7 +9592,7 @@ export class ODataValueOfIListOfContextHit implements IODataValueOfIListOfContex
     constructor(data?: IODataValueOfIListOfContextHit) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9545,6 +9639,12 @@ export class ODataValueContextOfIListOfContextHit extends ODataValueOfIListOfCon
 
     constructor(data?: IODataValueContextOfIListOfContextHit) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -9599,7 +9699,7 @@ export class ContextHit implements IContextHit {
     constructor(data?: IContextHit) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9697,7 +9797,7 @@ export class SimpleSearchRequest implements ISimpleSearchRequest {
     constructor(data?: ISimpleSearchRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9734,7 +9834,7 @@ export class ODataValueOfIListOfWTemplateInfo implements IODataValueOfIListOfWTe
     constructor(data?: IODataValueOfIListOfWTemplateInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9781,6 +9881,12 @@ export class ODataValueContextOfIListOfWTemplateInfo extends ODataValueOfIListOf
 
     constructor(data?: IODataValueContextOfIListOfWTemplateInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -9832,7 +9938,7 @@ export class WTemplateInfo implements IWTemplateInfo {
     constructor(data?: IWTemplateInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9892,7 +9998,7 @@ export class LFColor implements ILFColor {
     constructor(data?: ILFColor) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9937,7 +10043,7 @@ export class ODataValueOfIListOfTemplateFieldInfo implements IODataValueOfIListO
     constructor(data?: IODataValueOfIListOfTemplateFieldInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9984,6 +10090,12 @@ export class ODataValueContextOfIListOfTemplateFieldInfo extends ODataValueOfILi
 
     constructor(data?: IODataValueContextOfIListOfTemplateFieldInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -10028,6 +10140,12 @@ export class TemplateFieldInfo extends WFieldInfo implements ITemplateFieldInfo 
 
     constructor(data?: ITemplateFieldInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -10073,7 +10191,7 @@ form logic rule. */
     constructor(data?: IRule) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property))
+                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10298,7 +10416,7 @@ function isRetryable(response: Response, init: RequestInit): boolean {
   return (response.status >= 500 || response.status == 408) && isIdempotent;
 }
 
-async function getNextLinkListing<T extends IODataValueContextOfIListOfEntry>(
+async function getNextLinkListing<T>(
   http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> },
   processListing: (response: Response) => Promise<T>,
   nextLink: string,
@@ -10564,7 +10682,7 @@ export interface IFieldDefinitionsClient {
   getFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfEntry>;
+  }): Promise<ODataValueContextOfIListOfWFieldInfo>;
 }
 
 export interface ISearchesClient {

@@ -30,7 +30,7 @@ describe('Set Entries Integration Tests', () => {
     let putLinks = new PutLinksRequest();
     putLinks.targetId = targetEntry.id;
     putLinks.linkTypeId = 1;
-    let request = new Array<Entry>(putLinks);
+    let request = new Array<PutLinksRequest>(putLinks);
     let result = await _RepositoryApiClient.entriesClient.assignEntryLinks({
       repoId,
       entryId: sourceEntry.id ?? -1,

@@ -148,7 +148,7 @@ function isRetryable(response: Response, init: RequestInit): boolean {
   return (response.status >= 500 || response.status == 408) && isIdempotent;
 }
 
-async function getNextLinkListing<T extends generated.IODataValueContextOfIListOfEntry>(
+async function getNextLinkListing<T>(
   http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> },
   processListing: (response: Response) => Promise<T>,
   nextLink: string,
@@ -791,7 +791,7 @@ export interface IFieldDefinitionsClient {
   getFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfEntry>;
+  }): Promise<generated.ODataValueContextOfIListOfWFieldInfo>;
 }
 
 export class FieldDefinitionsClient extends generated.FieldDefinitionsClient implements IFieldDefinitionsClient {
