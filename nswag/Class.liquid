@@ -19,6 +19,8 @@
 
 {% assign condition_temp = HasInheritance == false or ConvertConstructorInterfaceData -%}
 {% if GenerateConstructorInterface or HasBaseDiscriminator -%}
+    {% assign BaseDiscriminatorArray = BaseDiscriminator | split: " "  %}
+    {% assign BaseDiscriminator = BaseDiscriminatorArray | join: "" %}
     constructor({% if GenerateConstructorInterface %}data?: I{{ ClassName }}{% endif %}) {
 {%     if HasInheritance -%}
         super({% if GenerateConstructorInterface %}data{% endif %});
@@ -68,7 +70,7 @@
         }
 {%     endif -%}
 {%     if HasBaseDiscriminator -%}
-        this._discriminator = "{{ DiscriminatorName }}";
+        this._discriminator = "{{ DiscriminatorName | camelcase }}";
 {%     endif -%}
     }
 {% endif -%}
