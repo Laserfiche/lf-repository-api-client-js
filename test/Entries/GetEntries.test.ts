@@ -4,6 +4,9 @@ import 'isomorphic-fetch';
 
 describe('Get Entries Integration Tests', () => {
   let entryId: number = 1;
+  let rootPath: string | null = '\\';
+  let nonExistingPath: string | null = '\\Non Existing Path';
+
   test('Get Entry Fields', async () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId, entryId });
     expect(entryFieldResponse?.value).not.toBeNull;
@@ -29,5 +32,29 @@ describe('Get Entries Integration Tests', () => {
   test('Get Entry Return Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntry({ repoId, entryId });
     expect(result?.value).not.toBeNull;
+  });
+
+  test('Get Entry By Full Path Return Root Folder', async () => {
+    let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
+      repoId,
+      fullPath: rootPath,
+      fallbackToClosestAncestor: false,
+    });
+    expect(result?.entry.id).toBe(1);
+    expect(result?.entry.fullPath).toBe(rootPath);
+    expect(result?.entry.entryType).toBe('Folder');
+    expect(result?.ancestorEntry).toBeNull;
+  });
+
+  test('Get Entry By Full Path Return Ancestor Root Folder', async () => {
+    let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
+      repoId,
+      fullPath: nonExistingPath,
+      fallbackToClosestAncestor: true,
+    });
+    expect(result?.ancestorEntry.id).toBe(1);
+    expect(result?.ancestorEntry.fullPath).toBe(rootPath);
+    expect(result?.ancestorEntry.entryType).toBe('Folder');
+    expect(result?.entry).toBeNull;
   });
 });
