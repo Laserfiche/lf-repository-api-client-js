@@ -22,7 +22,7 @@ describe('Search Integration Tests', () => {
 
   test('Get Search Context Hits', async () => {
     let request = new AdvancedSearchRequest();
-    request.searchCommand = '({LF:Basic ~= "*", option="DFANLT"})';
+    request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     var searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId, request });
     searchToken = searchResponse.token ?? '';
     expect(searchToken).not.toBeNull();
