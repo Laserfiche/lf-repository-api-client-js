@@ -19,7 +19,7 @@ import {
 export interface IEntriesClient {
 
     /**
-     * Creates a new document in the specified folder. Optionally sets metadata and electronic document component. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. With this route, partial success is possible. The response returns multiple operation (entryCreate operation, setEdoc operation, setLinks operation, etc..) objects, which contain information about any errors that may have occurred during the creation. As long as the entryCreate operation succeeds, the entry will be created, even if all other operations fail.
+     * Creates a new document in the specified folder with file (no more than 100 MB). Optionally sets metadata and electronic document component. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. With this route, partial success is possible. The response returns multiple operation (entryCreate operation, setEdoc operation, setLinks operation, etc..) objects, which contain information about any errors that may have occurred during the creation. As long as the entryCreate operation succeeds, the entry will be created, even if all other operations fail.
      * @param repoId The requested repository ID.
      * @param parentEntryId The entry ID of the folder that the document will be created in.
      * @param fileName The created document's file name.
@@ -64,6 +64,15 @@ export interface IEntriesClient {
      * @return Moves and/or renames an entry successfully.
      */
     moveOrRenameDocument(args: { repoId: string, entryId: number, request?: PatchEntryRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<Entry>;
+
+    /**
+     * Returns a single entry object using the entry path. Optional query parameter: fallbackToClosestAncestor. Use the fallbackToClosestAncestor query parameter to return the closest existing ancestor if the initial entry path is not found.
+     * @param repoId The requested repository ID.
+     * @param fullPath The requested entry path.
+     * @param fallbackToClosestAncestor (optional) An optional query parameter used to indicate whether or not the closest ancestor in the path should be returned if the initial entry path is not found. The default value is false.
+     * @return Get entry successfully.
+     */
+    getEntryByPath(args: { repoId: string, fullPath: string | null, fallbackToClosestAncestor?: boolean | undefined }): Promise<FindEntryResult>;
 
     /**
      * Returns the children entries of a folder in the repository. Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc". Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route. Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
@@ -582,7 +591,7 @@ export class EntriesClient implements IEntriesClient {
   }
 
     /**
-     * Creates a new document in the specified folder. Optionally sets metadata and electronic document component. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. With this route, partial success is possible. The response returns multiple operation (entryCreate operation, setEdoc operation, setLinks operation, etc..) objects, which contain information about any errors that may have occurred during the creation. As long as the entryCreate operation succeeds, the entry will be created, even if all other operations fail.
+     * Creates a new document in the specified folder with file (no more than 100 MB). Optionally sets metadata and electronic document component. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. With this route, partial success is possible. The response returns multiple operation (entryCreate operation, setEdoc operation, setLinks operation, etc..) objects, which contain information about any errors that may have occurred during the creation. As long as the entryCreate operation succeeds, the entry will be created, even if all other operations fail.
      * @param repoId The requested repository ID.
      * @param parentEntryId The entry ID of the folder that the document will be created in.
      * @param fileName The created document's file name.
@@ -979,6 +988,94 @@ export class EntriesClient implements IEntriesClient {
             });
         }
         return Promise.resolve<Entry>(null as any);
+    }
+
+    /**
+     * Returns a single entry object using the entry path. Optional query parameter: fallbackToClosestAncestor. Use the fallbackToClosestAncestor query parameter to return the closest existing ancestor if the initial entry path is not found.
+     * @param repoId The requested repository ID.
+     * @param fullPath The requested entry path.
+     * @param fallbackToClosestAncestor (optional) An optional query parameter used to indicate whether or not the closest ancestor in the path should be returned if the initial entry path is not found. The default value is false.
+     * @return Get entry successfully.
+     */
+    getEntryByPath(args: { repoId: string, fullPath: string | null, fallbackToClosestAncestor?: boolean | undefined }): Promise<FindEntryResult> {
+        let { repoId, fullPath, fallbackToClosestAncestor } = args;
+        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/Entries/ByPath?";
+        if (repoId === undefined || repoId === null)
+            throw new Error("The parameter 'repoId' must be defined.");
+        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
+        if (fullPath === undefined)
+            throw new Error("The parameter 'fullPath' must be defined.");
+        else if(fullPath !== null)
+            url_ += "fullPath=" + encodeURIComponent("" + fullPath) + "&";
+        if (fallbackToClosestAncestor === null)
+            throw new Error("The parameter 'fallbackToClosestAncestor' cannot be null.");
+        else if (fallbackToClosestAncestor !== undefined)
+            url_ += "fallbackToClosestAncestor=" + encodeURIComponent("" + fallbackToClosestAncestor) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetEntryByPath(_response);
+        });
+    }
+
+    protected processGetEntryByPath(response: Response): Promise<FindEntryResult> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FindEntryResult.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Requested entry path not found", status, _responseText, _headers, result404);
+            });
+        } else if (status === 429) {
+            return response.text().then((_responseText) => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ProblemDetails.fromJS(resultData429);
+            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FindEntryResult>(null as any);
     }
 
     /**
@@ -2667,7 +2764,7 @@ export interface IAttributesClient {
      * @param top (optional) Limits the number of items returned from a collection.
      * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
      * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
-     * @return Get trustee attribute key value pairs  successfully.
+     * @return Get trustee attribute key value pairs successfully.
      */
     getTrusteeAttributeKeyValuePairs(args: { repoId: string, everyone?: boolean | undefined, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfListOfAttribute>;
 
@@ -2768,7 +2865,7 @@ export class AttributesClient implements IAttributesClient {
      * @param top (optional) Limits the number of items returned from a collection.
      * @param skip (optional) Excludes the specified number of items of the queried collection from the result.
      * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
-     * @return Get trustee attribute key value pairs  successfully.
+     * @return Get trustee attribute key value pairs successfully.
      */
     getTrusteeAttributeKeyValuePairs(args: { repoId: string, everyone?: boolean | undefined, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfListOfAttribute> {
         let { repoId, everyone, prefer, select, orderby, top, skip, count } = args;
@@ -3609,437 +3706,6 @@ export class RepositoriesClient implements IRepositoriesClient {
             });
         }
         return Promise.resolve<RepositoryInfo[]>(null as any);
-    }
-}
-
-export interface IServerSessionClient {
-
-    /**
-     * Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session.
-     * @param repoId The requested repository ID.
-     * @return Invalidate the server session successfully.
-     */
-    invalidateServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
-
-    /**
-     * Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token.
-     * @param repoId The requested repository ID.
-     * @return Refresh the session successfully.
-     */
-    refreshServerSession(args: { repoId: string }): Promise<ODataValueOfDateTime>;
-
-    /**
-     * Deprecated. This function is a no-op, always returns 200.
-     * @param repoId The requested repository ID.
-     * @return Create the session successfully.
-     */
-    createServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
-}
-
-export class ServerSessionClient implements IServerSessionClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
-    }
-
-    /**
-     * Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session.
-     * @param repoId The requested repository ID.
-     * @return Invalidate the server session successfully.
-     */
-    invalidateServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean> {
-        let { repoId } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/ServerSession/Invalidate";
-        if (repoId === undefined || repoId === null)
-            throw new Error("The parameter 'repoId' must be defined.");
-        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processInvalidateServerSession(_response);
-        });
-    }
-
-    protected processInvalidateServerSession(response: Response): Promise<ODataValueOfBoolean> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ODataValueOfBoolean.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ODataValueOfBoolean>(null as any);
-    }
-
-    /**
-     * Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token.
-     * @param repoId The requested repository ID.
-     * @return Refresh the session successfully.
-     */
-    refreshServerSession(args: { repoId: string }): Promise<ODataValueOfDateTime> {
-        let { repoId } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/ServerSession/Refresh";
-        if (repoId === undefined || repoId === null)
-            throw new Error("The parameter 'repoId' must be defined.");
-        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRefreshServerSession(_response);
-        });
-    }
-
-    protected processRefreshServerSession(response: Response): Promise<ODataValueOfDateTime> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ODataValueOfDateTime.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ODataValueOfDateTime>(null as any);
-    }
-
-    /**
-     * Deprecated. This function is a no-op, always returns 200.
-     * @param repoId The requested repository ID.
-     * @return Create the session successfully.
-     */
-    createServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean> {
-        let { repoId } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/ServerSession/Create";
-        if (repoId === undefined || repoId === null)
-            throw new Error("The parameter 'repoId' must be defined.");
-        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCreateServerSession(_response);
-        });
-    }
-
-    protected processCreateServerSession(response: Response): Promise<ODataValueOfBoolean> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ODataValueOfBoolean.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ODataValueOfBoolean>(null as any);
-    }
-}
-
-export interface ITasksClient {
-
-    /**
-     * Returns the status of an operation. Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant). OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
-     * @param repoId The requested repository ID
-     * @param operationToken The operation token
-     * @return Get completed operation status with no result successfully.
-     */
-    getOperationStatusAndProgress(args: { repoId: string, operationToken: string }): Promise<OperationProgress>;
-
-    /**
-     * Cancels an operation. Provide an operationToken to cancel the operation, if possible. Should be used if an operation was created in error, or is no longer necessary. Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
-     * @param repoId The requested repository ID
-     * @param operationToken The operation token
-     * @return Cancel operation successfully.
-     */
-    cancelOperation(args: { repoId: string, operationToken: string }): Promise<void>;
-}
-
-export class TasksClient implements ITasksClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
-    }
-
-    /**
-     * Returns the status of an operation. Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant). OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
-     * @param repoId The requested repository ID
-     * @param operationToken The operation token
-     * @return Get completed operation status with no result successfully.
-     */
-    getOperationStatusAndProgress(args: { repoId: string, operationToken: string }): Promise<OperationProgress> {
-        let { repoId, operationToken } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/Tasks/{operationToken}";
-        if (repoId === undefined || repoId === null)
-            throw new Error("The parameter 'repoId' must be defined.");
-        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
-        if (operationToken === undefined || operationToken === null)
-            throw new Error("The parameter 'operationToken' must be defined.");
-        url_ = url_.replace("{operationToken}", encodeURIComponent("" + operationToken));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetOperationStatusAndProgress(_response);
-        });
-    }
-
-    protected processGetOperationStatusAndProgress(response: Response): Promise<OperationProgress> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = OperationProgress.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 201) {
-            return response.text().then((_responseText) => {
-            let result201: any = null;
-            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = OperationProgress.fromJS(resultData201);
-            return result201;
-            });
-        } else if (status === 202) {
-            return response.text().then((_responseText) => {
-            let result202: any = null;
-            let resultData202 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result202 = OperationProgress.fromJS(resultData202);
-            return result202;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("Request operationToken not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<OperationProgress>(null as any);
-    }
-
-    /**
-     * Cancels an operation. Provide an operationToken to cancel the operation, if possible. Should be used if an operation was created in error, or is no longer necessary. Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
-     * @param repoId The requested repository ID
-     * @param operationToken The operation token
-     * @return Cancel operation successfully.
-     */
-    cancelOperation(args: { repoId: string, operationToken: string }): Promise<void> {
-        let { repoId, operationToken } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/Tasks/{operationToken}";
-        if (repoId === undefined || repoId === null)
-            throw new Error("The parameter 'repoId' must be defined.");
-        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
-        if (operationToken === undefined || operationToken === null)
-            throw new Error("The parameter 'operationToken' must be defined.");
-        url_ = url_.replace("{operationToken}", encodeURIComponent("" + operationToken));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "DELETE",
-            headers: {
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCancelOperation(_response);
-        });
-    }
-
-    protected processCancelOperation(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("Request operationToken not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(null as any);
     }
 }
 
@@ -5315,6 +4981,210 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
     }
 }
 
+export interface ITasksClient {
+
+    /**
+     * Returns the status of an operation. Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant). OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
+     * @param repoId The requested repository ID
+     * @param operationToken The operation token
+     * @return Get completed operation status with no result successfully.
+     */
+    getOperationStatusAndProgress(args: { repoId: string, operationToken: string }): Promise<OperationProgress>;
+
+    /**
+     * Cancels an operation. Provide an operationToken to cancel the operation, if possible. Should be used if an operation was created in error, or is no longer necessary. Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
+     * @param repoId The requested repository ID
+     * @param operationToken The operation token
+     * @return Cancel operation successfully.
+     */
+    cancelOperation(args: { repoId: string, operationToken: string }): Promise<void>;
+}
+
+export class TasksClient implements ITasksClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
+    }
+
+    /**
+     * Returns the status of an operation. Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant). OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
+     * @param repoId The requested repository ID
+     * @param operationToken The operation token
+     * @return Get completed operation status with no result successfully.
+     */
+    getOperationStatusAndProgress(args: { repoId: string, operationToken: string }): Promise<OperationProgress> {
+        let { repoId, operationToken } = args;
+        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/Tasks/{operationToken}";
+        if (repoId === undefined || repoId === null)
+            throw new Error("The parameter 'repoId' must be defined.");
+        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
+        if (operationToken === undefined || operationToken === null)
+            throw new Error("The parameter 'operationToken' must be defined.");
+        url_ = url_.replace("{operationToken}", encodeURIComponent("" + operationToken));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetOperationStatusAndProgress(_response);
+        });
+    }
+
+    protected processGetOperationStatusAndProgress(response: Response): Promise<OperationProgress> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = OperationProgress.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 201) {
+            return response.text().then((_responseText) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = OperationProgress.fromJS(resultData201);
+            return result201;
+            });
+        } else if (status === 202) {
+            return response.text().then((_responseText) => {
+            let result202: any = null;
+            let resultData202 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result202 = OperationProgress.fromJS(resultData202);
+            return result202;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Request operationToken not found.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 429) {
+            return response.text().then((_responseText) => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ProblemDetails.fromJS(resultData429);
+            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<OperationProgress>(null as any);
+    }
+
+    /**
+     * Cancels an operation. Provide an operationToken to cancel the operation, if possible. Should be used if an operation was created in error, or is no longer necessary. Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
+     * @param repoId The requested repository ID
+     * @param operationToken The operation token
+     * @return Cancel operation successfully.
+     */
+    cancelOperation(args: { repoId: string, operationToken: string }): Promise<void> {
+        let { repoId, operationToken } = args;
+        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/Tasks/{operationToken}";
+        if (repoId === undefined || repoId === null)
+            throw new Error("The parameter 'repoId' must be defined.");
+        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
+        if (operationToken === undefined || operationToken === null)
+            throw new Error("The parameter 'operationToken' must be defined.");
+        url_ = url_.replace("{operationToken}", encodeURIComponent("" + operationToken));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCancelOperation(_response);
+        });
+    }
+
+    protected processCancelOperation(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Request operationToken not found.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 429) {
+            return response.text().then((_responseText) => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ProblemDetails.fromJS(resultData429);
+            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+}
+
 export interface ITemplateDefinitionsClient {
 
     /**
@@ -5818,7 +5688,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
      */
     getTemplateFieldDefinitions(args: { repoId: string, templateId: number, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
         let { repoId, templateId, prefer, culture, select, orderby, top, skip, count } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/TemplateDefinitions/{templateId}/fields?";
+        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/TemplateDefinitions/{templateId}/Fields?";
         if (repoId === undefined || repoId === null)
             throw new Error("The parameter 'repoId' must be defined.");
         url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
@@ -6019,6 +5889,233 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
             });
         }
         return Promise.resolve<ODataValueContextOfIListOfTemplateFieldInfo>(null as any);
+    }
+}
+
+export interface IServerSessionClient {
+
+    /**
+     * Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session. Only available in Laserfiche Cloud.
+     * @param repoId The requested repository ID.
+     * @return Invalidate the server session successfully.
+     */
+    invalidateServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
+
+    /**
+     * Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token. Only available in Laserfiche Cloud.
+     * @param repoId The requested repository ID.
+     * @return Refresh the session successfully.
+     */
+    refreshServerSession(args: { repoId: string }): Promise<ODataValueOfDateTime>;
+
+    /**
+     * Deprecated. This function is a no-op, always returns 200. Only available in Laserfiche Cloud.
+     * @param repoId The requested repository ID.
+     * @return Create the session successfully.
+     */
+    createServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
+}
+
+export class ServerSessionClient implements IServerSessionClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
+    }
+
+    /**
+     * Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session. Only available in Laserfiche Cloud.
+     * @param repoId The requested repository ID.
+     * @return Invalidate the server session successfully.
+     */
+    invalidateServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean> {
+        let { repoId } = args;
+        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/ServerSession/Invalidate";
+        if (repoId === undefined || repoId === null)
+            throw new Error("The parameter 'repoId' must be defined.");
+        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processInvalidateServerSession(_response);
+        });
+    }
+
+    protected processInvalidateServerSession(response: Response): Promise<ODataValueOfBoolean> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ODataValueOfBoolean.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 429) {
+            return response.text().then((_responseText) => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ProblemDetails.fromJS(resultData429);
+            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ODataValueOfBoolean>(null as any);
+    }
+
+    /**
+     * Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token. Only available in Laserfiche Cloud.
+     * @param repoId The requested repository ID.
+     * @return Refresh the session successfully.
+     */
+    refreshServerSession(args: { repoId: string }): Promise<ODataValueOfDateTime> {
+        let { repoId } = args;
+        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/ServerSession/Refresh";
+        if (repoId === undefined || repoId === null)
+            throw new Error("The parameter 'repoId' must be defined.");
+        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRefreshServerSession(_response);
+        });
+    }
+
+    protected processRefreshServerSession(response: Response): Promise<ODataValueOfDateTime> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ODataValueOfDateTime.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 429) {
+            return response.text().then((_responseText) => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ProblemDetails.fromJS(resultData429);
+            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ODataValueOfDateTime>(null as any);
+    }
+
+    /**
+     * Deprecated. This function is a no-op, always returns 200. Only available in Laserfiche Cloud.
+     * @param repoId The requested repository ID.
+     * @return Create the session successfully.
+     */
+    createServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean> {
+        let { repoId } = args;
+        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/ServerSession/Create";
+        if (repoId === undefined || repoId === null)
+            throw new Error("The parameter 'repoId' must be defined.");
+        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateServerSession(_response);
+        });
+    }
+
+    protected processCreateServerSession(response: Response): Promise<ODataValueOfBoolean> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ODataValueOfBoolean.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ODataValueOfBoolean>(null as any);
     }
 }
 
@@ -6530,7 +6627,7 @@ export class ProblemDetails implements IProblemDetails {
     status?: number | undefined;
     detail?: string | undefined;
     instance?: string | undefined;
-    extensions?: { [key: string]: any; } | undefined;
+    extensions?: { [key: string]: any; };
 
     constructor(data?: IProblemDetails) {
         if (data) {
@@ -6589,12 +6686,101 @@ export interface IProblemDetails {
     status?: number | undefined;
     detail?: string | undefined;
     instance?: string | undefined;
-    extensions?: { [key: string]: any; } | undefined;
+    extensions?: { [key: string]: any; };
 }
 
 export abstract class IHeaderDictionary implements IIHeaderDictionary {
     item?: any[];
     contentLength?: number | undefined;
+    accept?: any[];
+    acceptCharset?: any[];
+    acceptEncoding?: any[];
+    acceptLanguage?: any[];
+    acceptRanges?: any[];
+    accessControlAllowCredentials?: any[];
+    accessControlAllowHeaders?: any[];
+    accessControlAllowMethods?: any[];
+    accessControlAllowOrigin?: any[];
+    accessControlExposeHeaders?: any[];
+    accessControlMaxAge?: any[];
+    accessControlRequestHeaders?: any[];
+    accessControlRequestMethod?: any[];
+    age?: any[];
+    allow?: any[];
+    altSvc?: any[];
+    authorization?: any[];
+    baggage?: any[];
+    cacheControl?: any[];
+    connection?: any[];
+    contentDisposition?: any[];
+    contentEncoding?: any[];
+    contentLanguage?: any[];
+    contentLocation?: any[];
+    contentMD5?: any[];
+    contentRange?: any[];
+    contentSecurityPolicy?: any[];
+    contentSecurityPolicyReportOnly?: any[];
+    contentType?: any[];
+    correlationContext?: any[];
+    cookie?: any[];
+    date?: any[];
+    eTag?: any[];
+    expires?: any[];
+    expect?: any[];
+    from?: any[];
+    grpcAcceptEncoding?: any[];
+    grpcEncoding?: any[];
+    grpcMessage?: any[];
+    grpcStatus?: any[];
+    grpcTimeout?: any[];
+    host?: any[];
+    keepAlive?: any[];
+    ifMatch?: any[];
+    ifModifiedSince?: any[];
+    ifNoneMatch?: any[];
+    ifRange?: any[];
+    ifUnmodifiedSince?: any[];
+    lastModified?: any[];
+    link?: any[];
+    location?: any[];
+    maxForwards?: any[];
+    origin?: any[];
+    pragma?: any[];
+    proxyAuthenticate?: any[];
+    proxyAuthorization?: any[];
+    proxyConnection?: any[];
+    range?: any[];
+    referer?: any[];
+    retryAfter?: any[];
+    requestId?: any[];
+    secWebSocketAccept?: any[];
+    secWebSocketKey?: any[];
+    secWebSocketProtocol?: any[];
+    secWebSocketVersion?: any[];
+    secWebSocketExtensions?: any[];
+    server?: any[];
+    setCookie?: any[];
+    strictTransportSecurity?: any[];
+    tE?: any[];
+    trailer?: any[];
+    transferEncoding?: any[];
+    translate?: any[];
+    traceParent?: any[];
+    traceState?: any[];
+    upgrade?: any[];
+    upgradeInsecureRequests?: any[];
+    userAgent?: any[];
+    vary?: any[];
+    via?: any[];
+    warning?: any[];
+    webSocketSubProtocols?: any[];
+    wWWAuthenticate?: any[];
+    xContentTypeOptions?: any[];
+    xFrameOptions?: any[];
+    xPoweredBy?: any[];
+    xRequestedWith?: any[];
+    xUACompatible?: any[];
+    xXSSProtection?: any[];
 
     constructor(data?: IIHeaderDictionary) {
         if (data) {
@@ -6613,6 +6799,451 @@ export abstract class IHeaderDictionary implements IIHeaderDictionary {
                     this.item!.push(item);
             }
             this.contentLength = _data["ContentLength"];
+            if (Array.isArray(_data["Accept"])) {
+                this.accept = [] as any;
+                for (let item of _data["Accept"])
+                    this.accept!.push(item);
+            }
+            if (Array.isArray(_data["AcceptCharset"])) {
+                this.acceptCharset = [] as any;
+                for (let item of _data["AcceptCharset"])
+                    this.acceptCharset!.push(item);
+            }
+            if (Array.isArray(_data["AcceptEncoding"])) {
+                this.acceptEncoding = [] as any;
+                for (let item of _data["AcceptEncoding"])
+                    this.acceptEncoding!.push(item);
+            }
+            if (Array.isArray(_data["AcceptLanguage"])) {
+                this.acceptLanguage = [] as any;
+                for (let item of _data["AcceptLanguage"])
+                    this.acceptLanguage!.push(item);
+            }
+            if (Array.isArray(_data["AcceptRanges"])) {
+                this.acceptRanges = [] as any;
+                for (let item of _data["AcceptRanges"])
+                    this.acceptRanges!.push(item);
+            }
+            if (Array.isArray(_data["AccessControlAllowCredentials"])) {
+                this.accessControlAllowCredentials = [] as any;
+                for (let item of _data["AccessControlAllowCredentials"])
+                    this.accessControlAllowCredentials!.push(item);
+            }
+            if (Array.isArray(_data["AccessControlAllowHeaders"])) {
+                this.accessControlAllowHeaders = [] as any;
+                for (let item of _data["AccessControlAllowHeaders"])
+                    this.accessControlAllowHeaders!.push(item);
+            }
+            if (Array.isArray(_data["AccessControlAllowMethods"])) {
+                this.accessControlAllowMethods = [] as any;
+                for (let item of _data["AccessControlAllowMethods"])
+                    this.accessControlAllowMethods!.push(item);
+            }
+            if (Array.isArray(_data["AccessControlAllowOrigin"])) {
+                this.accessControlAllowOrigin = [] as any;
+                for (let item of _data["AccessControlAllowOrigin"])
+                    this.accessControlAllowOrigin!.push(item);
+            }
+            if (Array.isArray(_data["AccessControlExposeHeaders"])) {
+                this.accessControlExposeHeaders = [] as any;
+                for (let item of _data["AccessControlExposeHeaders"])
+                    this.accessControlExposeHeaders!.push(item);
+            }
+            if (Array.isArray(_data["AccessControlMaxAge"])) {
+                this.accessControlMaxAge = [] as any;
+                for (let item of _data["AccessControlMaxAge"])
+                    this.accessControlMaxAge!.push(item);
+            }
+            if (Array.isArray(_data["AccessControlRequestHeaders"])) {
+                this.accessControlRequestHeaders = [] as any;
+                for (let item of _data["AccessControlRequestHeaders"])
+                    this.accessControlRequestHeaders!.push(item);
+            }
+            if (Array.isArray(_data["AccessControlRequestMethod"])) {
+                this.accessControlRequestMethod = [] as any;
+                for (let item of _data["AccessControlRequestMethod"])
+                    this.accessControlRequestMethod!.push(item);
+            }
+            if (Array.isArray(_data["Age"])) {
+                this.age = [] as any;
+                for (let item of _data["Age"])
+                    this.age!.push(item);
+            }
+            if (Array.isArray(_data["Allow"])) {
+                this.allow = [] as any;
+                for (let item of _data["Allow"])
+                    this.allow!.push(item);
+            }
+            if (Array.isArray(_data["AltSvc"])) {
+                this.altSvc = [] as any;
+                for (let item of _data["AltSvc"])
+                    this.altSvc!.push(item);
+            }
+            if (Array.isArray(_data["Authorization"])) {
+                this.authorization = [] as any;
+                for (let item of _data["Authorization"])
+                    this.authorization!.push(item);
+            }
+            if (Array.isArray(_data["Baggage"])) {
+                this.baggage = [] as any;
+                for (let item of _data["Baggage"])
+                    this.baggage!.push(item);
+            }
+            if (Array.isArray(_data["CacheControl"])) {
+                this.cacheControl = [] as any;
+                for (let item of _data["CacheControl"])
+                    this.cacheControl!.push(item);
+            }
+            if (Array.isArray(_data["Connection"])) {
+                this.connection = [] as any;
+                for (let item of _data["Connection"])
+                    this.connection!.push(item);
+            }
+            if (Array.isArray(_data["ContentDisposition"])) {
+                this.contentDisposition = [] as any;
+                for (let item of _data["ContentDisposition"])
+                    this.contentDisposition!.push(item);
+            }
+            if (Array.isArray(_data["ContentEncoding"])) {
+                this.contentEncoding = [] as any;
+                for (let item of _data["ContentEncoding"])
+                    this.contentEncoding!.push(item);
+            }
+            if (Array.isArray(_data["ContentLanguage"])) {
+                this.contentLanguage = [] as any;
+                for (let item of _data["ContentLanguage"])
+                    this.contentLanguage!.push(item);
+            }
+            if (Array.isArray(_data["ContentLocation"])) {
+                this.contentLocation = [] as any;
+                for (let item of _data["ContentLocation"])
+                    this.contentLocation!.push(item);
+            }
+            if (Array.isArray(_data["ContentMD5"])) {
+                this.contentMD5 = [] as any;
+                for (let item of _data["ContentMD5"])
+                    this.contentMD5!.push(item);
+            }
+            if (Array.isArray(_data["ContentRange"])) {
+                this.contentRange = [] as any;
+                for (let item of _data["ContentRange"])
+                    this.contentRange!.push(item);
+            }
+            if (Array.isArray(_data["ContentSecurityPolicy"])) {
+                this.contentSecurityPolicy = [] as any;
+                for (let item of _data["ContentSecurityPolicy"])
+                    this.contentSecurityPolicy!.push(item);
+            }
+            if (Array.isArray(_data["ContentSecurityPolicyReportOnly"])) {
+                this.contentSecurityPolicyReportOnly = [] as any;
+                for (let item of _data["ContentSecurityPolicyReportOnly"])
+                    this.contentSecurityPolicyReportOnly!.push(item);
+            }
+            if (Array.isArray(_data["ContentType"])) {
+                this.contentType = [] as any;
+                for (let item of _data["ContentType"])
+                    this.contentType!.push(item);
+            }
+            if (Array.isArray(_data["CorrelationContext"])) {
+                this.correlationContext = [] as any;
+                for (let item of _data["CorrelationContext"])
+                    this.correlationContext!.push(item);
+            }
+            if (Array.isArray(_data["Cookie"])) {
+                this.cookie = [] as any;
+                for (let item of _data["Cookie"])
+                    this.cookie!.push(item);
+            }
+            if (Array.isArray(_data["Date"])) {
+                this.date = [] as any;
+                for (let item of _data["Date"])
+                    this.date!.push(item);
+            }
+            if (Array.isArray(_data["ETag"])) {
+                this.eTag = [] as any;
+                for (let item of _data["ETag"])
+                    this.eTag!.push(item);
+            }
+            if (Array.isArray(_data["Expires"])) {
+                this.expires = [] as any;
+                for (let item of _data["Expires"])
+                    this.expires!.push(item);
+            }
+            if (Array.isArray(_data["Expect"])) {
+                this.expect = [] as any;
+                for (let item of _data["Expect"])
+                    this.expect!.push(item);
+            }
+            if (Array.isArray(_data["From"])) {
+                this.from = [] as any;
+                for (let item of _data["From"])
+                    this.from!.push(item);
+            }
+            if (Array.isArray(_data["GrpcAcceptEncoding"])) {
+                this.grpcAcceptEncoding = [] as any;
+                for (let item of _data["GrpcAcceptEncoding"])
+                    this.grpcAcceptEncoding!.push(item);
+            }
+            if (Array.isArray(_data["GrpcEncoding"])) {
+                this.grpcEncoding = [] as any;
+                for (let item of _data["GrpcEncoding"])
+                    this.grpcEncoding!.push(item);
+            }
+            if (Array.isArray(_data["GrpcMessage"])) {
+                this.grpcMessage = [] as any;
+                for (let item of _data["GrpcMessage"])
+                    this.grpcMessage!.push(item);
+            }
+            if (Array.isArray(_data["GrpcStatus"])) {
+                this.grpcStatus = [] as any;
+                for (let item of _data["GrpcStatus"])
+                    this.grpcStatus!.push(item);
+            }
+            if (Array.isArray(_data["GrpcTimeout"])) {
+                this.grpcTimeout = [] as any;
+                for (let item of _data["GrpcTimeout"])
+                    this.grpcTimeout!.push(item);
+            }
+            if (Array.isArray(_data["Host"])) {
+                this.host = [] as any;
+                for (let item of _data["Host"])
+                    this.host!.push(item);
+            }
+            if (Array.isArray(_data["KeepAlive"])) {
+                this.keepAlive = [] as any;
+                for (let item of _data["KeepAlive"])
+                    this.keepAlive!.push(item);
+            }
+            if (Array.isArray(_data["IfMatch"])) {
+                this.ifMatch = [] as any;
+                for (let item of _data["IfMatch"])
+                    this.ifMatch!.push(item);
+            }
+            if (Array.isArray(_data["IfModifiedSince"])) {
+                this.ifModifiedSince = [] as any;
+                for (let item of _data["IfModifiedSince"])
+                    this.ifModifiedSince!.push(item);
+            }
+            if (Array.isArray(_data["IfNoneMatch"])) {
+                this.ifNoneMatch = [] as any;
+                for (let item of _data["IfNoneMatch"])
+                    this.ifNoneMatch!.push(item);
+            }
+            if (Array.isArray(_data["IfRange"])) {
+                this.ifRange = [] as any;
+                for (let item of _data["IfRange"])
+                    this.ifRange!.push(item);
+            }
+            if (Array.isArray(_data["IfUnmodifiedSince"])) {
+                this.ifUnmodifiedSince = [] as any;
+                for (let item of _data["IfUnmodifiedSince"])
+                    this.ifUnmodifiedSince!.push(item);
+            }
+            if (Array.isArray(_data["LastModified"])) {
+                this.lastModified = [] as any;
+                for (let item of _data["LastModified"])
+                    this.lastModified!.push(item);
+            }
+            if (Array.isArray(_data["Link"])) {
+                this.link = [] as any;
+                for (let item of _data["Link"])
+                    this.link!.push(item);
+            }
+            if (Array.isArray(_data["Location"])) {
+                this.location = [] as any;
+                for (let item of _data["Location"])
+                    this.location!.push(item);
+            }
+            if (Array.isArray(_data["MaxForwards"])) {
+                this.maxForwards = [] as any;
+                for (let item of _data["MaxForwards"])
+                    this.maxForwards!.push(item);
+            }
+            if (Array.isArray(_data["Origin"])) {
+                this.origin = [] as any;
+                for (let item of _data["Origin"])
+                    this.origin!.push(item);
+            }
+            if (Array.isArray(_data["Pragma"])) {
+                this.pragma = [] as any;
+                for (let item of _data["Pragma"])
+                    this.pragma!.push(item);
+            }
+            if (Array.isArray(_data["ProxyAuthenticate"])) {
+                this.proxyAuthenticate = [] as any;
+                for (let item of _data["ProxyAuthenticate"])
+                    this.proxyAuthenticate!.push(item);
+            }
+            if (Array.isArray(_data["ProxyAuthorization"])) {
+                this.proxyAuthorization = [] as any;
+                for (let item of _data["ProxyAuthorization"])
+                    this.proxyAuthorization!.push(item);
+            }
+            if (Array.isArray(_data["ProxyConnection"])) {
+                this.proxyConnection = [] as any;
+                for (let item of _data["ProxyConnection"])
+                    this.proxyConnection!.push(item);
+            }
+            if (Array.isArray(_data["Range"])) {
+                this.range = [] as any;
+                for (let item of _data["Range"])
+                    this.range!.push(item);
+            }
+            if (Array.isArray(_data["Referer"])) {
+                this.referer = [] as any;
+                for (let item of _data["Referer"])
+                    this.referer!.push(item);
+            }
+            if (Array.isArray(_data["RetryAfter"])) {
+                this.retryAfter = [] as any;
+                for (let item of _data["RetryAfter"])
+                    this.retryAfter!.push(item);
+            }
+            if (Array.isArray(_data["RequestId"])) {
+                this.requestId = [] as any;
+                for (let item of _data["RequestId"])
+                    this.requestId!.push(item);
+            }
+            if (Array.isArray(_data["SecWebSocketAccept"])) {
+                this.secWebSocketAccept = [] as any;
+                for (let item of _data["SecWebSocketAccept"])
+                    this.secWebSocketAccept!.push(item);
+            }
+            if (Array.isArray(_data["SecWebSocketKey"])) {
+                this.secWebSocketKey = [] as any;
+                for (let item of _data["SecWebSocketKey"])
+                    this.secWebSocketKey!.push(item);
+            }
+            if (Array.isArray(_data["SecWebSocketProtocol"])) {
+                this.secWebSocketProtocol = [] as any;
+                for (let item of _data["SecWebSocketProtocol"])
+                    this.secWebSocketProtocol!.push(item);
+            }
+            if (Array.isArray(_data["SecWebSocketVersion"])) {
+                this.secWebSocketVersion = [] as any;
+                for (let item of _data["SecWebSocketVersion"])
+                    this.secWebSocketVersion!.push(item);
+            }
+            if (Array.isArray(_data["SecWebSocketExtensions"])) {
+                this.secWebSocketExtensions = [] as any;
+                for (let item of _data["SecWebSocketExtensions"])
+                    this.secWebSocketExtensions!.push(item);
+            }
+            if (Array.isArray(_data["Server"])) {
+                this.server = [] as any;
+                for (let item of _data["Server"])
+                    this.server!.push(item);
+            }
+            if (Array.isArray(_data["SetCookie"])) {
+                this.setCookie = [] as any;
+                for (let item of _data["SetCookie"])
+                    this.setCookie!.push(item);
+            }
+            if (Array.isArray(_data["StrictTransportSecurity"])) {
+                this.strictTransportSecurity = [] as any;
+                for (let item of _data["StrictTransportSecurity"])
+                    this.strictTransportSecurity!.push(item);
+            }
+            if (Array.isArray(_data["TE"])) {
+                this.tE = [] as any;
+                for (let item of _data["TE"])
+                    this.tE!.push(item);
+            }
+            if (Array.isArray(_data["Trailer"])) {
+                this.trailer = [] as any;
+                for (let item of _data["Trailer"])
+                    this.trailer!.push(item);
+            }
+            if (Array.isArray(_data["TransferEncoding"])) {
+                this.transferEncoding = [] as any;
+                for (let item of _data["TransferEncoding"])
+                    this.transferEncoding!.push(item);
+            }
+            if (Array.isArray(_data["Translate"])) {
+                this.translate = [] as any;
+                for (let item of _data["Translate"])
+                    this.translate!.push(item);
+            }
+            if (Array.isArray(_data["TraceParent"])) {
+                this.traceParent = [] as any;
+                for (let item of _data["TraceParent"])
+                    this.traceParent!.push(item);
+            }
+            if (Array.isArray(_data["TraceState"])) {
+                this.traceState = [] as any;
+                for (let item of _data["TraceState"])
+                    this.traceState!.push(item);
+            }
+            if (Array.isArray(_data["Upgrade"])) {
+                this.upgrade = [] as any;
+                for (let item of _data["Upgrade"])
+                    this.upgrade!.push(item);
+            }
+            if (Array.isArray(_data["UpgradeInsecureRequests"])) {
+                this.upgradeInsecureRequests = [] as any;
+                for (let item of _data["UpgradeInsecureRequests"])
+                    this.upgradeInsecureRequests!.push(item);
+            }
+            if (Array.isArray(_data["UserAgent"])) {
+                this.userAgent = [] as any;
+                for (let item of _data["UserAgent"])
+                    this.userAgent!.push(item);
+            }
+            if (Array.isArray(_data["Vary"])) {
+                this.vary = [] as any;
+                for (let item of _data["Vary"])
+                    this.vary!.push(item);
+            }
+            if (Array.isArray(_data["Via"])) {
+                this.via = [] as any;
+                for (let item of _data["Via"])
+                    this.via!.push(item);
+            }
+            if (Array.isArray(_data["Warning"])) {
+                this.warning = [] as any;
+                for (let item of _data["Warning"])
+                    this.warning!.push(item);
+            }
+            if (Array.isArray(_data["WebSocketSubProtocols"])) {
+                this.webSocketSubProtocols = [] as any;
+                for (let item of _data["WebSocketSubProtocols"])
+                    this.webSocketSubProtocols!.push(item);
+            }
+            if (Array.isArray(_data["WWWAuthenticate"])) {
+                this.wWWAuthenticate = [] as any;
+                for (let item of _data["WWWAuthenticate"])
+                    this.wWWAuthenticate!.push(item);
+            }
+            if (Array.isArray(_data["XContentTypeOptions"])) {
+                this.xContentTypeOptions = [] as any;
+                for (let item of _data["XContentTypeOptions"])
+                    this.xContentTypeOptions!.push(item);
+            }
+            if (Array.isArray(_data["XFrameOptions"])) {
+                this.xFrameOptions = [] as any;
+                for (let item of _data["XFrameOptions"])
+                    this.xFrameOptions!.push(item);
+            }
+            if (Array.isArray(_data["XPoweredBy"])) {
+                this.xPoweredBy = [] as any;
+                for (let item of _data["XPoweredBy"])
+                    this.xPoweredBy!.push(item);
+            }
+            if (Array.isArray(_data["XRequestedWith"])) {
+                this.xRequestedWith = [] as any;
+                for (let item of _data["XRequestedWith"])
+                    this.xRequestedWith!.push(item);
+            }
+            if (Array.isArray(_data["XUACompatible"])) {
+                this.xUACompatible = [] as any;
+                for (let item of _data["XUACompatible"])
+                    this.xUACompatible!.push(item);
+            }
+            if (Array.isArray(_data["XXSSProtection"])) {
+                this.xXSSProtection = [] as any;
+                for (let item of _data["XXSSProtection"])
+                    this.xXSSProtection!.push(item);
+            }
         }
     }
 
@@ -6629,6 +7260,451 @@ export abstract class IHeaderDictionary implements IIHeaderDictionary {
                 data["Item"].push(item);
         }
         data["ContentLength"] = this.contentLength;
+        if (Array.isArray(this.accept)) {
+            data["Accept"] = [];
+            for (let item of this.accept)
+                data["Accept"].push(item);
+        }
+        if (Array.isArray(this.acceptCharset)) {
+            data["AcceptCharset"] = [];
+            for (let item of this.acceptCharset)
+                data["AcceptCharset"].push(item);
+        }
+        if (Array.isArray(this.acceptEncoding)) {
+            data["AcceptEncoding"] = [];
+            for (let item of this.acceptEncoding)
+                data["AcceptEncoding"].push(item);
+        }
+        if (Array.isArray(this.acceptLanguage)) {
+            data["AcceptLanguage"] = [];
+            for (let item of this.acceptLanguage)
+                data["AcceptLanguage"].push(item);
+        }
+        if (Array.isArray(this.acceptRanges)) {
+            data["AcceptRanges"] = [];
+            for (let item of this.acceptRanges)
+                data["AcceptRanges"].push(item);
+        }
+        if (Array.isArray(this.accessControlAllowCredentials)) {
+            data["AccessControlAllowCredentials"] = [];
+            for (let item of this.accessControlAllowCredentials)
+                data["AccessControlAllowCredentials"].push(item);
+        }
+        if (Array.isArray(this.accessControlAllowHeaders)) {
+            data["AccessControlAllowHeaders"] = [];
+            for (let item of this.accessControlAllowHeaders)
+                data["AccessControlAllowHeaders"].push(item);
+        }
+        if (Array.isArray(this.accessControlAllowMethods)) {
+            data["AccessControlAllowMethods"] = [];
+            for (let item of this.accessControlAllowMethods)
+                data["AccessControlAllowMethods"].push(item);
+        }
+        if (Array.isArray(this.accessControlAllowOrigin)) {
+            data["AccessControlAllowOrigin"] = [];
+            for (let item of this.accessControlAllowOrigin)
+                data["AccessControlAllowOrigin"].push(item);
+        }
+        if (Array.isArray(this.accessControlExposeHeaders)) {
+            data["AccessControlExposeHeaders"] = [];
+            for (let item of this.accessControlExposeHeaders)
+                data["AccessControlExposeHeaders"].push(item);
+        }
+        if (Array.isArray(this.accessControlMaxAge)) {
+            data["AccessControlMaxAge"] = [];
+            for (let item of this.accessControlMaxAge)
+                data["AccessControlMaxAge"].push(item);
+        }
+        if (Array.isArray(this.accessControlRequestHeaders)) {
+            data["AccessControlRequestHeaders"] = [];
+            for (let item of this.accessControlRequestHeaders)
+                data["AccessControlRequestHeaders"].push(item);
+        }
+        if (Array.isArray(this.accessControlRequestMethod)) {
+            data["AccessControlRequestMethod"] = [];
+            for (let item of this.accessControlRequestMethod)
+                data["AccessControlRequestMethod"].push(item);
+        }
+        if (Array.isArray(this.age)) {
+            data["Age"] = [];
+            for (let item of this.age)
+                data["Age"].push(item);
+        }
+        if (Array.isArray(this.allow)) {
+            data["Allow"] = [];
+            for (let item of this.allow)
+                data["Allow"].push(item);
+        }
+        if (Array.isArray(this.altSvc)) {
+            data["AltSvc"] = [];
+            for (let item of this.altSvc)
+                data["AltSvc"].push(item);
+        }
+        if (Array.isArray(this.authorization)) {
+            data["Authorization"] = [];
+            for (let item of this.authorization)
+                data["Authorization"].push(item);
+        }
+        if (Array.isArray(this.baggage)) {
+            data["Baggage"] = [];
+            for (let item of this.baggage)
+                data["Baggage"].push(item);
+        }
+        if (Array.isArray(this.cacheControl)) {
+            data["CacheControl"] = [];
+            for (let item of this.cacheControl)
+                data["CacheControl"].push(item);
+        }
+        if (Array.isArray(this.connection)) {
+            data["Connection"] = [];
+            for (let item of this.connection)
+                data["Connection"].push(item);
+        }
+        if (Array.isArray(this.contentDisposition)) {
+            data["ContentDisposition"] = [];
+            for (let item of this.contentDisposition)
+                data["ContentDisposition"].push(item);
+        }
+        if (Array.isArray(this.contentEncoding)) {
+            data["ContentEncoding"] = [];
+            for (let item of this.contentEncoding)
+                data["ContentEncoding"].push(item);
+        }
+        if (Array.isArray(this.contentLanguage)) {
+            data["ContentLanguage"] = [];
+            for (let item of this.contentLanguage)
+                data["ContentLanguage"].push(item);
+        }
+        if (Array.isArray(this.contentLocation)) {
+            data["ContentLocation"] = [];
+            for (let item of this.contentLocation)
+                data["ContentLocation"].push(item);
+        }
+        if (Array.isArray(this.contentMD5)) {
+            data["ContentMD5"] = [];
+            for (let item of this.contentMD5)
+                data["ContentMD5"].push(item);
+        }
+        if (Array.isArray(this.contentRange)) {
+            data["ContentRange"] = [];
+            for (let item of this.contentRange)
+                data["ContentRange"].push(item);
+        }
+        if (Array.isArray(this.contentSecurityPolicy)) {
+            data["ContentSecurityPolicy"] = [];
+            for (let item of this.contentSecurityPolicy)
+                data["ContentSecurityPolicy"].push(item);
+        }
+        if (Array.isArray(this.contentSecurityPolicyReportOnly)) {
+            data["ContentSecurityPolicyReportOnly"] = [];
+            for (let item of this.contentSecurityPolicyReportOnly)
+                data["ContentSecurityPolicyReportOnly"].push(item);
+        }
+        if (Array.isArray(this.contentType)) {
+            data["ContentType"] = [];
+            for (let item of this.contentType)
+                data["ContentType"].push(item);
+        }
+        if (Array.isArray(this.correlationContext)) {
+            data["CorrelationContext"] = [];
+            for (let item of this.correlationContext)
+                data["CorrelationContext"].push(item);
+        }
+        if (Array.isArray(this.cookie)) {
+            data["Cookie"] = [];
+            for (let item of this.cookie)
+                data["Cookie"].push(item);
+        }
+        if (Array.isArray(this.date)) {
+            data["Date"] = [];
+            for (let item of this.date)
+                data["Date"].push(item);
+        }
+        if (Array.isArray(this.eTag)) {
+            data["ETag"] = [];
+            for (let item of this.eTag)
+                data["ETag"].push(item);
+        }
+        if (Array.isArray(this.expires)) {
+            data["Expires"] = [];
+            for (let item of this.expires)
+                data["Expires"].push(item);
+        }
+        if (Array.isArray(this.expect)) {
+            data["Expect"] = [];
+            for (let item of this.expect)
+                data["Expect"].push(item);
+        }
+        if (Array.isArray(this.from)) {
+            data["From"] = [];
+            for (let item of this.from)
+                data["From"].push(item);
+        }
+        if (Array.isArray(this.grpcAcceptEncoding)) {
+            data["GrpcAcceptEncoding"] = [];
+            for (let item of this.grpcAcceptEncoding)
+                data["GrpcAcceptEncoding"].push(item);
+        }
+        if (Array.isArray(this.grpcEncoding)) {
+            data["GrpcEncoding"] = [];
+            for (let item of this.grpcEncoding)
+                data["GrpcEncoding"].push(item);
+        }
+        if (Array.isArray(this.grpcMessage)) {
+            data["GrpcMessage"] = [];
+            for (let item of this.grpcMessage)
+                data["GrpcMessage"].push(item);
+        }
+        if (Array.isArray(this.grpcStatus)) {
+            data["GrpcStatus"] = [];
+            for (let item of this.grpcStatus)
+                data["GrpcStatus"].push(item);
+        }
+        if (Array.isArray(this.grpcTimeout)) {
+            data["GrpcTimeout"] = [];
+            for (let item of this.grpcTimeout)
+                data["GrpcTimeout"].push(item);
+        }
+        if (Array.isArray(this.host)) {
+            data["Host"] = [];
+            for (let item of this.host)
+                data["Host"].push(item);
+        }
+        if (Array.isArray(this.keepAlive)) {
+            data["KeepAlive"] = [];
+            for (let item of this.keepAlive)
+                data["KeepAlive"].push(item);
+        }
+        if (Array.isArray(this.ifMatch)) {
+            data["IfMatch"] = [];
+            for (let item of this.ifMatch)
+                data["IfMatch"].push(item);
+        }
+        if (Array.isArray(this.ifModifiedSince)) {
+            data["IfModifiedSince"] = [];
+            for (let item of this.ifModifiedSince)
+                data["IfModifiedSince"].push(item);
+        }
+        if (Array.isArray(this.ifNoneMatch)) {
+            data["IfNoneMatch"] = [];
+            for (let item of this.ifNoneMatch)
+                data["IfNoneMatch"].push(item);
+        }
+        if (Array.isArray(this.ifRange)) {
+            data["IfRange"] = [];
+            for (let item of this.ifRange)
+                data["IfRange"].push(item);
+        }
+        if (Array.isArray(this.ifUnmodifiedSince)) {
+            data["IfUnmodifiedSince"] = [];
+            for (let item of this.ifUnmodifiedSince)
+                data["IfUnmodifiedSince"].push(item);
+        }
+        if (Array.isArray(this.lastModified)) {
+            data["LastModified"] = [];
+            for (let item of this.lastModified)
+                data["LastModified"].push(item);
+        }
+        if (Array.isArray(this.link)) {
+            data["Link"] = [];
+            for (let item of this.link)
+                data["Link"].push(item);
+        }
+        if (Array.isArray(this.location)) {
+            data["Location"] = [];
+            for (let item of this.location)
+                data["Location"].push(item);
+        }
+        if (Array.isArray(this.maxForwards)) {
+            data["MaxForwards"] = [];
+            for (let item of this.maxForwards)
+                data["MaxForwards"].push(item);
+        }
+        if (Array.isArray(this.origin)) {
+            data["Origin"] = [];
+            for (let item of this.origin)
+                data["Origin"].push(item);
+        }
+        if (Array.isArray(this.pragma)) {
+            data["Pragma"] = [];
+            for (let item of this.pragma)
+                data["Pragma"].push(item);
+        }
+        if (Array.isArray(this.proxyAuthenticate)) {
+            data["ProxyAuthenticate"] = [];
+            for (let item of this.proxyAuthenticate)
+                data["ProxyAuthenticate"].push(item);
+        }
+        if (Array.isArray(this.proxyAuthorization)) {
+            data["ProxyAuthorization"] = [];
+            for (let item of this.proxyAuthorization)
+                data["ProxyAuthorization"].push(item);
+        }
+        if (Array.isArray(this.proxyConnection)) {
+            data["ProxyConnection"] = [];
+            for (let item of this.proxyConnection)
+                data["ProxyConnection"].push(item);
+        }
+        if (Array.isArray(this.range)) {
+            data["Range"] = [];
+            for (let item of this.range)
+                data["Range"].push(item);
+        }
+        if (Array.isArray(this.referer)) {
+            data["Referer"] = [];
+            for (let item of this.referer)
+                data["Referer"].push(item);
+        }
+        if (Array.isArray(this.retryAfter)) {
+            data["RetryAfter"] = [];
+            for (let item of this.retryAfter)
+                data["RetryAfter"].push(item);
+        }
+        if (Array.isArray(this.requestId)) {
+            data["RequestId"] = [];
+            for (let item of this.requestId)
+                data["RequestId"].push(item);
+        }
+        if (Array.isArray(this.secWebSocketAccept)) {
+            data["SecWebSocketAccept"] = [];
+            for (let item of this.secWebSocketAccept)
+                data["SecWebSocketAccept"].push(item);
+        }
+        if (Array.isArray(this.secWebSocketKey)) {
+            data["SecWebSocketKey"] = [];
+            for (let item of this.secWebSocketKey)
+                data["SecWebSocketKey"].push(item);
+        }
+        if (Array.isArray(this.secWebSocketProtocol)) {
+            data["SecWebSocketProtocol"] = [];
+            for (let item of this.secWebSocketProtocol)
+                data["SecWebSocketProtocol"].push(item);
+        }
+        if (Array.isArray(this.secWebSocketVersion)) {
+            data["SecWebSocketVersion"] = [];
+            for (let item of this.secWebSocketVersion)
+                data["SecWebSocketVersion"].push(item);
+        }
+        if (Array.isArray(this.secWebSocketExtensions)) {
+            data["SecWebSocketExtensions"] = [];
+            for (let item of this.secWebSocketExtensions)
+                data["SecWebSocketExtensions"].push(item);
+        }
+        if (Array.isArray(this.server)) {
+            data["Server"] = [];
+            for (let item of this.server)
+                data["Server"].push(item);
+        }
+        if (Array.isArray(this.setCookie)) {
+            data["SetCookie"] = [];
+            for (let item of this.setCookie)
+                data["SetCookie"].push(item);
+        }
+        if (Array.isArray(this.strictTransportSecurity)) {
+            data["StrictTransportSecurity"] = [];
+            for (let item of this.strictTransportSecurity)
+                data["StrictTransportSecurity"].push(item);
+        }
+        if (Array.isArray(this.tE)) {
+            data["TE"] = [];
+            for (let item of this.tE)
+                data["TE"].push(item);
+        }
+        if (Array.isArray(this.trailer)) {
+            data["Trailer"] = [];
+            for (let item of this.trailer)
+                data["Trailer"].push(item);
+        }
+        if (Array.isArray(this.transferEncoding)) {
+            data["TransferEncoding"] = [];
+            for (let item of this.transferEncoding)
+                data["TransferEncoding"].push(item);
+        }
+        if (Array.isArray(this.translate)) {
+            data["Translate"] = [];
+            for (let item of this.translate)
+                data["Translate"].push(item);
+        }
+        if (Array.isArray(this.traceParent)) {
+            data["TraceParent"] = [];
+            for (let item of this.traceParent)
+                data["TraceParent"].push(item);
+        }
+        if (Array.isArray(this.traceState)) {
+            data["TraceState"] = [];
+            for (let item of this.traceState)
+                data["TraceState"].push(item);
+        }
+        if (Array.isArray(this.upgrade)) {
+            data["Upgrade"] = [];
+            for (let item of this.upgrade)
+                data["Upgrade"].push(item);
+        }
+        if (Array.isArray(this.upgradeInsecureRequests)) {
+            data["UpgradeInsecureRequests"] = [];
+            for (let item of this.upgradeInsecureRequests)
+                data["UpgradeInsecureRequests"].push(item);
+        }
+        if (Array.isArray(this.userAgent)) {
+            data["UserAgent"] = [];
+            for (let item of this.userAgent)
+                data["UserAgent"].push(item);
+        }
+        if (Array.isArray(this.vary)) {
+            data["Vary"] = [];
+            for (let item of this.vary)
+                data["Vary"].push(item);
+        }
+        if (Array.isArray(this.via)) {
+            data["Via"] = [];
+            for (let item of this.via)
+                data["Via"].push(item);
+        }
+        if (Array.isArray(this.warning)) {
+            data["Warning"] = [];
+            for (let item of this.warning)
+                data["Warning"].push(item);
+        }
+        if (Array.isArray(this.webSocketSubProtocols)) {
+            data["WebSocketSubProtocols"] = [];
+            for (let item of this.webSocketSubProtocols)
+                data["WebSocketSubProtocols"].push(item);
+        }
+        if (Array.isArray(this.wWWAuthenticate)) {
+            data["WWWAuthenticate"] = [];
+            for (let item of this.wWWAuthenticate)
+                data["WWWAuthenticate"].push(item);
+        }
+        if (Array.isArray(this.xContentTypeOptions)) {
+            data["XContentTypeOptions"] = [];
+            for (let item of this.xContentTypeOptions)
+                data["XContentTypeOptions"].push(item);
+        }
+        if (Array.isArray(this.xFrameOptions)) {
+            data["XFrameOptions"] = [];
+            for (let item of this.xFrameOptions)
+                data["XFrameOptions"].push(item);
+        }
+        if (Array.isArray(this.xPoweredBy)) {
+            data["XPoweredBy"] = [];
+            for (let item of this.xPoweredBy)
+                data["XPoweredBy"].push(item);
+        }
+        if (Array.isArray(this.xRequestedWith)) {
+            data["XRequestedWith"] = [];
+            for (let item of this.xRequestedWith)
+                data["XRequestedWith"].push(item);
+        }
+        if (Array.isArray(this.xUACompatible)) {
+            data["XUACompatible"] = [];
+            for (let item of this.xUACompatible)
+                data["XUACompatible"].push(item);
+        }
+        if (Array.isArray(this.xXSSProtection)) {
+            data["XXSSProtection"] = [];
+            for (let item of this.xXSSProtection)
+                data["XXSSProtection"].push(item);
+        }
         return data;
     }
 }
@@ -6636,6 +7712,95 @@ export abstract class IHeaderDictionary implements IIHeaderDictionary {
 export interface IIHeaderDictionary {
     item?: any[];
     contentLength?: number | undefined;
+    accept?: any[];
+    acceptCharset?: any[];
+    acceptEncoding?: any[];
+    acceptLanguage?: any[];
+    acceptRanges?: any[];
+    accessControlAllowCredentials?: any[];
+    accessControlAllowHeaders?: any[];
+    accessControlAllowMethods?: any[];
+    accessControlAllowOrigin?: any[];
+    accessControlExposeHeaders?: any[];
+    accessControlMaxAge?: any[];
+    accessControlRequestHeaders?: any[];
+    accessControlRequestMethod?: any[];
+    age?: any[];
+    allow?: any[];
+    altSvc?: any[];
+    authorization?: any[];
+    baggage?: any[];
+    cacheControl?: any[];
+    connection?: any[];
+    contentDisposition?: any[];
+    contentEncoding?: any[];
+    contentLanguage?: any[];
+    contentLocation?: any[];
+    contentMD5?: any[];
+    contentRange?: any[];
+    contentSecurityPolicy?: any[];
+    contentSecurityPolicyReportOnly?: any[];
+    contentType?: any[];
+    correlationContext?: any[];
+    cookie?: any[];
+    date?: any[];
+    eTag?: any[];
+    expires?: any[];
+    expect?: any[];
+    from?: any[];
+    grpcAcceptEncoding?: any[];
+    grpcEncoding?: any[];
+    grpcMessage?: any[];
+    grpcStatus?: any[];
+    grpcTimeout?: any[];
+    host?: any[];
+    keepAlive?: any[];
+    ifMatch?: any[];
+    ifModifiedSince?: any[];
+    ifNoneMatch?: any[];
+    ifRange?: any[];
+    ifUnmodifiedSince?: any[];
+    lastModified?: any[];
+    link?: any[];
+    location?: any[];
+    maxForwards?: any[];
+    origin?: any[];
+    pragma?: any[];
+    proxyAuthenticate?: any[];
+    proxyAuthorization?: any[];
+    proxyConnection?: any[];
+    range?: any[];
+    referer?: any[];
+    retryAfter?: any[];
+    requestId?: any[];
+    secWebSocketAccept?: any[];
+    secWebSocketKey?: any[];
+    secWebSocketProtocol?: any[];
+    secWebSocketVersion?: any[];
+    secWebSocketExtensions?: any[];
+    server?: any[];
+    setCookie?: any[];
+    strictTransportSecurity?: any[];
+    tE?: any[];
+    trailer?: any[];
+    transferEncoding?: any[];
+    translate?: any[];
+    traceParent?: any[];
+    traceState?: any[];
+    upgrade?: any[];
+    upgradeInsecureRequests?: any[];
+    userAgent?: any[];
+    vary?: any[];
+    via?: any[];
+    warning?: any[];
+    webSocketSubProtocols?: any[];
+    wWWAuthenticate?: any[];
+    xContentTypeOptions?: any[];
+    xFrameOptions?: any[];
+    xPoweredBy?: any[];
+    xRequestedWith?: any[];
+    xUACompatible?: any[];
+    xXSSProtection?: any[];
 }
 
 /** The request body containing fields that will be assigned to the entry. */
@@ -7200,6 +8365,7 @@ use a custom format. */
     formatPattern?: string | undefined;
 }
 
+/** Enumeration of Laserfiche template field types. */
 export enum WFieldType {
     DateTime = "DateTime",
     Blob = "Blob",
@@ -7478,9 +8644,9 @@ export class Entry implements IEntry {
     /** The type of the entry. */
     entryType?: EntryType;
     /** A boolean indicating if this entry is a container object; it can have other entries as children. */
-    readonly isContainer?: boolean;
+    isContainer?: boolean;
     /** A boolean indicating if this entry is a leaf object; it cannot have other entries as children. */
-    readonly isLeaf?: boolean;
+    isLeaf?: boolean;
     /** The name of the template assigned to this entry. */
     templateName?: string | undefined;
     /** The id of the template assigned to this entry. */
@@ -7514,8 +8680,8 @@ export class Entry implements IEntry {
             this.creationTime = _data["creationTime"] ? new Date(_data["creationTime"].toString()) : <any>undefined;
             this.lastModifiedTime = _data["lastModifiedTime"] ? new Date(_data["lastModifiedTime"].toString()) : <any>undefined;
             this.entryType = _data["entryType"];
-            (<any>this).isContainer = _data["isContainer"];
-            (<any>this).isLeaf = _data["isLeaf"];
+            this.isContainer = _data["isContainer"];
+            this.isLeaf = _data["isLeaf"];
             this.templateName = _data["templateName"];
             this.templateId = _data["templateId"];
             if (Array.isArray(_data["templateFieldNames"])) {
@@ -7916,6 +9082,50 @@ to directly or indirectly under a record series in the repository. */
     isUnderRecordSeries?: boolean;
     /** The entries in this folder. */
     children?: Entry[] | undefined;
+}
+
+export class FindEntryResult implements IFindEntryResult {
+    /** The entry found by path. This property is set if entry is found. */
+    entry?: Entry | undefined;
+    /** The closest entry ancestor. This property is set if entry is not found and fallbackToClosestAncestor is set to true. */
+    ancestorEntry?: Entry | undefined;
+
+    constructor(data?: IFindEntryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.entry = _data["entry"] ? Entry.fromJS(_data["entry"]) : <any>undefined;
+            this.ancestorEntry = _data["ancestorEntry"] ? Entry.fromJS(_data["ancestorEntry"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): FindEntryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new FindEntryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["entry"] = this.entry ? this.entry.toJSON() : <any>undefined;
+        data["ancestorEntry"] = this.ancestorEntry ? this.ancestorEntry.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IFindEntryResult {
+    /** The entry found by path. This property is set if entry is found. */
+    entry?: Entry | undefined;
+    /** The closest entry ancestor. This property is set if entry is not found and fallbackToClosestAncestor is set to true. */
+    ancestorEntry?: Entry | undefined;
 }
 
 export class AcceptedOperation implements IAcceptedOperation {
@@ -9156,182 +10366,6 @@ export interface IRepositoryInfo {
     webclientUrl?: string | undefined;
 }
 
-export class ODataValueOfDateTime implements IODataValueOfDateTime {
-    value?: Date;
-
-    constructor(data?: IODataValueOfDateTime) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.value = _data["value"] ? new Date(_data["value"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ODataValueOfDateTime {
-        data = typeof data === 'object' ? data : {};
-        let result = new ODataValueOfDateTime();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value ? this.value.toISOString() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IODataValueOfDateTime {
-    value?: Date;
-}
-
-export class OperationProgress implements IOperationProgress {
-    /** The operation token of the operation associated with this OperationProgress. */
-    operationToken?: string | undefined;
-    /** The type of the operation associated with this OperationProgress. */
-    operationType?: string | undefined;
-    /** Determines what percentage of the execution of the associated operation is completed. */
-    percentComplete?: number;
-    /** The status of the operation associated with this OperationProgress. */
-    status?: OperationStatus;
-    /** The list of errors occurred during the execution of the associated operation. */
-    errors?: OperationErrorItem[] | undefined;
-    /** The URI which can be used (via api call) to access the result(s) of the associated operation. */
-    redirectUri?: string | undefined;
-    /** The timestamp representing when the associated operation's execution is started. */
-    startTimestamp?: Date;
-    /** The timestamp representing the last time when the associated task's status has changed. */
-    statusTimestamp?: Date;
-
-    constructor(data?: IOperationProgress) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.operationToken = _data["operationToken"];
-            this.operationType = _data["operationType"];
-            this.percentComplete = _data["percentComplete"];
-            this.status = _data["status"];
-            if (Array.isArray(_data["errors"])) {
-                this.errors = [] as any;
-                for (let item of _data["errors"])
-                    this.errors!.push(OperationErrorItem.fromJS(item));
-            }
-            this.redirectUri = _data["redirectUri"];
-            this.startTimestamp = _data["startTimestamp"] ? new Date(_data["startTimestamp"].toString()) : <any>undefined;
-            this.statusTimestamp = _data["statusTimestamp"] ? new Date(_data["statusTimestamp"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): OperationProgress {
-        data = typeof data === 'object' ? data : {};
-        let result = new OperationProgress();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["operationToken"] = this.operationToken;
-        data["operationType"] = this.operationType;
-        data["percentComplete"] = this.percentComplete;
-        data["status"] = this.status;
-        if (Array.isArray(this.errors)) {
-            data["errors"] = [];
-            for (let item of this.errors)
-                data["errors"].push(item.toJSON());
-        }
-        data["redirectUri"] = this.redirectUri;
-        data["startTimestamp"] = this.startTimestamp ? this.startTimestamp.toISOString() : <any>undefined;
-        data["statusTimestamp"] = this.statusTimestamp ? this.statusTimestamp.toISOString() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IOperationProgress {
-    /** The operation token of the operation associated with this OperationProgress. */
-    operationToken?: string | undefined;
-    /** The type of the operation associated with this OperationProgress. */
-    operationType?: string | undefined;
-    /** Determines what percentage of the execution of the associated operation is completed. */
-    percentComplete?: number;
-    /** The status of the operation associated with this OperationProgress. */
-    status?: OperationStatus;
-    /** The list of errors occurred during the execution of the associated operation. */
-    errors?: OperationErrorItem[] | undefined;
-    /** The URI which can be used (via api call) to access the result(s) of the associated operation. */
-    redirectUri?: string | undefined;
-    /** The timestamp representing when the associated operation's execution is started. */
-    startTimestamp?: Date;
-    /** The timestamp representing the last time when the associated task's status has changed. */
-    statusTimestamp?: Date;
-}
-
-export enum OperationStatus {
-    NotStarted = "NotStarted",
-    InProgress = "InProgress",
-    Completed = "Completed",
-    Failed = "Failed",
-    Cancelled = "Cancelled",
-}
-
-export class OperationErrorItem implements IOperationErrorItem {
-    /** The ID of the entry to which the error is related.  */
-    objectId?: number;
-    /** The short description of the error. */
-    errorMessage?: string | undefined;
-
-    constructor(data?: IOperationErrorItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.objectId = _data["objectId"];
-            this.errorMessage = _data["errorMessage"];
-        }
-    }
-
-    static fromJS(data: any): OperationErrorItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new OperationErrorItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["objectId"] = this.objectId;
-        data["errorMessage"] = this.errorMessage;
-        return data;
-    }
-}
-
-export interface IOperationErrorItem {
-    /** The ID of the entry to which the error is related.  */
-    objectId?: number;
-    /** The short description of the error. */
-    errorMessage?: string | undefined;
-}
-
 export class AuditReasons implements IAuditReasons {
     /** The audit reasons associated with delete entry. */
     deleteEntry?: WAuditReason[] | undefined;
@@ -9492,6 +10526,146 @@ export enum FuzzyType {
     NumberOfLetters = 2,
 }
 
+export class OperationProgress implements IOperationProgress {
+    /** The operation token of the operation associated with this OperationProgress. */
+    operationToken?: string | undefined;
+    /** The type of the operation associated with this OperationProgress. */
+    operationType?: string | undefined;
+    /** Determines what percentage of the execution of the associated operation is completed. */
+    percentComplete?: number;
+    /** The status of the operation associated with this OperationProgress. */
+    status?: OperationStatus;
+    /** The list of errors occurred during the execution of the associated operation. */
+    errors?: OperationErrorItem[] | undefined;
+    /** The URI which can be used (via api call) to access the result(s) of the associated operation. */
+    redirectUri?: string | undefined;
+    /** The timestamp representing when the associated operation's execution is started. */
+    startTimestamp?: Date;
+    /** The timestamp representing the last time when the associated task's status has changed. */
+    statusTimestamp?: Date;
+
+    constructor(data?: IOperationProgress) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.operationToken = _data["operationToken"];
+            this.operationType = _data["operationType"];
+            this.percentComplete = _data["percentComplete"];
+            this.status = _data["status"];
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(OperationErrorItem.fromJS(item));
+            }
+            this.redirectUri = _data["redirectUri"];
+            this.startTimestamp = _data["startTimestamp"] ? new Date(_data["startTimestamp"].toString()) : <any>undefined;
+            this.statusTimestamp = _data["statusTimestamp"] ? new Date(_data["statusTimestamp"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): OperationProgress {
+        data = typeof data === 'object' ? data : {};
+        let result = new OperationProgress();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["operationToken"] = this.operationToken;
+        data["operationType"] = this.operationType;
+        data["percentComplete"] = this.percentComplete;
+        data["status"] = this.status;
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["redirectUri"] = this.redirectUri;
+        data["startTimestamp"] = this.startTimestamp ? this.startTimestamp.toISOString() : <any>undefined;
+        data["statusTimestamp"] = this.statusTimestamp ? this.statusTimestamp.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IOperationProgress {
+    /** The operation token of the operation associated with this OperationProgress. */
+    operationToken?: string | undefined;
+    /** The type of the operation associated with this OperationProgress. */
+    operationType?: string | undefined;
+    /** Determines what percentage of the execution of the associated operation is completed. */
+    percentComplete?: number;
+    /** The status of the operation associated with this OperationProgress. */
+    status?: OperationStatus;
+    /** The list of errors occurred during the execution of the associated operation. */
+    errors?: OperationErrorItem[] | undefined;
+    /** The URI which can be used (via api call) to access the result(s) of the associated operation. */
+    redirectUri?: string | undefined;
+    /** The timestamp representing when the associated operation's execution is started. */
+    startTimestamp?: Date;
+    /** The timestamp representing the last time when the associated task's status has changed. */
+    statusTimestamp?: Date;
+}
+
+export enum OperationStatus {
+    NotStarted = "NotStarted",
+    InProgress = "InProgress",
+    Completed = "Completed",
+    Failed = "Failed",
+    Cancelled = "Cancelled",
+}
+
+export class OperationErrorItem implements IOperationErrorItem {
+    /** The ID of the entry to which the error is related.  */
+    objectId?: number;
+    /** The short description of the error. */
+    errorMessage?: string | undefined;
+
+    constructor(data?: IOperationErrorItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.objectId = _data["objectId"];
+            this.errorMessage = _data["errorMessage"];
+        }
+    }
+
+    static fromJS(data: any): OperationErrorItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new OperationErrorItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["objectId"] = this.objectId;
+        data["errorMessage"] = this.errorMessage;
+        return data;
+    }
+}
+
+export interface IOperationErrorItem {
+    /** The ID of the entry to which the error is related.  */
+    objectId?: number;
+    /** The short description of the error. */
+    errorMessage?: string | undefined;
+}
+
 export class ODataValueOfIListOfContextHit implements IODataValueOfIListOfContextHit {
     value?: ContextHit[];
 
@@ -9581,19 +10755,33 @@ export interface IODataValueContextOfIListOfContextHit extends IODataValueOfILis
 
 export class ContextHit implements IContextHit {
     hitType?: HitType;
+    /** A boolean indicating if this context hit occurs on an annotation. */
     isAnnotationHit?: boolean;
+    /** The ID of the annotation that the context hit is in. */
     annotationId?: number;
+    /** The page number in the document of the search hit's context. */
     pageNumber?: number;
+    /** The offset from the beginning of the page of the starting character of the search hit's context line. */
     pageOffset?: number;
+    /** The line of context for the search hit. */
     context?: string | undefined;
+    /** The character offset from the beginning of the context line of the start of the first highlight. */
     highlight1Offset?: number;
+    /** The length of the first highlight in characters. */
     highlight1Length?: number;
+    /** The character offset from the beginning of the context line of the start of the second highlight. */
     highlight2Offset?: number;
+    /** The length of the second highlight in characters. */
     highlight2Length?: number;
+    /** The number of words in the context hit. */
     hitWidth?: number;
+    /** The number of hits in the electronic document. */
     edocHitCount?: number;
+    /** The number of hits in the template. */
     fieldHitCount?: number;
+    /** The name of a template field containing the hit. */
     fieldName?: string | undefined;
+    /** The hit number. */
     hitNumber?: number;
 
     constructor(data?: IContextHit) {
@@ -9655,39 +10843,54 @@ export class ContextHit implements IContextHit {
 
 export interface IContextHit {
     hitType?: HitType;
+    /** A boolean indicating if this context hit occurs on an annotation. */
     isAnnotationHit?: boolean;
+    /** The ID of the annotation that the context hit is in. */
     annotationId?: number;
+    /** The page number in the document of the search hit's context. */
     pageNumber?: number;
+    /** The offset from the beginning of the page of the starting character of the search hit's context line. */
     pageOffset?: number;
+    /** The line of context for the search hit. */
     context?: string | undefined;
+    /** The character offset from the beginning of the context line of the start of the first highlight. */
     highlight1Offset?: number;
+    /** The length of the first highlight in characters. */
     highlight1Length?: number;
+    /** The character offset from the beginning of the context line of the start of the second highlight. */
     highlight2Offset?: number;
+    /** The length of the second highlight in characters. */
     highlight2Length?: number;
+    /** The number of words in the context hit. */
     hitWidth?: number;
+    /** The number of hits in the electronic document. */
     edocHitCount?: number;
+    /** The number of hits in the template. */
     fieldHitCount?: number;
+    /** The name of a template field containing the hit. */
     fieldName?: string | undefined;
+    /** The hit number. */
     hitNumber?: number;
 }
 
+/** The type of context hit. */
 export enum HitType {
-    PageContent = 0,
-    Note = 1,
-    Callout = 2,
-    TextBox = 3,
-    Edoc = 4,
-    Prop = 5,
-    Name = 6,
-    Extension = 7,
-    VersionGroupNote = 8,
-    VersionComment = 9,
-    Field = 10,
-    SignatureComment = 11,
-    CertificateSubject = 12,
-    TagComment = 13,
-    AnnotationComment = 14,
-    Attachment = 15,
+    PageContent = "PageContent",
+    Note = "Note",
+    Callout = "Callout",
+    TextBox = "TextBox",
+    Edoc = "Edoc",
+    Prop = "Prop",
+    Name = "Name",
+    Extension = "Extension",
+    VersionGroupNote = "VersionGroupNote",
+    VersionComment = "VersionComment",
+    Field = "Field",
+    SignatureComment = "SignatureComment",
+    CertificateSubject = "CertificateSubject",
+    TagComment = "TagComment",
+    AnnotationComment = "AnnotationComment",
+    Attachment = "Attachment",
 }
 
 export class SimpleSearchRequest implements ISimpleSearchRequest {
@@ -10111,6 +11314,42 @@ export interface IRule {
     /** The IDs of the parent fields in the template according to the
 form logic rule. */
     ancestors?: number[] | undefined;
+}
+
+export class ODataValueOfDateTime implements IODataValueOfDateTime {
+    value?: Date;
+
+    constructor(data?: IODataValueOfDateTime) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"] ? new Date(_data["value"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ODataValueOfDateTime {
+        data = typeof data === 'object' ? data : {};
+        let result = new ODataValueOfDateTime();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value ? this.value.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IODataValueOfDateTime {
+    value?: Date;
 }
 
 export interface FileParameter {
