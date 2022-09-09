@@ -6124,6 +6124,8 @@ export class CreateEntryResult implements ICreateEntryResult {
     /** A link to get the created entry. */
     documentLink?: string | undefined;
 
+    
+    
     constructor(data?: ICreateEntryResult) {
         if (data) {
             for (var property in data) {
@@ -6170,6 +6172,8 @@ export class CreateEntryOperations implements ICreateEntryOperations {
     setTags?: SetTags;
     setLinks?: SetLinks;
 
+    
+    
     constructor(data?: ICreateEntryOperations) {
         if (data) {
             for (var property in data) {
@@ -6226,6 +6230,8 @@ export class EntryCreate implements IEntryCreate {
     /** The id of the created entry. If the id is 0, then the entry was not created. */
     entryId?: number;
 
+    
+    
     constructor(data?: IEntryCreate) {
         if (data) {
             for (var property in data) {
@@ -6287,6 +6293,8 @@ export class APIServerException implements IAPIServerException {
     /** The source of where the exception occurred. */
     errorSource?: string | undefined;
 
+    
+    
     constructor(data?: IAPIServerException) {
         if (data) {
             for (var property in data) {
@@ -6346,6 +6354,8 @@ export class SetEdoc implements ISetEdoc {
     /** The list of exceptions that occured when trying to perform the operation. */
     exceptions?: APIServerException[] | undefined;
 
+    
+    
     constructor(data?: ISetEdoc) {
         if (data) {
             for (var property in data) {
@@ -6396,6 +6406,8 @@ export class SetTemplate implements ISetTemplate {
     /** The name of the template assigned to the entry. If this is null, then no template was assigned. */
     template?: string | undefined;
 
+    
+    
     constructor(data?: ISetTemplate) {
         if (data) {
             for (var property in data) {
@@ -6450,6 +6462,8 @@ export class SetFields implements ISetFields {
     /** The number of fields assigned to the entry. */
     fieldCount?: number;
 
+    
+    
     constructor(data?: ISetFields) {
         if (data) {
             for (var property in data) {
@@ -6504,6 +6518,8 @@ export class SetTags implements ISetTags {
     /** The tags that were assigned to the entry */
     assignedTags?: string[] | undefined;
 
+    
+    
     constructor(data?: ISetTags) {
         if (data) {
             for (var property in data) {
@@ -6566,6 +6582,8 @@ export class SetLinks implements ISetLinks {
     /** The ids of the other entries linked to the entry */
     otherEntryIds?: number[] | undefined;
 
+    
+    
     constructor(data?: ISetLinks) {
         if (data) {
             for (var property in data) {
@@ -6629,6 +6647,8 @@ export class ProblemDetails implements IProblemDetails {
     instance?: string | undefined;
     extensions?: { [key: string]: any; };
 
+    
+    
     constructor(data?: IProblemDetails) {
         if (data) {
             for (var property in data) {
@@ -6782,6 +6802,8 @@ export abstract class IHeaderDictionary implements IIHeaderDictionary {
     xUACompatible?: any[];
     xXSSProtection?: any[];
 
+    
+    
     constructor(data?: IIHeaderDictionary) {
         if (data) {
             for (var property in data) {
@@ -7808,6 +7830,8 @@ export class FieldToUpdate implements IFieldToUpdate {
     /** The field values that will be assigned to the field. */
     values?: ValueToUpdate[] | undefined;
 
+    
+    
     constructor(data?: IFieldToUpdate) {
         if (data) {
             for (var property in data) {
@@ -7857,6 +7881,8 @@ export class ValueToUpdate implements IValueToUpdate {
     /** The position of the value in the field. This is 1-indexed for multi value field. It will be ignored for single value field. */
     position?: number;
 
+    
+    
     constructor(data?: IValueToUpdate) {
         if (data) {
             for (var property in data) {
@@ -7903,6 +7929,8 @@ export class LinkToUpdate implements ILinkToUpdate {
     /** Whether the entry is the source for the link. */
     isSource?: boolean;
 
+    
+    
     constructor(data?: ILinkToUpdate) {
         if (data) {
             for (var property in data) {
@@ -7950,6 +7978,8 @@ export class PostEntryWithEdocMetadataRequest implements IPostEntryWithEdocMetad
     template?: string | undefined;
     metadata?: PutFieldValsRequest;
 
+    
+    
     constructor(data?: IPostEntryWithEdocMetadataRequest) {
         if (data) {
             for (var property in data) {
@@ -7993,6 +8023,8 @@ export class SimpleImportMetadata implements ISimpleImportMetadata {
     /** The tags that will be assigned to the entry. */
     tags?: string[] | undefined;
 
+    
+    
     constructor(data?: ISimpleImportMetadata) {
         if (data) {
             for (var property in data) {
@@ -8056,8 +8088,16 @@ export class PutFieldValsRequest extends SimpleImportMetadata implements IPutFie
     /** The links that will be assigned to the entry. */
     links?: LinkToUpdate[] | undefined;
 
+    
+    
     constructor(data?: IPutFieldValsRequest) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -8099,6 +8139,8 @@ export interface IPutFieldValsRequest extends ISimpleImportMetadata {
 export class ODataValueOfListOfAttribute implements IODataValueOfListOfAttribute {
     value?: Attribute[];
 
+    
+    
     constructor(data?: IODataValueOfListOfAttribute) {
         if (data) {
             for (var property in data) {
@@ -8147,8 +8189,16 @@ export class ODataValueContextOfListOfAttribute extends ODataValueOfListOfAttrib
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfListOfAttribute) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -8187,6 +8237,8 @@ export class Attribute implements IAttribute {
     key?: string | undefined;
     value?: string | undefined;
 
+    
+    
     constructor(data?: IAttribute) {
         if (data) {
             for (var property in data) {
@@ -8261,6 +8313,8 @@ Currency member of the WFieldFormat enumeration. */
 use a custom format. */
     formatPattern?: string | undefined;
 
+    
+    
     constructor(data?: IWFieldInfo) {
         if (data) {
             for (var property in data) {
@@ -8397,6 +8451,8 @@ export enum WFieldFormat {
 export class ODataValueOfIListOfWFieldInfo implements IODataValueOfIListOfWFieldInfo {
     value?: WFieldInfo[];
 
+    
+    
     constructor(data?: IODataValueOfIListOfWFieldInfo) {
         if (data) {
             for (var property in data) {
@@ -8445,8 +8501,16 @@ export class ODataValueContextOfIListOfWFieldInfo extends ODataValueOfIListOfWFi
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfIListOfWFieldInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -8484,6 +8548,8 @@ export interface IODataValueContextOfIListOfWFieldInfo extends IODataValueOfILis
 export class ODataValueOfIListOfEntryLinkTypeInfo implements IODataValueOfIListOfEntryLinkTypeInfo {
     value?: EntryLinkTypeInfo[];
 
+    
+    
     constructor(data?: IODataValueOfIListOfEntryLinkTypeInfo) {
         if (data) {
             for (var property in data) {
@@ -8532,8 +8598,16 @@ export class ODataValueContextOfIListOfEntryLinkTypeInfo extends ODataValueOfILi
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfIListOfEntryLinkTypeInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -8578,6 +8652,8 @@ export class EntryLinkTypeInfo implements IEntryLinkTypeInfo {
     /** The description of the link type. */
     linkTypeDescription?: string | undefined;
 
+    
+    
     constructor(data?: IEntryLinkTypeInfo) {
         if (data) {
             for (var property in data) {
@@ -8659,7 +8735,10 @@ export class Entry implements IEntry {
     rowNumber?: number;
     /** The fields assigned to this entry. */
     fields?: EntryFieldValue[] | undefined;
+    protected _discriminator: string;
 
+    
+    
     constructor(data?: IEntry) {
         if (data) {
             for (var property in data) {
@@ -8667,6 +8746,7 @@ export class Entry implements IEntry {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+        this._discriminator = "Entry";
     }
 
     init(_data?: any) {
@@ -8701,6 +8781,21 @@ export class Entry implements IEntry {
 
     static fromJS(data: any): Entry {
         data = typeof data === 'object' ? data : {};
+        if (data["entryType"] === "Document") {
+            let result = new Document();
+            result.init(data);
+            return result;
+        }
+        if (data["entryType"] === "Shortcut") {
+            let result = new Shortcut();
+            result.init(data);
+            return result;
+        }
+        if (data["entryType"] === "Folder") {
+            let result = new Folder();
+            result.init(data);
+            return result;
+        }
         let result = new Entry();
         result.init(data);
         return result;
@@ -8708,6 +8803,7 @@ export class Entry implements IEntry {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["entryType"] = this._discriminator;
         data["id"] = this.id;
         data["name"] = this.name;
         data["parentId"] = this.parentId;
@@ -8797,6 +8893,8 @@ export class EntryFieldValue implements IEntryFieldValue {
     /** A boolean indicating if there are more field values. */
     hasMoreValues?: boolean;
 
+    
+    
     constructor(data?: IEntryFieldValue) {
         if (data) {
             for (var property in data) {
@@ -8884,8 +8982,17 @@ if there is one, in bytes. */
     /** The electronic document attached to the represented document. */
     edoc?: Edoc | undefined;
 
+    
+    
     constructor(data?: IDocument) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        this._discriminator = "Document";
     }
 
     init(_data?: any) {
@@ -8950,6 +9057,8 @@ if there is one, in bytes. */
 
 export class Edoc implements IEdoc {
 
+    
+    
     constructor(data?: IEdoc) {
         if (data) {
             for (var property in data) {
@@ -8986,8 +9095,17 @@ export class Shortcut extends Entry implements IShortcut {
     /** The entry type of the shortcut target. */
     targetType?: EntryType;
 
+    
+    
     constructor(data?: IShortcut) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        this._discriminator = "Shortcut";
     }
 
     init(_data?: any) {
@@ -9035,8 +9153,17 @@ to directly or indirectly under a record series in the repository. */
     /** The entries in this folder. */
     children?: Entry[] | undefined;
 
+    
+    
     constructor(data?: IFolder) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        this._discriminator = "Folder";
     }
 
     init(_data?: any) {
@@ -9090,6 +9217,8 @@ export class FindEntryResult implements IFindEntryResult {
     /** The closest entry ancestor. This property is set if entry is not found and fallbackToClosestAncestor is set to true. */
     ancestorEntry?: Entry | undefined;
 
+    
+    
     constructor(data?: IFindEntryResult) {
         if (data) {
             for (var property in data) {
@@ -9132,6 +9261,8 @@ export class AcceptedOperation implements IAcceptedOperation {
     /** A token that can be used to check on the status of the operation. */
     token?: string | undefined;
 
+    
+    
     constructor(data?: IAcceptedOperation) {
         if (data) {
             for (var property in data) {
@@ -9172,6 +9303,8 @@ export class DeleteEntryWithAuditReason implements IDeleteEntryWithAuditReason {
     /** The comment for this audit event. */
     comment?: string | undefined;
 
+    
+    
     constructor(data?: IDeleteEntryWithAuditReason) {
         if (data) {
             for (var property in data) {
@@ -9216,6 +9349,8 @@ export class PatchEntryRequest implements IPatchEntryRequest {
     /** The name that will be assigned to the entry. */
     name?: string | undefined;
 
+    
+    
     constructor(data?: IPatchEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -9257,6 +9392,8 @@ export interface IPatchEntryRequest {
 export class ODataValueOfIListOfEntry implements IODataValueOfIListOfEntry {
     value?: Entry[];
 
+    
+    
     constructor(data?: IODataValueOfIListOfEntry) {
         if (data) {
             for (var property in data) {
@@ -9305,8 +9442,16 @@ export class ODataValueContextOfIListOfEntry extends ODataValueOfIListOfEntry im
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfIListOfEntry) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -9344,6 +9489,8 @@ export interface IODataValueContextOfIListOfEntry extends IODataValueOfIListOfEn
 export class ODataValueOfIListOfFieldValue implements IODataValueOfIListOfFieldValue {
     value?: FieldValue[];
 
+    
+    
     constructor(data?: IODataValueOfIListOfFieldValue) {
         if (data) {
             for (var property in data) {
@@ -9392,8 +9539,16 @@ export class ODataValueContextOfIListOfFieldValue extends ODataValueOfIListOfFie
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfIListOfFieldValue) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -9432,8 +9587,16 @@ export class FieldValue extends EntryFieldValue implements IFieldValue {
     /** The group id of the multi value field group. If the field is not a part of a multi value field group, then there is no group id. */
     groupId?: number | undefined;
 
+    
+    
     constructor(data?: IFieldValue) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -9466,6 +9629,8 @@ export interface IFieldValue extends IEntryFieldValue {
 export class ODataValueOfIListOfWTagInfo implements IODataValueOfIListOfWTagInfo {
     value?: WTagInfo[];
 
+    
+    
     constructor(data?: IODataValueOfIListOfWTagInfo) {
         if (data) {
             for (var property in data) {
@@ -9514,8 +9679,16 @@ export class ODataValueContextOfIListOfWTagInfo extends ODataValueOfIListOfWTagI
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfIListOfWTagInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -9565,6 +9738,8 @@ as a security tag (true) or an informational tag (false). */
     /** The watermark properties associated with the tag definition. */
     watermark?: Watermark | undefined;
 
+    
+    
     constructor(data?: IWTagInfo) {
         if (data) {
             for (var property in data) {
@@ -9635,6 +9810,8 @@ export class Watermark implements IWatermark {
 ranges from 0 to 100, with -1 as the default values. */
     watermarkIntensity?: number;
 
+    
+    
     constructor(data?: IWatermark) {
         if (data) {
             for (var property in data) {
@@ -9706,6 +9883,8 @@ export class PutTagRequest implements IPutTagRequest {
     /** The tag names to assign to the entry. */
     tags?: string[] | undefined;
 
+    
+    
     constructor(data?: IPutTagRequest) {
         if (data) {
             for (var property in data) {
@@ -9751,6 +9930,8 @@ export interface IPutTagRequest {
 export class ODataValueOfIListOfWEntryLinkInfo implements IODataValueOfIListOfWEntryLinkInfo {
     value?: WEntryLinkInfo[];
 
+    
+    
     constructor(data?: IODataValueOfIListOfWEntryLinkInfo) {
         if (data) {
             for (var property in data) {
@@ -9820,6 +10001,8 @@ export class WEntryLinkInfo implements IWEntryLinkInfo {
     /** The navigation link to the target entry. */
     targetLink?: string | undefined;
 
+    
+    
     constructor(data?: IWEntryLinkInfo) {
         if (data) {
             for (var property in data) {
@@ -9922,6 +10105,8 @@ export class PutLinksRequest implements IPutLinksRequest {
     /** Custom properties (key, value pairs) to be added to the link */
     customProperties?: { [key: string]: string; } | undefined;
 
+    
+    
     constructor(data?: IPutLinksRequest) {
         if (data) {
             for (var property in data) {
@@ -9983,8 +10168,16 @@ export class ODataValueContextOfIListOfWEntryLinkInfo extends ODataValueOfIListO
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfIListOfWEntryLinkInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -10029,6 +10222,8 @@ export class PostEntryChildrenRequest implements IPostEntryChildrenRequest {
     /** The SourceId is needed for some operations that require a source/destination. One example is the Copy operation. */
     sourceId?: number;
 
+    
+    
     constructor(data?: IPostEntryChildrenRequest) {
         if (data) {
             for (var property in data) {
@@ -10086,6 +10281,8 @@ export class CopyAsyncRequest implements ICopyAsyncRequest {
     /** The source entry Id to copy. */
     sourceId?: number;
 
+    
+    
     constructor(data?: ICopyAsyncRequest) {
         if (data) {
             for (var property in data) {
@@ -10127,6 +10324,8 @@ export interface ICopyAsyncRequest {
 export class ODataValueOfBoolean implements IODataValueOfBoolean {
     value?: boolean;
 
+    
+    
     constructor(data?: IODataValueOfBoolean) {
         if (data) {
             for (var property in data) {
@@ -10166,6 +10365,8 @@ export class GetEdocWithAuditReasonRequest implements IGetEdocWithAuditReasonReq
     /** The comment for this audit event. */
     comment?: string | undefined;
 
+    
+    
     constructor(data?: IGetEdocWithAuditReasonRequest) {
         if (data) {
             for (var property in data) {
@@ -10210,6 +10411,8 @@ export class GetDynamicFieldLogicValueRequest implements IGetDynamicFieldLogicVa
     /** The dynamic fields. */
     fieldValues?: { [key: string]: string; } | undefined;
 
+    
+    
     constructor(data?: IGetDynamicFieldLogicValueRequest) {
         if (data) {
             for (var property in data) {
@@ -10266,6 +10469,8 @@ export class PutTemplateRequest implements IPutTemplateRequest {
     /** The template fields that will be assigned to the entry. */
     fields?: { [key: string]: FieldToUpdate; } | undefined;
 
+    
+    
     constructor(data?: IPutTemplateRequest) {
         if (data) {
             for (var property in data) {
@@ -10324,6 +10529,8 @@ export class RepositoryInfo implements IRepositoryInfo {
     /** The corresponding repository WebClient url. */
     webclientUrl?: string | undefined;
 
+    
+    
     constructor(data?: IRepositoryInfo) {
         if (data) {
             for (var property in data) {
@@ -10372,6 +10579,8 @@ export class AuditReasons implements IAuditReasons {
     /** The audit reasons associated with export document. */
     exportDocument?: WAuditReason[] | undefined;
 
+    
+    
     constructor(data?: IAuditReasons) {
         if (data) {
             for (var property in data) {
@@ -10432,6 +10641,8 @@ export class WAuditReason implements IWAuditReason {
     /** The audit reason text. */
     name?: string | undefined;
 
+    
+    
     constructor(data?: IWAuditReason) {
         if (data) {
             for (var property in data) {
@@ -10478,6 +10689,8 @@ export class AdvancedSearchRequest implements IAdvancedSearchRequest {
     /** Fuzzy factor (percentage as int or int value) */
     fuzzyFactor?: number;
 
+    
+    
     constructor(data?: IAdvancedSearchRequest) {
         if (data) {
             for (var property in data) {
@@ -10544,6 +10757,8 @@ export class OperationProgress implements IOperationProgress {
     /** The timestamp representing the last time when the associated task's status has changed. */
     statusTimestamp?: Date;
 
+    
+    
     constructor(data?: IOperationProgress) {
         if (data) {
             for (var property in data) {
@@ -10628,6 +10843,8 @@ export class OperationErrorItem implements IOperationErrorItem {
     /** The short description of the error. */
     errorMessage?: string | undefined;
 
+    
+    
     constructor(data?: IOperationErrorItem) {
         if (data) {
             for (var property in data) {
@@ -10669,6 +10886,8 @@ export interface IOperationErrorItem {
 export class ODataValueOfIListOfContextHit implements IODataValueOfIListOfContextHit {
     value?: ContextHit[];
 
+    
+    
     constructor(data?: IODataValueOfIListOfContextHit) {
         if (data) {
             for (var property in data) {
@@ -10717,8 +10936,16 @@ export class ODataValueContextOfIListOfContextHit extends ODataValueOfIListOfCon
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfIListOfContextHit) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -10784,6 +11011,8 @@ export class ContextHit implements IContextHit {
     /** The hit number. */
     hitNumber?: number;
 
+    
+    
     constructor(data?: IContextHit) {
         if (data) {
             for (var property in data) {
@@ -10897,6 +11126,8 @@ export class SimpleSearchRequest implements ISimpleSearchRequest {
     /** Search command for simple search */
     searchCommand?: string | undefined;
 
+    
+    
     constructor(data?: ISimpleSearchRequest) {
         if (data) {
             for (var property in data) {
@@ -10934,6 +11165,8 @@ export interface ISimpleSearchRequest {
 export class ODataValueOfIListOfWTemplateInfo implements IODataValueOfIListOfWTemplateInfo {
     value?: WTemplateInfo[];
 
+    
+    
     constructor(data?: IODataValueOfIListOfWTemplateInfo) {
         if (data) {
             for (var property in data) {
@@ -10982,8 +11215,16 @@ export class ODataValueContextOfIListOfWTemplateInfo extends ODataValueOfIListOf
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfIListOfWTemplateInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -11032,6 +11273,8 @@ export class WTemplateInfo implements IWTemplateInfo {
     /** The number of fields assigned to the template. */
     fieldCount?: number;
 
+    
+    
     constructor(data?: IWTemplateInfo) {
         if (data) {
             for (var property in data) {
@@ -11092,6 +11335,8 @@ export class LFColor implements ILFColor {
     g?: number;
     b?: number;
 
+    
+    
     constructor(data?: ILFColor) {
         if (data) {
             for (var property in data) {
@@ -11137,6 +11382,8 @@ export interface ILFColor {
 export class ODataValueOfIListOfTemplateFieldInfo implements IODataValueOfIListOfTemplateFieldInfo {
     value?: TemplateFieldInfo[];
 
+    
+    
     constructor(data?: IODataValueOfIListOfTemplateFieldInfo) {
         if (data) {
             for (var property in data) {
@@ -11185,8 +11432,16 @@ export class ODataValueContextOfIListOfTemplateFieldInfo extends ODataValueOfILi
     /** It contains the count of a collection of entities or a collection of entity references. */
     odataCount?: number;
 
+    
+    
     constructor(data?: IODataValueContextOfIListOfTemplateFieldInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -11229,8 +11484,16 @@ export class TemplateFieldInfo extends WFieldInfo implements ITemplateFieldInfo 
     /** The name of field group. */
     groupName?: string | undefined;
 
+    
+    
     constructor(data?: ITemplateFieldInfo) {
         super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
@@ -11273,6 +11536,8 @@ export class Rule implements IRule {
 form logic rule. */
     ancestors?: number[] | undefined;
 
+    
+    
     constructor(data?: IRule) {
         if (data) {
             for (var property in data) {
@@ -11319,6 +11584,8 @@ form logic rule. */
 export class ODataValueOfDateTime implements IODataValueOfDateTime {
     value?: Date;
 
+    
+    
     constructor(data?: IODataValueOfDateTime) {
         if (data) {
             for (var property in data) {
@@ -11537,7 +11804,7 @@ function isRetryable(response: Response, init: RequestInit): boolean {
   return (response.status >= 500 || response.status == 408) && isIdempotent;
 }
 
-async function getNextLinkListing<T extends IODataValueContextOfIListOfEntry>(
+async function getNextLinkListing<T>(
   http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> },
   processListing: (response: Response) => Promise<T>,
   nextLink: string,
@@ -11803,7 +12070,7 @@ export interface IFieldDefinitionsClient {
   getFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfEntry>;
+  }): Promise<ODataValueContextOfIListOfWFieldInfo>;
 }
 
 export interface ISearchesClient {
