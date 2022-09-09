@@ -34,7 +34,7 @@ export interface IEntriesClient {
     importDocument(args: { repoId: string, parentEntryId: number, fileName: string, autoRename?: boolean | undefined, culture?: string | null | undefined, electronicDocument?: FileParameter | undefined, request?: PostEntryWithEdocMetadataRequest | undefined }): Promise<CreateEntryResult>;
 
     /**
-     * Returns a single entry object.
+     * Returns a single entry object. Provide an entry ID, and get the entry associated with that ID. Useful when detailed information about the entry is required, such as metadata, path information, etc. Allowed OData query options: Select. If the entry is a subtype (Folder, Document, or Shortcut), the entry will automatically be converted to include those model-specific properties.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param select (optional) Limits the properties returned in the result.
@@ -43,7 +43,7 @@ export interface IEntriesClient {
     getEntry(args: { repoId: string, entryId: number, select?: string | null | undefined }): Promise<Entry>;
 
     /**
-     * Deletes an entry asynchronously.
+     * Begins a task to delete an entry, and returns an operationToken. Provide an entry ID, and queue a delete task to remove it from the repository (includes nested objects if the entry is a Folder type). The entry will not be deleted immediately. Optionally include an audit reason ID and comment in the JSON body. This route returns an operationToken, and will run as an asynchronous operation. Check the progress via the Tasks/{operationToken} route.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param request (optional) The submitted audit reason.
@@ -52,7 +52,7 @@ export interface IEntriesClient {
     deleteEntryInfo(args: { repoId: string, entryId: number, request?: DeleteEntryWithAuditReason | undefined }): Promise<AcceptedOperation>;
 
     /**
-     * Moves and/or renames an entry.
+     * Moves and/or renames an entry. Move and/or rename an entry by passing in the new parent folder ID or name in the JSON body. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param request (optional) The request containing the folder ID that the entry will be moved to and the new name
@@ -95,7 +95,7 @@ export interface IEntriesClient {
     getEntryListing(args: { repoId: string, entryId: number, groupByEntryType?: boolean | undefined, fields?: string[] | null | undefined, formatFields?: boolean | undefined, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfEntry>;
 
     /**
-     * Creates/copies a new child entry in a folder.
+     * Create/copy a new child entry in the designated folder. Provide the parent folder ID, and based on the request body, copy or create a folder/shortcut as a child entry of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
      * @param repoId The requested repository ID.
      * @param entryId The folder ID that the entry will be created in.
      * @param request (optional) The entry to create.
@@ -108,7 +108,7 @@ export interface IEntriesClient {
     createOrCopyEntry(args: { repoId: string, entryId: number, request?: PostEntryChildrenRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<Entry>;
 
     /**
-     * Returns the fields assigned to an entry.
+     * Returns the fields assigned to an entry. Provide an entry ID, and get a paged listing of all fields assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -127,7 +127,7 @@ export interface IEntriesClient {
     getFieldValues(args: { repoId: string, entryId: number, prefer?: string | null | undefined, formatValue?: boolean | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfFieldValue>;
 
     /**
-     * Updates the field values assigned to an entry.
+     * Update the field values assigned to an entry. Provide the new field values to assign to the entry, and remove/reset all previously assigned field values.  This is an overwrite action. The request body must include all desired field values, including any existing field values that should remain assigned to the entry. Field values that are not included in the request will be deleted from the entry. If the field value that is not included is part of a template, it will still be assigned (as required by the template), but its value will be reset.
      * @param repoId The requested repository ID.
      * @param entryId The entry ID of the entry that will have its fields updated.
      * @param fieldsToUpdate (optional) 
@@ -138,7 +138,7 @@ export interface IEntriesClient {
     assignFieldValues(args: { repoId: string, entryId: number, fieldsToUpdate?: { [key: string]: FieldToUpdate; } | undefined, culture?: string | null | undefined }): Promise<ODataValueOfIListOfFieldValue>;
 
     /**
-     * Returns the tags assigned to an entry.
+     * Returns the tags assigned to an entry. Provide an entry ID, and get a paged listing of tags assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -152,7 +152,7 @@ export interface IEntriesClient {
     getTagsAssignedToEntry(args: { repoId: string, entryId: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWTagInfo>;
 
     /**
-     * Assigns tags to an entry.
+     * Assign tags to an entry. Provide an entry ID and a list of tags to assign to that entry. This is an overwrite action. The request must include all tags to assign to the entry, including existing tags that should remain assigned to the entry.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param tagsToAdd (optional) The tags to add.
@@ -161,7 +161,7 @@ export interface IEntriesClient {
     assignTags(args: { repoId: string, entryId: number, tagsToAdd?: PutTagRequest | undefined }): Promise<ODataValueOfIListOfWTagInfo>;
 
     /**
-     * Assigns links to an entry.
+     * Assign links to an entry. Provide an entry ID and a list of links to assign to that entry. This is an overwrite action. The request must include all links to assign to the entry, including existing links that should remain assigned to the entry.
      * @param repoId The request repository ID.
      * @param entryId The requested entry ID.
      * @param linksToAdd (optional) 
@@ -170,7 +170,7 @@ export interface IEntriesClient {
     assignEntryLinks(args: { repoId: string, entryId: number, linksToAdd?: PutLinksRequest[] | undefined }): Promise<ODataValueOfIListOfWEntryLinkInfo>;
 
     /**
-     * Returns the links assigned to an entry.
+     * Returns the links assigned to an entry. Provide an entry ID, and get a paged listing of links assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param prefer (optional) An optional odata header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -184,7 +184,7 @@ export interface IEntriesClient {
     getLinkValuesFromEntry(args: { repoId: string, entryId: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWEntryLinkInfo>;
 
     /**
-     * Copies an entry into a folder asynchronously.
+     * Copy a new child entry in the designated folder async, and potentially return an operationToken. Provide the parent folder ID, and copy an entry as a child of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.  The status of the operation can be checked via the Tasks/{operationToken} route.
      * @param repoId The requested repository ID.
      * @param entryId The folder ID that the entry will be created in.
      * @param request (optional) Copy entry request.
@@ -197,7 +197,7 @@ export interface IEntriesClient {
     copyEntry(args: { repoId: string, entryId: number, request?: CopyAsyncRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<AcceptedOperation>;
 
     /**
-     * Deletes the edoc associated with an entry.
+     * Delete the edoc associated with the provided entry ID.
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @return Deleted edoc successfully.
@@ -205,7 +205,7 @@ export interface IEntriesClient {
     deleteDocument(args: { repoId: string, entryId: number }): Promise<ODataValueOfBoolean>;
 
     /**
-     * Returns information about the edoc content of an entry.
+     * Returns information about the edoc content of an entry, without downloading the edoc in its entirety. Provide an entry ID, and get back the Content-Type and Content-Length in the response headers. This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry.
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @return Get edoc info successfully.
@@ -213,7 +213,7 @@ export interface IEntriesClient {
     getDocumentContentType(args: { repoId: string, entryId: number }): Promise<void>;
 
     /**
-     * Returns an entry's edoc resource in a stream format.
+     * Returns an entry's edoc resource in a stream format. Provide an entry ID, and get the edoc resource as part of the response content. Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc.
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @param range (optional) An optional header used to retrieve partial content of the edoc. Only supports single
@@ -223,7 +223,7 @@ export interface IEntriesClient {
     exportDocument(args: { repoId: string, entryId: number, range?: string | null | undefined }): Promise<FileResponse>;
 
     /**
-     * Deletes the pages associated with an entry.
+     * Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted. Optional parameter: pageRange (default empty). The value should be a comma-seperated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @param pageRange (optional) The pages to be deleted.
@@ -232,7 +232,7 @@ export interface IEntriesClient {
     deletePages(args: { repoId: string, entryId: number, pageRange?: string | null | undefined }): Promise<ODataValueOfBoolean>;
 
     /**
-     * Returns an entry's edoc resource in a stream format, including an audit reason.
+     * Returns an entry's edoc resource in a stream format while including an audit reason. Provide an entry ID and audit reason/comment in the request body, and get the edoc resource as part of the response content. Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc. This route is identical to the GET edoc route, but allows clients to include an audit reason when downloading the edoc.
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @param request (optional) 
@@ -243,7 +243,7 @@ export interface IEntriesClient {
     exportDocumentWithAuditReason(args: { repoId: string, entryId: number, request?: GetEdocWithAuditReasonRequest | undefined, range?: string | null | undefined }): Promise<FileResponse>;
 
     /**
-     * Returns the dynamic field logic values assigned to an entry.
+     * Returns dynamic field logic values with the current values of the fields in the template. Provide an entry ID and field values in the JSON body to get dynamic field logic values.  Independent and non-dynamic fields in the request body will be ignored, and only related dynamic field logic values for the assigned template will be returned.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param request (optional) 
@@ -252,7 +252,7 @@ export interface IEntriesClient {
     getDynamicFieldValues(args: { repoId: string, entryId: number, request?: GetDynamicFieldLogicValueRequest | undefined }): Promise<{ [key: string]: string[]; }>;
 
     /**
-     * Removes the currently assigned template from an entry.
+     * Remove the currently assigned template from the specified entry. Provide an entry ID to clear template value on. If the entry does not have a template assigned, no change will be made.
      * @param repoId The requested repository ID.
      * @param entryId The ID of the entry that will have its template removed.
      * @return Remove the currently assigned template successfully.
@@ -260,7 +260,7 @@ export interface IEntriesClient {
     deleteAssignedTemplate(args: { repoId: string, entryId: number }): Promise<Entry>;
 
     /**
-     * Assigns a template to an entry.
+     * Assign a template to an entry. Provide an entry ID, template name, and a list of template fields to assign to that entry. Only template values will be modified. Any existing independent fields on the entry will not be modified, nor will they be added if included in the request. The only modification to fields will only occur on templated fields. If the previously assigned template includes common template fields as the newly assigned template, the common field values will not be modified.
      * @param repoId The requested repository ID.
      * @param entryId The ID of entry that will have its template updated.
      * @param request (optional) The template and template fields that will be assigned to the entry.
@@ -278,7 +278,7 @@ export class EntriesClient implements IEntriesClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
     
@@ -663,12 +663,12 @@ export class EntriesClient implements IEntriesClient {
             result400 = CreateEntryResult.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
-        } else if (status === 404) {
+        } else if (status === 401) {
             return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = CreateEntryResult.fromJS(resultData404);
-            return throwException("Parent entry is not found.", status, _responseText, _headers, result404);
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
@@ -677,6 +677,13 @@ export class EntriesClient implements IEntriesClient {
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = CreateEntryResult.fromJS(resultData404);
+            return throwException("Parent entry is not found.", status, _responseText, _headers, result404);
+            });
         } else if (status === 409) {
             return response.text().then((_responseText) => {
             let result409: any = null;
@@ -684,26 +691,19 @@ export class EntriesClient implements IEntriesClient {
             result409 = CreateEntryResult.fromJS(resultData409);
             return throwException("Document creation is partial success.", status, _responseText, _headers, result409);
             });
-        } else if (status === 500) {
-            return response.text().then((_responseText) => {
-            let result500: any = null;
-            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = CreateEntryResult.fromJS(resultData500);
-            return throwException("Document creation is complete failure.", status, _responseText, _headers, result500);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
             let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result429 = ProblemDetails.fromJS(resultData429);
             return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
+            });
+        } else if (status === 500) {
+            return response.text().then((_responseText) => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = CreateEntryResult.fromJS(resultData500);
+            return throwException("Document creation is complete failure.", status, _responseText, _headers, result500);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -714,7 +714,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns a single entry object.
+     * Returns a single entry object. Provide an entry ID, and get the entry associated with that ID. Useful when detailed information about the entry is required, such as metadata, path information, etc. Allowed OData query options: Select. If the entry is a subtype (Folder, Document, or Shortcut), the entry will automatically be converted to include those model-specific properties.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param select (optional) Limits the properties returned in the result.
@@ -762,6 +762,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -775,13 +782,6 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Requested entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -799,7 +799,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Deletes an entry asynchronously.
+     * Begins a task to delete an entry, and returns an operationToken. Provide an entry ID, and queue a delete task to remove it from the repository (includes nested objects if the entry is a Folder type). The entry will not be deleted immediately. Optionally include an audit reason ID and comment in the JSON body. This route returns an operationToken, and will run as an asynchronous operation. Check the progress via the Tasks/{operationToken} route.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param request (optional) The submitted audit reason.
@@ -849,19 +849,19 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -879,7 +879,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Moves and/or renames an entry.
+     * Moves and/or renames an entry. Move and/or rename an entry by passing in the new parent folder ID or name in the JSON body. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param request (optional) The request containing the folder ID that the entry will be moved to and the new name
@@ -940,6 +940,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -967,13 +974,6 @@ export class EntriesClient implements IEntriesClient {
             let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1165,6 +1165,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1178,13 +1185,6 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1202,7 +1202,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Creates/copies a new child entry in a folder.
+     * Create/copy a new child entry in the designated folder. Provide the parent folder ID, and based on the request body, copy or create a folder/shortcut as a child entry of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
      * @param repoId The requested repository ID.
      * @param entryId The folder ID that the entry will be created in.
      * @param request (optional) The entry to create.
@@ -1262,6 +1262,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1283,13 +1290,6 @@ export class EntriesClient implements IEntriesClient {
             result409 = ProblemDetails.fromJS(resultData409);
             return throwException("Entry name conflicts.", status, _responseText, _headers, result409);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -1306,7 +1306,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns the fields assigned to an entry.
+     * Returns the fields assigned to an entry. Provide an entry ID, and get a paged listing of all fields assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1385,6 +1385,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1398,13 +1405,6 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1422,7 +1422,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Updates the field values assigned to an entry.
+     * Update the field values assigned to an entry. Provide the new field values to assign to the entry, and remove/reset all previously assigned field values.  This is an overwrite action. The request body must include all desired field values, including any existing field values that should remain assigned to the entry. Field values that are not included in the request will be deleted from the entry. If the field value that is not included is part of a template, it will still be assigned (as required by the template), but its value will be reset.
      * @param repoId The requested repository ID.
      * @param entryId The entry ID of the entry that will have its fields updated.
      * @param fieldsToUpdate (optional) 
@@ -1476,6 +1476,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1497,13 +1504,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -1520,7 +1520,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns the tags assigned to an entry.
+     * Returns the tags assigned to an entry. Provide an entry ID, and get a paged listing of tags assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1588,6 +1588,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1601,13 +1608,6 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1625,7 +1625,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Assigns tags to an entry.
+     * Assign tags to an entry. Provide an entry ID and a list of tags to assign to that entry. This is an overwrite action. The request must include all tags to assign to the entry, including existing tags that should remain assigned to the entry.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param tagsToAdd (optional) The tags to add.
@@ -1675,6 +1675,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1696,13 +1703,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -1719,7 +1719,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Assigns links to an entry.
+     * Assign links to an entry. Provide an entry ID and a list of links to assign to that entry. This is an overwrite action. The request must include all links to assign to the entry, including existing links that should remain assigned to the entry.
      * @param repoId The request repository ID.
      * @param entryId The requested entry ID.
      * @param linksToAdd (optional) 
@@ -1769,6 +1769,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1790,13 +1797,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -1813,7 +1813,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns the links assigned to an entry.
+     * Returns the links assigned to an entry. Provide an entry ID, and get a paged listing of links assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param prefer (optional) An optional odata header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1881,6 +1881,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -1894,13 +1901,6 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1918,7 +1918,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Copies an entry into a folder asynchronously.
+     * Copy a new child entry in the designated folder async, and potentially return an operationToken. Provide the parent folder ID, and copy an entry as a child of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.  The status of the operation can be checked via the Tasks/{operationToken} route.
      * @param repoId The requested repository ID.
      * @param entryId The folder ID that the entry will be created in.
      * @param request (optional) Copy entry request.
@@ -1978,19 +1978,19 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2008,7 +2008,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Deletes the edoc associated with an entry.
+     * Delete the edoc associated with the provided entry ID.
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @return Deleted edoc successfully.
@@ -2053,6 +2053,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2074,13 +2081,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -2097,7 +2097,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns information about the edoc content of an entry.
+     * Returns information about the edoc content of an entry, without downloading the edoc in its entirety. Provide an entry ID, and get back the Content-Type and Content-Length in the response headers. This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry.
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @return Get edoc info successfully.
@@ -2138,6 +2138,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2159,13 +2166,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -2182,7 +2182,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns an entry's edoc resource in a stream format.
+     * Returns an entry's edoc resource in a stream format. Provide an entry ID, and get the edoc resource as part of the response content. Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc.
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @param range (optional) An optional header used to retrieve partial content of the edoc. Only supports single
@@ -2233,6 +2233,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2254,13 +2261,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -2277,7 +2277,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Deletes the pages associated with an entry.
+     * Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted. Optional parameter: pageRange (default empty). The value should be a comma-seperated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @param pageRange (optional) The pages to be deleted.
@@ -2325,6 +2325,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2346,13 +2353,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -2369,7 +2369,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns an entry's edoc resource in a stream format, including an audit reason.
+     * Returns an entry's edoc resource in a stream format while including an audit reason. Provide an entry ID and audit reason/comment in the request body, and get the edoc resource as part of the response content. Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc. This route is identical to the GET edoc route, but allows clients to include an audit reason when downloading the edoc.
      * @param repoId The requested repository ID.
      * @param entryId The requested document ID.
      * @param request (optional) 
@@ -2425,6 +2425,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2446,13 +2453,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -2469,7 +2469,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns the dynamic field logic values assigned to an entry.
+     * Returns dynamic field logic values with the current values of the fields in the template. Provide an entry ID and field values in the JSON body to get dynamic field logic values.  Independent and non-dynamic fields in the request body will be ignored, and only related dynamic field logic values for the assigned template will be returned.
      * @param repoId The requested repository ID.
      * @param entryId The requested entry ID.
      * @param request (optional) 
@@ -2528,6 +2528,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2541,13 +2548,6 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2565,7 +2565,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Removes the currently assigned template from an entry.
+     * Remove the currently assigned template from the specified entry. Provide an entry ID to clear template value on. If the entry does not have a template assigned, no change will be made.
      * @param repoId The requested repository ID.
      * @param entryId The ID of the entry that will have its template removed.
      * @return Remove the currently assigned template successfully.
@@ -2610,6 +2610,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2631,13 +2638,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -2654,7 +2654,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Assigns a template to an entry.
+     * Assign a template to an entry. Provide an entry ID, template name, and a list of template fields to assign to that entry. Only template values will be modified. Any existing independent fields on the entry will not be modified, nor will they be added if included in the request. The only modification to fields will only occur on templated fields. If the previously assigned template includes common template fields as the newly assigned template, the common field values will not be modified.
      * @param repoId The requested repository ID.
      * @param entryId The ID of entry that will have its template updated.
      * @param request (optional) The template and template fields that will be assigned to the entry.
@@ -2708,6 +2708,13 @@ export class EntriesClient implements IEntriesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -2729,13 +2736,6 @@ export class EntriesClient implements IEntriesClient {
             result423 = ProblemDetails.fromJS(resultData423);
             return throwException("Entry is locked.", status, _responseText, _headers, result423);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -2755,7 +2755,7 @@ export class EntriesClient implements IEntriesClient {
 export interface IAttributesClient {
 
     /**
-     * Returns the attribute key value pairs associated with the authenticated user.
+     * Returns the attribute key value pairs associated with the authenticated user. Alternatively, return only the attribute key value pairs that are associated with the "Everyone" group. Attribute keys can be used with subsequent calls to get specific attribute values. Default page size: 100. Allowed OData query options: Select, Count, OrderBy, Skip, Top, SkipToken, Prefer. Optional query parameters: everyone (bool, default false). When true, this route does not return the attributes that are tied to the currently authenticated user, but rather the attributes assigned to the "Everyone" group. Note when this is true, the response does not include both the "Everyone" groups attribute and the currently authenticated user, but only the "Everyone" groups.
      * @param repoId The requested repository ID.
      * @param everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -2769,7 +2769,7 @@ export interface IAttributesClient {
     getTrusteeAttributeKeyValuePairs(args: { repoId: string, everyone?: boolean | undefined, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfListOfAttribute>;
 
     /**
-     * Returns an attribute object associated with the authenticated user.
+     * Returns the attribute associated with the key. Alternatively, return the attribute associated with the key within "Everyone" group. Optional query parameters: everyone (bool, default false). When true, the server only searches for the attribute value with the given key upon the authenticated users attributes. If false, only the authenticated users attributes will be queried.
      * @param repoId The requested repository ID.
      * @param attributeKey The requested attribute key.
      * @param everyone (optional) Boolean value that indicates whether to return attributes associated with everyone or the currently authenticated user.
@@ -2785,7 +2785,7 @@ export class AttributesClient implements IAttributesClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
     
@@ -2856,7 +2856,7 @@ export class AttributesClient implements IAttributesClient {
   }
 
     /**
-     * Returns the attribute key value pairs associated with the authenticated user.
+     * Returns the attribute key value pairs associated with the authenticated user. Alternatively, return only the attribute key value pairs that are associated with the "Everyone" group. Attribute keys can be used with subsequent calls to get specific attribute values. Default page size: 100. Allowed OData query options: Select, Count, OrderBy, Skip, Top, SkipToken, Prefer. Optional query parameters: everyone (bool, default false). When true, this route does not return the attributes that are tied to the currently authenticated user, but rather the attributes assigned to the "Everyone" group. Note when this is true, the response does not include both the "Everyone" groups attribute and the currently authenticated user, but only the "Everyone" groups.
      * @param repoId The requested repository ID.
      * @param everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -2918,6 +2918,13 @@ export class AttributesClient implements IAttributesClient {
             result200 = ODataValueContextOfListOfAttribute.fromJS(resultData200);
             return result200;
             });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
@@ -2939,13 +2946,6 @@ export class AttributesClient implements IAttributesClient {
             result429 = ProblemDetails.fromJS(resultData429);
             return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
             });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -2955,7 +2955,7 @@ export class AttributesClient implements IAttributesClient {
     }
 
     /**
-     * Returns an attribute object associated with the authenticated user.
+     * Returns the attribute associated with the key. Alternatively, return the attribute associated with the key within "Everyone" group. Optional query parameters: everyone (bool, default false). When true, the server only searches for the attribute value with the given key upon the authenticated users attributes. If false, only the authenticated users attributes will be queried.
      * @param repoId The requested repository ID.
      * @param attributeKey The requested attribute key.
      * @param everyone (optional) Boolean value that indicates whether to return attributes associated with everyone or the currently authenticated user.
@@ -3005,6 +3005,13 @@ export class AttributesClient implements IAttributesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -3018,13 +3025,6 @@ export class AttributesClient implements IAttributesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Requested attribute key not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3045,7 +3045,7 @@ export class AttributesClient implements IAttributesClient {
 export interface IFieldDefinitionsClient {
 
     /**
-     * Returns a single field definition object.
+     * Returns a single field definition associated with the specified ID.  Useful when a route provides a minimal amount of details and more information about the specific field definition is needed. Allowed OData query options: Select
      * @param repoId The requested repository ID.
      * @param fieldDefinitionId The requested field definition ID.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -3056,7 +3056,7 @@ export interface IFieldDefinitionsClient {
     getFieldDefinitionById(args: { repoId: string, fieldDefinitionId: number, culture?: string | null | undefined, select?: string | null | undefined }): Promise<WFieldInfo>;
 
     /**
-     * Returns the paged listing of the field definitions available in a repository.
+     * Returns a paged listing of field definitions available in the specified repository. Useful when trying to find a list of all field definitions available, rather than only those assigned to a specific entry/template. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -3078,7 +3078,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
     
@@ -3153,7 +3153,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   }
 
     /**
-     * Returns a single field definition object.
+     * Returns a single field definition associated with the specified ID.  Useful when a route provides a minimal amount of details and more information about the specific field definition is needed. Allowed OData query options: Select
      * @param repoId The requested repository ID.
      * @param fieldDefinitionId The requested field definition ID.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -3205,6 +3205,13 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -3218,13 +3225,6 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Requested field definition id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3242,7 +3242,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
     }
 
     /**
-     * Returns the paged listing of the field definitions available in a repository.
+     * Returns a paged listing of field definitions available in the specified repository. Useful when trying to find a list of all field definitions available, rather than only those assigned to a specific entry/template. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -3343,7 +3343,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
 export interface ILinkDefinitionsClient {
 
     /**
-     * Returns the link definitions associated with a repository.
+     * Returns the link definitions in the repository. Provide a repository ID and get a paged listing of link definitions available in the repository. Useful when trying to display all link definitions available, not only links assigned to a specific entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param select (optional) Limits the properties returned in the result.
@@ -3356,7 +3356,7 @@ export interface ILinkDefinitionsClient {
     getLinkDefinitions(args: { repoId: string, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfEntryLinkTypeInfo>;
 
     /**
-     * Returns a single link definition object.
+     * Returns a single link definition associated with the specified ID. Provide a link type ID and get the associated link definition. Useful when a route provides a minimal amount of details and more information about the specific link definition is needed. Allowed OData query options: Select
      * @param repoId The requested repository ID.
      * @param linkTypeId The requested link type ID.
      * @param select (optional) Limits the properties returned in the result.
@@ -3372,7 +3372,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
     
@@ -3443,7 +3443,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
   }
 
     /**
-     * Returns the link definitions associated with a repository.
+     * Returns the link definitions in the repository. Provide a repository ID and get a paged listing of link definitions available in the repository. Useful when trying to display all link definitions available, not only links assigned to a specific entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param select (optional) Limits the properties returned in the result.
@@ -3537,7 +3537,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
     }
 
     /**
-     * Returns a single link definition object.
+     * Returns a single link definition associated with the specified ID. Provide a link type ID and get the associated link definition. Useful when a route provides a minimal amount of details and more information about the specific link definition is needed. Allowed OData query options: Select
      * @param repoId The requested repository ID.
      * @param linkTypeId The requested link type ID.
      * @param select (optional) Limits the properties returned in the result.
@@ -3585,13 +3585,6 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("Requested link type definition ID not found", status, _responseText, _headers, result404);
-            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
@@ -3605,6 +3598,13 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Requested link type definition ID not found", status, _responseText, _headers, result404);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3625,7 +3625,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
 export interface IRepositoriesClient {
 
     /**
-     * Returns the list of repositories accessible to the authenticated user.
+     * Returns the repository resource list that current user has access to.
      * @return Get the respository resource list successfully.
      */
     getRepositoryList(args: {  }): Promise<RepositoryInfo[]>;
@@ -3638,11 +3638,11 @@ export class RepositoriesClient implements IRepositoriesClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
     /**
-     * Returns the list of repositories accessible to the authenticated user.
+     * Returns the repository resource list that current user has access to.
      * @return Get the respository resource list successfully.
      */
     getRepositoryList(args: {  }): Promise<RepositoryInfo[]> {
@@ -3726,7 +3726,7 @@ export class AuditReasonsClient implements IAuditReasonsClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
     /**
@@ -4047,7 +4047,7 @@ export class SearchesClient implements ISearchesClient {
   }
 
     /**
-     * Runs a search in the specified repository.
+     * Runs a search operation on the repository. Optional body parameters: FuzzyType: (default none), which can be used to determine what is considered a match by number of letters or percentage. FuzzyFactor: integer value that determines the degree to which a search will be considered a match (integer value for NumberOfLetters, or int value representing a percentage). The status for search operations must be checked via the Search specific status checking route.
      * @param repoId The requested repository ID.
      * @param request (optional) The Laserfiche search command to run, optionally include fuzzy search settings.
      * @return Search operation start successfully.
@@ -4123,7 +4123,7 @@ export class SearchesClient implements ISearchesClient {
     }
 
     /**
-     * Returns the status of a search operation.
+     * Returns search status. Provide a token (returned in the create search asynchronous route), and get the search status, progress, and any errors that may have occurred. When the search is completed, the Location header can be inspected as a link to the search results. OperationStatus can be one of the following : NotStarted, InProgress, Completed, Failed, or Canceled.
      * @param repoId The requested repository ID.
      * @param searchToken The requested searchToken.
      * @return Search has failed. Check the errors property to find out why.
@@ -4182,6 +4182,13 @@ export class SearchesClient implements ISearchesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -4195,13 +4202,6 @@ export class SearchesClient implements ISearchesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request search token not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4219,7 +4219,7 @@ export class SearchesClient implements ISearchesClient {
     }
 
     /**
-     * Cancels or closes a search operation.
+     * Cancels a currently running search. Closes a completed search.
      * @param repoId The requested repository ID.
      * @param searchToken The requested searchToken.
      * @return Cancel or closed search successfully.
@@ -4264,6 +4264,13 @@ export class SearchesClient implements ISearchesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -4277,13 +4284,6 @@ export class SearchesClient implements ISearchesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request search token not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4301,7 +4301,7 @@ export class SearchesClient implements ISearchesClient {
     }
 
     /**
-     * Returns the results listing associated with a search operation.
+     * Returns a search result listing if the search is completed. Optional query parameter: groupByOrderType (default false). This query parameter decides whether or not results are returned in groups based on their entry type. Optional query parameter: refresh (default false). If the search listing should be refreshed to show updated values. Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". sort order can be either "asc" or "desc". Search results expire after 5 minutes, but can be refreshed by retrieving the results again. Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param repoId The requested repository ID.
      * @param searchToken The requested searchToken.
      * @param groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
@@ -4392,6 +4392,13 @@ export class SearchesClient implements ISearchesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -4405,13 +4412,6 @@ export class SearchesClient implements ISearchesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request search token not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4429,7 +4429,7 @@ export class SearchesClient implements ISearchesClient {
     }
 
     /**
-     * Returns the context hits associated with a search result entry.
+     * Returns the context hits associated with a search result entry. Given a searchToken, and rowNumber associated with a search entry in the listing, return the context hits for that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param searchToken The requested searchToken.
      * @param rowNumber The search result listing row number to get context hits for.
@@ -4501,6 +4501,13 @@ export class SearchesClient implements ISearchesClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -4514,13 +4521,6 @@ export class SearchesClient implements ISearchesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request search token not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4541,7 +4541,7 @@ export class SearchesClient implements ISearchesClient {
 export interface ISimpleSearchesClient {
 
     /**
-     * Runs a "simple" search operation.
+     * Runs a "simple" search operation on the repository. Returns a truncated search result listing. Search result listing may be truncated, depending on number of results. Additionally, searches may time out if they take too long. Use the other search route to run full searches. Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param repoId The requested repository ID.
      * @param select (optional) Limits the properties returned in the result.
      * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -4564,11 +4564,11 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
     /**
-     * Runs a "simple" search operation.
+     * Runs a "simple" search operation on the repository. Returns a truncated search result listing. Search result listing may be truncated, depending on number of results. Additionally, searches may time out if they take too long. Use the other search route to run full searches. Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param repoId The requested repository ID.
      * @param select (optional) Limits the properties returned in the result.
      * @param orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -4686,7 +4686,7 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
 export interface ITagDefinitionsClient {
 
     /**
-     * Returns the tag definitions associated with a repository.
+     * Returns all tag definitions in the repository. Provide a repository ID and get a paged listing of tag definitions available in the repository. Useful when trying to display all tag definitions available, not only tags assigned to a specific entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -4701,7 +4701,7 @@ export interface ITagDefinitionsClient {
     getTagDefinitions(args: { repoId: string, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWTagInfo>;
 
     /**
-     * Returns a single tag definition object.
+     * Returns a single tag definition. Provide a tag definition ID, and get the single tag definition associated with that ID. Useful when another route provides a minimal amount of details, and more information about the specific tag is needed. Allowed OData query options: Select
      * @param repoId The requested repository ID.
      * @param tagId The requested tag definition ID.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -4719,7 +4719,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
     
@@ -4794,7 +4794,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
   }
 
     /**
-     * Returns the tag definitions associated with a repository.
+     * Returns all tag definitions in the repository. Provide a repository ID and get a paged listing of tag definitions available in the repository. Useful when trying to display all tag definitions available, not only tags assigned to a specific entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -4830,201 +4830,6 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
             throw new Error("The parameter 'count' cannot be null.");
         else if (count !== undefined)
             url_ += "$count=" + encodeURIComponent("" + count) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetTagDefinitions(_response);
-        });
-    }
-
-    protected processGetTagDefinitions(response: Response): Promise<ODataValueContextOfIListOfWTagInfo> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ODataValueContextOfIListOfWTagInfo.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ODataValueContextOfIListOfWTagInfo>(null as any);
-    }
-
-    /**
-     * Returns a single tag definition object.
-     * @param repoId The requested repository ID.
-     * @param tagId The requested tag definition ID.
-     * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-                The value should be a standard language tag.
-     * @param select (optional) Limits the properties returned in the result.
-     * @return Get tag definition successfully.
-     */
-    getTagDefinitionById(args: { repoId: string, tagId: number, culture?: string | null | undefined, select?: string | null | undefined }): Promise<WTagInfo> {
-        let { repoId, tagId, culture, select } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/TagDefinitions/{tagId}?";
-        if (repoId === undefined || repoId === null)
-            throw new Error("The parameter 'repoId' must be defined.");
-        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
-        if (tagId === undefined || tagId === null)
-            throw new Error("The parameter 'tagId' must be defined.");
-        url_ = url_.replace("{tagId}", encodeURIComponent("" + tagId));
-        if (culture !== undefined && culture !== null)
-            url_ += "culture=" + encodeURIComponent("" + culture) + "&";
-        if (select !== undefined && select !== null)
-            url_ += "$select=" + encodeURIComponent("" + select) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetTagDefinitionById(_response);
-        });
-    }
-
-    protected processGetTagDefinitionById(response: Response): Promise<WTagInfo> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = WTagInfo.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("Request tag definition id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<WTagInfo>(null as any);
-    }
-}
-
-export interface ITasksClient {
-
-    /**
-     * Returns the status of an operation.
-     * @param repoId The requested repository ID
-     * @param operationToken The operation token
-     * @return Get completed operation status with no result successfully.
-     */
-    getOperationStatusAndProgress(args: { repoId: string, operationToken: string }): Promise<OperationProgress>;
-
-    /**
-     * Cancels an operation.
-     * @param repoId The requested repository ID
-     * @param operationToken The operation token
-     * @return Cancel operation successfully.
-     */
-    cancelOperation(args: { repoId: string, operationToken: string }): Promise<void>;
-}
-
-export class TasksClient implements ITasksClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
-    }
-
-    /**
-     * Returns the status of an operation.
-     * @param repoId The requested repository ID
-     * @param operationToken The operation token
-     * @return Get completed operation status with no result successfully.
-     */
-    getOperationStatusAndProgress(args: { repoId: string, operationToken: string }): Promise<OperationProgress> {
-        let { repoId, operationToken } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/Tasks/{operationToken}";
-        if (repoId === undefined || repoId === null)
-            throw new Error("The parameter 'repoId' must be defined.");
-        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
-        if (operationToken === undefined || operationToken === null)
-            throw new Error("The parameter 'operationToken' must be defined.");
-        url_ = url_.replace("{operationToken}", encodeURIComponent("" + operationToken));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -5343,13 +5148,6 @@ export class TasksClient implements ITasksClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("Request operationToken not found.", status, _responseText, _headers, result404);
-            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
@@ -5390,7 +5188,7 @@ export class TasksClient implements ITasksClient {
 export interface ITemplateDefinitionsClient {
 
     /**
-     * Returns the template definitions associated with a repository.
+     * Returns all template definitions (including field definitions) in the repository. If a template name query parameter is given, then a single template definition is returned. Provide a repository ID, and get a paged listing of template definitions available in the repository. Useful when trying to find a list of all template definitions available, rather than a specific one. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5406,7 +5204,7 @@ export interface ITemplateDefinitionsClient {
     getTemplateDefinitions(args: { repoId: string, templateName?: string | null | undefined, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWTemplateInfo>;
 
     /**
-     * Returns a single template definition object.
+     * Returns a single template definition (including field definitions, if relevant). Provide a template definition ID, and get the single template definition associated with that ID. Useful when a route provides a minimal amount of details, and more information about the specific template is needed. Allowed OData query options: Select
      * @param repoId The requested repository ID.
      * @param templateId The requested template definition ID.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -5417,7 +5215,7 @@ export interface ITemplateDefinitionsClient {
     getTemplateDefinitionById(args: { repoId: string, templateId: number, culture?: string | null | undefined, select?: string | null | undefined }): Promise<WTemplateInfo>;
 
     /**
-     * Returns the field definitions assigned to a template definition (by template definition ID).
+     * Returns the field definitions assigned to a template definition. Provide a template definition ID, and get a paged listing of the field definitions assigned to that template.  Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param templateId The requested template definition ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5433,7 +5231,7 @@ export interface ITemplateDefinitionsClient {
     getTemplateFieldDefinitions(args: { repoId: string, templateId: number, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
 
     /**
-     * Returns the field definitions assigned to a template definition (by template definition name).
+     * Returns the field definitions assigned to a template definition. Provide a template definition name, and get a paged listing of the field definitions assigned to that template.  Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param templateName A required query parameter for the requested template name.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5456,7 +5254,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
     
@@ -5678,7 +5476,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }
 
     /**
-     * Returns the template definitions associated with a repository.
+     * Returns all template definitions (including field definitions) in the repository. If a template name query parameter is given, then a single template definition is returned. Provide a repository ID, and get a paged listing of template definitions available in the repository. Useful when trying to find a list of all template definitions available, rather than a specific one. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5742,6 +5540,13 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
             result200 = ODataValueContextOfIListOfWTemplateInfo.fromJS(resultData200);
             return result200;
             });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
             let result401: any = null;
@@ -5756,26 +5561,19 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request template name not found.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 429) {
+            return response.text().then((_responseText) => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ProblemDetails.fromJS(resultData429);
+            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -5786,7 +5584,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     }
 
     /**
-     * Returns a single template definition object.
+     * Returns a single template definition (including field definitions, if relevant). Provide a template definition ID, and get the single template definition associated with that ID. Useful when a route provides a minimal amount of details, and more information about the specific template is needed. Allowed OData query options: Select
      * @param repoId The requested repository ID.
      * @param templateId The requested template definition ID.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -5838,6 +5636,13 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -5851,13 +5656,6 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request template id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -5875,7 +5673,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     }
 
     /**
-     * Returns the field definitions assigned to a template definition (by template definition ID).
+     * Returns the field definitions assigned to a template definition. Provide a template definition ID, and get a paged listing of the field definitions assigned to that template.  Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param templateId The requested template definition ID.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5890,7 +5688,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
      */
     getTemplateFieldDefinitions(args: { repoId: string, templateId: number, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
         let { repoId, templateId, prefer, culture, select, orderby, top, skip, count } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/TemplateDefinitions/{templateId}/fields?";
+        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/TemplateDefinitions/{templateId}/Fields?";
         if (repoId === undefined || repoId === null)
             throw new Error("The parameter 'repoId' must be defined.");
         url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
@@ -5947,6 +5745,13 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
             let result403: any = null;
@@ -5960,13 +5765,6 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request template id not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -5984,7 +5782,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     }
 
     /**
-     * Returns the field definitions assigned to a template definition (by template definition name).
+     * Returns the field definitions assigned to a template definition. Provide a template definition name, and get a paged listing of the field definitions assigned to that template.  Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param repoId The requested repository ID.
      * @param templateName A required query parameter for the requested template name.
      * @param prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5997,9 +5795,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
      * @param count (optional) Indicates whether the total count of items within a collection are returned in the result.
      * @return Get template field definitions successfully.
      */
-    getTemplateFieldDefinitions(args: { repoId: string, templateId: number, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
-        let { repoId, templateId, prefer, culture, select, orderby, top, skip, count } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/TemplateDefinitions/{templateId}/Fields?";
+    getTemplateFieldDefinitionsByTemplateName(args: { repoId: string, templateName: string | null, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
+        let { repoId, templateName, prefer, culture, select, orderby, top, skip, count } = args;
+        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/TemplateDefinitions/Fields?";
         if (repoId === undefined || repoId === null)
             throw new Error("The parameter 'repoId' must be defined.");
         url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
@@ -6048,190 +5846,6 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = ODataValueContextOfIListOfTemplateFieldInfo.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("Request template name not found.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ODataValueContextOfIListOfTemplateFieldInfo>(null as any);
-    }
-}
-
-export interface IServerSessionClient {
-
-    /**
-     * Invalidates the server session.
-     * @param repoId The requested repository ID.
-     * @return Invalidate the server session successfully.
-     */
-    invalidateServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
-
-    /**
-     * Refreshes the server session.
-     * @param repoId The requested repository ID.
-     * @return Refresh the session successfully.
-     */
-    refreshServerSession(args: { repoId: string }): Promise<ODataValueOfDateTime>;
-
-    /**
-     * Deprecated. Do not call this api.
-     * @param repoId The requested repository ID.
-     * @return Create the session successfully.
-     */
-    createServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
-}
-
-export class ServerSessionClient implements IServerSessionClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:11211";
-    }
-
-    /**
-     * Invalidates the server session.
-     * @param repoId The requested repository ID.
-     * @return Invalidate the server session successfully.
-     */
-    invalidateServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean> {
-        let { repoId } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/ServerSession/Invalidate";
-        if (repoId === undefined || repoId === null)
-            throw new Error("The parameter 'repoId' must be defined.");
-        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processInvalidateServerSession(_response);
-        });
-    }
-
-    protected processInvalidateServerSession(response: Response): Promise<ODataValueOfBoolean> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ODataValueOfBoolean.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 403) {
-            return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
-            });
-        } else if (status === 429) {
-            return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ODataValueOfBoolean>(null as any);
-    }
-
-    /**
-     * Refreshes the server session.
-     * @param repoId The requested repository ID.
-     * @return Refresh the session successfully.
-     */
-    refreshServerSession(args: { repoId: string }): Promise<ODataValueOfDateTime> {
-        let { repoId } = args;
-        let url_ = this.baseUrl + "/v1/Repositories/{repoId}/ServerSession/Refresh";
-        if (repoId === undefined || repoId === null)
-            throw new Error("The parameter 'repoId' must be defined.");
-        url_ = url_.replace("{repoId}", encodeURIComponent("" + repoId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRefreshServerSession(_response);
-        });
-    }
-
-    protected processRefreshServerSession(response: Response): Promise<ODataValueOfDateTime> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ODataValueOfDateTime.fromJS(resultData200);
             return result200;
             });
         } else if (status === 400) {
@@ -6515,7 +6129,7 @@ export class CreateEntryResult implements ICreateEntryResult {
     constructor(data?: ICreateEntryResult) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6563,7 +6177,7 @@ export class CreateEntryOperations implements ICreateEntryOperations {
     constructor(data?: ICreateEntryOperations) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6621,7 +6235,7 @@ export class EntryCreate implements IEntryCreate {
     constructor(data?: IEntryCreate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6684,7 +6298,7 @@ export class APIServerException implements IAPIServerException {
     constructor(data?: IAPIServerException) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6745,7 +6359,7 @@ export class SetEdoc implements ISetEdoc {
     constructor(data?: ISetEdoc) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6797,7 +6411,7 @@ export class SetTemplate implements ISetTemplate {
     constructor(data?: ISetTemplate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6853,7 +6467,7 @@ export class SetFields implements ISetFields {
     constructor(data?: ISetFields) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6909,7 +6523,7 @@ export class SetTags implements ISetTags {
     constructor(data?: ISetTags) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -6973,7 +6587,7 @@ export class SetLinks implements ISetLinks {
     constructor(data?: ISetLinks) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7025,22 +6639,11 @@ export interface ISetLinks {
     otherEntryIds?: number[] | undefined;
 }
 
-/** A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807. */
 export class ProblemDetails implements IProblemDetails {
-    /** A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
-dereferenced, it provide human-readable documentation for the problem type
-(e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
-"about:blank". */
     type?: string | undefined;
-    /** A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
-of the problem, except for purposes of localization(e.g., using proactive content negotiation;
-see[RFC7231], Section 3.4). */
     title?: string | undefined;
-    /** The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem. */
     status?: number | undefined;
-    /** A human-readable explanation specific to this occurrence of the problem. */
     detail?: string | undefined;
-    /** A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced. */
     instance?: string | undefined;
     extensions?: { [key: string]: any; };
 
@@ -7049,7 +6652,7 @@ see[RFC7231], Section 3.4). */
     constructor(data?: IProblemDetails) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -7097,30 +6700,17 @@ see[RFC7231], Section 3.4). */
     }
 }
 
-/** A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807. */
 export interface IProblemDetails {
-    /** A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
-dereferenced, it provide human-readable documentation for the problem type
-(e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
-"about:blank". */
     type?: string | undefined;
-    /** A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
-of the problem, except for purposes of localization(e.g., using proactive content negotiation;
-see[RFC7231], Section 3.4). */
     title?: string | undefined;
-    /** The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem. */
     status?: number | undefined;
-    /** A human-readable explanation specific to this occurrence of the problem. */
     detail?: string | undefined;
-    /** A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced. */
     instance?: string | undefined;
     extensions?: { [key: string]: any; };
 }
 
-/** Represents HttpRequest and HttpResponse headers */
 export abstract class IHeaderDictionary implements IIHeaderDictionary {
     item?: any[];
-    /** Strongly typed access to the Content-Length header. Implementations must keep this in sync with the string representation. */
     contentLength?: number | undefined;
     accept?: any[];
     acceptCharset?: any[];
@@ -7217,7 +6807,7 @@ export abstract class IHeaderDictionary implements IIHeaderDictionary {
     constructor(data?: IIHeaderDictionary) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8141,10 +7731,8 @@ export abstract class IHeaderDictionary implements IIHeaderDictionary {
     }
 }
 
-/** Represents HttpRequest and HttpResponse headers */
 export interface IIHeaderDictionary {
     item?: any[];
-    /** Strongly typed access to the Content-Length header. Implementations must keep this in sync with the string representation. */
     contentLength?: number | undefined;
     accept?: any[];
     acceptCharset?: any[];
@@ -8247,7 +7835,7 @@ export class FieldToUpdate implements IFieldToUpdate {
     constructor(data?: IFieldToUpdate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8298,7 +7886,7 @@ export class ValueToUpdate implements IValueToUpdate {
     constructor(data?: IValueToUpdate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8346,7 +7934,7 @@ export class LinkToUpdate implements ILinkToUpdate {
     constructor(data?: ILinkToUpdate) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8395,7 +7983,7 @@ export class PostEntryWithEdocMetadataRequest implements IPostEntryWithEdocMetad
     constructor(data?: IPostEntryWithEdocMetadataRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8429,20 +8017,18 @@ export interface IPostEntryWithEdocMetadataRequest {
     metadata?: PutFieldValsRequest;
 }
 
-export class ImportAsyncMetadata implements IImportAsyncMetadata {
+export class SimpleImportMetadata implements ISimpleImportMetadata {
     /** The fields that will be assigned to the entry. */
     fields?: { [key: string]: FieldToUpdate; } | undefined;
     /** The tags that will be assigned to the entry. */
     tags?: string[] | undefined;
-    /** The links that will be assigned to the entry. */
-    links?: LinkToUpdate[] | undefined;
 
     
     
-    constructor(data?: IImportAsyncMetadata) {
+    constructor(data?: ISimpleImportMetadata) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8462,17 +8048,12 @@ export class ImportAsyncMetadata implements IImportAsyncMetadata {
                 for (let item of _data["tags"])
                     this.tags!.push(item);
             }
-            if (Array.isArray(_data["links"])) {
-                this.links = [] as any;
-                for (let item of _data["links"])
-                    this.links!.push(LinkToUpdate.fromJS(item));
-            }
         }
     }
 
-    static fromJS(data: any): ImportAsyncMetadata {
+    static fromJS(data: any): SimpleImportMetadata {
         data = typeof data === 'object' ? data : {};
-        let result = new ImportAsyncMetadata();
+        let result = new SimpleImportMetadata();
         result.init(data);
         return result;
     }
@@ -8491,26 +8072,21 @@ export class ImportAsyncMetadata implements IImportAsyncMetadata {
             for (let item of this.tags)
                 data["tags"].push(item);
         }
-        if (Array.isArray(this.links)) {
-            data["links"] = [];
-            for (let item of this.links)
-                data["links"].push(item.toJSON());
-        }
         return data;
     }
 }
 
-export interface IImportAsyncMetadata {
+export interface ISimpleImportMetadata {
     /** The fields that will be assigned to the entry. */
     fields?: { [key: string]: FieldToUpdate; } | undefined;
     /** The tags that will be assigned to the entry. */
     tags?: string[] | undefined;
-    /** The links that will be assigned to the entry. */
-    links?: LinkToUpdate[] | undefined;
 }
 
 /** The request body containing fields that will be assigned to the entry. */
-export class PutFieldValsRequest extends ImportAsyncMetadata implements IPutFieldValsRequest {
+export class PutFieldValsRequest extends SimpleImportMetadata implements IPutFieldValsRequest {
+    /** The links that will be assigned to the entry. */
+    links?: LinkToUpdate[] | undefined;
 
     
     
@@ -8518,7 +8094,7 @@ export class PutFieldValsRequest extends ImportAsyncMetadata implements IPutFiel
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8526,6 +8102,13 @@ export class PutFieldValsRequest extends ImportAsyncMetadata implements IPutFiel
 
     init(_data?: any) {
         super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["links"])) {
+                this.links = [] as any;
+                for (let item of _data["links"])
+                    this.links!.push(LinkToUpdate.fromJS(item));
+            }
+        }
     }
 
     static fromJS(data: any): PutFieldValsRequest {
@@ -8537,13 +8120,20 @@ export class PutFieldValsRequest extends ImportAsyncMetadata implements IPutFiel
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.links)) {
+            data["links"] = [];
+            for (let item of this.links)
+                data["links"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data;
     }
 }
 
 /** The request body containing fields that will be assigned to the entry. */
-export interface IPutFieldValsRequest extends IImportAsyncMetadata {
+export interface IPutFieldValsRequest extends ISimpleImportMetadata {
+    /** The links that will be assigned to the entry. */
+    links?: LinkToUpdate[] | undefined;
 }
 
 export class ODataValueOfListOfAttribute implements IODataValueOfListOfAttribute {
@@ -8554,7 +8144,7 @@ export class ODataValueOfListOfAttribute implements IODataValueOfListOfAttribute
     constructor(data?: IODataValueOfListOfAttribute) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8605,7 +8195,7 @@ export class ODataValueContextOfListOfAttribute extends ODataValueOfListOfAttrib
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8652,7 +8242,7 @@ export class Attribute implements IAttribute {
     constructor(data?: IAttribute) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8728,7 +8318,7 @@ use a custom format. */
     constructor(data?: IWFieldInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8866,7 +8456,7 @@ export class ODataValueOfIListOfWFieldInfo implements IODataValueOfIListOfWField
     constructor(data?: IODataValueOfIListOfWFieldInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8917,7 +8507,7 @@ export class ODataValueContextOfIListOfWFieldInfo extends ODataValueOfIListOfWFi
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -8963,7 +8553,7 @@ export class ODataValueOfIListOfEntryLinkTypeInfo implements IODataValueOfIListO
     constructor(data?: IODataValueOfIListOfEntryLinkTypeInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9014,7 +8604,7 @@ export class ODataValueContextOfIListOfEntryLinkTypeInfo extends ODataValueOfILi
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9067,7 +8657,7 @@ export class EntryLinkTypeInfo implements IEntryLinkTypeInfo {
     constructor(data?: IEntryLinkTypeInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9145,7 +8735,6 @@ export class Entry implements IEntry {
     rowNumber?: number;
     /** The fields assigned to this entry. */
     fields?: EntryFieldValue[] | undefined;
-
     protected _discriminator: string;
 
     
@@ -9153,7 +8742,7 @@ export class Entry implements IEntry {
     constructor(data?: IEntry) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9309,7 +8898,7 @@ export class EntryFieldValue implements IEntryFieldValue {
     constructor(data?: IEntryFieldValue) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9399,7 +8988,7 @@ if there is one, in bytes. */
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9473,7 +9062,7 @@ export class Edoc implements IEdoc {
     constructor(data?: IEdoc) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9512,7 +9101,7 @@ export class Shortcut extends Entry implements IShortcut {
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9570,7 +9159,7 @@ to directly or indirectly under a record series in the repository. */
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9628,6 +9217,8 @@ export class FindEntryResult implements IFindEntryResult {
     /** The closest entry ancestor. This property is set if entry is not found and fallbackToClosestAncestor is set to true. */
     ancestorEntry?: Entry | undefined;
 
+    
+    
     constructor(data?: IFindEntryResult) {
         if (data) {
             for (var property in data) {
@@ -9675,7 +9266,7 @@ export class AcceptedOperation implements IAcceptedOperation {
     constructor(data?: IAcceptedOperation) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9717,7 +9308,7 @@ export class DeleteEntryWithAuditReason implements IDeleteEntryWithAuditReason {
     constructor(data?: IDeleteEntryWithAuditReason) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9763,7 +9354,7 @@ export class PatchEntryRequest implements IPatchEntryRequest {
     constructor(data?: IPatchEntryRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9806,7 +9397,7 @@ export class ODataValueOfIListOfEntry implements IODataValueOfIListOfEntry {
     constructor(data?: IODataValueOfIListOfEntry) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9857,7 +9448,7 @@ export class ODataValueContextOfIListOfEntry extends ODataValueOfIListOfEntry im
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9903,7 +9494,7 @@ export class ODataValueOfIListOfFieldValue implements IODataValueOfIListOfFieldV
     constructor(data?: IODataValueOfIListOfFieldValue) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -9954,7 +9545,7 @@ export class ODataValueContextOfIListOfFieldValue extends ODataValueOfIListOfFie
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10002,7 +9593,7 @@ export class FieldValue extends EntryFieldValue implements IFieldValue {
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10043,7 +9634,7 @@ export class ODataValueOfIListOfWTagInfo implements IODataValueOfIListOfWTagInfo
     constructor(data?: IODataValueOfIListOfWTagInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10094,7 +9685,7 @@ export class ODataValueContextOfIListOfWTagInfo extends ODataValueOfIListOfWTagI
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10152,7 +9743,7 @@ as a security tag (true) or an informational tag (false). */
     constructor(data?: IWTagInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10224,7 +9815,7 @@ ranges from 0 to 100, with -1 as the default values. */
     constructor(data?: IWatermark) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10297,7 +9888,7 @@ export class PutTagRequest implements IPutTagRequest {
     constructor(data?: IPutTagRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10344,7 +9935,7 @@ export class ODataValueOfIListOfWEntryLinkInfo implements IODataValueOfIListOfWE
     constructor(data?: IODataValueOfIListOfWEntryLinkInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10415,7 +10006,7 @@ export class WEntryLinkInfo implements IWEntryLinkInfo {
     constructor(data?: IWEntryLinkInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10519,7 +10110,7 @@ export class PutLinksRequest implements IPutLinksRequest {
     constructor(data?: IPutLinksRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10583,7 +10174,7 @@ export class ODataValueContextOfIListOfWEntryLinkInfo extends ODataValueOfIListO
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10636,7 +10227,7 @@ export class PostEntryChildrenRequest implements IPostEntryChildrenRequest {
     constructor(data?: IPostEntryChildrenRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10695,7 +10286,7 @@ export class CopyAsyncRequest implements ICopyAsyncRequest {
     constructor(data?: ICopyAsyncRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10738,7 +10329,7 @@ export class ODataValueOfBoolean implements IODataValueOfBoolean {
     constructor(data?: IODataValueOfBoolean) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10779,7 +10370,7 @@ export class GetEdocWithAuditReasonRequest implements IGetEdocWithAuditReasonReq
     constructor(data?: IGetEdocWithAuditReasonRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10825,7 +10416,7 @@ export class GetDynamicFieldLogicValueRequest implements IGetDynamicFieldLogicVa
     constructor(data?: IGetDynamicFieldLogicValueRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10883,7 +10474,7 @@ export class PutTemplateRequest implements IPutTemplateRequest {
     constructor(data?: IPutTemplateRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -10938,6 +10529,8 @@ export class RepositoryInfo implements IRepositoryInfo {
     /** The corresponding repository WebClient url. */
     webclientUrl?: string | undefined;
 
+    
+    
     constructor(data?: IRepositoryInfo) {
         if (data) {
             for (var property in data) {
@@ -10991,7 +10584,7 @@ export class AuditReasons implements IAuditReasons {
     constructor(data?: IAuditReasons) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11053,7 +10646,7 @@ export class WAuditReason implements IWAuditReason {
     constructor(data?: IWAuditReason) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11101,7 +10694,7 @@ export class AdvancedSearchRequest implements IAdvancedSearchRequest {
     constructor(data?: IAdvancedSearchRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11164,6 +10757,8 @@ export class OperationProgress implements IOperationProgress {
     /** The timestamp representing the last time when the associated task's status has changed. */
     statusTimestamp?: Date;
 
+    
+    
     constructor(data?: IOperationProgress) {
         if (data) {
             for (var property in data) {
@@ -11248,6 +10843,8 @@ export class OperationErrorItem implements IOperationErrorItem {
     /** The short description of the error. */
     errorMessage?: string | undefined;
 
+    
+    
     constructor(data?: IOperationErrorItem) {
         if (data) {
             for (var property in data) {
@@ -11294,7 +10891,7 @@ export class ODataValueOfIListOfContextHit implements IODataValueOfIListOfContex
     constructor(data?: IODataValueOfIListOfContextHit) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11345,7 +10942,7 @@ export class ODataValueContextOfIListOfContextHit extends ODataValueOfIListOfCon
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11419,7 +11016,7 @@ export class ContextHit implements IContextHit {
     constructor(data?: IContextHit) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11534,7 +11131,7 @@ export class SimpleSearchRequest implements ISimpleSearchRequest {
     constructor(data?: ISimpleSearchRequest) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11573,7 +11170,7 @@ export class ODataValueOfIListOfWTemplateInfo implements IODataValueOfIListOfWTe
     constructor(data?: IODataValueOfIListOfWTemplateInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11624,7 +11221,7 @@ export class ODataValueContextOfIListOfWTemplateInfo extends ODataValueOfIListOf
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11681,7 +11278,7 @@ export class WTemplateInfo implements IWTemplateInfo {
     constructor(data?: IWTemplateInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11743,7 +11340,7 @@ export class LFColor implements ILFColor {
     constructor(data?: ILFColor) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11790,7 +11387,7 @@ export class ODataValueOfIListOfTemplateFieldInfo implements IODataValueOfIListO
     constructor(data?: IODataValueOfIListOfTemplateFieldInfo) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11841,7 +11438,7 @@ export class ODataValueContextOfIListOfTemplateFieldInfo extends ODataValueOfILi
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11893,7 +11490,7 @@ export class TemplateFieldInfo extends WFieldInfo implements ITemplateFieldInfo 
         super(data);
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11944,7 +11541,7 @@ form logic rule. */
     constructor(data?: IRule) {
         if (data) {
             for (var property in data) {
-                if (data.hasOwnProperty(property) && this.hasOwnProperty(property))
+                if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
@@ -11987,6 +11584,8 @@ form logic rule. */
 export class ODataValueOfDateTime implements IODataValueOfDateTime {
     value?: Date;
 
+    
+    
     constructor(data?: IODataValueOfDateTime) {
         if (data) {
             for (var property in data) {
