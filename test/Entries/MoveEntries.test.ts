@@ -26,7 +26,7 @@ describe('Move Entries Integration Tests', () => {
     request.parentId = parentFolder.id;
     request.name = 'RepositoryApiClientIntegrationTest JS MovedFolder';
 
-    let movedEntry: Entry = await _RepositoryApiClient.entriesClient.moveOrRenameDocument({
+    let movedEntry: Entry = await _RepositoryApiClient.entriesClient.moveOrRenameEntry({
       repoId,
       entryId: childFolder.id ?? -1,
       request,
