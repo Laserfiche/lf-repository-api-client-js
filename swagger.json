@@ -1126,7 +1126,7 @@
         ],
         "summary": "Moves and/or renames an entry. Move and/or rename an entry by passing in the new parent folder ID or name in the JSON body. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.",
         "description": "- Moves and/or renames an entry.\n- Move and/or rename an entry by passing in the new parent folder ID or name in the JSON body.\n- Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.",
-        "operationId": "MoveOrRenameDocument",
+        "operationId": "MoveOrRenameEntry",
         "parameters": [
           {
             "name": "repoId",

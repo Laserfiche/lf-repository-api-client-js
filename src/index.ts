@@ -63,7 +63,7 @@ export interface IEntriesClient {
                 The value should be a standard language tag.
      * @return Moves and/or renames an entry successfully.
      */
-    moveOrRenameDocument(args: { repoId: string, entryId: number, request?: PatchEntryRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<Entry>;
+    moveOrRenameEntry(args: { repoId: string, entryId: number, request?: PatchEntryRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<Entry>;
 
     /**
      * Returns a single entry object using the entry path. Optional query parameter: fallbackToClosestAncestor. Use the fallbackToClosestAncestor query parameter to return the closest existing ancestor if the initial entry path is not found.
@@ -890,7 +890,7 @@ export class EntriesClient implements IEntriesClient {
                 The value should be a standard language tag.
      * @return Moves and/or renames an entry successfully.
      */
-    moveOrRenameDocument(args: { repoId: string, entryId: number, request?: PatchEntryRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<Entry> {
+    moveOrRenameEntry(args: { repoId: string, entryId: number, request?: PatchEntryRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<Entry> {
         let { repoId, entryId, request, autoRename, culture } = args;
         let url_ = this.baseUrl + "/v1/Repositories/{repoId}/Entries/{entryId}?";
         if (repoId === undefined || repoId === null)
@@ -919,11 +919,11 @@ export class EntriesClient implements IEntriesClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processMoveOrRenameDocument(_response);
+            return this.processMoveOrRenameEntry(_response);
         });
     }
 
-    protected processMoveOrRenameDocument(response: Response): Promise<Entry> {
+    protected processMoveOrRenameEntry(response: Response): Promise<Entry> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
