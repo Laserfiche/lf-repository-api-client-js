@@ -41,6 +41,8 @@
   },
   "dependencies": {
     "@laserfiche/lf-api-client-core": "^1.0.11",
-    "@laserfiche/lf-js-utils": "^4.0.3"
+    "@laserfiche/lf-js-utils": "^4.0.3",
+    "form-data": "^3.0.1",
+    "formdata-node": "^5.0.0"
   }
 }
