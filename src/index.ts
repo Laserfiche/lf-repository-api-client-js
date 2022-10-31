@@ -1138,10 +1138,12 @@ export class EntriesClient implements IEntriesClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetEntryListing(_response);
@@ -1358,10 +1360,12 @@ export class EntriesClient implements IEntriesClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetFieldValues(_response);
@@ -1561,10 +1565,12 @@ export class EntriesClient implements IEntriesClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetTagsAssignedToEntry(_response);
@@ -1854,10 +1860,12 @@ export class EntriesClient implements IEntriesClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetLinkValuesFromEntry(_response);
@@ -2203,10 +2211,12 @@ export class EntriesClient implements IEntriesClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Range": range !== undefined && range !== null ? "" + range : "",
                 "Accept": "application/octet-stream"
             }
         };
+
+        if (range !== null && range !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Range": range !== undefined && range !== null ? "" + range : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processExportDocument(_response);
@@ -2394,11 +2404,13 @@ export class EntriesClient implements IEntriesClient {
             body: content_,
             method: "POST",
             headers: {
-                "Range": range !== undefined && range !== null ? "" + range : "",
                 "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
             }
         };
+
+        if (range !== null && range !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Range": range !== undefined && range !== null ? "" + range : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processExportDocumentWithAuditReason(_response);
@@ -2898,10 +2910,12 @@ export class AttributesClient implements IAttributesClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetTrusteeAttributeKeyValuePairs(_response);
@@ -3283,10 +3297,12 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetFieldDefinitions(_response);
@@ -3480,10 +3496,12 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetLinkDefinitions(_response);
@@ -4365,10 +4383,12 @@ export class SearchesClient implements ISearchesClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetSearchResults(_response);
@@ -4474,10 +4494,12 @@ export class SearchesClient implements ISearchesClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetSearchContextHits(_response);
@@ -4835,10 +4857,12 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetTagDefinitions(_response);
@@ -5520,10 +5544,12 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetTemplateDefinitions(_response);
@@ -5718,10 +5744,12 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetTemplateFieldDefinitions(_response);
@@ -5828,10 +5856,12 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
-                "Prefer": prefer !== undefined && prefer !== null ? "" + prefer : "",
                 "Accept": "application/json"
             }
         };
+
+        if (prefer !== null && prefer !== undefined)
+            options_.headers = Object.assign({}, options_.headers, {"Prefer": prefer !== undefined && prefer !== null ? "" + prefer : null});
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
             return this.processGetTemplateFieldDefinitionsByTemplateName(_response);
