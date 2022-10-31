@@ -26,7 +26,7 @@ export interface IEntriesClient {
      * @param autoRename (optional) An optional query parameter used to indicate if the new document should be automatically
                 renamed if an entry already exists with the given name in the folder. The default value is false.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used.
-                The value should be a standard language tag.
+                The value should be a standard language tag. This may be used when setting field values with tokens.
      * @param electronicDocument (optional) 
      * @param request (optional) 
      * @return Document creation is success.
@@ -132,7 +132,7 @@ export interface IEntriesClient {
      * @param entryId The entry ID of the entry that will have its fields updated.
      * @param fieldsToUpdate (optional) 
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used.
-                The value should be a standard language tag.
+                The value should be a standard language tag. This may be used when setting field values with tokens.
      * @return Update field values successfully.
      */
     assignFieldValues(args: { repoId: string, entryId: number, fieldsToUpdate?: { [key: string]: FieldToUpdate; } | undefined, culture?: string | null | undefined }): Promise<ODataValueOfIListOfFieldValue>;
@@ -265,7 +265,7 @@ export interface IEntriesClient {
      * @param entryId The ID of entry that will have its template updated.
      * @param request (optional) The template and template fields that will be assigned to the entry.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used.
-                The value should be a standard language tag.
+                The value should be a standard language tag. This may be used when setting field values with tokens.
      * @return Assign a template successfully.
      */
     writeTemplateValueToEntry(args: { repoId: string, entryId: number, request?: PutTemplateRequest | undefined, culture?: string | null | undefined }): Promise<Entry>;
@@ -598,7 +598,7 @@ export class EntriesClient implements IEntriesClient {
      * @param autoRename (optional) An optional query parameter used to indicate if the new document should be automatically
                 renamed if an entry already exists with the given name in the folder. The default value is false.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used.
-                The value should be a standard language tag.
+                The value should be a standard language tag. This may be used when setting field values with tokens.
      * @param electronicDocument (optional) 
      * @param request (optional) 
      * @return Document creation is success.
@@ -862,6 +862,13 @@ export class EntriesClient implements IEntriesClient {
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -1431,7 +1438,7 @@ export class EntriesClient implements IEntriesClient {
      * @param entryId The entry ID of the entry that will have its fields updated.
      * @param fieldsToUpdate (optional) 
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used.
-                The value should be a standard language tag.
+                The value should be a standard language tag. This may be used when setting field values with tokens.
      * @return Update field values successfully.
      */
     assignFieldValues(args: { repoId: string, entryId: number, fieldsToUpdate?: { [key: string]: FieldToUpdate; } | undefined, culture?: string | null | undefined }): Promise<ODataValueOfIListOfFieldValue> {
@@ -1999,6 +2006,13 @@ export class EntriesClient implements IEntriesClient {
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2671,7 +2685,7 @@ export class EntriesClient implements IEntriesClient {
      * @param entryId The ID of entry that will have its template updated.
      * @param request (optional) The template and template fields that will be assigned to the entry.
      * @param culture (optional) An optional query parameter used to indicate the locale that should be used.
-                The value should be a standard language tag.
+                The value should be a standard language tag. This may be used when setting field values with tokens.
      * @return Assign a template successfully.
      */
     writeTemplateValueToEntry(args: { repoId: string, entryId: number, request?: PutTemplateRequest | undefined, culture?: string | null | undefined }): Promise<Entry> {
@@ -2952,6 +2966,13 @@ export class AttributesClient implements IAttributesClient {
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -3340,6 +3361,13 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -3539,6 +3567,13 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -3711,6 +3746,13 @@ export class RepositoriesClient implements IRepositoriesClient {
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
             });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -3802,6 +3844,13 @@ export class AuditReasonsClient implements IAuditReasonsClient {
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4124,6 +4173,13 @@ export class SearchesClient implements ISearchesClient {
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -4689,6 +4745,13 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -4900,6 +4963,13 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -5011,7 +5081,7 @@ export interface ITasksClient {
      * Returns the status of an operation. Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant). OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
      * @param repoId The requested repository ID
      * @param operationToken The operation token
-     * @return Get completed operation status with no result successfully.
+     * @return Get completed or failed operation status with no result successfully.
      */
     getOperationStatusAndProgress(args: { repoId: string, operationToken: string }): Promise<OperationProgress>;
 
@@ -5038,7 +5108,7 @@ export class TasksClient implements ITasksClient {
      * Returns the status of an operation. Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant). OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
      * @param repoId The requested repository ID
      * @param operationToken The operation token
-     * @return Get completed operation status with no result successfully.
+     * @return Get completed or failed operation status with no result successfully.
      */
     getOperationStatusAndProgress(args: { repoId: string, operationToken: string }): Promise<OperationProgress> {
         let { repoId, operationToken } = args;
@@ -5925,16 +5995,18 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
 export interface IServerSessionClient {
 
     /**
-     * Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session. Only available in Laserfiche Cloud.
+     * Deprecated. Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session. Only available in Laserfiche Cloud.
      * @param repoId The requested repository ID.
      * @return Invalidate the server session successfully.
+     * @deprecated
      */
     invalidateServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
 
     /**
-     * Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token. Only available in Laserfiche Cloud.
+     * Deprecated. Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token. Only available in Laserfiche Cloud.
      * @param repoId The requested repository ID.
      * @return Refresh the session successfully.
+     * @deprecated
      */
     refreshServerSession(args: { repoId: string }): Promise<ODataValueOfDateTime>;
 
@@ -5942,6 +6014,7 @@ export interface IServerSessionClient {
      * Deprecated. This function is a no-op, always returns 200. Only available in Laserfiche Cloud.
      * @param repoId The requested repository ID.
      * @return Create the session successfully.
+     * @deprecated
      */
     createServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
 }
@@ -5957,9 +6030,10 @@ export class ServerSessionClient implements IServerSessionClient {
     }
 
     /**
-     * Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session. Only available in Laserfiche Cloud.
+     * Deprecated. Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session. Only available in Laserfiche Cloud.
      * @param repoId The requested repository ID.
      * @return Invalidate the server session successfully.
+     * @deprecated
      */
     invalidateServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean> {
         let { repoId } = args;
@@ -6012,6 +6086,13 @@ export class ServerSessionClient implements IServerSessionClient {
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -6028,9 +6109,10 @@ export class ServerSessionClient implements IServerSessionClient {
     }
 
     /**
-     * Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token. Only available in Laserfiche Cloud.
+     * Deprecated. Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token. Only available in Laserfiche Cloud.
      * @param repoId The requested repository ID.
      * @return Refresh the session successfully.
+     * @deprecated
      */
     refreshServerSession(args: { repoId: string }): Promise<ODataValueOfDateTime> {
         let { repoId } = args;
@@ -6083,6 +6165,13 @@ export class ServerSessionClient implements IServerSessionClient {
             result403 = ProblemDetails.fromJS(resultData403);
             return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("Not found.", status, _responseText, _headers, result404);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -6102,6 +6191,7 @@ export class ServerSessionClient implements IServerSessionClient {
      * Deprecated. This function is a no-op, always returns 200. Only available in Laserfiche Cloud.
      * @param repoId The requested repository ID.
      * @return Create the session successfully.
+     * @deprecated
      */
     createServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean> {
         let { repoId } = args;
@@ -6139,6 +6229,13 @@ export class ServerSessionClient implements IServerSessionClient {
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -8007,6 +8104,8 @@ export class PostEntryWithEdocMetadataRequest implements IPostEntryWithEdocMetad
     /** The name of the template assigned to the entry. */
     template?: string | undefined;
     metadata?: PutFieldValsRequest;
+    /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
+    volumeName?: string | undefined;
 
     
     
@@ -8023,6 +8122,7 @@ export class PostEntryWithEdocMetadataRequest implements IPostEntryWithEdocMetad
         if (_data) {
             this.template = _data["template"];
             this.metadata = _data["metadata"] ? PutFieldValsRequest.fromJS(_data["metadata"]) : <any>undefined;
+            this.volumeName = _data["volumeName"];
         }
     }
 
@@ -8037,6 +8137,7 @@ export class PostEntryWithEdocMetadataRequest implements IPostEntryWithEdocMetad
         data = typeof data === 'object' ? data : {};
         data["template"] = this.template;
         data["metadata"] = this.metadata ? this.metadata.toJSON() : <any>undefined;
+        data["volumeName"] = this.volumeName;
         return data;
     }
 }
@@ -8045,6 +8146,8 @@ export interface IPostEntryWithEdocMetadataRequest {
     /** The name of the template assigned to the entry. */
     template?: string | undefined;
     metadata?: PutFieldValsRequest;
+    /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
+    volumeName?: string | undefined;
 }
 
 export class SimpleImportMetadata implements ISimpleImportMetadata {
@@ -8730,7 +8833,7 @@ export interface IEntryLinkTypeInfo {
     linkTypeDescription?: string | undefined;
 }
 
-export class Entry implements IEntry {
+export abstract class Entry implements IEntry {
     /** The ID of the entry. */
     id?: number;
     /** The name of the entry. */
@@ -8826,9 +8929,12 @@ export class Entry implements IEntry {
             result.init(data);
             return result;
         }
-        let result = new Entry();
-        result.init(data);
-        return result;
+        if (data["entryType"] === "RecordSeries") {
+            let result = new RecordSeries();
+            result.init(data);
+            return result;
+        }
+        throw new Error("The abstract class 'Entry' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
@@ -8989,6 +9095,42 @@ export interface IEntryFieldValue {
     isRequired?: boolean;
     /** A boolean indicating if there are more field values. */
     hasMoreValues?: boolean;
+}
+
+export class RecordSeries extends Entry implements IRecordSeries {
+
+    
+    
+    constructor(data?: IRecordSeries) {
+        super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        this._discriminator = "RecordSeries";
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+    }
+
+    static fromJS(data: any): RecordSeries {
+        data = typeof data === 'object' ? data : {};
+        let result = new RecordSeries();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IRecordSeries extends IEntry {
 }
 
 export class Document extends Entry implements IDocument {
@@ -10251,6 +10393,8 @@ export class PostEntryChildrenRequest implements IPostEntryChildrenRequest {
     targetId?: number;
     /** The SourceId is needed for some operations that require a source/destination. One example is the Copy operation. */
     sourceId?: number;
+    /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
+    volumeName?: string | undefined;
 
     
     
@@ -10269,6 +10413,7 @@ export class PostEntryChildrenRequest implements IPostEntryChildrenRequest {
             this.entryType = _data["entryType"];
             this.targetId = _data["targetId"];
             this.sourceId = _data["sourceId"];
+            this.volumeName = _data["volumeName"];
         }
     }
 
@@ -10285,6 +10430,7 @@ export class PostEntryChildrenRequest implements IPostEntryChildrenRequest {
         data["entryType"] = this.entryType;
         data["targetId"] = this.targetId;
         data["sourceId"] = this.sourceId;
+        data["volumeName"] = this.volumeName;
         return data;
     }
 }
@@ -10298,6 +10444,8 @@ export interface IPostEntryChildrenRequest {
     targetId?: number;
     /** The SourceId is needed for some operations that require a source/destination. One example is the Copy operation. */
     sourceId?: number;
+    /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
+    volumeName?: string | undefined;
 }
 
 export enum PostEntryChildrenEntryType {
@@ -10310,6 +10458,8 @@ export class CopyAsyncRequest implements ICopyAsyncRequest {
     name?: string;
     /** The source entry Id to copy. */
     sourceId?: number;
+    /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
+    volumeName?: string | undefined;
 
     
     
@@ -10326,6 +10476,7 @@ export class CopyAsyncRequest implements ICopyAsyncRequest {
         if (_data) {
             this.name = _data["name"];
             this.sourceId = _data["sourceId"];
+            this.volumeName = _data["volumeName"];
         }
     }
 
@@ -10340,6 +10491,7 @@ export class CopyAsyncRequest implements ICopyAsyncRequest {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["sourceId"] = this.sourceId;
+        data["volumeName"] = this.volumeName;
         return data;
     }
 }
@@ -10349,6 +10501,8 @@ export interface ICopyAsyncRequest {
     name?: string;
     /** The source entry Id to copy. */
     sourceId?: number;
+    /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
+    volumeName?: string | undefined;
 }
 
 export class ODataValueOfBoolean implements IODataValueOfBoolean {
@@ -10782,6 +10936,8 @@ export class OperationProgress implements IOperationProgress {
     errors?: OperationErrorItem[] | undefined;
     /** The URI which can be used (via api call) to access the result(s) of the associated operation. */
     redirectUri?: string | undefined;
+    /** The ID of the entry affected (e.g. created or modified) by the execution of the associated operation. */
+    entryId?: number;
     /** The timestamp representing when the associated operation's execution is started. */
     startTimestamp?: Date;
     /** The timestamp representing the last time when the associated task's status has changed. */
@@ -10810,6 +10966,7 @@ export class OperationProgress implements IOperationProgress {
                     this.errors!.push(OperationErrorItem.fromJS(item));
             }
             this.redirectUri = _data["redirectUri"];
+            this.entryId = _data["entryId"];
             this.startTimestamp = _data["startTimestamp"] ? new Date(_data["startTimestamp"].toString()) : <any>undefined;
             this.statusTimestamp = _data["statusTimestamp"] ? new Date(_data["statusTimestamp"].toString()) : <any>undefined;
         }
@@ -10834,6 +10991,7 @@ export class OperationProgress implements IOperationProgress {
                 data["errors"].push(item.toJSON());
         }
         data["redirectUri"] = this.redirectUri;
+        data["entryId"] = this.entryId;
         data["startTimestamp"] = this.startTimestamp ? this.startTimestamp.toISOString() : <any>undefined;
         data["statusTimestamp"] = this.statusTimestamp ? this.statusTimestamp.toISOString() : <any>undefined;
         return data;
@@ -10853,6 +11011,8 @@ export interface IOperationProgress {
     errors?: OperationErrorItem[] | undefined;
     /** The URI which can be used (via api call) to access the result(s) of the associated operation. */
     redirectUri?: string | undefined;
+    /** The ID of the entry affected (e.g. created or modified) by the execution of the associated operation. */
+    entryId?: number;
     /** The timestamp representing when the associated operation's execution is started. */
     startTimestamp?: Date;
     /** The timestamp representing the last time when the associated task's status has changed. */

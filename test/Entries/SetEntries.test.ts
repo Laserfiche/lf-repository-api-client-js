@@ -15,7 +15,7 @@ import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Set Entries Integration Tests', () => {
-  var entry = new Entry();
+  var entry: Entry;
 
   afterEach(async () => {
     if (entry) {
