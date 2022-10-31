@@ -53,9 +53,6 @@
             signal,
 {%-    endif -%}
             headers: {
-{%-    for parameter in operation.HeaderParameters -%}
-                "{{ parameter.Name }}": {{ parameter.VariableName }} !== undefined && {{ parameter.VariableName }} !== null ? "" + {{ parameter.VariableName }} : "",
-{%-    endfor -%}
 {%-    if operation.HasContent or operation.ConsumesFormUrlEncoded -%}
                 "Content-Type": "{{ operation.Consumes }}",
 {%-    endif -%}
@@ -64,6 +61,13 @@
 {%-    endif -%}
             }
         };
+
+{%-    for parameter in operation.HeaderParameters -%}
+{%         if parameter.IsRequired == false -%}
+        if ({{ parameter.VariableName }} !== null && {{ parameter.VariableName }} !== undefined)
+{%         endif -%}
+            options_.headers = Object.assign({}, options_.headers, {"{{ parameter.Name }}": {{ parameter.VariableName }} !== undefined && {{ parameter.VariableName }} !== null ? "" + {{ parameter.VariableName }} : null});
+{%-    endfor -%}
 
 {%-    if UseTransformOptionsMethod -%}
         return this.transformOptions(options_).then(transformedOptions_ => {
