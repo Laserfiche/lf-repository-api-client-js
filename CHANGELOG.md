@@ -9,4 +9,4 @@
   - `serverSessionClient.invalidateServerSession`
 - Fixed an issue with optional header parameters being set as empty strings, such as in `exportDocument`
 - **[BREAKING]**: `IEntriesClient`
-  - Rename `moveOrRenameDocument` to `moveOrRenameEntryAsync` to better represent its capability.
+  - Rename `moveOrRenameDocument` to `moveOrRenameEntry` to better represent its capability.
