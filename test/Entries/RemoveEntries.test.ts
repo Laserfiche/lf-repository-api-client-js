@@ -5,7 +5,7 @@ import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Remove Entries Integration Tests', () => {
-  let entry = new Entry();
+  let entry: Entry;
   afterEach(async () => {
     if (entry) {
       let body = new DeleteEntryWithAuditReason();
