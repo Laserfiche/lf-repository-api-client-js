@@ -4695,7 +4695,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ODataValueOfIListOfEntry"
+                  "$ref": "#/components/schemas/ODataValueContextOfIListOfEntry"
                 }
               }
             }
@@ -4708,7 +4708,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ODataValueOfIListOfEntry"
+                  "$ref": "#/components/schemas/ODataValueContextOfIListOfEntry"
                 }
               }
             }
@@ -8058,7 +8058,7 @@
         }
       },
       "FuzzyType": {
-        "type": "integer",
+        "type": "string",
         "description": "",
         "x-enumNames": [
           "None",
@@ -8066,9 +8066,9 @@
           "NumberOfLetters"
         ],
         "enum": [
-          0,
-          1,
-          2
+          "None",
+          "Percentage",
+          "NumberOfLetters"
         ]
       },
       "OperationProgress": {
