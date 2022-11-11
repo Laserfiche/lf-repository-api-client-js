@@ -41,7 +41,7 @@ describe('Set Entries Integration Tests', () => {
     if (!links) {
       throw new Error('links is undefined');
     }
-    expect(links).not.toBeNull;
+    expect(links).not.toBeNull();
     expect(request.length).toBe(links.length);
     expect(sourceEntry.id).toBe(links[0].sourceId);
     expect(targetEntry.id).toBe(links[0].targetId);

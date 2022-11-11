@@ -12,7 +12,7 @@ describe('Dynamic Fields Integration Tests', () => {
     if (!templateDefinitions) {
       throw new Error('templateDefinitions is undefined');
     }
-    expect(templateDefinitions).not.toBeNull;
+    expect(templateDefinitions).not.toBeNull();
     expect(templateDefinitions?.length).toBeGreaterThan(0);
     let request = new GetDynamicFieldLogicValueRequest();
     request.templateId = templateDefinitions[0].id;
@@ -21,6 +21,6 @@ describe('Dynamic Fields Integration Tests', () => {
       entryId,
       request,
     });
-    expect(dynamicFieldValueResponse).not.toBeNull;
+    expect(dynamicFieldValueResponse).not.toBeNull();
   });
 });

@@ -15,7 +15,7 @@ describe('Template Definitions Integration Tests', () => {
       throw new Error('templateDefinitionResponse.value');
     }
     let firstTemplateDefinition = templateDefinitionResponse.value[0];
-    expect(firstTemplateDefinition).not.toBeNull;
+    expect(firstTemplateDefinition).not.toBeNull();
     let result: ODataValueContextOfIListOfWTemplateInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({
         repoId,
@@ -25,7 +25,7 @@ describe('Template Definitions Integration Tests', () => {
       throw new Error('result.value is undefined');
     }
     let templateInfo: WTemplateInfo = result.value[0];
-    expect(result).not.toBeNull;
+    expect(result).not.toBeNull();
     expect(result.value.length).toBe(1);
     expect(templateInfo.id).toBe(firstTemplateDefinition.id);
   });
@@ -36,14 +36,14 @@ describe('Template Definitions Integration Tests', () => {
       throw new Error('templateDefinitionResponse.value');
     }
     let firstTemplateDefinition = templateDefinitionResponse.value[0];
-    expect(firstTemplateDefinition).not.toBeNull;
+    expect(firstTemplateDefinition).not.toBeNull();
     let result: ODataValueContextOfIListOfTemplateFieldInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitions({
         repoId,
         templateId: firstTemplateDefinition.id ?? -1,
       });
     let templateDefinitions = result.value;
-    expect(templateDefinitions).not.toBeNull;
+    expect(templateDefinitions).not.toBeNull();
     expect(templateDefinitions?.length).toBe(firstTemplateDefinition.fieldCount);
   });
 
@@ -97,14 +97,14 @@ describe('Template Definitions Integration Tests', () => {
       throw new Error('templateDefinitionResponse.value');
     }
     let firstTemplateDefinition = templateDefinitionResponse.value[0];
-    expect(firstTemplateDefinition).not.toBeNull;
+    expect(firstTemplateDefinition).not.toBeNull();
     let result: ODataValueContextOfIListOfTemplateFieldInfo =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitionsByTemplateName({
         repoId,
         templateName: firstTemplateDefinition.name ?? '',
       });
     let templateDefinitions = result.value;
-    expect(templateDefinitions).not.toBeNull;
+    expect(templateDefinitions).not.toBeNull();
     expect(templateDefinitions?.length).toBe(firstTemplateDefinition.fieldCount);
   });
 
@@ -137,12 +137,12 @@ describe('Template Definitions Integration Tests', () => {
       throw new Error('templateDefinitionResponse.value');
     }
     let firstTemplateDefinition = templateDefinitionResponse.value[0];
-    expect(firstTemplateDefinition).not.toBeNull;
+    expect(firstTemplateDefinition).not.toBeNull();
     let result = await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitionById({
       repoId,
       templateId: firstTemplateDefinition.id ?? -1,
     });
-    expect(result).not.toBeNull;
+    expect(result).not.toBeNull();
     expect(result.id).toBe(firstTemplateDefinition.id);
   });
 

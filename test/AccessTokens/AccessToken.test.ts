@@ -11,7 +11,7 @@ describe('Access Token Integration Tests', () => {
     });
     let expireTime: Date | undefined = refreshResponse.value;
     let expireTimeInStr = expireTime?.toString() ?? '';
-    expect(expireTime).not.toBeNull;
+    expect(expireTime).not.toBeNull();
     expect(currentTime < expireTimeInStr).toBe(true);
   });
   test('Invalidate Server Session', async () => {

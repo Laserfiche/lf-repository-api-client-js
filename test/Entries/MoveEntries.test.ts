@@ -32,7 +32,7 @@ describe('Move Entries Integration Tests', () => {
       request,
       autoRename: true,
     });
-    expect(movedEntry).not.toBeNull;
+    expect(movedEntry).not.toBeNull();
     expect(movedEntry.id).toBe(childFolder.id);
     expect(movedEntry.parentId).toBe(parentFolder.id);
     expect(movedEntry.name).toBe(request.name);

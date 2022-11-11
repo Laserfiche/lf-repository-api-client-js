@@ -7,7 +7,7 @@ describe('Tag Definitions Integration Tests', () => {
   test('Get Tag Definitions', async () => {
     let TagDefinitionsResponse: ODataValueContextOfIListOfWTagInfo =
       await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId });
-    expect(TagDefinitionsResponse.value).not.toBeNull;
+    expect(TagDefinitionsResponse.value).not.toBeNull();
   });
 
   test('Get Tag Definitions for each paging', async () => {
@@ -56,12 +56,12 @@ describe('Tag Definitions Integration Tests', () => {
       throw new Error('TagDefinitionsResponse is undefined');
     }
     let firstTagDefinitionsResponse = TagDefinitionsResponse[0];
-    expect(allTagDefinitionsResponse.value).not.toBeNull;
+    expect(allTagDefinitionsResponse.value).not.toBeNull();
     let tagDefinition: WTagInfo = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitionById({
       repoId,
       tagId: firstTagDefinitionsResponse.id ?? -1,
     });
-    expect(tagDefinition).not.toBeNull;
+    expect(tagDefinition).not.toBeNull();
     expect(tagDefinition.id).toBe(firstTagDefinitionsResponse.id);
   });
 });
