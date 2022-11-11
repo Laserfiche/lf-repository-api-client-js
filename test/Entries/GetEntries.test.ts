@@ -43,10 +43,10 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.entry.id).toBe(1);
     expect(result?.entry.fullPath).toBe(rootPath);
     expect(result?.entry.entryType).toBe('Folder');
-    expect(result?.ancestorEntry).toBeNull();
+    expect(result?.ancestorEntry).toBeUndefined();
   });
 
-  test('Get Entry By Full Path Return Ancestor Root Folder', async () => {
+  test.only('Get Entry By Full Path Return Ancestor Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
       repoId,
       fullPath: nonExistingPath,
@@ -55,7 +55,7 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.ancestorEntry.id).toBe(1);
     expect(result?.ancestorEntry.fullPath).toBe(rootPath);
     expect(result?.ancestorEntry.entryType).toBe('Folder');
-    expect(result?.entry).toBeNull();
+    expect(result?.entry).toBeUndefined();
   });
 
   // TODO use importDocument instead of hardcode entryId 3 https://github.com/Laserfiche/lf-repository-api-client-js/issues/53
