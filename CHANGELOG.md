@@ -1,3 +1,8 @@
+## Prerelease
+
+### Fixes
+- Fix `IEntriesClient.getDocumentContentType` return type from `Promise<void>` to `Promise<HttpResponseHead<void>>` to allow retrieving response headers.
+
 ## 1.0.14
 
 ### Fixes

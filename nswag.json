@@ -23,7 +23,10 @@
       "generateOptionalParameters": true,
       "markOptionalProperties": true,
       "operationGenerationMode": "MultipleClientsFromFirstTagAndOperationId",
-      "templateDirectory": "nswag"
+      "templateDirectory": "nswag",
+      "wrapResponses": true,
+      "wrapResponseMethods": ["EntriesClient.getDocumentContentType"],
+      "responseClass": "HttpResponseHead"
     }
   }
 }
