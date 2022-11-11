@@ -17,7 +17,7 @@ describe('Task Integration Tests', () => {
       request: body,
     });
     let token: string | undefined = result.token;
-    expect(token).not.toBeNull;
+    expect(token).not.toBeNull();
     expect(token).not.toBe('');
     try {
       await new Promise((r) => setTimeout(r, 5000));
@@ -39,14 +39,14 @@ describe('Task Integration Tests', () => {
       request: body,
     });
     let token: string | undefined = result.token;
-    expect(token).not.toBeNull;
+    expect(token).not.toBeNull();
     expect(token).not.toBe('');
     await new Promise((r) => setTimeout(r, 5000));
     let operationProgress = await _RepositoryApiClient.tasksClient.getOperationStatusAndProgress({
       repoId,
       operationToken: token ?? '',
     });
-    expect(operationProgress).not.toBeNull;
+    expect(operationProgress).not.toBeNull();
     expect(operationProgress.status).toBe(OperationStatus.Completed);
     expect(operationProgress.percentComplete).toBe(100);
   });

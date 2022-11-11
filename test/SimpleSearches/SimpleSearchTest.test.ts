@@ -12,7 +12,7 @@ describe('Simple Search Integration Tests', () => {
       repoId,
       request,
     });
-    expect(simpleSearchResponse.value).not.toBeNull;
+    expect(simpleSearchResponse.value).not.toBeNull();
   });
-  
+
 });

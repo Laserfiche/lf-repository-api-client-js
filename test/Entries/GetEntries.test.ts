@@ -9,7 +9,7 @@ describe('Get Entries Integration Tests', () => {
 
   test('Get Entry Fields', async () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId, entryId });
-    expect(entryFieldResponse?.value).not.toBeNull;
+    expect(entryFieldResponse?.value).not.toBeNull();
   });
   test('Get Entry Listing', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryListing({
@@ -21,17 +21,17 @@ describe('Get Entries Integration Tests', () => {
 
   test('Get Entry Links', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getLinkValuesFromEntry({ repoId, entryId });
-    expect(result?.value).not.toBeNull;
+    expect(result?.value).not.toBeNull();
   });
 
   test('Get Entry Tags', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getTagsAssignedToEntry({ repoId, entryId });
-    expect(result?.value).not.toBeNull;
+    expect(result?.value).not.toBeNull();
   });
 
   test('Get Entry Return Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntry({ repoId, entryId });
-    expect(result?.value).not.toBeNull;
+    expect(result?.value).not.toBeNull();
   });
 
   test('Get Entry By Full Path Return Root Folder', async () => {
@@ -43,10 +43,10 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.entry.id).toBe(1);
     expect(result?.entry.fullPath).toBe(rootPath);
     expect(result?.entry.entryType).toBe('Folder');
-    expect(result?.ancestorEntry).toBeNull;
+    expect(result?.ancestorEntry).toBeUndefined();
   });
 
-  test('Get Entry By Full Path Return Ancestor Root Folder', async () => {
+  test.only('Get Entry By Full Path Return Ancestor Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
       repoId,
       fullPath: nonExistingPath,
@@ -55,7 +55,7 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.ancestorEntry.id).toBe(1);
     expect(result?.ancestorEntry.fullPath).toBe(rootPath);
     expect(result?.ancestorEntry.entryType).toBe('Folder');
-    expect(result?.entry).toBeNull;
+    expect(result?.entry).toBeUndefined();
   });
 
   // TODO use importDocument instead of hardcode entryId 3 https://github.com/Laserfiche/lf-repository-api-client-js/issues/53

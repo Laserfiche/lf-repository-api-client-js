@@ -14,9 +14,9 @@ describe('Link Definitions Integration Tests', () => {
       throw new Error('linkDefinitionsResponse.value');
     }
     let firstLinkDefinition = linkDefinitionsResponse.value[0];
-    expect(firstLinkDefinition).not.toBeNull;
+    expect(firstLinkDefinition).not.toBeNull();
   });
-  
+
 
   test('Get Link Definitions for each paging', async () => {
     let maxPageSize = 10;
@@ -38,7 +38,7 @@ describe('Link Definitions Integration Tests', () => {
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
-  
+
 
   test('Get Link Definitions Simple Paging', async () => {
     let maxPageSize = 1;
@@ -62,5 +62,5 @@ describe('Link Definitions Integration Tests', () => {
     expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
 
-  
+
 });

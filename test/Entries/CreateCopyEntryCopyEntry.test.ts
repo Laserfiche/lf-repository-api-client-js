@@ -43,7 +43,7 @@ describe('Create Copy Entry Test', () => {
       request,
       autoRename: true,
     });
-    expect(targetEntry).not.toBeNull;
+    expect(targetEntry).not.toBeNull();
     createdEntries.push(targetEntry);
     expect(targetEntry.parentId).toBe(testFolder.id);
     expect(targetEntry.entryType).toBe(EntryType.Folder);
@@ -75,7 +75,7 @@ describe('Create Copy Entry Test', () => {
       entryId: testFolder.id ?? -1,
       request: deleteEntryRequest,
     });
-    expect(deletionResult.token).not.toBeNull;
+    expect(deletionResult.token).not.toBeNull();
     expect(deletionResult.token).not.toBe('');
   });
 });

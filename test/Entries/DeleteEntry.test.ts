@@ -14,7 +14,7 @@ describe('Delete Entries Integration Tests', () => {
       request: body,
     });
     let token: string = result.token ?? '';
-    expect(token).not.toBeNull;
+    expect(token).not.toBeNull();
     expect(token).not.toBe('');
   });
 });
