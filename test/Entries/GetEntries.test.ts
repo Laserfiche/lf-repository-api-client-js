@@ -57,4 +57,16 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.ancestorEntry.entryType).toBe('Folder');
     expect(result?.entry).toBeNull;
   });
+
+  // TODO use importDocument instead of hardcode entryId 3 https://github.com/Laserfiche/lf-repository-api-client-js/issues/53
+  test('Get Document Content Type Return Content Headers', async () => {
+    let result: any = await _RepositoryApiClient.entriesClient.getDocumentContentType({
+      repoId,
+      entryId: 3,
+    });
+    expect(result?.status).toBe(200);
+    expect(result?.headers['content-type']).toBeDefined();
+    expect(result?.headers['content-length']).toBeDefined();
+    expect(result?.result).toBeNull();
+  });
 });

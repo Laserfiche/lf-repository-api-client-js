@@ -210,7 +210,7 @@ export interface IEntriesClient {
      * @param entryId The requested document ID.
      * @return Get edoc info successfully.
      */
-    getDocumentContentType(args: { repoId: string, entryId: number }): Promise<void>;
+    getDocumentContentType(args: { repoId: string, entryId: number }): Promise<HttpResponseHead<void>>;
 
     /**
      * Returns an entry's edoc resource in a stream format. Provide an entry ID, and get the edoc resource as part of the response content. Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc.
@@ -2124,7 +2124,7 @@ export class EntriesClient implements IEntriesClient {
      * @param entryId The requested document ID.
      * @return Get edoc info successfully.
      */
-    getDocumentContentType(args: { repoId: string, entryId: number }): Promise<void> {
+    getDocumentContentType(args: { repoId: string, entryId: number }): Promise<HttpResponseHead<void>> {
         let { repoId, entryId } = args;
         let url_ = this.baseUrl + "/v1/Repositories/{repoId}/Entries/{entryId}/Laserfiche.Repository.Document/edoc";
         if (repoId === undefined || repoId === null)
@@ -2146,12 +2146,12 @@ export class EntriesClient implements IEntriesClient {
         });
     }
 
-    protected processGetDocumentContentType(response: Response): Promise<void> {
+    protected processGetDocumentContentType(response: Response): Promise<HttpResponseHead<void>> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
+            return new HttpResponseHead(status, _headers, null as any);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -2200,7 +2200,7 @@ export class EntriesClient implements IEntriesClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(null as any);
+        return Promise.resolve<HttpResponseHead<void>>(new HttpResponseHead(status, _headers, null as any));
     }
 
     /**
@@ -11807,6 +11807,19 @@ export class ODataValueOfDateTime implements IODataValueOfDateTime {
 
 export interface IODataValueOfDateTime {
     value?: Date;
+}
+
+export class HttpResponseHead<TResult> {
+    status: number;
+    headers: { [key: string]: any; };
+    result: TResult;
+
+    constructor(status: number, headers: { [key: string]: any; }, result: TResult)
+    {
+        this.status = status;
+        this.headers = headers;
+        this.result = result;
+    }
 }
 
 export interface FileParameter {
