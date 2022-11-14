@@ -4632,7 +4632,7 @@ export interface ISimpleSearchesClient {
                 culture will not be used for formatting.
      * @return Simple search run successfully.
      */
-    createSimpleSearchOperation(args: { repoId: string, select?: string | undefined, orderby?: string | undefined, count?: boolean | undefined, fields?: string[] | null | undefined, formatFields?: boolean | undefined, request?: SimpleSearchRequest | undefined, culture?: string | null | undefined }): Promise<ODataValueOfIListOfEntry>;
+    createSimpleSearchOperation(args: { repoId: string, select?: string | undefined, orderby?: string | undefined, count?: boolean | undefined, fields?: string[] | null | undefined, formatFields?: boolean | undefined, request?: SimpleSearchRequest | undefined, culture?: string | null | undefined }): Promise<ODataValueContextOfIListOfEntry>;
 }
 
 export class SimpleSearchesClient implements ISimpleSearchesClient {
@@ -4659,7 +4659,7 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
                 culture will not be used for formatting.
      * @return Simple search run successfully.
      */
-    createSimpleSearchOperation(args: { repoId: string, select?: string | undefined, orderby?: string | undefined, count?: boolean | undefined, fields?: string[] | null | undefined, formatFields?: boolean | undefined, request?: SimpleSearchRequest | undefined, culture?: string | null | undefined }): Promise<ODataValueOfIListOfEntry> {
+    createSimpleSearchOperation(args: { repoId: string, select?: string | undefined, orderby?: string | undefined, count?: boolean | undefined, fields?: string[] | null | undefined, formatFields?: boolean | undefined, request?: SimpleSearchRequest | undefined, culture?: string | null | undefined }): Promise<ODataValueContextOfIListOfEntry> {
         let { repoId, select, orderby, count, fields, formatFields, request, culture } = args;
         let url_ = this.baseUrl + "/v1/Repositories/{repoId}/SimpleSearches?";
         if (repoId === undefined || repoId === null)
@@ -4703,14 +4703,14 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
         });
     }
 
-    protected processCreateSimpleSearchOperation(response: Response): Promise<ODataValueOfIListOfEntry> {
+    protected processCreateSimpleSearchOperation(response: Response): Promise<ODataValueContextOfIListOfEntry> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ODataValueOfIListOfEntry.fromJS(resultData200);
+            result200 = ODataValueContextOfIListOfEntry.fromJS(resultData200);
             return result200;
             });
         } else if (status === 204) {
@@ -4721,7 +4721,7 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
             return response.text().then((_responseText) => {
             let result206: any = null;
             let resultData206 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result206 = ODataValueOfIListOfEntry.fromJS(resultData206);
+            result206 = ODataValueContextOfIListOfEntry.fromJS(resultData206);
             return result206;
             });
         } else if (status === 400) {
@@ -4764,7 +4764,7 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<ODataValueOfIListOfEntry>(null as any);
+        return Promise.resolve<ODataValueContextOfIListOfEntry>(null as any);
     }
 }
 
@@ -10918,9 +10918,9 @@ export interface IAdvancedSearchRequest {
 }
 
 export enum FuzzyType {
-    None = 0,
-    Percentage = 1,
-    NumberOfLetters = 2,
+    None = "None",
+    Percentage = "Percentage",
+    NumberOfLetters = "NumberOfLetters",
 }
 
 export class OperationProgress implements IOperationProgress {

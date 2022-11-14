@@ -2,6 +2,8 @@
 
 ### Fixes
 - Fix `IEntriesClient.getDocumentContentType` return type from `Promise<void>` to `Promise<HttpResponseHead<void>>` to allow retrieving response headers.
+- Fix `ISimpleSearchesClient.createSimpleSearchOperation` return type from `Promise<ODataValueOfIListOfEntry>` to `Promise<ODataValueContextOfIListOfEntry>` to more accurately represent the response. The `ODataValueContextOfIListOfEntry` type derives from the `ODataValueOfIListOfEntry` type.
+- **[BREAKING]**: Fix `FuzzyType` enum values to have string values. Usage of the `FuzzyType` when creating a search using `ISearchesClient.createSearchOperation` does not need to change.
 
 ## 1.0.14
 
