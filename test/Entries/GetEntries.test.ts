@@ -46,7 +46,7 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.ancestorEntry).toBeUndefined();
   });
 
-  test.only('Get Entry By Full Path Return Ancestor Root Folder', async () => {
+  test('Get Entry By Full Path Return Ancestor Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
       repoId,
       fullPath: nonExistingPath,
