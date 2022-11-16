@@ -6263,6 +6263,12 @@
             "description": "A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced.",
             "nullable": true
           },
+          "extensions": {
+            "type": "object",
+            "description": "The extension members.",
+            "nullable": true,
+            "additionalProperties": {}
+          },
           "operationId": {
             "type": "string",
             "description": "The operation id.",

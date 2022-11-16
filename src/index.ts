@@ -6765,6 +6765,8 @@ see[RFC7231], Section 3.4). */
     detail?: string | undefined;
     /** A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced. */
     instance?: string | undefined;
+    /** The extension members. */
+    extensions?: { [key: string]: any; } | undefined;
     /** The operation id. */
     operationId?: string | undefined;
     /** The error source. */
@@ -6792,6 +6794,13 @@ see[RFC7231], Section 3.4). */
             this.status = _data["status"];
             this.detail = _data["detail"];
             this.instance = _data["instance"];
+            if (_data["extensions"]) {
+                this.extensions = {} as any;
+                for (let key in _data["extensions"]) {
+                    if (_data["extensions"].hasOwnProperty(key))
+                        (<any>this.extensions)![key] = _data["extensions"][key];
+                }
+            }
             this.operationId = _data["operationId"];
             this.errorSource = _data["errorSource"];
             this.errorCode = _data["errorCode"];
@@ -6813,6 +6822,13 @@ see[RFC7231], Section 3.4). */
         data["status"] = this.status;
         data["detail"] = this.detail;
         data["instance"] = this.instance;
+        if (this.extensions) {
+            data["extensions"] = {};
+            for (let key in this.extensions) {
+                if (this.extensions.hasOwnProperty(key))
+                    (<any>data["extensions"])[key] = this.extensions[key];
+            }
+        }
         data["operationId"] = this.operationId;
         data["errorSource"] = this.errorSource;
         data["errorCode"] = this.errorCode;
@@ -6838,6 +6854,8 @@ see[RFC7231], Section 3.4). */
     detail?: string | undefined;
     /** A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced. */
     instance?: string | undefined;
+    /** The extension members. */
+    extensions?: { [key: string]: any; } | undefined;
     /** The operation id. */
     operationId?: string | undefined;
     /** The error source. */
