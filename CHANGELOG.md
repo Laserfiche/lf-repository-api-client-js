@@ -2,6 +2,7 @@
 
 ### Fixes
 - Fix `IEntriesClient.getDocumentContentType` return type from `Promise<void>` to `Promise<HttpResponseHead<void>>` to allow retrieving response headers.
+- Fix `IEntriesClient.getDocumentContentType` throwing empty `ProblemDetails` when receiving an error status code.
 - Fix `ISimpleSearchesClient.createSimpleSearchOperation` return type from `Promise<ODataValueOfIListOfEntry>` to `Promise<ODataValueContextOfIListOfEntry>` to more accurately represent the response. The `ODataValueContextOfIListOfEntry` type derives from the `ODataValueOfIListOfEntry` type.
 - **[BREAKING]**: Fix `FuzzyType` enum values to have string values. Usage of the `FuzzyType` when creating a search using `ISearchesClient.createSearchOperation` does not need to change.
 - **[BREAKING]**: Fix `ProblemDetails` not deserializing extension properties. Previously, the `ProblemDetails.extensions` dictionary property was always `undefined`. This property has been replaced with documented properties.
