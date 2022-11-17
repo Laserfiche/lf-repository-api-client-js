@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import { CreateEntry } from '../BaseTest.js';
 import { DeleteEntryWithAuditReason } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -9,7 +9,7 @@ describe('Delete Entries Integration Tests', () => {
     let deleteEntry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS DeleteFolder');
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let result = await _RepositoryApiClient.entriesClient.deleteEntryInfo({
-      repoId,
+      repoId: repositoryId,
       entryId: deleteEntry.id ?? -1,
       request: body,
     });

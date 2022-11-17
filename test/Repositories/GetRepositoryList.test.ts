@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import { RepositoryInfo } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
@@ -11,7 +11,7 @@ describe('Repo List Integration Tests', () => {
       expect(RepoListResponse[i].repoId).not.toBeNull();
       expect(RepoListResponse[i].webclientUrl).not.toBeNull();
       expect(RepoListResponse[i].webclientUrl).toContain(RepoListResponse[i].repoId);
-      if (RepoListResponse[i].repoId == repoId) {
+      if (RepoListResponse[i].repoId == repositoryId) {
         foundRepo = true;
       }
     }

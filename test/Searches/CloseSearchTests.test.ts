@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
@@ -8,13 +8,13 @@ describe('Search Integration Tests', () => {
     //create search
     let request = new AdvancedSearchRequest();
     request.searchCommand = "({LF:Basic ~= \"*\", option=\"DFANLT\"})";
-    var response = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId, request });
+    var response = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId: repositoryId, request });
     let searchToken = response.token;
     expect(searchToken).not.toBeNull();
 
     //close the search
     var closeSearchResponse = await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({
-      repoId,
+      repoId: repositoryId,
       searchToken: searchToken ?? '',
     });
     expect(closeSearchResponse.value).toBe(true);
@@ -25,7 +25,7 @@ describe('Search Integration Tests', () => {
     let searchRequest = new AdvancedSearchRequest();
     searchRequest.searchCommand = "({LF:Basic ~= \"*\", option=\"DFANLT\"})";
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
-      repoId,
+      repoId: repositoryId,
       request: searchRequest,
     });
     let searchToken: string = searchResponse.token ?? '';
@@ -34,7 +34,7 @@ describe('Search Integration Tests', () => {
     await new Promise((r) => setTimeout(r, 5000));
     let prefer = `maxpagesize=${maxPageSize}`;
     let response: ODataValueContextOfIListOfEntry = await _RepositoryApiClient.searchesClient.getSearchResults({
-      repoId,
+      repoId: repositoryId,
       searchToken,
       prefer,
     });

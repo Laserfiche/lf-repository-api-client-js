@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import { DeleteEntryWithAuditReason, Entry, PatchEntryRequest } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -11,7 +11,7 @@ describe('Move Entries Integration Tests', () => {
       if (createdEntries[i]) {
         let body = new DeleteEntryWithAuditReason();
         let num = Number(createdEntries[i].id);
-        await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
+        await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId: repositoryId, entryId: num, request: body });
       }
     }
   });
@@ -27,7 +27,7 @@ describe('Move Entries Integration Tests', () => {
     request.name = 'RepositoryApiClientIntegrationTest JS MovedFolder';
 
     let movedEntry: Entry = await _RepositoryApiClient.entriesClient.moveOrRenameEntry({
-      repoId,
+      repoId: repositoryId,
       entryId: childFolder.id ?? -1,
       request,
       autoRename: true,

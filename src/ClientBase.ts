@@ -1,6 +1,7 @@
 import * as generated from './index.js';
 import { UrlUtils } from '@laserfiche/lf-js-utils';
 import {
+  UsernamePasswordHandler,
   OAuthClientCredentialsHandler,
   HttpRequestHandler,
   DomainUtils,
@@ -87,6 +88,16 @@ export class RepositoryApiClient implements IRepositoryApiClient {
   ): RepositoryApiClient {
     let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
     return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
+  }
+
+  public static createFromUsernamePassword(
+    repoId: string,
+    username: string,
+    password: string,
+    baseUrl: string
+  ): RepositoryApiClient {
+    let handler = new UsernamePasswordHandler(repoId, username, password, baseUrl, undefined);
+    return new RepositoryApiClient(handler, baseUrl);
   }
 }
 /** @internal */
@@ -1604,7 +1615,7 @@ export interface ILinkDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-  
+
   /**
    * Returns all link definitions in the repository using a next link
    * @param nextLink a url that allows retrieving the next subset of the requested collection
@@ -1617,11 +1628,8 @@ export interface ILinkDefinitionsClient {
   }): Promise<generated.ODataValueContextOfIListOfEntryLinkTypeInfo>;
 }
 
-export class LinkDefinitionsClient 
-  extends generated.LinkDefinitionsClient
-  implements ILinkDefinitionsClient 
-{
- /**
+export class LinkDefinitionsClient extends generated.LinkDefinitionsClient implements ILinkDefinitionsClient {
+  /**
    * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param repoId The requested repository ID.
@@ -1666,7 +1674,7 @@ export class LinkDefinitionsClient
       nextLink = response.odataNextLink;
     }
   }
-  
+
   /**
    * Returns all link definitions in the repository using a next link
    * @param nextLink a url that allows retrieving the next subset of the requested collection
@@ -1686,5 +1694,4 @@ export class LinkDefinitionsClient
       maxPageSize
     );
   }
-
 }

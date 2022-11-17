@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import { ODataValueContextOfListOfAttribute, IRepositoryApiClient } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
@@ -6,7 +6,7 @@ import 'isomorphic-fetch';
 describe('Attribute Key Integration Tests', () => {
   test('Get the attribute keys', async () => {
     let result: ODataValueContextOfListOfAttribute =
-      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId, everyone: true });
+      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId: repositoryId, everyone: true });
     expect(result).not.toBeNull();
   });
 
@@ -14,7 +14,7 @@ describe('Attribute Key Integration Tests', () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
     let result: ODataValueContextOfListOfAttribute =
-      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId, everyone: true, prefer });
+      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId: repositoryId, everyone: true, prefer });
     if (!result.value) {
       throw new Error('result.value is undefined');
     }
@@ -45,7 +45,7 @@ describe('Attribute Key Integration Tests', () => {
     };
     await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairsForEach({
       callback,
-      repoId,
+      repoId: repositoryId,
       everyone: true,
       maxPageSize,
     });
@@ -55,7 +55,7 @@ describe('Attribute Key Integration Tests', () => {
 
   test('Get the attribute value by Key', async () => {
     let result: ODataValueContextOfListOfAttribute =
-      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId });
+      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId: repositoryId });
     let attributeKeys = result.value;
     if (!attributeKeys) {
       throw new Error('attributeKeys is undefined');
@@ -63,7 +63,7 @@ describe('Attribute Key Integration Tests', () => {
     expect(attributeKeys).not.toBeNull();
     expect(attributeKeys.length).toBeGreaterThan(0);
     let attributeValueResponse = await _RepositoryApiClient.attributesClient.getTrusteeAttributeValueByKey({
-      repoId,
+      repoId: repositoryId,
       attributeKey: attributeKeys[0].key ?? '',
     });
     expect(attributeValueResponse).not.toBeNull();

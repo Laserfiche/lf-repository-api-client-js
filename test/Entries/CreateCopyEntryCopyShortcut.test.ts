@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import {
   DeleteEntryWithAuditReason,
   Entry,
@@ -17,7 +17,7 @@ describe('Create Copy Entry Test', () => {
       if (createdEntries[i]) {
         let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
         let num: number = Number(createdEntries[i].id);
-        await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
+        await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId: repositoryId, entryId: num, request: body });
         await new Promise((r) => setTimeout(r, 5000));
       }
     }
@@ -32,7 +32,7 @@ describe('Create Copy Entry Test', () => {
     request.entryType = PostEntryChildrenEntryType.Folder;
     request.name = newEntryName;
     let response = await _RepositoryApiClient.entriesClient.createOrCopyEntry({
-      repoId,
+      repoId: repositoryId,
       entryId: parentEntryId,
       request,
       autoRename: true,
@@ -50,7 +50,7 @@ describe('Create Copy Entry Test', () => {
     request.name = newEntryName;
     request.targetId = targetEntry.id;
     response = await _RepositoryApiClient.entriesClient.createOrCopyEntry({
-      repoId,
+      repoId: repositoryId,
       entryId: parentEntryId,
       request,
       autoRename: true,
@@ -66,7 +66,7 @@ describe('Create Copy Entry Test', () => {
     request.name = 'RepositoryApiClientIntegrationTest JS CopiedEntry';
     request.sourceId = shortcut.id;
     let newEntry: Entry = await _RepositoryApiClient.entriesClient.createOrCopyEntry({
-      repoId,
+      repoId: repositoryId,
       entryId: parentEntryId,
       request,
       autoRename: true,
