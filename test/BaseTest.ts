@@ -1,5 +1,14 @@
 import { Entry, PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType } from '../src';
-import { OAuthAccessKey, repositoryId, testServicePrincipalKey, testHeader, username, password, baseUrl, authorizationType } from './TestHelper.js';
+import {
+  OAuthAccessKey,
+  repositoryId,
+  testServicePrincipalKey,
+  testHeader,
+  username,
+  password,
+  baseUrl,
+  authorizationType,
+} from './TestHelper.js';
 import { IRepositoryApiClient, RepositoryApiClient } from '../src/index.js';
 import { authorizationType as authType } from './AuthorizationType';
 
@@ -12,7 +21,12 @@ export async function CreateEntry(
   var request = new PostEntryChildrenRequest();
   request.entryType = PostEntryChildrenEntryType.Folder;
   request.name = entryName;
-  var newEntry = await client.entriesClient.createOrCopyEntry({ repoId: repositoryId, entryId: parentEntryId, request, autoRename });
+  var newEntry = await client.entriesClient.createOrCopyEntry({
+    repoId: repositoryId,
+    entryId: parentEntryId,
+    request,
+    autoRename,
+  });
   expect(newEntry).not.toBeNull();
   expect(newEntry.parentId).toBe(parentEntryId);
   expect(newEntry.entryType).toBe(EntryType.Folder);
@@ -28,12 +42,15 @@ export async function allFalse(arr: WFieldInfo[]): Promise<boolean> {
   return true;
 }
 let _RepositoryApiClient: IRepositoryApiClient;
-export function createClient():IRepositoryApiClient{
-  if (!_RepositoryApiClient){
-    if(authorizationType == authType.CloudAccessKey){
+export function createClient(): IRepositoryApiClient {
+  if (!_RepositoryApiClient) {
+    if (authorizationType == authType.CloudAccessKey) {
+      if (!testServicePrincipalKey || !OAuthAccessKey) 
+        throw new Error(`testServicePrincipalKey or OAuthAccessKey is missing`);
       _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
-    }
-    else if (authorizationType == authType.APIServerUsernamePassword){
+    } else if (authorizationType == authType.APIServerUsernamePassword) {
+      if (!repositoryId || !username || !password || !baseUrl) 
+        throw new Error(`RepositoryId, Username, Password, or BaseURL is missing`);
       _RepositoryApiClient = RepositoryApiClient.createFromUsernamePassword(repositoryId, username, password, baseUrl);
     }
     let defaultRequestHeaders: Record<string, string> = { 'X-LF-AppID': 'RepositoryApiClientIntegrationTest JS' };
