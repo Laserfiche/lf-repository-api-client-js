@@ -5,7 +5,8 @@
 - Fix `IEntriesClient.getDocumentContentType` throwing empty `ProblemDetails` when receiving an error status code.
 - Fix `ISimpleSearchesClient.createSimpleSearchOperation` return type from `Promise<ODataValueOfIListOfEntry>` to `Promise<ODataValueContextOfIListOfEntry>` to more accurately represent the response. The `ODataValueContextOfIListOfEntry` type derives from the `ODataValueOfIListOfEntry` type.
 - **[BREAKING]**: Fix `FuzzyType` enum values to have string values. Usage of the `FuzzyType` when creating a search using `ISearchesClient.createSearchOperation` does not need to change.
-- Fix `ProblemDetails` not deserializing extension properties.
+- Add more properties to the `ProblemDetails` type to more accurately represent the response.
+- **[BREAKING]**: Remove `ProblemDetails.extensions`. This property was always undefined.
 
 ## 1.0.14
 

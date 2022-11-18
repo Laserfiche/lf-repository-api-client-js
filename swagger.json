@@ -6236,7 +6236,9 @@
       "ProblemDetails": {
         "type": "object",
         "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807.",
-        "additionalProperties": false,
+        "additionalProperties": {
+          "nullable": true
+        },
         "properties": {
           "type": {
             "type": "string",
@@ -6262,12 +6264,6 @@
             "type": "string",
             "description": "A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced.",
             "nullable": true
-          },
-          "extensions": {
-            "type": "object",
-            "description": "The extension members.",
-            "nullable": true,
-            "additionalProperties": {}
           },
           "operationId": {
             "type": "string",
