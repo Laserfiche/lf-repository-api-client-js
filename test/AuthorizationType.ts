@@ -1,4 +1,5 @@
-export enum authorizationType{
+export enum authorizationTypeEnum{
     CloudAccessKey = "CLOUD_ACCESS_KEY",
-    APIServerUsernamePassword = "API_SERVER_USERNAME_PASSWORD"
+    APIServerUsernamePassword = "API_SERVER_USERNAME_PASSWORD",
+    None = ''
 }

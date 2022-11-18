@@ -23,6 +23,16 @@ export interface IRepositoryApiClient {
   linkDefinitionsClient: ILinkDefinitionsClient;
   defaultRequestHeaders: Record<string, string>;
 }
+/** @internal */
+/**
+ * Removes all the trailing occurrences of a character from a string.
+ * @param value 
+ * @param endValue string to remove
+ * @return trimed string
+ */
+export function trimEnd(value:string, endValue:string):string{
+  return value.endsWith(endValue) ? value.substring(0, value.length - endValue.length) : value;
+}
 // @ts-ignore
 export class RepositoryApiClient implements IRepositoryApiClient {
   private baseUrl: string;
@@ -77,7 +87,7 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     baseUrlDebug?: string
   ): RepositoryApiClient {
     if (!httpRequestHandler) throw new Error('Argument cannot be null: httpRequestHandler');
-    let repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
+    const repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
     return repoClient;
   }
 
@@ -86,18 +96,19 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     accessKey: AccessKey,
     baseUrlDebug?: string
   ): RepositoryApiClient {
-    let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
+    const handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
     return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
   }
 
   public static createFromUsernamePassword(
-    repoId: string,
+    repositoryId: string,
     username: string,
     password: string,
     baseUrl: string
   ): RepositoryApiClient {
-    let handler = new UsernamePasswordHandler(repoId, username, password, baseUrl, undefined);
-    return new RepositoryApiClient(handler, baseUrl);
+    const baseUrlWithoutSlash : string = trimEnd(baseUrl, '/');
+    const handler = new UsernamePasswordHandler(repositoryId, username, password, baseUrlWithoutSlash, undefined);
+    return new RepositoryApiClient(handler, baseUrlWithoutSlash);
   }
 }
 /** @internal */

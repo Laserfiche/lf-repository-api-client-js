@@ -10,7 +10,7 @@ import {
   authorizationType,
 } from './TestHelper.js';
 import { IRepositoryApiClient, RepositoryApiClient } from '../src/index.js';
-import { authorizationType as authType } from './AuthorizationType';
+import { authorizationTypeEnum as authType } from './AuthorizationType';
 
 export async function CreateEntry(
   client: IRepositoryApiClient,
@@ -44,13 +44,13 @@ export async function allFalse(arr: WFieldInfo[]): Promise<boolean> {
 let _RepositoryApiClient: IRepositoryApiClient;
 export function createClient(): IRepositoryApiClient {
   if (!_RepositoryApiClient) {
-    if (authorizationType == authType.CloudAccessKey) {
-      if (!testServicePrincipalKey || !OAuthAccessKey) 
-        throw new Error(`testServicePrincipalKey or OAuthAccessKey is missing`);
+    if (authorizationType === authType.CloudAccessKey) {
+      if (!testServicePrincipalKey || !OAuthAccessKey)
+        throw new Error(`testServicePrincipalKey or OAuthAccessKey is undefined`);
       _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
-    } else if (authorizationType == authType.APIServerUsernamePassword) {
-      if (!repositoryId || !username || !password || !baseUrl) 
-        throw new Error(`RepositoryId, Username, Password, or BaseURL is missing`);
+    } else if (authorizationType === authType.APIServerUsernamePassword) {
+      if (!repositoryId || !username || !password || !baseUrl)
+        throw new Error(`RepositoryId, Username, Password, or BaseURL is undefined`);
       _RepositoryApiClient = RepositoryApiClient.createFromUsernamePassword(repositoryId, username, password, baseUrl);
     }
     let defaultRequestHeaders: Record<string, string> = { 'X-LF-AppID': 'RepositoryApiClientIntegrationTest JS' };
