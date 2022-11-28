@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { authorizationTypeEnum } from './AuthorizationType';
+import { authorizationTypeEnum } from './AuthorizationType.js';
 import { AccessKey, createFromBase64EncodedAccessKey } from '@laserfiche/lf-api-client-core';
 export const testServicePrincipalKey: string = process.env.SERVICE_PRINCIPAL_KEY ?? '';
 if (!testServicePrincipalKey) {

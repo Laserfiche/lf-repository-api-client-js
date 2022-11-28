@@ -10,7 +10,7 @@ import {
   authorizationType,
 } from './TestHelper.js';
 import { IRepositoryApiClient, RepositoryApiClient } from '../src/index.js';
-import { authorizationTypeEnum as authType } from './AuthorizationType';
+import { authorizationTypeEnum as authType } from './AuthorizationType.js';
 
 export async function CreateEntry(
   client: IRepositoryApiClient,
