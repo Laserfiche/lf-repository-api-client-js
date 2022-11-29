@@ -1,4 +1,8 @@
-## Prerelease
+## 1.1.0
+
+### Features
+
+- Added support for Self-hosted API Server
 
 ### Fixes
 
