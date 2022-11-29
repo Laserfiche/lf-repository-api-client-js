@@ -23,9 +23,3 @@
 - Fixed an issue with optional header parameters being set as empty strings, such as in `exportDocument`
 - **[BREAKING]**: `IEntriesClient`
   - Rename `moveOrRenameDocument` to `moveOrRenameEntry` to better represent its capability.
-
-## 1.1.0
-
-### Features
-
-- Added support for Self-hosted API Server
