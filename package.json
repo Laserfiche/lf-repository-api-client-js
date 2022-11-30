@@ -18,6 +18,9 @@
     "clean": "tsc -b --clean",
     "nswag": "nswag run"
   },
+  "keywords": [
+    "Laserfiche"
+  ],
   "author": "Laserfiche",
   "url": "https://www.laserfiche.com/",
   "license": "MIT",
