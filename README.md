@@ -13,3 +13,7 @@ This package contains the Laserfiche Repository API Client library for Typescrip
 ```node
 npm install @laserfiche/lf-repository-api-client
 ```
+
+## Change Log
+
+See CHANGELOG [here](https://github.com/Laserfiche/lf-repository-api-client-js/blob/HEAD/CHANGELOG.md).

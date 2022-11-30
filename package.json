@@ -1,7 +1,7 @@
 {
   "name": "@laserfiche/lf-repository-api-client",
   "type": "module",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Laserfiche Repository API Client library for TypeScript.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -18,6 +18,9 @@
     "clean": "tsc -b --clean",
     "nswag": "nswag run"
   },
+  "keywords": [
+    "Laserfiche"
+  ],
   "author": "Laserfiche",
   "url": "https://www.laserfiche.com/",
   "license": "MIT",

@@ -1,3 +1,10 @@
+## 1.1.1
+
+### Fixes
+
+- Added `Laserfiche` keyword to `package.json` file
+- Updated changelog information in the readme file 
+
 ## 1.1.0
 
 ### Features
