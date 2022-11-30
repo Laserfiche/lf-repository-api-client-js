@@ -3,7 +3,7 @@
 ### Fixes
 
 - Added `Laserfiche` keyword to `package.json` file
-- Updated changelog information in the readme file 
+- Added Changelog link in the readme file
 
 ## 1.1.0
 
