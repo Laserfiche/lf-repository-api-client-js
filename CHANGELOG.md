@@ -1,10 +1,3 @@
-## Prerelease
-
-### Documentation
-
-- Added `Laserfiche` keyword to `package.json` file
-- Added Changelog link in the readme file
-
 ## 1.1.0
 
 ### Features
