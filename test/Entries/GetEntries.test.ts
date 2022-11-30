@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
@@ -8,35 +8,35 @@ describe('Get Entries Integration Tests', () => {
   let nonExistingPath: string | null = '\\Non Existing Path';
 
   test('Get Entry Fields', async () => {
-    let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId, entryId });
+    let entryFieldResponse = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId: repositoryId, entryId });
     expect(entryFieldResponse?.value).not.toBeNull();
   });
   test('Get Entry Listing', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryListing({
-      repoId,
+      repoId: repositoryId,
       entryId,
     });
     expect(result?.value?.length).toBeGreaterThan(1);
   });
 
   test('Get Entry Links', async () => {
-    let result: any = await _RepositoryApiClient.entriesClient.getLinkValuesFromEntry({ repoId, entryId });
+    let result: any = await _RepositoryApiClient.entriesClient.getLinkValuesFromEntry({ repoId: repositoryId, entryId });
     expect(result?.value).not.toBeNull();
   });
 
   test('Get Entry Tags', async () => {
-    let result: any = await _RepositoryApiClient.entriesClient.getTagsAssignedToEntry({ repoId, entryId });
+    let result: any = await _RepositoryApiClient.entriesClient.getTagsAssignedToEntry({ repoId: repositoryId, entryId });
     expect(result?.value).not.toBeNull();
   });
 
   test('Get Entry Return Root Folder', async () => {
-    let result: any = await _RepositoryApiClient.entriesClient.getEntry({ repoId, entryId });
+    let result: any = await _RepositoryApiClient.entriesClient.getEntry({ repoId: repositoryId, entryId });
     expect(result?.value).not.toBeNull();
   });
 
   test('Get Entry By Full Path Return Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
-      repoId,
+      repoId: repositoryId,
       fullPath: rootPath,
       fallbackToClosestAncestor: false,
     });
@@ -48,7 +48,7 @@ describe('Get Entries Integration Tests', () => {
 
   test.only('Get Entry By Full Path Return Ancestor Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
-      repoId,
+      repoId: repositoryId,
       fullPath: nonExistingPath,
       fallbackToClosestAncestor: true,
     });
@@ -61,7 +61,7 @@ describe('Get Entries Integration Tests', () => {
   // TODO use importDocument instead of hardcode entryId 3 https://github.com/Laserfiche/lf-repository-api-client-js/issues/53
   test('Get Document Content Type Return Content Headers', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getDocumentContentType({
-      repoId,
+      repoId: repositoryId,
       entryId: 3,
     });
     expect(result?.status).toBe(200);

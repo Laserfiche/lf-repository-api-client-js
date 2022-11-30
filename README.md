@@ -10,6 +10,6 @@ This package contains the Laserfiche Repository API Client library for Typescrip
 
 ## Installation
 
-```bash
+```node
 npm install @laserfiche/lf-repository-api-client
 ```

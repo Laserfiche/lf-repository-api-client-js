@@ -1,6 +1,7 @@
 import * as generated from './index.js';
 import { UrlUtils } from '@laserfiche/lf-js-utils';
 import {
+  UsernamePasswordHandler,
   OAuthClientCredentialsHandler,
   HttpRequestHandler,
   DomainUtils,
@@ -21,6 +22,16 @@ export interface IRepositoryApiClient {
   templateDefinitionsClient: ITemplateDefinitionsClient;
   linkDefinitionsClient: ILinkDefinitionsClient;
   defaultRequestHeaders: Record<string, string>;
+}
+/** @internal */
+/**
+ * Removes all the trailing occurrences of a character from a string.
+ * @param value
+ * @param endValue string to remove
+ * @return trimed string
+ */
+export function trimEnd(value: string, endValue: string): string {
+  return value.endsWith(endValue) ? value.substring(0, value.length - endValue.length) : value;
 }
 // @ts-ignore
 export class RepositoryApiClient implements IRepositoryApiClient {
@@ -76,7 +87,7 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     baseUrlDebug?: string
   ): RepositoryApiClient {
     if (!httpRequestHandler) throw new Error('Argument cannot be null: httpRequestHandler');
-    let repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
+    const repoClient = new RepositoryApiClient(httpRequestHandler, baseUrlDebug);
     return repoClient;
   }
 
@@ -85,8 +96,19 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     accessKey: AccessKey,
     baseUrlDebug?: string
   ): RepositoryApiClient {
-    let handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
+    const handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
     return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
+  }
+
+  public static createFromUsernamePassword(
+    repositoryId: string,
+    username: string,
+    password: string,
+    baseUrl: string
+  ): RepositoryApiClient {
+    const baseUrlWithoutSlash: string = trimEnd(baseUrl, '/');
+    const handler = new UsernamePasswordHandler(repositoryId, username, password, baseUrlWithoutSlash, undefined);
+    return new RepositoryApiClient(handler, baseUrlWithoutSlash);
   }
 }
 /** @internal */
@@ -1604,7 +1626,7 @@ export interface ILinkDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void>;
-  
+
   /**
    * Returns all link definitions in the repository using a next link
    * @param nextLink a url that allows retrieving the next subset of the requested collection
@@ -1617,11 +1639,8 @@ export interface ILinkDefinitionsClient {
   }): Promise<generated.ODataValueContextOfIListOfEntryLinkTypeInfo>;
 }
 
-export class LinkDefinitionsClient 
-  extends generated.LinkDefinitionsClient
-  implements ILinkDefinitionsClient 
-{
- /**
+export class LinkDefinitionsClient extends generated.LinkDefinitionsClient implements ILinkDefinitionsClient {
+  /**
    * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param repoId The requested repository ID.
@@ -1666,7 +1685,7 @@ export class LinkDefinitionsClient
       nextLink = response.odataNextLink;
     }
   }
-  
+
   /**
    * Returns all link definitions in the repository using a next link
    * @param nextLink a url that allows retrieving the next subset of the requested collection
@@ -1686,5 +1705,4 @@ export class LinkDefinitionsClient
       maxPageSize
     );
   }
-
 }

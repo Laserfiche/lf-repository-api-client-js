@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import {
   CopyAsyncRequest,
   DeleteEntryWithAuditReason,
@@ -21,7 +21,7 @@ describe('Create Copy Entry Test', () => {
       if (createdEntries[i]) {
         let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
         let num: number = Number(createdEntries[i].id);
-        await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
+        await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId: repositoryId, entryId: num, request: body });
       }
     }
     createdEntries = [];
@@ -38,7 +38,7 @@ describe('Create Copy Entry Test', () => {
     request.entryType = PostEntryChildrenEntryType.Folder;
     request.name = newEntryName;
     var targetEntry: Entry = await _RepositoryApiClient.entriesClient.createOrCopyEntry({
-      repoId,
+      repoId: repositoryId,
       entryId: testFolder.id ?? -1,
       request,
       autoRename: true,
@@ -53,7 +53,7 @@ describe('Create Copy Entry Test', () => {
     copyRequest.name = 'RepositoryApiClientIntegrationTest JS CopiedEntry';
     copyRequest.sourceId = targetEntry.id;
     let copyResult = await _RepositoryApiClient.entriesClient.copyEntry({
-      repoId,
+      repoId: repositoryId,
       entryId: testFolder.id ?? -1,
       request: copyRequest,
       autoRename: true,
@@ -63,7 +63,7 @@ describe('Create Copy Entry Test', () => {
     // Wait for the copy operation to finish
     await new Promise((r) => setTimeout(r, 5000));
     let opResponse: OperationProgress = await _RepositoryApiClient.tasksClient.getOperationStatusAndProgress({
-      repoId,
+      repoId: repositoryId,
       operationToken: opToken,
     });
     expect(opResponse.status).toBe(OperationStatus.Completed);
@@ -71,7 +71,7 @@ describe('Create Copy Entry Test', () => {
     // Remove the folder that contains the created entry
     let deleteEntryRequest: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let deletionResult = await _RepositoryApiClient.entriesClient.deleteEntryInfo({
-      repoId,
+      repoId: repositoryId,
       entryId: testFolder.id ?? -1,
       request: deleteEntryRequest,
     });

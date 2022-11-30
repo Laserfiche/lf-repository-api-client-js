@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import {
   AdvancedSearchRequest,
   ODataValueContextOfIListOfContextHit,
@@ -16,19 +16,19 @@ describe('Search Integration Tests', () => {
 
   afterEach(async () => {
     if (searchToken) {
-      await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({ repoId, searchToken });
+      await _RepositoryApiClient.searchesClient.cancelOrCloseSearch({ repoId: repositoryId, searchToken });
     }
   });
 
   test('Get Search Context Hits', async () => {
     let request = new AdvancedSearchRequest();
     request.searchCommand = '({LF:Basic ~= "*", option="DFANLT"})';
-    var searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId, request });
+    var searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId: repositoryId, request });
     searchToken = searchResponse.token ?? '';
     expect(searchToken).not.toBeNull();
     expect(searchToken).not.toBe('');
     await new Promise((r) => setTimeout(r, 5000));
-    var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId, searchToken });
+    var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId: repositoryId, searchToken });
     var searchResults = searchResultsResponse.value;
     if (!searchResults) {
       throw new Error('searchResults is undefined');
@@ -38,7 +38,7 @@ describe('Search Integration Tests', () => {
     let rowNum = searchResults[0].rowNumber;
 
     var contextHitResponse = await _RepositoryApiClient.searchesClient.getSearchContextHits({
-      repoId,
+      repoId: repositoryId,
       searchToken,
       rowNumber: rowNum ?? -1,
     });
@@ -51,7 +51,7 @@ describe('Search Integration Tests', () => {
     let searchRequest = new AdvancedSearchRequest();
     searchRequest.searchCommand = '({LF:Basic ~= "*", option="DFANLT"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
-      repoId,
+      repoId: repositoryId,
       request: searchRequest,
     });
     searchToken = searchResponse.token ?? '';
@@ -68,7 +68,7 @@ describe('Search Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.searchesClient.getSearchResultsForEach({ callback, repoId, searchToken, maxPageSize });
+    await _RepositoryApiClient.searchesClient.getSearchResultsForEach({ callback, repoId: repositoryId, searchToken, maxPageSize });
     expect(searchResults).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -78,14 +78,14 @@ describe('Search Integration Tests', () => {
     let searchRequest = new AdvancedSearchRequest();
     searchRequest.searchCommand = '({LF:Basic ~= "search", option="DFANLT"})';
     let searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({
-      repoId,
+      repoId: repositoryId,
       request: searchRequest,
     });
     searchToken = searchResponse.token ?? '';
     expect(searchToken).not.toBe('');
     expect(searchToken).not.toBeNull();
     await new Promise((r) => setTimeout(r, 5000));
-    var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId, searchToken });
+    var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId: repositoryId, searchToken });
     if (!searchResultsResponse.value) {
       throw new Error('searchResultsResponse.value is undefined');
     }
@@ -105,7 +105,7 @@ describe('Search Integration Tests', () => {
     };
     await _RepositoryApiClient.searchesClient.getSearchContextHitsForEach({
       callback,
-      repoId,
+      repoId: repositoryId,
       searchToken,
       rowNumber: rowNum,
       maxPageSize,
@@ -117,12 +117,12 @@ describe('Search Integration Tests', () => {
   test('Get Search Results', async () => {
     let request = new AdvancedSearchRequest();
     request.searchCommand = '({LF:Basic ~= "*", option="DFANLT"})';
-    var searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId, request });
+    var searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId: repositoryId, request });
     searchToken = searchResponse.token ?? '';
     expect(searchToken).not.toBeNull();
     expect(searchToken).not.toBe('');
     await new Promise((r) => setTimeout(r, 10000));
-    var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId, searchToken });
+    var searchResultsResponse = await _RepositoryApiClient.searchesClient.getSearchResults({ repoId: repositoryId, searchToken });
     var searchResults = searchResultsResponse.value;
     expect(searchResults).not.toBeNull();
   });
@@ -130,12 +130,12 @@ describe('Search Integration Tests', () => {
   test('Get Search Status', async () => {
     let request = new AdvancedSearchRequest();
     request.searchCommand = '({LF:Basic ~= "*", option="DFANLT"})';
-    var searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId, request });
+    var searchResponse = await _RepositoryApiClient.searchesClient.createSearchOperation({ repoId: repositoryId, request });
     searchToken = searchResponse.token ?? '';
     expect(searchToken).not.toBeNull();
     expect(searchToken).not.toBe('');
     await new Promise((r) => setTimeout(r, 5000));
-    var searchStatusResponse = await _RepositoryApiClient.searchesClient.getSearchStatus({ repoId, searchToken });
+    var searchStatusResponse = await _RepositoryApiClient.searchesClient.getSearchStatus({ repoId: repositoryId, searchToken });
     var searchStatus = searchStatusResponse;
     expect(searchStatus).not.toBeNull();
     expect(searchStatus.operationToken).toBe(searchToken);

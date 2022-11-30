@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import { AcceptedOperation, DeleteEntryWithAuditReason, Entry, OperationStatus } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -12,7 +12,7 @@ describe('Task Integration Tests', () => {
     );
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let result: AcceptedOperation = await _RepositoryApiClient.entriesClient.deleteEntryInfo({
-      repoId,
+      repoId: repositoryId,
       entryId: deleteEntry.id ?? -1,
       request: body,
     });
@@ -21,7 +21,7 @@ describe('Task Integration Tests', () => {
     expect(token).not.toBe('');
     try {
       await new Promise((r) => setTimeout(r, 5000));
-      await _RepositoryApiClient.tasksClient.cancelOperation({ repoId, operationToken: token ?? '' });
+      await _RepositoryApiClient.tasksClient.cancelOperation({ repoId: repositoryId, operationToken: token ?? '' });
     } catch (err: any) {
       expect(err.title.includes('Cannot cancel ended operation'));
     }
@@ -34,7 +34,7 @@ describe('Task Integration Tests', () => {
     );
     let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
     let result = await _RepositoryApiClient.entriesClient.deleteEntryInfo({
-      repoId,
+      repoId: repositoryId,
       entryId: deleteEntry.id ?? -1,
       request: body,
     });
@@ -43,7 +43,7 @@ describe('Task Integration Tests', () => {
     expect(token).not.toBe('');
     await new Promise((r) => setTimeout(r, 5000));
     let operationProgress = await _RepositoryApiClient.tasksClient.getOperationStatusAndProgress({
-      repoId,
+      repoId: repositoryId,
       operationToken: token ?? '',
     });
     expect(operationProgress).not.toBeNull();

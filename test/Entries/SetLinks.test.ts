@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -12,11 +12,11 @@ describe('Set Entries Integration Tests', () => {
       if (createdEntries[i]) {
         let body: DeleteEntryWithAuditReason = new DeleteEntryWithAuditReason();
         let num: number = Number(createdEntries[i].id);
-        await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId, entryId: num, request: body });
+        await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId: repositoryId, entryId: num, request: body });
       }
     }
     createdEntries = [];
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId });
+    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId: repositoryId });
   });
 
   test('Set Links', async () => {
@@ -32,7 +32,7 @@ describe('Set Entries Integration Tests', () => {
     putLinks.linkTypeId = 1;
     let request = new Array<PutLinksRequest>(putLinks);
     let result = await _RepositoryApiClient.entriesClient.assignEntryLinks({
-      repoId,
+      repoId: repositoryId,
       entryId: sourceEntry.id ?? -1,
       linksToAdd: request,
     });

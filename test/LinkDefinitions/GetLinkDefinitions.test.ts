@@ -1,4 +1,4 @@
-import { repoId } from '../TestHelper.js';
+import { repositoryId } from '../TestHelper.js';
 import {
   ODataValueContextOfIListOfEntryLinkTypeInfo,
 
@@ -9,7 +9,7 @@ import 'isomorphic-fetch';
 describe('Link Definitions Integration Tests', () => {
   test('Get Link Definition', async () => {
     let linkDefinitionsResponse: ODataValueContextOfIListOfEntryLinkTypeInfo =
-      await _RepositoryApiClient.linkDefinitionsClient.getLinkDefinitions({ repoId });
+      await _RepositoryApiClient.linkDefinitionsClient.getLinkDefinitions({ repoId: repositoryId });
     if (!linkDefinitionsResponse.value) {
       throw new Error('linkDefinitionsResponse.value');
     }
@@ -32,7 +32,7 @@ describe('Link Definitions Integration Tests', () => {
     };
     await _RepositoryApiClient.linkDefinitionsClient.getLinkDefinitionsForEach({
       callback,
-      repoId,
+      repoId: repositoryId,
       maxPageSize,
     });
     expect(entries).toBeGreaterThan(0);
@@ -43,7 +43,7 @@ describe('Link Definitions Integration Tests', () => {
   test('Get Link Definitions Simple Paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
-    let response = await _RepositoryApiClient.linkDefinitionsClient.getLinkDefinitions({ repoId, prefer });
+    let response = await _RepositoryApiClient.linkDefinitionsClient.getLinkDefinitions({ repoId: repositoryId, prefer });
     if (!response.value) {
       throw new Error('response.value is undefined');
     }
