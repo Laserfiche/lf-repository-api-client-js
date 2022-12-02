@@ -1,5 +1,5 @@
 import * as generated from './index.js';
-import { UrlUtils } from '@laserfiche/lf-js-utils';
+import { UrlUtils, StringUtils } from '@laserfiche/lf-js-utils';
 import {
   UsernamePasswordHandler,
   OAuthClientCredentialsHandler,
@@ -23,16 +23,7 @@ export interface IRepositoryApiClient {
   linkDefinitionsClient: ILinkDefinitionsClient;
   defaultRequestHeaders: Record<string, string>;
 }
-/** @internal */
-/**
- * Removes all the trailing occurrences of a character from a string.
- * @param value
- * @param endValue string to remove
- * @return trimed string
- */
-export function trimEnd(value: string, endValue: string): string {
-  return value.endsWith(endValue) ? value.substring(0, value.length - endValue.length) : value;
-}
+
 // @ts-ignore
 export class RepositoryApiClient implements IRepositoryApiClient {
   private baseUrl: string;
@@ -106,13 +97,13 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     password: string,
     baseUrl: string
   ): RepositoryApiClient {
-    const baseUrlWithoutSlash: string = trimEnd(baseUrl, '/');
+    const baseUrlWithoutSlash: string = StringUtils.trimEnd(baseUrl, '/');
     const handler = new UsernamePasswordHandler(repositoryId, username, password, baseUrlWithoutSlash, undefined);
     return new RepositoryApiClient(handler, baseUrlWithoutSlash);
   }
 }
 /** @internal */
-export class RepositoryApiClientHttpHandler {
+export class RepositoryApiClientHttpHandler { 
   private _httpRequestHandler: HttpRequestHandler;
   public defaultRequestHeaders: Record<string, string>;
 

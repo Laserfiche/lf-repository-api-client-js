@@ -44,6 +44,6 @@
   },
   "dependencies": {
     "@laserfiche/lf-api-client-core": "^1.1.2",
-    "@laserfiche/lf-js-utils": "^4.0.3"
+    "@laserfiche/lf-js-utils": "^4.0.5"
   }
 }
