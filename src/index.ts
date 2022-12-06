@@ -11956,7 +11956,7 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     password: string,
     baseUrl: string
   ): RepositoryApiClient {
-    const baseUrlWithoutSlash: string = StringUtils.(baseUrl, '/');
+    const baseUrlWithoutSlash: string = StringUtils.trimEnd(baseUrl, '/');
     const handler = new UsernamePasswordHandler(repositoryId, username, password, baseUrlWithoutSlash, undefined);
     return new RepositoryApiClient(handler, baseUrlWithoutSlash);
   }
