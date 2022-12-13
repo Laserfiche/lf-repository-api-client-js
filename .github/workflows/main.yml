@@ -118,7 +118,7 @@ jobs:
         run: mkdir -p ./docs_temp/${{ github.ref_name }}
 
       - name: Generate typedoc docs
-        run: npx typedoc ./src/index.ts --out ./docs_temp/${{ github.ref_name }} --excludePrivate
+        run: npx typedoc ./src/index.ts --out ./docs_temp/${{ github.ref_name }} --excludePrivate --includeVersion
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.3.1
