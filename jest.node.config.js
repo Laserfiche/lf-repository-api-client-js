@@ -4,7 +4,7 @@ export default {
   globals: {
     'ts-jest': {
       useESM: true,
-    },
+    }, FormData
   },
   testEnvironment: 'node',
   reporters: ['default', ['jest-junit', { outputName: 'junit-node.xml' }]],

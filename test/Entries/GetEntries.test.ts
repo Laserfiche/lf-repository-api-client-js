@@ -1,6 +1,7 @@
 import { repositoryId } from '../TestHelper.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
+import { ApiException } from '../../src/index.js';
 
 describe('Get Entries Integration Tests', () => {
   let entryId: number = 1;
@@ -46,16 +47,18 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.ancestorEntry).toBeUndefined();
   });
 
-  test.only('Get Entry By Full Path Return Ancestor Root Folder', async () => {
+  test('Get Entry By Full Path Return Ancestor Root Folder', async () => {
+    try {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
-      repoId: repositoryId,
+      repoId: "dsl;ffsd",
       fullPath: nonExistingPath,
       fallbackToClosestAncestor: true,
     });
-    expect(result?.ancestorEntry.id).toBe(1);
-    expect(result?.ancestorEntry.fullPath).toBe(rootPath);
-    expect(result?.ancestorEntry.entryType).toBe('Folder');
-    expect(result?.entry).toBeUndefined();
+  }
+    catch (e) {
+      console.log(e);
+    }
+
   });
 
   // TODO use importDocument instead of hardcode entryId 3 https://github.com/Laserfiche/lf-repository-api-client-js/issues/53
@@ -69,4 +72,45 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.headers['content-length']).toBeDefined();
     expect(result?.result).toBeNull();
   });
+
+  test.only('Get Entry Throw Exception', async () => {
+    try {
+      await _RepositoryApiClient.entriesClient.getEntryListing({
+        repoId: "fakeRepo",
+        entryId,
+      });
+    } catch (e: any) {
+      expect(e.problemDetails.title).toBeDefined();
+      expect(e.problemDetails.title).toEqual(e.message);
+      expect(e.problemDetails.status).toBe(404);
+      expect(e.status).toBe(404);
+      expect(e.problemDetails.operationId).toBeDefined();
+      expect(e.problemDetails.type).toBeDefined();
+      expect(e.problemDetails.instance).toBeDefined();
+      expect(e.problemDetails.errorSource).toBeDefined();
+      expect(e.problemDetails.traceId).toBeDefined();
+      expect(e.problemDetails.extensions).toBeUndefined();
+    }
+  })
+
+  test.only('Get Document Content Type Throw Exception', async () => {
+    try {
+      await _RepositoryApiClient.entriesClient.getDocumentContentType({
+        repoId: "fakeRepo",
+        entryId,
+      });
+    } catch (e: any) {
+      expect(e.problemDetails.title).toBeDefined();
+      expect(e.problemDetails.title).toEqual(e.message);
+      expect(e.problemDetails.status).toBe(404);
+      expect(e.status).toBe(404);
+      expect(e.problemDetails.operationId).toBeDefined();
+      expect(e.problemDetails.type).toBeUndefined();
+      expect(e.problemDetails.instance).toBeUndefined();
+      expect(e.problemDetails.errorSource).toBeUndefined();
+      expect(e.problemDetails.traceId).toBeUndefined();
+      expect(e.problemDetails.additionalProperties).toBeUndefined();
+    }
+  })
 });
+
