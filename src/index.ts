@@ -15,6 +15,7 @@ import {
   HttpRequestHandler,
   DomainUtils,
   AccessKey,
+  ApiException as ApiExceptionCore
 } from '@laserfiche/lf-api-client-core';
 
 export interface IEntriesClient {
@@ -12624,15 +12625,14 @@ export interface ILinkDefinitionsClient {
 }
 
 const OPERATION_ID_HEADER: string = "x-requestid";
-
-export class ApiException extends Error  {
+export class ApiException extends ApiExceptionCore  {
   message: string;
   status: number;
   headers: { [key: string]: any; };
   problemDetails: ProblemDetails;
 
   constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
-    super();
+    super(message, status, headers, result);
 
     let problemDetails = new ProblemDetails();
 

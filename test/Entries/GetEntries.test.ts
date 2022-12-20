@@ -48,17 +48,15 @@ describe('Get Entries Integration Tests', () => {
   });
 
   test('Get Entry By Full Path Return Ancestor Root Folder', async () => {
-    try {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
-      repoId: "dsl;ffsd",
+      repoId: repositoryId,
       fullPath: nonExistingPath,
       fallbackToClosestAncestor: true,
     });
-  }
-    catch (e) {
-      console.log(e);
-    }
-
+    expect(result?.ancestorEntry.id).toBe(1);
+    expect(result?.ancestorEntry.fullPath).toBe(rootPath);
+    expect(result?.ancestorEntry.entryType).toBe('Folder');
+    expect(result?.entry).toBeUndefined();
   });
 
   // TODO use importDocument instead of hardcode entryId 3 https://github.com/Laserfiche/lf-repository-api-client-js/issues/53
@@ -73,7 +71,7 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.result).toBeNull();
   });
 
-  test.only('Get Entry Throw Exception', async () => {
+  test('Get Entry Throw Exception', async () => {
     try {
       await _RepositoryApiClient.entriesClient.getEntryListing({
         repoId: "fakeRepo",
@@ -93,7 +91,7 @@ describe('Get Entries Integration Tests', () => {
     }
   })
 
-  test.only('Get Document Content Type Throw Exception', async () => {
+  test('Get Document Content Type Throw Exception', async () => {
     try {
       await _RepositoryApiClient.entriesClient.getDocumentContentType({
         repoId: "fakeRepo",

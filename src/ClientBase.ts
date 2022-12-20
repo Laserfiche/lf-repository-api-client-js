@@ -6,6 +6,7 @@ import {
   HttpRequestHandler,
   DomainUtils,
   AccessKey,
+  ApiException as ApiExceptionCore
 } from '@laserfiche/lf-api-client-core';
 class ClientBase {}
 export interface IRepositoryApiClient {
@@ -1697,9 +1698,6 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
     );
   }
 }
-export class ProblemDetails extends generated.ProblemDetails {
-  extensions: any;
-}
 
 export class CreateEntryResult extends generated.CreateEntryResult {
   getSummary(): string {
@@ -1729,15 +1727,17 @@ export class CreateEntryResult extends generated.CreateEntryResult {
 }
 
 const OPERATION_ID_HEADER: string = "x-requestid";
-
-export class ApiException extends Error  {
+export class ProblemDetails extends generated.ProblemDetails {
+  extensions: any;
+}
+export class ApiException extends ApiExceptionCore  {
   message: string;
   status: number;
   headers: { [key: string]: any; };
   problemDetails: ProblemDetails;
 
   constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
-    super();
+    super(message, status, headers, result);
 
     let problemDetails = new generated.ProblemDetails();
 
