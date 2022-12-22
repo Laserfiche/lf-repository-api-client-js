@@ -1700,6 +1700,7 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
 }
 
 export class CreateEntryResult extends generated.CreateEntryResult {
+  /** @internal */
   getSummary(): string {
     let messages = [];
     const entryId: number = this.operations?.entryCreate?.entryId ?? 0;

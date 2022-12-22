@@ -6261,7 +6261,8 @@ export class CreateEntryResult implements ICreateEntryResult {
 
     
     
-    getSummary(): string {
+    /** @internal */
+  getSummary(): string {
     let messages = [];
     const entryId: number = this.operations?.entryCreate?.entryId ?? 0;
     if (entryId !== 0) {
