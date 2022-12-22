@@ -14,7 +14,7 @@ try {
     console.log(e?.message);
     if (e?.problemDetails?.extensions != null) {
       var partialSuccessResult: CreateEntryResult | undefined = e?.problemDetails?.extensions["createEntryResult"];
-      var createdEntryId: number | undefined = partialSuccessResult.operations?.entryCreate?.entryId;
+      var createdEntryId: number | undefined = partialSuccessResult?.operations?.entryCreate?.entryId;
     }
 }
 ```
