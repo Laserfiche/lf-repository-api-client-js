@@ -52,6 +52,8 @@ export function createClient(): IRepositoryApiClient {
       if (!repositoryId || !username || !password || !baseUrl)
         throw new Error(`RepositoryId, Username, Password, or BaseURL is undefined`);
       _RepositoryApiClient = RepositoryApiClient.createFromUsernamePassword(repositoryId, username, password, baseUrl);
+    } else {
+      throw new Error('Authorization type is undefined')
     }
     let defaultRequestHeaders: Record<string, string> = { 'X-LF-AppID': 'RepositoryApiClientIntegrationTest JS' };
     if (testHeader) {

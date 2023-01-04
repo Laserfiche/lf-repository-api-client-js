@@ -23,7 +23,7 @@ describe('Task Integration Tests', () => {
       await new Promise((r) => setTimeout(r, 5000));
       await _RepositoryApiClient.tasksClient.cancelOperation({ repoId: repositoryId, operationToken: token ?? '' });
     } catch (err: any) {
-      expect(err.title.includes('Cannot cancel ended operation'));
+      expect(err.problemDetails.title.includes('Cannot cancel ended operation'));
     }
   });
 

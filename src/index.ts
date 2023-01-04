@@ -15,6 +15,7 @@ import {
   HttpRequestHandler,
   DomainUtils,
   AccessKey,
+  ApiException as ApiExceptionCore
 } from '@laserfiche/lf-api-client-core';
 
 export interface IEntriesClient {
@@ -2156,45 +2157,27 @@ export class EntriesClient implements IEntriesClient {
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("Invalid or bad request.", status, _responseText, _headers, result400);
+            return throwException("Invalid or bad request.", status, _responseText, _headers);
             });
         } else if (status === 401) {
             return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("Access token is invalid or expired.", status, _responseText, _headers, result401);
+            return throwException("Access token is invalid or expired.", status, _responseText, _headers);
             });
         } else if (status === 403) {
             return response.text().then((_responseText) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("Access denied for the operation.", status, _responseText, _headers, result403);
+            return throwException("Access denied for the operation.", status, _responseText, _headers);
             });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("Request entry id not found.", status, _responseText, _headers, result404);
+            return throwException("Request entry id not found.", status, _responseText, _headers);
             });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
-            let result423: any = null;
-            let resultData423 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result423 = ProblemDetails.fromJS(resultData423);
-            return throwException("Entry is locked.", status, _responseText, _headers, result423);
+            return throwException("Entry is locked.", status, _responseText, _headers);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
-            let result429: any = null;
-            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result429 = ProblemDetails.fromJS(resultData429);
-            return throwException("Rate limit is reached.", status, _responseText, _headers, result429);
+            return throwException("Rate limit is reached.", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -2243,13 +2226,25 @@ export class EntriesClient implements IEntriesClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200 || status === 206) {
             const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
             return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
         } else if (status === 206) {
             const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
             return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -2437,13 +2432,25 @@ export class EntriesClient implements IEntriesClient {
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200 || status === 206) {
             const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
             return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
         } else if (status === 206) {
             const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
             return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -6254,6 +6261,32 @@ export class CreateEntryResult implements ICreateEntryResult {
 
     
     
+    /** @internal */
+  getSummary(): string {
+    let messages = [];
+    const entryId: number = this.operations?.entryCreate?.entryId ?? 0;
+    if (entryId !== 0) {
+      messages.push(`entryId = ${entryId}`);
+    }
+
+    function getErrorMessages(errors: APIServerException[] | undefined): string {
+      if (errors == null) {
+        return "";
+      }
+      
+      return errors.map(item => item.message).join(" ");
+    }
+
+    messages.push(getErrorMessages(this.operations?.entryCreate?.exceptions));
+    messages.push(getErrorMessages(this.operations?.setEdoc?.exceptions));
+    messages.push(getErrorMessages(this.operations?.setFields?.exceptions));
+    messages.push(getErrorMessages(this.operations?.setLinks?.exceptions));
+    messages.push(getErrorMessages(this.operations?.setTags?.exceptions));
+    messages.push(getErrorMessages(this.operations?.setTemplate?.exceptions));
+
+    return messages.filter(item => item).join(" ");
+  }
+
     constructor(data?: ICreateEntryResult) {
         if (data) {
             for (var property in data) {
@@ -6767,16 +6800,31 @@ export interface ISetLinks {
     otherEntryIds?: number[] | undefined;
 }
 
+/** A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807. */
 export class ProblemDetails implements IProblemDetails {
+    /** The problem type. */
     type?: string | undefined;
+    /** A short, human-readable summary of the problem type. */
     title?: string | undefined;
-    status?: number | undefined;
+    /** The HTTP status code. */
+    status!: number;
+    /** A human-readable explanation specific to this occurrence of the problem. */
     detail?: string | undefined;
+    /** A URI reference that identifies the specific occurrence of the problem. */
     instance?: string | undefined;
-    extensions?: { [key: string]: any; };
+    /** The operation id. */
+    operationId?: string | undefined;
+    /** The error source. */
+    errorSource?: string | undefined;
+    /** The error code. */
+    errorCode?: number;
+    /** The trace id. */
+    traceId?: string | undefined;
 
     
     
+    extensions: any;
+
     constructor(data?: IProblemDetails) {
         if (data) {
             for (var property in data) {
@@ -6793,13 +6841,10 @@ export class ProblemDetails implements IProblemDetails {
             this.status = _data["status"];
             this.detail = _data["detail"];
             this.instance = _data["instance"];
-            if (_data["extensions"]) {
-                this.extensions = {} as any;
-                for (let key in _data["extensions"]) {
-                    if (_data["extensions"].hasOwnProperty(key))
-                        (<any>this.extensions)![key] = _data["extensions"][key];
-                }
-            }
+            this.operationId = _data["operationId"];
+            this.errorSource = _data["errorSource"];
+            this.errorCode = _data["errorCode"];
+            this.traceId = _data["traceId"];
         }
     }
 
@@ -6817,24 +6862,34 @@ export class ProblemDetails implements IProblemDetails {
         data["status"] = this.status;
         data["detail"] = this.detail;
         data["instance"] = this.instance;
-        if (this.extensions) {
-            data["extensions"] = {};
-            for (let key in this.extensions) {
-                if (this.extensions.hasOwnProperty(key))
-                    (<any>data["extensions"])[key] = this.extensions[key];
-            }
-        }
+        data["operationId"] = this.operationId;
+        data["errorSource"] = this.errorSource;
+        data["errorCode"] = this.errorCode;
+        data["traceId"] = this.traceId;
         return data;
     }
 }
 
+/** A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807. */
 export interface IProblemDetails {
+    /** The problem type. */
     type?: string | undefined;
+    /** A short, human-readable summary of the problem type. */
     title?: string | undefined;
-    status?: number | undefined;
+    /** The HTTP status code. */
+    status: number;
+    /** A human-readable explanation specific to this occurrence of the problem. */
     detail?: string | undefined;
+    /** A URI reference that identifies the specific occurrence of the problem. */
     instance?: string | undefined;
-    extensions?: { [key: string]: any; };
+    /** The operation id. */
+    operationId?: string | undefined;
+    /** The error source. */
+    errorSource?: string | undefined;
+    /** The error code. */
+    errorCode?: number;
+    /** The trace id. */
+    traceId?: string | undefined;
 }
 
 export abstract class IHeaderDictionary implements IIHeaderDictionary {
@@ -11835,7 +11890,7 @@ export interface FileResponse {
     headers?: { [name: string]: any };
 }
 
-export class ApiException extends Error {
+export class ApiExceptionDummy extends Error {
     message: string;
     status: number;
     response: string;
@@ -11852,18 +11907,15 @@ export class ApiException extends Error {
         this.result = result;
     }
 
-    protected isApiException = true;
+    protected isApiExceptionDummy = true;
 
-    static isApiException(obj: any): obj is ApiException {
-        return obj.isApiException === true;
+    static isApiExceptionDummy(obj: any): obj is ApiExceptionDummy {
+        return obj.isApiExceptionDummy === true;
     }
 }
 
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
-    if (result !== null && result !== undefined)
-        throw result;
-    else
-        throw new ApiException(message, status, response, headers, null);
+    throw new ApiException(message, status, response, headers, result);
 }
 
 class ClientBase {}
@@ -12595,4 +12647,42 @@ export interface ILinkDefinitionsClient {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfEntryLinkTypeInfo>;
+}
+
+const OPERATION_ID_HEADER: string = "x-requestid";
+export class ApiException extends ApiExceptionCore  {
+  message: string;
+  status: number;
+  headers: { [key: string]: any; };
+  problemDetails: ProblemDetails;
+
+  constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
+    super(message, status, headers, result);
+
+    let problemDetails = new ProblemDetails();
+
+    if (result instanceof CreateEntryResult) {
+      problemDetails = ProblemDetails.fromJS({
+        "title": result.getSummary(),
+        "status": status,
+        "operationId": headers[OPERATION_ID_HEADER],
+      });
+
+      problemDetails.extensions = {
+        "createEntryResult": Object.assign({}, result)
+      }
+    } else { 
+      problemDetails = result != null && result.status !== undefined ? result : ProblemDetails.fromJS({
+        "title": "HTTP status code " + status,
+        "status": status,
+        "operationId": headers[OPERATION_ID_HEADER],
+      });
+    }
+
+    this.message = problemDetails?.title ??  message;
+    this.status = status;
+    this.headers = headers;
+    this.problemDetails = problemDetails 
+  }
+
 }

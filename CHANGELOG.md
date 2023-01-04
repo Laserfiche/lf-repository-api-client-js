@@ -1,3 +1,24 @@
+## 1.1.1
+
+### Fixes
+- The `ApiException` type now has a `ProblemDetails` property which contains additional information about the error.
+- The `ProblemDetails` type now has additional properties from the response.
+- `importDocument` v1 API can result in a partial success in some cases. The related exceptions can be found in 
+`ProblemDetails.Extensions`:
+```javascript
+try {
+    await _RepositoryApiClient.entriesClient.importDocument({
+        ...importDocumentRequest
+    });
+} catch (e: any) {
+    console.log(e?.message);
+    if (e?.problemDetails?.extensions != null) {
+      var partialSuccessResult: CreateEntryResult | undefined = e?.problemDetails?.extensions["createEntryResult"];
+      var createdEntryId: number | undefined = partialSuccessResult?.operations?.entryCreate?.entryId;
+    }
+}
+```
+
 ## 1.1.0
 
 ### Features
