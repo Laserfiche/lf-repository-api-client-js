@@ -1,15 +1,23 @@
 import { repositoryId } from '../TestHelper.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
-import { Blob } from 'buffer';
-import { ApiException, CreateEntryResult, FileParameter, PostEntryWithEdocMetadataRequest } from '../../src/index.js';
+import { Blob as NodeBlob } from 'buffer';
+import { CreateEntryResult, FileParameter, PostEntryWithEdocMetadataRequest } from '../../src/index.js';
+import { isBrowser } from '@laserfiche/lf-js-utils/dist/utils/core-utils.js';
 
 describe('Import Document Integration Tests', () => {
   
     test('Import Document Throws Exception', async () => {
-        const blob = new Blob([""], {
-            type: "application/json",
-          });
+        let blob: any;
+        if (isBrowser()){
+            blob = new Blob([""], {
+                type: "application/json",
+              });
+        } else {
+            blob = new NodeBlob([""], {
+                type: "application/json",
+              });
+        }
         const request = new PostEntryWithEdocMetadataRequest();
         const edoc : FileParameter = {
             fileName: "RepositoryApiClientIntegrationTest JS GetDocumentContent",
