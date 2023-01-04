@@ -7,7 +7,7 @@ describe('Simple Search Integration Tests', () => {
 
   test('Create Simple Search', async () => {
     let request: SimpleSearchRequest = new SimpleSearchRequest();
-    request.searchCommand = "({LF:Basic ~= \"*\", option=\"DFANLT\"})";
+    request.searchCommand = "({LF:Basic ~= \"search text\", option=\"DFANLT\"})";
     let simpleSearchResponse = await _RepositoryApiClient.simpleSearchesClient.createSimpleSearchOperation({
       repoId: repositoryId,
       request,
