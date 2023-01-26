@@ -12008,14 +12008,16 @@ export class RepositoryApiClient implements IRepositoryApiClient {
    * Create a Laserfiche repository client that will use Laserfiche Cloud OAuth client credentials to get access tokens.
    * @param servicePrincipalKey The service principal key created for the service principal from the Laserfiche Account Administration.
    * @param accessKey The access key exported from the Laserfiche Developer Console.
+   * @param scope (optional) The requested space-delimited scopes for the access token.
    * @param baseUrlDebug (optional) override for the Laserfiche repository API base url.
    */
   public static createFromAccessKey(
     servicePrincipalKey: string,
     accessKey: AccessKey,
+    scope?: string,
     baseUrlDebug?: string
   ): RepositoryApiClient {
-    const handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey);
+    const handler = new OAuthClientCredentialsHandler(servicePrincipalKey, accessKey, scope);
     return RepositoryApiClient.createFromHttpRequestHandler(handler, baseUrlDebug);
   }
 
