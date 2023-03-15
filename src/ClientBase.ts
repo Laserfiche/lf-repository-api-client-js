@@ -1753,43 +1753,20 @@ export class CreateEntryResult extends generated.CreateEntryResult {
   }
 }
 
-const OPERATION_ID_HEADER: string = "x-requestid";
 export class ProblemDetails extends generated.ProblemDetails {
   extensions: any;
 }
 export class ApiException extends ApiExceptionCore  {
-  message: string;
-  status: number;
-  headers: { [key: string]: any; };
-  problemDetails: ProblemDetails;
-
   constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
     super(message, status, headers, result);
 
-    let problemDetails = new generated.ProblemDetails();
-
     if (result instanceof generated.CreateEntryResult) {
-      problemDetails = generated.ProblemDetails.fromJS({
-        "title": result.getSummary(),
-        "status": status,
-        "operationId": headers[OPERATION_ID_HEADER],
-      });
-
-      problemDetails.extensions = {
+      this.problemDetails.title = result.getSummary();
+      this.problemDetails.extensions = {
         "createEntryResult": Object.assign({}, result)
       }
-    } else { 
-      problemDetails = result != null && result.status !== undefined ? result : generated.ProblemDetails.fromJS({
-        "title": "HTTP status code " + status,
-        "status": status,
-        "operationId": headers[OPERATION_ID_HEADER],
-      });
+      this.message = this.problemDetails.title;
     }
-
-    this.message = problemDetails?.title ??  message;
-    this.status = status;
-    this.headers = headers;
-    this.problemDetails = problemDetails 
   }
 
 }
