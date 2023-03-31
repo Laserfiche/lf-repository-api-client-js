@@ -128,6 +128,20 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     const handler = new UsernamePasswordHandler(repositoryId, username, password, baseUrlWithoutSlash, undefined);
     return new RepositoryApiClient(handler, baseUrlWithoutSlash);
   }
+
+  public static async getSelfHostedRepositoryList(baseUrl: string): Promise<any>{
+    if(baseUrl.trim().endsWith('/')){
+      baseUrl.replace(baseUrl[baseUrl.length -1], "");
+    }
+    let url = baseUrl + "/v1/Repositories";
+    const response = await fetch(url, {
+      method: "GET", 
+      headers: {
+        "accept": "application/json",
+      }, 
+    });
+    return response.json();
+  }
 }
 /** @internal */
 export class RepositoryApiClientHttpHandler { 
