@@ -21,7 +21,6 @@ describe('Repo List Integration Tests', () => {
   if (authorizationType == authorizationTypeEnum.APIServerUsernamePassword) {
     test('Get SelfHosted Repo Lists', async () => {
       let SelfHostedRepoList: RepositoryInfo[] = await RepositoryApiClient.getSelfHostedRepositoryList(baseUrl);
-      console.log(SelfHostedRepoList);
       let foundRepo = false;
       for (let i = 0; i < SelfHostedRepoList.length; i++) {
         expect(SelfHostedRepoList[i].repoId).not.toBeNull();
