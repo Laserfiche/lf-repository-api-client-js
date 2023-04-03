@@ -129,6 +129,11 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     return new RepositoryApiClient(handler, baseUrlWithoutSlash);
   }
 
+  /**
+   * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
+   * @param baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
+   * @returns Get the respository resource list successfully.
+   */
   public static async getSelfHostedRepositoryList(baseUrl: string): Promise<any>{
     if(baseUrl.trim().endsWith('/')){
       baseUrl.replace(baseUrl[baseUrl.length -1], "");
