@@ -72,18 +72,18 @@ jobs:
       - name: Npm ci
         run: npm ci
 
-      # - name: Npm test on cloud
-      #   id: test-cloud
-      #   env:
-      #     ACCESS_KEY: ${{ secrets.DEV_US_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
-      #     SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_US_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
-      #     REPOSITORY_ID: ${{ secrets.DEV_US_PUBLIC_USE_REPOSITORY_ID_1 }}
-      #     AUTHORIZATION_TYPE: ${{ secrets.AUTHORIZATION_TYPE }}
-      #     TEST_HEADER: ${{ secrets.TEST_HEADER }}
-      #   run: npm run test:all
+      - name: Npm test on cloud
+        id: test-cloud
+        env:
+          ACCESS_KEY: ${{ secrets.DEV_US_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
+          SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_US_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
+          REPOSITORY_ID: ${{ secrets.DEV_US_PUBLIC_USE_REPOSITORY_ID_1 }}
+          AUTHORIZATION_TYPE: ${{ secrets.AUTHORIZATION_TYPE }}
+          TEST_HEADER: ${{ secrets.TEST_HEADER }}
+        run: npm run test:all
 
       - name: Npm test on self-hosted
-        # if: always() && (steps.test-cloud.outcome == 'success' || steps.test-cloud.outcome == 'failure')
+        if: always() && (steps.test-cloud.outcome == 'success' || steps.test-cloud.outcome == 'failure')
         env:
           ACCESS_KEY: ${{ secrets.DEV_US_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
           SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_US_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
