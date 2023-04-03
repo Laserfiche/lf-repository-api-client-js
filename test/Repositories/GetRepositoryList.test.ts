@@ -11,7 +11,7 @@ describe('Repo List Integration Tests', () => {
       expect(RepoListResponse[i].repoId).not.toBeNull();
       expect(RepoListResponse[i].webclientUrl).not.toBeNull();
       expect(RepoListResponse[i].webclientUrl).toContain(RepoListResponse[i].repoId);
-      if (RepoListResponse[i].repoId == repositoryId) {
+      if (RepoListResponse[i].repoId?.localeCompare(repositoryId, undefined, { sensitivity: "base" }) === 0) {
         foundRepo = true;
       }
     }
