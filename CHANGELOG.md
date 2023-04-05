@@ -1,6 +1,6 @@
 ## 1.1.4 Pre-release
 
-### Fixes
+### Features
 - Added `RepositoryClient.getSelfHostedRepositoryList` method that will enable self hosted users to get their repository list without an access token.
 ## 1.1.3
 
