@@ -15,7 +15,7 @@ import {
   HttpRequestHandler,
   DomainUtils,
   AccessKey,
-  ApiException as ApiExceptionCore
+  ApiException as ApiExceptionCore,
 } from '@laserfiche/lf-api-client-core';
 
 export interface IEntriesClient {
@@ -3702,6 +3702,21 @@ export class RepositoriesClient implements IRepositoriesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
+    
+  /**
+   * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
+   * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
+   * @returns Get the repository resource list successfully.
+   */
+  public static async getSelfHostedRepositoryList(args: { baseUrl: string }): Promise<RepositoryInfo[]> {
+    let { baseUrl } = args;
+    const baseUrlWithoutSlash: string = StringUtils.trimEnd(baseUrl, '/');
+    let http = {
+      fetch,
+    };
+    return await new RepositoriesClient(baseUrlWithoutSlash, http).getRepositoryList({});
+  }
+
     /**
      * Returns the repository resource list that current user has access to.
      * @return Get the respository resource list successfully.
@@ -6271,10 +6286,10 @@ export class CreateEntryResult implements ICreateEntryResult {
 
     function getErrorMessages(errors: APIServerException[] | undefined): string {
       if (errors == null) {
-        return "";
+        return '';
       }
-      
-      return errors.map(item => item.message).join(" ");
+
+      return errors.map((item) => item.message).join(' ');
     }
 
     messages.push(getErrorMessages(this.operations?.entryCreate?.exceptions));
@@ -6284,7 +6299,7 @@ export class CreateEntryResult implements ICreateEntryResult {
     messages.push(getErrorMessages(this.operations?.setTags?.exceptions));
     messages.push(getErrorMessages(this.operations?.setTemplate?.exceptions));
 
-    return messages.filter(item => item).join(" ");
+    return messages.filter((item) => item).join(' ');
   }
 
     constructor(data?: ICreateEntryResult) {
@@ -12040,7 +12055,7 @@ export class RepositoryApiClient implements IRepositoryApiClient {
   }
 }
 /** @internal */
-export class RepositoryApiClientHttpHandler { 
+export class RepositoryApiClientHttpHandler {
   private _httpRequestHandler: HttpRequestHandler;
   public defaultRequestHeaders: Record<string, string>;
 
@@ -12651,17 +12666,16 @@ export interface ILinkDefinitionsClient {
   }): Promise<ODataValueContextOfIListOfEntryLinkTypeInfo>;
 }
 
-export class ApiException extends ApiExceptionCore  {
-  constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
+export class ApiException extends ApiExceptionCore {
+  constructor(message: string, status: number, response: string, headers: { [key: string]: any }, result: any) {
     super(message, status, headers, result);
 
     if (result instanceof CreateEntryResult) {
       this.problemDetails.title = result.getSummary();
       this.problemDetails.extensions = {
-        "createEntryResult": Object.assign({}, result)
-      }
+        createEntryResult: Object.assign({}, result),
+      };
       this.message = this.problemDetails.title;
     }
   }
-
 }
