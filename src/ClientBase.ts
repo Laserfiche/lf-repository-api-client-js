@@ -1725,7 +1725,7 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
   }
 }
 
-export class RepositoryClient extends generated.RepositoriesClient {
+export class RepositoriesClient extends generated.RepositoriesClient {
   /**
    * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
    * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI

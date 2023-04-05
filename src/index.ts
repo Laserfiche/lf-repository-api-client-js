@@ -3702,6 +3702,21 @@ export class RepositoriesClient implements IRepositoriesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
+    
+  /**
+   * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
+   * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
+   * @returns Get the repository resource list successfully.
+   */
+  public static async getSelfHostedRepositoryList(args: { baseUrl: string }): Promise<RepositoryInfo[]> {
+    let { baseUrl } = args;
+    const baseUrlWithoutSlash: string = StringUtils.trimEnd(baseUrl, '/');
+    let http = {
+      fetch,
+    };
+    return await new RepositoriesClient(baseUrlWithoutSlash, http).getRepositoryList({});
+  }
+
     /**
      * Returns the repository resource list that current user has access to.
      * @return Get the respository resource list successfully.
@@ -12649,22 +12664,6 @@ export interface ILinkDefinitionsClient {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfEntryLinkTypeInfo>;
-}
-
-export class RepositoryClient extends RepositoriesClient {
-  /**
-   * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
-   * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
-   * @returns Get the repository resource list successfully.
-   */
-  public static async getSelfHostedRepositoryList(args: { baseUrl: string }): Promise<RepositoryInfo[]> {
-    let { baseUrl } = args;
-    const baseUrlWithoutSlash: string = StringUtils.trimEnd(baseUrl, '/');
-    let http = {
-      fetch,
-    };
-    return await new RepositoriesClient(baseUrlWithoutSlash, http).getRepositoryList({});
-  }
 }
 
 export class ApiException extends ApiExceptionCore {
