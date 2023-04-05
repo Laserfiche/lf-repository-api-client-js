@@ -16,7 +16,6 @@ describe('Set Entries Integration Tests', () => {
       }
     }
     createdEntries = [];
-    _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId: repositoryId });
   });
 
   test('Set Links', async () => {
