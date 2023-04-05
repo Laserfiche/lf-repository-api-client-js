@@ -6,7 +6,7 @@ import {
   HttpRequestHandler,
   DomainUtils,
   AccessKey,
-  ApiException as ApiExceptionCore
+  ApiException as ApiExceptionCore,
 } from '@laserfiche/lf-api-client-core';
 class ClientBase {}
 export interface IRepositoryApiClient {
@@ -128,28 +128,9 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     const handler = new UsernamePasswordHandler(repositoryId, username, password, baseUrlWithoutSlash, undefined);
     return new RepositoryApiClient(handler, baseUrlWithoutSlash);
   }
-
-  /**
-   * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
-   * @param baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
-   * @returns Get the respository resource list successfully.
-   */
-  public static async getSelfHostedRepositoryList(baseUrl: string): Promise<any>{
-    if(baseUrl.trim().endsWith('/')){
-      baseUrl.replace(baseUrl[baseUrl.length -1], "");
-    }
-    let url = baseUrl + "/v1/Repositories";
-    const response = await fetch(url, {
-      method: "GET", 
-      headers: {
-        "accept": "application/json",
-      }, 
-    });
-    return response.json();
-  }
 }
 /** @internal */
-export class RepositoryApiClientHttpHandler { 
+export class RepositoryApiClientHttpHandler {
   private _httpRequestHandler: HttpRequestHandler;
   public defaultRequestHeaders: Record<string, string>;
 
@@ -1744,6 +1725,22 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
   }
 }
 
+export class RepositoryClient extends generated.RepositoriesClient {
+  /**
+   * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
+   * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
+   * @returns Get the repository resource list successfully.
+   */
+  public static async getSelfHostedRepositoryList(args: { baseUrl: string }): Promise<generated.RepositoryInfo[]> {
+    let { baseUrl } = args;
+    const baseUrlWithoutSlash: string = StringUtils.trimEnd(baseUrl, '/');
+    let http = {
+      fetch,
+    };
+    return await new generated.RepositoriesClient(baseUrlWithoutSlash, http).getRepositoryList({});
+  }
+}
+
 export class CreateEntryResult extends generated.CreateEntryResult {
   /** @internal */
   getSummary(): string {
@@ -1755,10 +1752,10 @@ export class CreateEntryResult extends generated.CreateEntryResult {
 
     function getErrorMessages(errors: generated.APIServerException[] | undefined): string {
       if (errors == null) {
-        return "";
+        return '';
       }
-      
-      return errors.map(item => item.message).join(" ");
+
+      return errors.map((item) => item.message).join(' ');
     }
 
     messages.push(getErrorMessages(this.operations?.entryCreate?.exceptions));
@@ -1768,24 +1765,23 @@ export class CreateEntryResult extends generated.CreateEntryResult {
     messages.push(getErrorMessages(this.operations?.setTags?.exceptions));
     messages.push(getErrorMessages(this.operations?.setTemplate?.exceptions));
 
-    return messages.filter(item => item).join(" ");
+    return messages.filter((item) => item).join(' ');
   }
 }
 
 export class ProblemDetails extends generated.ProblemDetails {
   extensions: any;
 }
-export class ApiException extends ApiExceptionCore  {
-  constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
+export class ApiException extends ApiExceptionCore {
+  constructor(message: string, status: number, response: string, headers: { [key: string]: any }, result: any) {
     super(message, status, headers, result);
 
     if (result instanceof generated.CreateEntryResult) {
       this.problemDetails.title = result.getSummary();
       this.problemDetails.extensions = {
-        "createEntryResult": Object.assign({}, result)
-      }
+        createEntryResult: Object.assign({}, result),
+      };
       this.message = this.problemDetails.title;
     }
   }
-
 }

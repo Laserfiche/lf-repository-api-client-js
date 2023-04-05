@@ -1,7 +1,7 @@
-## 1.1.4
+## 1.1.4 Pre-release
 
 ### Fixes
-- Added `static async getSelfHostedRepositoryList(baseUrl: string)` method to the `RepositoryApiClient` class that will enable self hosted users to get their repo list without a jwt.
+- Added `RepositoryClient.getSelfHostedRepositoryList` method that will enable self hosted users to get their repository list without an access token.
 ## 1.1.3
 
 ### Features
