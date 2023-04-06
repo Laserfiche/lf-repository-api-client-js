@@ -1,4 +1,5 @@
-import { repositoryId } from '../TestHelper.js';
+import { repositoryId, authorizationType } from '../TestHelper.js';
+import { authorizationTypeEnum } from '../AuthorizationType.js';
 import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo } from '../../src/index.js';
 import { CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -16,6 +17,9 @@ describe('Set Entries Integration Tests', () => {
       }
     }
     createdEntries = [];
+    if (authorizationType === authorizationTypeEnum.CloudAccessKey) {
+      _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId: repositoryId });
+    }
   });
 
   test('Set Links', async () => {
