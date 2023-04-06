@@ -16,5 +16,7 @@ describe('Delete Entries Integration Tests', () => {
     let token: string = result.token ?? '';
     expect(token).not.toBeNull();
     expect(token).not.toBe('');
+    // wait for the delete operation to complete
+    await new Promise((r) => setTimeout(r, 5000));
   });
 });
