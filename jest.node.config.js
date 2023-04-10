@@ -1,6 +1,3 @@
-import { authorizationType } from './dist/test/TestHelper.js';
-import { authorizationTypeEnum as authType } from './dist/test/AuthorizationType.js';
-
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 export default {
   preset: 'ts-jest/presets/js-with-ts-esm',
@@ -11,7 +8,7 @@ export default {
   },
   testEnvironment: 'node',
   // reporters: ['default', ['jest-junit', { outputName: 'junit-node.xml' }]],
-  reporters: ['default', ['jest-junit', { outputName: authorizationType === authType.CloudAccessKey ? 'junit-node.xml' : 'junit-node-selfhosted.xml' }]],
+  reporters: ['default', ['jest-junit', { outputName: process.env.authorizationType === 'CLOUD_ACCESS_KEY' ? 'junit-node.xml' : 'junit-node-selfhosted.xml' }]],
   setupFiles:['./CreateSession.ts'],
   testTimeout: 200000,
   moduleNameMapper: {
