@@ -1,5 +1,5 @@
-import { authorizationType } from './test/TestHelper.js';
-import { authorizationTypeEnum as authType } from './test/AuthorizationType.js';
+import { authorizationType } from './dist/test/TestHelper.js';
+import { authorizationTypeEnum as authType } from './dist/test/AuthorizationType.js';
 
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 export default {
