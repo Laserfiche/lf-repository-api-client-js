@@ -8,7 +8,7 @@ export default {
   },
   testEnvironment: 'node',
   // reporters: ['default', ['jest-junit', { outputName: 'junit-node.xml' }]],
-  reporters: ['default', ['jest-junit', { outputName: process.env.authorizationType === 'CLOUD_ACCESS_KEY' ? 'junit-node.xml' : 'junit-node-selfhosted.xml' }]],
+  reporters: ['default', ['jest-junit', { outputName: process.env.AUTHORIZATION_TYPE === 'CLOUD_ACCESS_KEY' ? 'junit-node.xml' : 'junit-node-selfhosted.xml' }]],
   setupFiles:['./CreateSession.ts'],
   testTimeout: 200000,
   moduleNameMapper: {
