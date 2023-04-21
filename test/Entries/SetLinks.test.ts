@@ -17,9 +17,9 @@ describe('Set Entries Integration Tests', () => {
       }
     }
     createdEntries = [];
-    // if (authorizationType === authorizationTypeEnum.CloudAccessKey) {
-    //   _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId: repositoryId });
-    // }
+    if (authorizationType === authorizationTypeEnum.CloudAccessKey) {
+      _RepositoryApiClient.serverSessionClient.invalidateServerSession({ repoId: repositoryId });
+    }
   });
 
   test('Set Links', async () => {

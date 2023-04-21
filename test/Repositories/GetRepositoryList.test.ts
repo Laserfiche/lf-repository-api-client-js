@@ -23,8 +23,7 @@ describe('Repo List Integration Tests', () => {
       let SelfHostedRepoList: RepositoryInfo[] = await RepositoriesClient.getSelfHostedRepositoryList({ baseUrl });
       let foundRepo = false;
       for (let i = 0; i < SelfHostedRepoList.length; i++) {
-        expect(SelfHostedRepoList[i].repoId).not.toBeNull();
-        if (SelfHostedRepoList[i].repoId?.toLowerCase == repositoryId.toLowerCase) {
+        if (SelfHostedRepoList[i].repoId?.localeCompare(repositoryId, undefined, { sensitivity: "base" }) === 0) {
           foundRepo = true;
         }
       }

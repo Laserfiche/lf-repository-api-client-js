@@ -12,7 +12,7 @@ describe('Get Entry Tests', () => {
   let entryId: number = 1;
 
   test('Get Entry Listing for each paging', async () => {
-    let maxPageSize = 50;
+    let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
     const callback = async (response: ODataValueContextOfIListOfEntry) => {
