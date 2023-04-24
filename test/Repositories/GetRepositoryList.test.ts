@@ -10,11 +10,9 @@ describe('Repo List Integration Tests', () => {
     let foundRepo = false;
     for (let i = 0; i < RepoListResponse.length; i++) {
       expect(RepoListResponse[i].repoId).not.toBeNull();
-      if (authorizationType != authorizationTypeEnum.APIServerUsernamePassword) {
-        expect(RepoListResponse[i].webclientUrl).not.toBeNull();
-        expect(RepoListResponse[i].webclientUrl).toContain(RepoListResponse[i].repoId);
-      }
-      if (RepoListResponse[i].repoId?.toLowerCase == repositoryId.toLowerCase) {
+      expect(RepoListResponse[i].webclientUrl).not.toBeNull();
+      expect(RepoListResponse[i].webclientUrl).toContain(RepoListResponse[i].repoId);
+      if (RepoListResponse[i].repoId?.localeCompare(repositoryId, undefined, { sensitivity: "base" }) === 0) {
         foundRepo = true;
       }
     }
@@ -25,8 +23,7 @@ describe('Repo List Integration Tests', () => {
       let SelfHostedRepoList: RepositoryInfo[] = await RepositoriesClient.getSelfHostedRepositoryList({ baseUrl });
       let foundRepo = false;
       for (let i = 0; i < SelfHostedRepoList.length; i++) {
-        expect(SelfHostedRepoList[i].repoId).not.toBeNull();
-        if (SelfHostedRepoList[i].repoId?.toLowerCase == repositoryId.toLowerCase) {
+        if (SelfHostedRepoList[i].repoId?.localeCompare(repositoryId, undefined, { sensitivity: "base" }) === 0) {
           foundRepo = true;
         }
       }

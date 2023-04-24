@@ -1,7 +1,8 @@
-import { repositoryId } from '../TestHelper.js';
+import { repositoryId, authorizationType } from '../TestHelper.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 import { ApiException } from '../../src/index.js';
+import { authorizationTypeEnum } from '../AuthorizationType.js';
 
 describe('Get Entries Integration Tests', () => {
   let entryId: number = 1;
@@ -61,9 +62,15 @@ describe('Get Entries Integration Tests', () => {
 
   // TODO use importDocument instead of hardcode entryId 3 https://github.com/Laserfiche/lf-repository-api-client-js/issues/53
   test('Get Document Content Type Return Content Headers', async () => {
+    if (authorizationType === authorizationTypeEnum.APIServerUsernamePassword) {
+      entryId = 509544;
+    } else {
+      entryId = 3;
+    }
+
     let result: any = await _RepositoryApiClient.entriesClient.getDocumentContentType({
       repoId: repositoryId,
-      entryId: 3,
+      entryId: entryId,
     });
     expect(result?.status).toBe(200);
     expect(result?.headers['content-type']).toBeDefined();
