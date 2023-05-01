@@ -75,3 +75,8 @@ jobs:
       with:
         upload: True
         output: sarif-results
+
+    - name: Download Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: test-file
