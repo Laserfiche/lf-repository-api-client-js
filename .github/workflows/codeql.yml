@@ -73,7 +73,7 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
       with:
-        upload: False
+        upload: True
         output: sarif-results
 
     - name: Upload SARIF results
