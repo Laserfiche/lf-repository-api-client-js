@@ -12070,7 +12070,7 @@ export class RepositoryApiClientHttpHandler {
     let shouldRetry = true;
 
     if (this.defaultRequestHeaders) {
-      this.defaultRequestHeaders["Accept-Encoding"] = "br";
+      this.defaultRequestHeaders['Accept-Encoding'] = 'br';
       init.headers = Object.assign({}, this.defaultRequestHeaders, init.headers);
     }
     let response: Response | undefined;
