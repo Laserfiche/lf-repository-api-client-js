@@ -2,7 +2,7 @@
 
 ### Features
 - Added `RepositoriesClient.getSelfHostedRepositoryList` method that will enable self hosted users to get their repository list without an access token.
-- Added the brotli compression header which will compress every API response to improve performance 
+- Added the gzip compression header which will compress every API response to improve performance 
 ## 1.1.3
 
 ### Features
