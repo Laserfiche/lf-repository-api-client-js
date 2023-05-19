@@ -14,7 +14,6 @@ See CHANGELOG [here](https://github.com/Laserfiche/lf-repository-api-client-js/b
 ## Installation
 
 To install, [see here](https://www.npmjs.com/package/@laserfiche/lf-repository-api-client)
-```
 
 ### Build, Test, and Package
 
