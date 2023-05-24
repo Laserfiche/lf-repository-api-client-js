@@ -60,7 +60,7 @@ export class RepositoryApiClient implements IRepositoryApiClient {
 
   private constructor(httpRequestHandler: HttpRequestHandler, baseUrlDebug?: string) {
     this.repoClientHandler = new RepositoryApiClientHttpHandler(httpRequestHandler);
-    if (httpRequestHandler){
+    if (this.repoClientHandler){
       this.defaultRequestHeaders['Accept-Encoding'] = 'gzip';
     }
     let fetch = this.repoClientHandler.httpHandler;
