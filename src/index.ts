@@ -77,7 +77,7 @@ export interface IEntriesClient {
     getEntryByPath(args: { repoId: string, fullPath: string | null, fallbackToClosestAncestor?: boolean | undefined }): Promise<FindEntryResult>;
 
     /**
-     * Returns the children entries of a folder in the repository. Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc". Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route. Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
+     * Returns the children entries of a folder in the repository. Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository. Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc". Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route. Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID.
      * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
@@ -186,7 +186,7 @@ export interface IEntriesClient {
     getLinkValuesFromEntry(args: { repoId: string, entryId: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWEntryLinkInfo>;
 
     /**
-     * Copy a new child entry in the designated folder async, and potentially return an operationToken. Provide the parent folder ID, and copy an entry as a child of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.  The status of the operation can be checked via the Tasks/{operationToken} route.
+     * Copy a new child entry in the designated folder async, and potentially return an operationToken. Provide the parent folder ID, and copy an entry as a child of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.  The status of the operation can be checked via the Tasks/{operationToken} route. Token substitution in the name of the copied entry is not supported.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
      * @param args.request (optional) Copy entry request.
@@ -207,7 +207,7 @@ export interface IEntriesClient {
     deleteDocument(args: { repoId: string, entryId: number }): Promise<ODataValueOfBoolean>;
 
     /**
-     * Returns information about the edoc content of an entry, without downloading the edoc in its entirety. Provide an entry ID, and get back the Content-Type and Content-Length in the response headers. This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry.
+     * Returns information about the edoc content of an entry, without downloading the edoc in its entirety. Provide an entry ID, and get back the Content-Type and Content-Length in the response headers. This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry. If an error occurs, the error message can be found in the X-APIServer-Error HTTP response header.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @return Get edoc info successfully.
@@ -693,6 +693,13 @@ export class EntriesClient implements IEntriesClient {
             result409 = CreateEntryResult.fromJS(resultData409);
             return throwException("Document creation is partial success.", status, _responseText, _headers, result409);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -872,6 +879,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -976,6 +990,13 @@ export class EntriesClient implements IEntriesClient {
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result409 = ProblemDetails.fromJS(resultData409);
             return throwException("Entry name conflicts.", status, _responseText, _headers, result409);
+            });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
             });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
@@ -1088,7 +1109,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns the children entries of a folder in the repository. Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc". Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route. Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
+     * Returns the children entries of a folder in the repository. Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository. Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc". Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route. Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID.
      * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
@@ -1301,6 +1322,13 @@ export class EntriesClient implements IEntriesClient {
             result409 = ProblemDetails.fromJS(resultData409);
             return throwException("Entry name conflicts.", status, _responseText, _headers, result409);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -1510,6 +1538,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Requested entry id not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
             let result423: any = null;
@@ -1711,6 +1746,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request id not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
             let result423: any = null;
@@ -1804,6 +1846,13 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
             });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
@@ -1935,7 +1984,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Copy a new child entry in the designated folder async, and potentially return an operationToken. Provide the parent folder ID, and copy an entry as a child of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.  The status of the operation can be checked via the Tasks/{operationToken} route.
+     * Copy a new child entry in the designated folder async, and potentially return an operationToken. Provide the parent folder ID, and copy an entry as a child of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.  The status of the operation can be checked via the Tasks/{operationToken} route. Token substitution in the name of the copied entry is not supported.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
      * @param args.request (optional) Copy entry request.
@@ -2015,6 +2064,13 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not found.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2121,7 +2177,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns information about the edoc content of an entry, without downloading the edoc in its entirety. Provide an entry ID, and get back the Content-Type and Content-Length in the response headers. This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry.
+     * Returns information about the edoc content of an entry, without downloading the edoc in its entirety. Provide an entry ID, and get back the Content-Type and Content-Length in the response headers. This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry. If an error occurs, the error message can be found in the X-APIServer-Error HTTP response header.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @return Get edoc info successfully.
@@ -2480,6 +2536,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
             let result423: any = null;
@@ -2582,6 +2645,13 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry not found.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
@@ -2762,6 +2832,13 @@ export class EntriesClient implements IEntriesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
             });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
@@ -4204,6 +4281,13 @@ export class SearchesClient implements ISearchesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -4774,6 +4858,13 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not found.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
             });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
