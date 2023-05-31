@@ -1,0 +1,47 @@
+name: generate-client
+
+on:
+  push:	
+    branches: [ 'generate-client-workflow' ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      API_VERSION:
+        description: 'The API version. Default value is 1'
+        required: false
+        type: string
+        default: '1'
+
+env:
+  API_VERSION: '1'
+
+jobs:
+  generate-client:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2.5.1
+      with:
+        node-version: "16"
+
+    - name: Install NSwag
+      run: npm ci
+
+    - name: Download swagger file
+      run: python ./generate-client/download_swagger.py --swagger-url 'https://api.laserfiche.com/repository/swagger/v${{ env.API_VERSION }}/swagger.json' --output-filepath './generate-client/swagger.json' --swagger-override-filepath './generate-client/swagger-override.json' 
+
+    - name: Generate the client
+      run: npm run nswag
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4.2.3
+      with:
+        branch: ${{ github.ref_name }}-generate-v${{ env.API_VERSION }}-client
+        delete-branch: true
+        title: "Automated update for generating the v${{ env.API_VERSION }} client by action ${{ github.run_id }}"
+        commit-message: "Automated update for generating the v${{ env.API_VERSION }} client by action ${{ github.run_id }}"
+        body: "Automated update for generating the v${{ env.API_VERSION }} client by action ${{ github.run_id }}"
+        assignees: ${{ github.actor }}
