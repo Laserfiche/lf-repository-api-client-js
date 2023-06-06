@@ -22,15 +22,8 @@ def replace_summary_by_description(json_data):
     for path_element in json_data['paths'].values():
         for api_element in path_element.values():
             if 'description' in api_element:
-                description = api_element['description']
-                paragraphs = description.split('\n')
-                new_paragraphs = []
-                for paragraph in paragraphs:
-                    if paragraph.startswith('- '):
-                        paragraph = paragraph[2:]
-                    new_paragraphs.append(paragraph)
-                new_description = ' '.join(new_paragraphs)
-                api_element['summary'] = new_description
+                api_element['summary'] = api_element['description']
+                del api_element['description']
     return json_data
 
 def replace_with_override_data(json_data, json_override_data):
