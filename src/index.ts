@@ -21,7 +21,9 @@ import {
 export interface IEntriesClient {
 
     /**
-     * Creates a new document in the specified folder with file (no more than 100 MB). Optionally sets metadata and electronic document component. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. With this route, partial success is possible. The response returns multiple operation (entryCreate operation, setEdoc operation, setLinks operation, etc..) objects, which contain information about any errors that may have occurred during the creation. As long as the entryCreate operation succeeds, the entry will be created, even if all other operations fail.
+     * - Creates a new document in the specified folder with file (no more than 100 MB).
+    - Optionally sets metadata and electronic document component.
+    - Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. With this route, partial success is possible. The response returns multiple operation (entryCreate operation, setEdoc operation, setLinks operation, etc..) objects, which contain information about any errors that may have occurred during the creation. As long as the entryCreate operation succeeds, the entry will be created, even if all other operations fail.
      * @param args.repoId The requested repository ID.
      * @param args.parentEntryId The entry ID of the folder that the document will be created in.
      * @param args.fileName The created document's file name.
@@ -36,7 +38,9 @@ export interface IEntriesClient {
     importDocument(args: { repoId: string, parentEntryId: number, fileName: string, autoRename?: boolean | undefined, culture?: string | null | undefined, electronicDocument?: FileParameter | undefined, request?: PostEntryWithEdocMetadataRequest | undefined }): Promise<CreateEntryResult>;
 
     /**
-     * Returns a single entry object. Provide an entry ID, and get the entry associated with that ID. Useful when detailed information about the entry is required, such as metadata, path information, etc. Allowed OData query options: Select. If the entry is a subtype (Folder, Document, or Shortcut), the entry will automatically be converted to include those model-specific properties.
+     * - Returns a single entry object.
+    - Provide an entry ID, and get the entry associated with that ID. Useful when detailed information about the entry is required, such as metadata, path information, etc.
+    - Allowed OData query options: Select. If the entry is a subtype (Folder, Document, or Shortcut), the entry will automatically be converted to include those model-specific properties.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -45,7 +49,9 @@ export interface IEntriesClient {
     getEntry(args: { repoId: string, entryId: number, select?: string | null | undefined }): Promise<Entry>;
 
     /**
-     * Begins a task to delete an entry, and returns an operationToken. Provide an entry ID, and queue a delete task to remove it from the repository (includes nested objects if the entry is a Folder type). The entry will not be deleted immediately. Optionally include an audit reason ID and comment in the JSON body. This route returns an operationToken, and will run as an asynchronous operation. Check the progress via the Tasks/{operationToken} route.
+     * - Begins a task to delete an entry, and returns an operationToken.
+    - Provide an entry ID, and queue a delete task to remove it from the repository (includes nested objects if the entry is a Folder type). The entry will not be deleted immediately.
+    - Optionally include an audit reason ID and comment in the JSON body. This route returns an operationToken, and will run as an asynchronous operation. Check the progress via the Tasks/{operationToken} route.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.request (optional) The submitted audit reason.
@@ -54,7 +60,9 @@ export interface IEntriesClient {
     deleteEntryInfo(args: { repoId: string, entryId: number, request?: DeleteEntryWithAuditReason | undefined }): Promise<AcceptedOperation>;
 
     /**
-     * Moves and/or renames an entry. Move and/or rename an entry by passing in the new parent folder ID or name in the JSON body. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
+     * - Moves and/or renames an entry.
+    - Move and/or rename an entry by passing in the new parent folder ID or name in the JSON body.
+    - Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.request (optional) The request containing the folder ID that the entry will be moved to and the new name
@@ -68,7 +76,8 @@ export interface IEntriesClient {
     moveOrRenameEntry(args: { repoId: string, entryId: number, request?: PatchEntryRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<Entry>;
 
     /**
-     * Returns a single entry object using the entry path. Optional query parameter: fallbackToClosestAncestor. Use the fallbackToClosestAncestor query parameter to return the closest existing ancestor if the initial entry path is not found.
+     * - Returns a single entry object using the entry path.
+    - Optional query parameter: fallbackToClosestAncestor. Use the fallbackToClosestAncestor query parameter to return the closest existing ancestor if the initial entry path is not found.
      * @param args.repoId The requested repository ID.
      * @param args.fullPath The requested entry path.
      * @param args.fallbackToClosestAncestor (optional) An optional query parameter used to indicate whether or not the closest ancestor in the path should be returned if the initial entry path is not found. The default value is false.
@@ -77,7 +86,12 @@ export interface IEntriesClient {
     getEntryByPath(args: { repoId: string, fullPath: string | null, fallbackToClosestAncestor?: boolean | undefined }): Promise<FindEntryResult>;
 
     /**
-     * Returns the children entries of a folder in the repository. Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc". Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route. Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
+     * - Returns the children entries of a folder in the repository.
+    - Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository.
+    - Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc". Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route.
+    - Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names.
+    - If field values are requested, only the first value is returned if it is a multi value field.
+    - Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID.
      * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
@@ -97,7 +111,9 @@ export interface IEntriesClient {
     getEntryListing(args: { repoId: string, entryId: number, groupByEntryType?: boolean | undefined, fields?: string[] | null | undefined, formatFields?: boolean | undefined, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfEntry>;
 
     /**
-     * Create/copy a new child entry in the designated folder. Provide the parent folder ID, and based on the request body, copy or create a folder/shortcut as a child entry of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
+     * - Create/copy a new child entry in the designated folder.
+    - Provide the parent folder ID, and based on the request body, copy or create a folder/shortcut as a child entry of the designated folder.
+    - Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
      * @param args.request (optional) The entry to create.
@@ -110,7 +126,9 @@ export interface IEntriesClient {
     createOrCopyEntry(args: { repoId: string, entryId: number, request?: PostEntryChildrenRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<Entry>;
 
     /**
-     * Returns the fields assigned to an entry. Provide an entry ID, and get a paged listing of all fields assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the fields assigned to an entry.
+    - Provide an entry ID, and get a paged listing of all fields assigned to that entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -129,7 +147,9 @@ export interface IEntriesClient {
     getFieldValues(args: { repoId: string, entryId: number, prefer?: string | null | undefined, formatValue?: boolean | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfFieldValue>;
 
     /**
-     * Update the field values assigned to an entry. Provide the new field values to assign to the entry, and remove/reset all previously assigned field values.  This is an overwrite action. The request body must include all desired field values, including any existing field values that should remain assigned to the entry. Field values that are not included in the request will be deleted from the entry. If the field value that is not included is part of a template, it will still be assigned (as required by the template), but its value will be reset.
+     * - Update the field values assigned to an entry.
+    - Provide the new field values to assign to the entry, and remove/reset all previously assigned field values. 
+    - This is an overwrite action. The request body must include all desired field values, including any existing field values that should remain assigned to the entry. Field values that are not included in the request will be deleted from the entry. If the field value that is not included is part of a template, it will still be assigned (as required by the template), but its value will be reset.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The entry ID of the entry that will have its fields updated.
      * @param args.fieldsToUpdate (optional) 
@@ -140,7 +160,9 @@ export interface IEntriesClient {
     assignFieldValues(args: { repoId: string, entryId: number, fieldsToUpdate?: { [key: string]: FieldToUpdate; } | undefined, culture?: string | null | undefined }): Promise<ODataValueOfIListOfFieldValue>;
 
     /**
-     * Returns the tags assigned to an entry. Provide an entry ID, and get a paged listing of tags assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the tags assigned to an entry.
+    - Provide an entry ID, and get a paged listing of tags assigned to that entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -154,7 +176,9 @@ export interface IEntriesClient {
     getTagsAssignedToEntry(args: { repoId: string, entryId: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWTagInfo>;
 
     /**
-     * Assign tags to an entry. Provide an entry ID and a list of tags to assign to that entry. This is an overwrite action. The request must include all tags to assign to the entry, including existing tags that should remain assigned to the entry.
+     * - Assign tags to an entry.
+    - Provide an entry ID and a list of tags to assign to that entry.
+    - This is an overwrite action. The request must include all tags to assign to the entry, including existing tags that should remain assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.tagsToAdd (optional) The tags to add.
@@ -163,7 +187,9 @@ export interface IEntriesClient {
     assignTags(args: { repoId: string, entryId: number, tagsToAdd?: PutTagRequest | undefined }): Promise<ODataValueOfIListOfWTagInfo>;
 
     /**
-     * Assign links to an entry. Provide an entry ID and a list of links to assign to that entry. This is an overwrite action. The request must include all links to assign to the entry, including existing links that should remain assigned to the entry.
+     * - Assign links to an entry.
+    - Provide an entry ID and a list of links to assign to that entry.
+    - This is an overwrite action. The request must include all links to assign to the entry, including existing links that should remain assigned to the entry.
      * @param args.repoId The request repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.linksToAdd (optional) 
@@ -172,7 +198,9 @@ export interface IEntriesClient {
     assignEntryLinks(args: { repoId: string, entryId: number, linksToAdd?: PutLinksRequest[] | undefined }): Promise<ODataValueOfIListOfWEntryLinkInfo>;
 
     /**
-     * Returns the links assigned to an entry. Provide an entry ID, and get a paged listing of links assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the links assigned to an entry.
+    - Provide an entry ID, and get a paged listing of links assigned to that entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.prefer (optional) An optional odata header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -186,7 +214,11 @@ export interface IEntriesClient {
     getLinkValuesFromEntry(args: { repoId: string, entryId: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWEntryLinkInfo>;
 
     /**
-     * Copy a new child entry in the designated folder async, and potentially return an operationToken. Provide the parent folder ID, and copy an entry as a child of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.  The status of the operation can be checked via the Tasks/{operationToken} route.
+     * - Copy a new child entry in the designated folder async, and potentially return an operationToken.
+    - Provide the parent folder ID, and copy an entry as a child of the designated folder.
+    - Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. 
+    - The status of the operation can be checked via the Tasks/{operationToken} route.
+    - Token substitution in the name of the copied entry is not supported.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
      * @param args.request (optional) Copy entry request.
@@ -199,7 +231,7 @@ export interface IEntriesClient {
     copyEntry(args: { repoId: string, entryId: number, request?: CopyAsyncRequest | undefined, autoRename?: boolean | undefined, culture?: string | null | undefined }): Promise<AcceptedOperation>;
 
     /**
-     * Delete the edoc associated with the provided entry ID.
+     * - Delete the edoc associated with the provided entry ID.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @return Deleted edoc successfully.
@@ -207,7 +239,10 @@ export interface IEntriesClient {
     deleteDocument(args: { repoId: string, entryId: number }): Promise<ODataValueOfBoolean>;
 
     /**
-     * Returns information about the edoc content of an entry, without downloading the edoc in its entirety. Provide an entry ID, and get back the Content-Type and Content-Length in the response headers. This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry.
+     * - Returns information about the edoc content of an entry, without downloading the edoc in its entirety.
+    - Provide an entry ID, and get back the Content-Type and Content-Length in the response headers.
+    - This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry.
+    - If an error occurs, the error message can be found in the X-APIServer-Error HTTP response header.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @return Get edoc info successfully.
@@ -215,7 +250,9 @@ export interface IEntriesClient {
     getDocumentContentType(args: { repoId: string, entryId: number }): Promise<HttpResponseHead<void>>;
 
     /**
-     * Returns an entry's edoc resource in a stream format. Provide an entry ID, and get the edoc resource as part of the response content. Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc.
+     * - Returns an entry's edoc resource in a stream format.
+    - Provide an entry ID, and get the edoc resource as part of the response content.
+    - Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @param args.range (optional) An optional header used to retrieve partial content of the edoc. Only supports single
@@ -225,7 +262,8 @@ export interface IEntriesClient {
     exportDocument(args: { repoId: string, entryId: number, range?: string | null | undefined }): Promise<FileResponse>;
 
     /**
-     * Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted. Optional parameter: pageRange (default empty). The value should be a comma-seperated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
+     * - Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted.
+    - Optional parameter: pageRange (default empty). The value should be a comma-seperated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @param args.pageRange (optional) The pages to be deleted.
@@ -234,7 +272,9 @@ export interface IEntriesClient {
     deletePages(args: { repoId: string, entryId: number, pageRange?: string | null | undefined }): Promise<ODataValueOfBoolean>;
 
     /**
-     * Returns an entry's edoc resource in a stream format while including an audit reason. Provide an entry ID and audit reason/comment in the request body, and get the edoc resource as part of the response content. Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc. This route is identical to the GET edoc route, but allows clients to include an audit reason when downloading the edoc.
+     * - Returns an entry's edoc resource in a stream format while including an audit reason.
+    - Provide an entry ID and audit reason/comment in the request body, and get the edoc resource as part of the response content.
+    - Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc. This route is identical to the GET edoc route, but allows clients to include an audit reason when downloading the edoc.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @param args.request (optional) 
@@ -245,7 +285,9 @@ export interface IEntriesClient {
     exportDocumentWithAuditReason(args: { repoId: string, entryId: number, request?: GetEdocWithAuditReasonRequest | undefined, range?: string | null | undefined }): Promise<FileResponse>;
 
     /**
-     * Returns dynamic field logic values with the current values of the fields in the template. Provide an entry ID and field values in the JSON body to get dynamic field logic values.  Independent and non-dynamic fields in the request body will be ignored, and only related dynamic field logic values for the assigned template will be returned.
+     * - Returns dynamic field logic values with the current values of the fields in the template.
+    - Provide an entry ID and field values in the JSON body to get dynamic field logic values.
+     Independent and non-dynamic fields in the request body will be ignored, and only related dynamic field logic values for the assigned template will be returned.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.request (optional) 
@@ -254,7 +296,9 @@ export interface IEntriesClient {
     getDynamicFieldValues(args: { repoId: string, entryId: number, request?: GetDynamicFieldLogicValueRequest | undefined }): Promise<{ [key: string]: string[]; }>;
 
     /**
-     * Remove the currently assigned template from the specified entry. Provide an entry ID to clear template value on. If the entry does not have a template assigned, no change will be made.
+     * - Remove the currently assigned template from the specified entry.
+    - Provide an entry ID to clear template value on.
+    - If the entry does not have a template assigned, no change will be made.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The ID of the entry that will have its template removed.
      * @return Remove the currently assigned template successfully.
@@ -262,7 +306,9 @@ export interface IEntriesClient {
     deleteAssignedTemplate(args: { repoId: string, entryId: number }): Promise<Entry>;
 
     /**
-     * Assign a template to an entry. Provide an entry ID, template name, and a list of template fields to assign to that entry. Only template values will be modified. Any existing independent fields on the entry will not be modified, nor will they be added if included in the request. The only modification to fields will only occur on templated fields. If the previously assigned template includes common template fields as the newly assigned template, the common field values will not be modified.
+     * - Assign a template to an entry.
+    - Provide an entry ID, template name, and a list of template fields to assign to that entry.
+    - Only template values will be modified. Any existing independent fields on the entry will not be modified, nor will they be added if included in the request. The only modification to fields will only occur on templated fields. If the previously assigned template includes common template fields as the newly assigned template, the common field values will not be modified.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The ID of entry that will have its template updated.
      * @param args.request (optional) The template and template fields that will be assigned to the entry.
@@ -593,7 +639,9 @@ export class EntriesClient implements IEntriesClient {
   }
 
     /**
-     * Creates a new document in the specified folder with file (no more than 100 MB). Optionally sets metadata and electronic document component. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. With this route, partial success is possible. The response returns multiple operation (entryCreate operation, setEdoc operation, setLinks operation, etc..) objects, which contain information about any errors that may have occurred during the creation. As long as the entryCreate operation succeeds, the entry will be created, even if all other operations fail.
+     * - Creates a new document in the specified folder with file (no more than 100 MB).
+    - Optionally sets metadata and electronic document component.
+    - Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. With this route, partial success is possible. The response returns multiple operation (entryCreate operation, setEdoc operation, setLinks operation, etc..) objects, which contain information about any errors that may have occurred during the creation. As long as the entryCreate operation succeeds, the entry will be created, even if all other operations fail.
      * @param args.repoId The requested repository ID.
      * @param args.parentEntryId The entry ID of the folder that the document will be created in.
      * @param args.fileName The created document's file name.
@@ -693,6 +741,13 @@ export class EntriesClient implements IEntriesClient {
             result409 = CreateEntryResult.fromJS(resultData409);
             return throwException("Document creation is partial success.", status, _responseText, _headers, result409);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -716,7 +771,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns a single entry object. Provide an entry ID, and get the entry associated with that ID. Useful when detailed information about the entry is required, such as metadata, path information, etc. Allowed OData query options: Select. If the entry is a subtype (Folder, Document, or Shortcut), the entry will automatically be converted to include those model-specific properties.
+     * - Returns a single entry object.
+    - Provide an entry ID, and get the entry associated with that ID. Useful when detailed information about the entry is required, such as metadata, path information, etc.
+    - Allowed OData query options: Select. If the entry is a subtype (Folder, Document, or Shortcut), the entry will automatically be converted to include those model-specific properties.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -801,7 +858,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Begins a task to delete an entry, and returns an operationToken. Provide an entry ID, and queue a delete task to remove it from the repository (includes nested objects if the entry is a Folder type). The entry will not be deleted immediately. Optionally include an audit reason ID and comment in the JSON body. This route returns an operationToken, and will run as an asynchronous operation. Check the progress via the Tasks/{operationToken} route.
+     * - Begins a task to delete an entry, and returns an operationToken.
+    - Provide an entry ID, and queue a delete task to remove it from the repository (includes nested objects if the entry is a Folder type). The entry will not be deleted immediately.
+    - Optionally include an audit reason ID and comment in the JSON body. This route returns an operationToken, and will run as an asynchronous operation. Check the progress via the Tasks/{operationToken} route.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.request (optional) The submitted audit reason.
@@ -872,6 +931,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -888,7 +954,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Moves and/or renames an entry. Move and/or rename an entry by passing in the new parent folder ID or name in the JSON body. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
+     * - Moves and/or renames an entry.
+    - Move and/or rename an entry by passing in the new parent folder ID or name in the JSON body.
+    - Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.request (optional) The request containing the folder ID that the entry will be moved to and the new name
@@ -977,6 +1045,13 @@ export class EntriesClient implements IEntriesClient {
             result409 = ProblemDetails.fromJS(resultData409);
             return throwException("Entry name conflicts.", status, _responseText, _headers, result409);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
             let result423: any = null;
@@ -1000,7 +1075,8 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns a single entry object using the entry path. Optional query parameter: fallbackToClosestAncestor. Use the fallbackToClosestAncestor query parameter to return the closest existing ancestor if the initial entry path is not found.
+     * - Returns a single entry object using the entry path.
+    - Optional query parameter: fallbackToClosestAncestor. Use the fallbackToClosestAncestor query parameter to return the closest existing ancestor if the initial entry path is not found.
      * @param args.repoId The requested repository ID.
      * @param args.fullPath The requested entry path.
      * @param args.fallbackToClosestAncestor (optional) An optional query parameter used to indicate whether or not the closest ancestor in the path should be returned if the initial entry path is not found. The default value is false.
@@ -1088,7 +1164,12 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns the children entries of a folder in the repository. Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc". Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route. Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
+     * - Returns the children entries of a folder in the repository.
+    - Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository.
+    - Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc". Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route.
+    - Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names.
+    - If field values are requested, only the first value is returned if it is a multi value field.
+    - Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID.
      * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
@@ -1213,7 +1294,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Create/copy a new child entry in the designated folder. Provide the parent folder ID, and based on the request body, copy or create a folder/shortcut as a child entry of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
+     * - Create/copy a new child entry in the designated folder.
+    - Provide the parent folder ID, and based on the request body, copy or create a folder/shortcut as a child entry of the designated folder.
+    - Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
      * @param args.request (optional) The entry to create.
@@ -1301,6 +1384,13 @@ export class EntriesClient implements IEntriesClient {
             result409 = ProblemDetails.fromJS(resultData409);
             return throwException("Entry name conflicts.", status, _responseText, _headers, result409);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -1317,7 +1407,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns the fields assigned to an entry. Provide an entry ID, and get a paged listing of all fields assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the fields assigned to an entry.
+    - Provide an entry ID, and get a paged listing of all fields assigned to that entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1435,7 +1527,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Update the field values assigned to an entry. Provide the new field values to assign to the entry, and remove/reset all previously assigned field values.  This is an overwrite action. The request body must include all desired field values, including any existing field values that should remain assigned to the entry. Field values that are not included in the request will be deleted from the entry. If the field value that is not included is part of a template, it will still be assigned (as required by the template), but its value will be reset.
+     * - Update the field values assigned to an entry.
+    - Provide the new field values to assign to the entry, and remove/reset all previously assigned field values. 
+    - This is an overwrite action. The request body must include all desired field values, including any existing field values that should remain assigned to the entry. Field values that are not included in the request will be deleted from the entry. If the field value that is not included is part of a template, it will still be assigned (as required by the template), but its value will be reset.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The entry ID of the entry that will have its fields updated.
      * @param args.fieldsToUpdate (optional) 
@@ -1510,6 +1604,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Requested entry id not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
             let result423: any = null;
@@ -1533,7 +1634,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns the tags assigned to an entry. Provide an entry ID, and get a paged listing of tags assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the tags assigned to an entry.
+    - Provide an entry ID, and get a paged listing of tags assigned to that entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1640,7 +1743,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Assign tags to an entry. Provide an entry ID and a list of tags to assign to that entry. This is an overwrite action. The request must include all tags to assign to the entry, including existing tags that should remain assigned to the entry.
+     * - Assign tags to an entry.
+    - Provide an entry ID and a list of tags to assign to that entry.
+    - This is an overwrite action. The request must include all tags to assign to the entry, including existing tags that should remain assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.tagsToAdd (optional) The tags to add.
@@ -1711,6 +1816,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request id not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
             let result423: any = null;
@@ -1734,7 +1846,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Assign links to an entry. Provide an entry ID and a list of links to assign to that entry. This is an overwrite action. The request must include all links to assign to the entry, including existing links that should remain assigned to the entry.
+     * - Assign links to an entry.
+    - Provide an entry ID and a list of links to assign to that entry.
+    - This is an overwrite action. The request must include all links to assign to the entry, including existing links that should remain assigned to the entry.
      * @param args.repoId The request repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.linksToAdd (optional) 
@@ -1805,6 +1919,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
             let result423: any = null;
@@ -1828,7 +1949,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns the links assigned to an entry. Provide an entry ID, and get a paged listing of links assigned to that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the links assigned to an entry.
+    - Provide an entry ID, and get a paged listing of links assigned to that entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.prefer (optional) An optional odata header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1935,7 +2058,11 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Copy a new child entry in the designated folder async, and potentially return an operationToken. Provide the parent folder ID, and copy an entry as a child of the designated folder. Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed.  The status of the operation can be checked via the Tasks/{operationToken} route.
+     * - Copy a new child entry in the designated folder async, and potentially return an operationToken.
+    - Provide the parent folder ID, and copy an entry as a child of the designated folder.
+    - Optional parameter: autoRename (default false). If an entry already exists with the given name, the entry will be automatically renamed. 
+    - The status of the operation can be checked via the Tasks/{operationToken} route.
+    - Token substitution in the name of the copied entry is not supported.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
      * @param args.request (optional) Copy entry request.
@@ -2016,6 +2143,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -2032,7 +2166,7 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Delete the edoc associated with the provided entry ID.
+     * - Delete the edoc associated with the provided entry ID.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @return Deleted edoc successfully.
@@ -2121,7 +2255,10 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns information about the edoc content of an entry, without downloading the edoc in its entirety. Provide an entry ID, and get back the Content-Type and Content-Length in the response headers. This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry.
+     * - Returns information about the edoc content of an entry, without downloading the edoc in its entirety.
+    - Provide an entry ID, and get back the Content-Type and Content-Length in the response headers.
+    - This route does not provide a way to download the actual edoc. Instead, it just gives metadata information about the edoc associated with the entry.
+    - If an error occurs, the error message can be found in the X-APIServer-Error HTTP response header.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @return Get edoc info successfully.
@@ -2188,7 +2325,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns an entry's edoc resource in a stream format. Provide an entry ID, and get the edoc resource as part of the response content. Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc.
+     * - Returns an entry's edoc resource in a stream format.
+    - Provide an entry ID, and get the edoc resource as part of the response content.
+    - Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @param args.range (optional) An optional header used to retrieve partial content of the edoc. Only supports single
@@ -2297,7 +2436,8 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted. Optional parameter: pageRange (default empty). The value should be a comma-seperated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
+     * - Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted.
+    - Optional parameter: pageRange (default empty). The value should be a comma-seperated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @param args.pageRange (optional) The pages to be deleted.
@@ -2389,7 +2529,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns an entry's edoc resource in a stream format while including an audit reason. Provide an entry ID and audit reason/comment in the request body, and get the edoc resource as part of the response content. Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc. This route is identical to the GET edoc route, but allows clients to include an audit reason when downloading the edoc.
+     * - Returns an entry's edoc resource in a stream format while including an audit reason.
+    - Provide an entry ID and audit reason/comment in the request body, and get the edoc resource as part of the response content.
+    - Optional header: Range. Use the Range header (single range with byte unit) to retrieve partial content of the edoc, rather than the entire edoc. This route is identical to the GET edoc route, but allows clients to include an audit reason when downloading the edoc.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested document ID.
      * @param args.request (optional) 
@@ -2480,6 +2622,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
             let result423: any = null;
@@ -2503,7 +2652,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Returns dynamic field logic values with the current values of the fields in the template. Provide an entry ID and field values in the JSON body to get dynamic field logic values.  Independent and non-dynamic fields in the request body will be ignored, and only related dynamic field logic values for the assigned template will be returned.
+     * - Returns dynamic field logic values with the current values of the fields in the template.
+    - Provide an entry ID and field values in the JSON body to get dynamic field logic values.
+     Independent and non-dynamic fields in the request body will be ignored, and only related dynamic field logic values for the assigned template will be returned.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.request (optional) 
@@ -2583,6 +2734,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -2599,7 +2757,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Remove the currently assigned template from the specified entry. Provide an entry ID to clear template value on. If the entry does not have a template assigned, no change will be made.
+     * - Remove the currently assigned template from the specified entry.
+    - Provide an entry ID to clear template value on.
+    - If the entry does not have a template assigned, no change will be made.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The ID of the entry that will have its template removed.
      * @return Remove the currently assigned template successfully.
@@ -2688,7 +2848,9 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * Assign a template to an entry. Provide an entry ID, template name, and a list of template fields to assign to that entry. Only template values will be modified. Any existing independent fields on the entry will not be modified, nor will they be added if included in the request. The only modification to fields will only occur on templated fields. If the previously assigned template includes common template fields as the newly assigned template, the common field values will not be modified.
+     * - Assign a template to an entry.
+    - Provide an entry ID, template name, and a list of template fields to assign to that entry.
+    - Only template values will be modified. Any existing independent fields on the entry will not be modified, nor will they be added if included in the request. The only modification to fields will only occur on templated fields. If the previously assigned template includes common template fields as the newly assigned template, the common field values will not be modified.
      * @param args.repoId The requested repository ID.
      * @param args.entryId The ID of entry that will have its template updated.
      * @param args.request (optional) The template and template fields that will be assigned to the entry.
@@ -2763,6 +2925,13 @@ export class EntriesClient implements IEntriesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Request entry id not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 423) {
             return response.text().then((_responseText) => {
             let result423: any = null;
@@ -2789,7 +2958,9 @@ export class EntriesClient implements IEntriesClient {
 export interface IAttributesClient {
 
     /**
-     * Returns the attribute key value pairs associated with the authenticated user. Alternatively, return only the attribute key value pairs that are associated with the "Everyone" group. Attribute keys can be used with subsequent calls to get specific attribute values. Default page size: 100. Allowed OData query options: Select, Count, OrderBy, Skip, Top, SkipToken, Prefer. Optional query parameters: everyone (bool, default false). When true, this route does not return the attributes that are tied to the currently authenticated user, but rather the attributes assigned to the "Everyone" group. Note when this is true, the response does not include both the "Everyone" groups attribute and the currently authenticated user, but only the "Everyone" groups.
+     * - Returns the attribute key value pairs associated with the authenticated user. Alternatively, return only the attribute key value pairs that are associated with the "Everyone" group.
+    - Attribute keys can be used with subsequent calls to get specific attribute values.
+    - Default page size: 100. Allowed OData query options: Select, Count, OrderBy, Skip, Top, SkipToken, Prefer. Optional query parameters: everyone (bool, default false). When true, this route does not return the attributes that are tied to the currently authenticated user, but rather the attributes assigned to the "Everyone" group. Note when this is true, the response does not include both the "Everyone" groups attribute and the currently authenticated user, but only the "Everyone" groups.
      * @param args.repoId The requested repository ID.
      * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -2803,7 +2974,8 @@ export interface IAttributesClient {
     getTrusteeAttributeKeyValuePairs(args: { repoId: string, everyone?: boolean | undefined, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfListOfAttribute>;
 
     /**
-     * Returns the attribute associated with the key. Alternatively, return the attribute associated with the key within "Everyone" group. Optional query parameters: everyone (bool, default false). When true, the server only searches for the attribute value with the given key upon the authenticated users attributes. If false, only the authenticated users attributes will be queried.
+     * - Returns the attribute associated with the key. Alternatively, return the attribute associated with the key within "Everyone" group.
+    - Optional query parameters: everyone (bool, default false). When true, the server only searches for the attribute value with the given key upon the authenticated users attributes. If false, only the authenticated users attributes will be queried.
      * @param args.repoId The requested repository ID.
      * @param args.attributeKey The requested attribute key.
      * @param args.everyone (optional) Boolean value that indicates whether to return attributes associated with everyone or the currently authenticated user.
@@ -2890,7 +3062,9 @@ export class AttributesClient implements IAttributesClient {
   }
 
     /**
-     * Returns the attribute key value pairs associated with the authenticated user. Alternatively, return only the attribute key value pairs that are associated with the "Everyone" group. Attribute keys can be used with subsequent calls to get specific attribute values. Default page size: 100. Allowed OData query options: Select, Count, OrderBy, Skip, Top, SkipToken, Prefer. Optional query parameters: everyone (bool, default false). When true, this route does not return the attributes that are tied to the currently authenticated user, but rather the attributes assigned to the "Everyone" group. Note when this is true, the response does not include both the "Everyone" groups attribute and the currently authenticated user, but only the "Everyone" groups.
+     * - Returns the attribute key value pairs associated with the authenticated user. Alternatively, return only the attribute key value pairs that are associated with the "Everyone" group.
+    - Attribute keys can be used with subsequent calls to get specific attribute values.
+    - Default page size: 100. Allowed OData query options: Select, Count, OrderBy, Skip, Top, SkipToken, Prefer. Optional query parameters: everyone (bool, default false). When true, this route does not return the attributes that are tied to the currently authenticated user, but rather the attributes assigned to the "Everyone" group. Note when this is true, the response does not include both the "Everyone" groups attribute and the currently authenticated user, but only the "Everyone" groups.
      * @param args.repoId The requested repository ID.
      * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -2998,7 +3172,8 @@ export class AttributesClient implements IAttributesClient {
     }
 
     /**
-     * Returns the attribute associated with the key. Alternatively, return the attribute associated with the key within "Everyone" group. Optional query parameters: everyone (bool, default false). When true, the server only searches for the attribute value with the given key upon the authenticated users attributes. If false, only the authenticated users attributes will be queried.
+     * - Returns the attribute associated with the key. Alternatively, return the attribute associated with the key within "Everyone" group.
+    - Optional query parameters: everyone (bool, default false). When true, the server only searches for the attribute value with the given key upon the authenticated users attributes. If false, only the authenticated users attributes will be queried.
      * @param args.repoId The requested repository ID.
      * @param args.attributeKey The requested attribute key.
      * @param args.everyone (optional) Boolean value that indicates whether to return attributes associated with everyone or the currently authenticated user.
@@ -3088,7 +3263,9 @@ export class AttributesClient implements IAttributesClient {
 export interface IFieldDefinitionsClient {
 
     /**
-     * Returns a single field definition associated with the specified ID.  Useful when a route provides a minimal amount of details and more information about the specific field definition is needed. Allowed OData query options: Select
+     * - Returns a single field definition associated with the specified ID. 
+    - Useful when a route provides a minimal amount of details and more information about the specific field definition is needed.
+    - Allowed OData query options: Select
      * @param args.repoId The requested repository ID.
      * @param args.fieldDefinitionId The requested field definition ID.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -3099,7 +3276,9 @@ export interface IFieldDefinitionsClient {
     getFieldDefinitionById(args: { repoId: string, fieldDefinitionId: number, culture?: string | null | undefined, select?: string | null | undefined }): Promise<WFieldInfo>;
 
     /**
-     * Returns a paged listing of field definitions available in the specified repository. Useful when trying to find a list of all field definitions available, rather than only those assigned to a specific entry/template. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns a paged listing of field definitions available in the specified repository.
+    - Useful when trying to find a list of all field definitions available, rather than only those assigned to a specific entry/template.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -3196,7 +3375,9 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   }
 
     /**
-     * Returns a single field definition associated with the specified ID.  Useful when a route provides a minimal amount of details and more information about the specific field definition is needed. Allowed OData query options: Select
+     * - Returns a single field definition associated with the specified ID. 
+    - Useful when a route provides a minimal amount of details and more information about the specific field definition is needed.
+    - Allowed OData query options: Select
      * @param args.repoId The requested repository ID.
      * @param args.fieldDefinitionId The requested field definition ID.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -3285,7 +3466,9 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
     }
 
     /**
-     * Returns a paged listing of field definitions available in the specified repository. Useful when trying to find a list of all field definitions available, rather than only those assigned to a specific entry/template. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns a paged listing of field definitions available in the specified repository.
+    - Useful when trying to find a list of all field definitions available, rather than only those assigned to a specific entry/template.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -3395,7 +3578,9 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
 export interface ILinkDefinitionsClient {
 
     /**
-     * Returns the link definitions in the repository. Provide a repository ID and get a paged listing of link definitions available in the repository. Useful when trying to display all link definitions available, not only links assigned to a specific entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the link definitions in the repository.
+    - Provide a repository ID and get a paged listing of link definitions available in the repository. Useful when trying to display all link definitions available, not only links assigned to a specific entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -3408,7 +3593,9 @@ export interface ILinkDefinitionsClient {
     getLinkDefinitions(args: { repoId: string, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfEntryLinkTypeInfo>;
 
     /**
-     * Returns a single link definition associated with the specified ID. Provide a link type ID and get the associated link definition. Useful when a route provides a minimal amount of details and more information about the specific link definition is needed. Allowed OData query options: Select
+     * - Returns a single link definition associated with the specified ID.
+    - Provide a link type ID and get the associated link definition. Useful when a route provides a minimal amount of details and more information about the specific link definition is needed.
+    - Allowed OData query options: Select
      * @param args.repoId The requested repository ID.
      * @param args.linkTypeId The requested link type ID.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -3495,7 +3682,9 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
   }
 
     /**
-     * Returns the link definitions in the repository. Provide a repository ID and get a paged listing of link definitions available in the repository. Useful when trying to display all link definitions available, not only links assigned to a specific entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the link definitions in the repository.
+    - Provide a repository ID and get a paged listing of link definitions available in the repository. Useful when trying to display all link definitions available, not only links assigned to a specific entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -3598,7 +3787,9 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
     }
 
     /**
-     * Returns a single link definition associated with the specified ID. Provide a link type ID and get the associated link definition. Useful when a route provides a minimal amount of details and more information about the specific link definition is needed. Allowed OData query options: Select
+     * - Returns a single link definition associated with the specified ID.
+    - Provide a link type ID and get the associated link definition. Useful when a route provides a minimal amount of details and more information about the specific link definition is needed.
+    - Allowed OData query options: Select
      * @param args.repoId The requested repository ID.
      * @param args.linkTypeId The requested link type ID.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -3686,7 +3877,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
 export interface IRepositoriesClient {
 
     /**
-     * Returns the repository resource list that current user has access to.
+     * - Returns the repository resource list that current user has access to.
      * @return Get the respository resource list successfully.
      */
     getRepositoryList(args: {  }): Promise<RepositoryInfo[]>;
@@ -3718,7 +3909,7 @@ export class RepositoriesClient implements IRepositoriesClient {
   }
 
     /**
-     * Returns the repository resource list that current user has access to.
+     * - Returns the repository resource list that current user has access to.
      * @return Get the respository resource list successfully.
      */
     getRepositoryList(args: {  }): Promise<RepositoryInfo[]> {
@@ -3795,7 +3986,9 @@ export class RepositoriesClient implements IRepositoriesClient {
 export interface IAuditReasonsClient {
 
     /**
-     * Returns the audit reasons associated with the authenticated user. Inherited audit reasons are included. Only includes audit reasons associated with available API functionalities, like delete entry and export document. If the authenticated user does not have the appropriate Laserfiche feature right, the audit reasons associated with that feature right will not be included.
+     * - Returns the audit reasons associated with the authenticated user. Inherited audit reasons are included.
+    - Only includes audit reasons associated with available API functionalities, like delete entry and export document.
+    - If the authenticated user does not have the appropriate Laserfiche feature right, the audit reasons associated with that feature right will not be included.
      * @param args.repoId The requested repository ID.
      * @return Get audit reasons successfully.
      */
@@ -3813,7 +4006,9 @@ export class AuditReasonsClient implements IAuditReasonsClient {
     }
 
     /**
-     * Returns the audit reasons associated with the authenticated user. Inherited audit reasons are included. Only includes audit reasons associated with available API functionalities, like delete entry and export document. If the authenticated user does not have the appropriate Laserfiche feature right, the audit reasons associated with that feature right will not be included.
+     * - Returns the audit reasons associated with the authenticated user. Inherited audit reasons are included.
+    - Only includes audit reasons associated with available API functionalities, like delete entry and export document.
+    - If the authenticated user does not have the appropriate Laserfiche feature right, the audit reasons associated with that feature right will not be included.
      * @param args.repoId The requested repository ID.
      * @return Get audit reasons successfully.
      */
@@ -3894,7 +4089,8 @@ export class AuditReasonsClient implements IAuditReasonsClient {
 export interface ISearchesClient {
 
     /**
-     * Runs a search operation on the repository. Optional body parameters: FuzzyType: (default none), which can be used to determine what is considered a match by number of letters or percentage. FuzzyFactor: integer value that determines the degree to which a search will be considered a match (integer value for NumberOfLetters, or int value representing a percentage). The status for search operations must be checked via the Search specific status checking route.
+     * - Runs a search operation on the repository.
+    - Optional body parameters: FuzzyType: (default none), which can be used to determine what is considered a match by number of letters or percentage. FuzzyFactor: integer value that determines the degree to which a search will be considered a match (integer value for NumberOfLetters, or int value representing a percentage). The status for search operations must be checked via the Search specific status checking route.
      * @param args.repoId The requested repository ID.
      * @param args.request (optional) The Laserfiche search command to run, optionally include fuzzy search settings.
      * @return Search operation start successfully.
@@ -3902,7 +4098,9 @@ export interface ISearchesClient {
     createSearchOperation(args: { repoId: string, request?: AdvancedSearchRequest | undefined }): Promise<AcceptedOperation>;
 
     /**
-     * Returns search status. Provide a token (returned in the create search asynchronous route), and get the search status, progress, and any errors that may have occurred. When the search is completed, the Location header can be inspected as a link to the search results. OperationStatus can be one of the following : NotStarted, InProgress, Completed, Failed, or Canceled.
+     * - Returns search status.
+    - Provide a token (returned in the create search asynchronous route), and get the search status, progress, and any errors that may have occurred. When the search is completed, the Location header can be inspected as a link to the search results.
+    - OperationStatus can be one of the following : NotStarted, InProgress, Completed, Failed, or Canceled.
      * @param args.repoId The requested repository ID.
      * @param args.searchToken The requested searchToken.
      * @return Search has failed. Check the errors property to find out why.
@@ -3910,7 +4108,8 @@ export interface ISearchesClient {
     getSearchStatus(args: { repoId: string, searchToken: string }): Promise<OperationProgress>;
 
     /**
-     * Cancels a currently running search. Closes a completed search.
+     * - Cancels a currently running search.
+    - Closes a completed search.
      * @param args.repoId The requested repository ID.
      * @param args.searchToken The requested searchToken.
      * @return Cancel or closed search successfully.
@@ -3918,7 +4117,13 @@ export interface ISearchesClient {
     cancelOrCloseSearch(args: { repoId: string, searchToken: string }): Promise<ODataValueOfBoolean>;
 
     /**
-     * Returns a search result listing if the search is completed. Optional query parameter: groupByOrderType (default false). This query parameter decides whether or not results are returned in groups based on their entry type. Optional query parameter: refresh (default false). If the search listing should be refreshed to show updated values. Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". sort order can be either "asc" or "desc". Search results expire after 5 minutes, but can be refreshed by retrieving the results again. Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
+     * - Returns a search result listing if the search is completed.
+    - Optional query parameter: groupByOrderType (default false). This query parameter decides whether or not results are returned in groups based on their entry type.
+    - Optional query parameter: refresh (default false). If the search listing should be refreshed to show updated values.
+    - Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". sort order can be either "asc" or "desc". Search results expire after 5 minutes, but can be refreshed by retrieving the results again.
+    - Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names.
+    - If field values are requested, only the first value is returned if it is a multi value field.
+    - Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.searchToken The requested searchToken.
      * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
@@ -3939,7 +4144,9 @@ export interface ISearchesClient {
     getSearchResults(args: { repoId: string, searchToken: string, groupByEntryType?: boolean | undefined, refresh?: boolean | undefined, fields?: string[] | null | undefined, formatFields?: boolean | undefined, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfEntry>;
 
     /**
-     * Returns the context hits associated with a search result entry. Given a searchToken, and rowNumber associated with a search entry in the listing, return the context hits for that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the context hits associated with a search result entry.
+    - Given a searchToken, and rowNumber associated with a search entry in the listing, return the context hits for that entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.searchToken The requested searchToken.
      * @param args.rowNumber The search result listing row number to get context hits for.
@@ -4137,7 +4344,8 @@ export class SearchesClient implements ISearchesClient {
   }
 
     /**
-     * Runs a search operation on the repository. Optional body parameters: FuzzyType: (default none), which can be used to determine what is considered a match by number of letters or percentage. FuzzyFactor: integer value that determines the degree to which a search will be considered a match (integer value for NumberOfLetters, or int value representing a percentage). The status for search operations must be checked via the Search specific status checking route.
+     * - Runs a search operation on the repository.
+    - Optional body parameters: FuzzyType: (default none), which can be used to determine what is considered a match by number of letters or percentage. FuzzyFactor: integer value that determines the degree to which a search will be considered a match (integer value for NumberOfLetters, or int value representing a percentage). The status for search operations must be checked via the Search specific status checking route.
      * @param args.repoId The requested repository ID.
      * @param args.request (optional) The Laserfiche search command to run, optionally include fuzzy search settings.
      * @return Search operation start successfully.
@@ -4204,6 +4412,13 @@ export class SearchesClient implements ISearchesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -4220,7 +4435,9 @@ export class SearchesClient implements ISearchesClient {
     }
 
     /**
-     * Returns search status. Provide a token (returned in the create search asynchronous route), and get the search status, progress, and any errors that may have occurred. When the search is completed, the Location header can be inspected as a link to the search results. OperationStatus can be one of the following : NotStarted, InProgress, Completed, Failed, or Canceled.
+     * - Returns search status.
+    - Provide a token (returned in the create search asynchronous route), and get the search status, progress, and any errors that may have occurred. When the search is completed, the Location header can be inspected as a link to the search results.
+    - OperationStatus can be one of the following : NotStarted, InProgress, Completed, Failed, or Canceled.
      * @param args.repoId The requested repository ID.
      * @param args.searchToken The requested searchToken.
      * @return Search has failed. Check the errors property to find out why.
@@ -4316,7 +4533,8 @@ export class SearchesClient implements ISearchesClient {
     }
 
     /**
-     * Cancels a currently running search. Closes a completed search.
+     * - Cancels a currently running search.
+    - Closes a completed search.
      * @param args.repoId The requested repository ID.
      * @param args.searchToken The requested searchToken.
      * @return Cancel or closed search successfully.
@@ -4398,7 +4616,13 @@ export class SearchesClient implements ISearchesClient {
     }
 
     /**
-     * Returns a search result listing if the search is completed. Optional query parameter: groupByOrderType (default false). This query parameter decides whether or not results are returned in groups based on their entry type. Optional query parameter: refresh (default false). If the search listing should be refreshed to show updated values. Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". sort order can be either "asc" or "desc". Search results expire after 5 minutes, but can be refreshed by retrieving the results again. Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
+     * - Returns a search result listing if the search is completed.
+    - Optional query parameter: groupByOrderType (default false). This query parameter decides whether or not results are returned in groups based on their entry type.
+    - Optional query parameter: refresh (default false). If the search listing should be refreshed to show updated values.
+    - Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". sort order can be either "asc" or "desc". Search results expire after 5 minutes, but can be refreshed by retrieving the results again.
+    - Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names.
+    - If field values are requested, only the first value is returned if it is a multi value field.
+    - Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.searchToken The requested searchToken.
      * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
@@ -4528,7 +4752,9 @@ export class SearchesClient implements ISearchesClient {
     }
 
     /**
-     * Returns the context hits associated with a search result entry. Given a searchToken, and rowNumber associated with a search entry in the listing, return the context hits for that entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the context hits associated with a search result entry.
+    - Given a searchToken, and rowNumber associated with a search entry in the listing, return the context hits for that entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.searchToken The requested searchToken.
      * @param args.rowNumber The search result listing row number to get context hits for.
@@ -4642,7 +4868,12 @@ export class SearchesClient implements ISearchesClient {
 export interface ISimpleSearchesClient {
 
     /**
-     * Runs a "simple" search operation on the repository. Returns a truncated search result listing. Search result listing may be truncated, depending on number of results. Additionally, searches may time out if they take too long. Use the other search route to run full searches. Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
+     * - Runs a "simple" search operation on the repository.
+    - Returns a truncated search result listing.
+    - Search result listing may be truncated, depending on number of results. Additionally, searches may time out if they take too long. Use the other search route to run full searches.
+    - Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names.
+    - If field values are requested, only the first value is returned if it is a multi value field.
+    - Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.select (optional) Limits the properties returned in the result.
      * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -4669,7 +4900,12 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
     }
 
     /**
-     * Runs a "simple" search operation on the repository. Returns a truncated search result listing. Search result listing may be truncated, depending on number of results. Additionally, searches may time out if they take too long. Use the other search route to run full searches. Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. Null or Empty field values should not be used to determine if a field is assigned to the entry.
+     * - Runs a "simple" search operation on the repository.
+    - Returns a truncated search result listing.
+    - Search result listing may be truncated, depending on number of results. Additionally, searches may time out if they take too long. Use the other search route to run full searches.
+    - Optionally returns field values for the entries in the search result listing. Each field name needs to be specified in the request. Maximum limit of 10 field names.
+    - If field values are requested, only the first value is returned if it is a multi value field.
+    - Null or Empty field values should not be used to determine if a field is assigned to the entry.
      * @param args.repoId The requested repository ID.
      * @param args.select (optional) Limits the properties returned in the result.
      * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -4775,6 +5011,13 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("Not found.", status, _responseText, _headers, result404);
             });
+        } else if (status === 413) {
+            return response.text().then((_responseText) => {
+            let result413: any = null;
+            let resultData413 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result413 = ProblemDetails.fromJS(resultData413);
+            return throwException("Request is too large.", status, _responseText, _headers, result413);
+            });
         } else if (status === 429) {
             return response.text().then((_responseText) => {
             let result429: any = null;
@@ -4794,7 +5037,9 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
 export interface ITagDefinitionsClient {
 
     /**
-     * Returns all tag definitions in the repository. Provide a repository ID and get a paged listing of tag definitions available in the repository. Useful when trying to display all tag definitions available, not only tags assigned to a specific entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns all tag definitions in the repository.
+    - Provide a repository ID and get a paged listing of tag definitions available in the repository. Useful when trying to display all tag definitions available, not only tags assigned to a specific entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -4809,7 +5054,9 @@ export interface ITagDefinitionsClient {
     getTagDefinitions(args: { repoId: string, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWTagInfo>;
 
     /**
-     * Returns a single tag definition. Provide a tag definition ID, and get the single tag definition associated with that ID. Useful when another route provides a minimal amount of details, and more information about the specific tag is needed. Allowed OData query options: Select
+     * - Returns a single tag definition.
+    - Provide a tag definition ID, and get the single tag definition associated with that ID. Useful when another route provides a minimal amount of details, and more information about the specific tag is needed.
+    - Allowed OData query options: Select
      * @param args.repoId The requested repository ID.
      * @param args.tagId The requested tag definition ID.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -4902,7 +5149,9 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
   }
 
     /**
-     * Returns all tag definitions in the repository. Provide a repository ID and get a paged listing of tag definitions available in the repository. Useful when trying to display all tag definitions available, not only tags assigned to a specific entry. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns all tag definitions in the repository.
+    - Provide a repository ID and get a paged listing of tag definitions available in the repository. Useful when trying to display all tag definitions available, not only tags assigned to a specific entry.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -5009,7 +5258,9 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
     }
 
     /**
-     * Returns a single tag definition. Provide a tag definition ID, and get the single tag definition associated with that ID. Useful when another route provides a minimal amount of details, and more information about the specific tag is needed. Allowed OData query options: Select
+     * - Returns a single tag definition.
+    - Provide a tag definition ID, and get the single tag definition associated with that ID. Useful when another route provides a minimal amount of details, and more information about the specific tag is needed.
+    - Allowed OData query options: Select
      * @param args.repoId The requested repository ID.
      * @param args.tagId The requested tag definition ID.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -5101,7 +5352,9 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
 export interface ITasksClient {
 
     /**
-     * Returns the status of an operation. Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant). OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
+     * - Returns the status of an operation.
+    - Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant).
+    - OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
      * @param args.repoId The requested repository ID
      * @param args.operationToken The operation token
      * @return Get completed or failed operation status with no result successfully.
@@ -5109,7 +5362,9 @@ export interface ITasksClient {
     getOperationStatusAndProgress(args: { repoId: string, operationToken: string }): Promise<OperationProgress>;
 
     /**
-     * Cancels an operation. Provide an operationToken to cancel the operation, if possible. Should be used if an operation was created in error, or is no longer necessary. Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
+     * - Cancels an operation.
+    - Provide an operationToken to cancel the operation, if possible. Should be used if an operation was created in error, or is no longer necessary.
+    - Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
      * @param args.repoId The requested repository ID
      * @param args.operationToken The operation token
      * @return Cancel operation successfully.
@@ -5128,7 +5383,9 @@ export class TasksClient implements ITasksClient {
     }
 
     /**
-     * Returns the status of an operation. Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant). OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
+     * - Returns the status of an operation.
+    - Provide an operationToken (returned in other asynchronous routes) to get the operation status, progress, and any errors that may have occurred. When the operation is completed, the Location header can be inspected as a link to the modified resources (if relevant).
+    - OperationStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
      * @param args.repoId The requested repository ID
      * @param args.operationToken The operation token
      * @return Get completed or failed operation status with no result successfully.
@@ -5224,7 +5481,9 @@ export class TasksClient implements ITasksClient {
     }
 
     /**
-     * Cancels an operation. Provide an operationToken to cancel the operation, if possible. Should be used if an operation was created in error, or is no longer necessary. Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
+     * - Cancels an operation.
+    - Provide an operationToken to cancel the operation, if possible. Should be used if an operation was created in error, or is no longer necessary.
+    - Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
      * @param args.repoId The requested repository ID
      * @param args.operationToken The operation token
      * @return Cancel operation successfully.
@@ -5305,7 +5564,9 @@ export class TasksClient implements ITasksClient {
 export interface ITemplateDefinitionsClient {
 
     /**
-     * Returns all template definitions (including field definitions) in the repository. If a template name query parameter is given, then a single template definition is returned. Provide a repository ID, and get a paged listing of template definitions available in the repository. Useful when trying to find a list of all template definitions available, rather than a specific one. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns all template definitions (including field definitions) in the repository. If a template name query parameter is given, then a single template definition is returned.
+    - Provide a repository ID, and get a paged listing of template definitions available in the repository. Useful when trying to find a list of all template definitions available, rather than a specific one.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5321,7 +5582,9 @@ export interface ITemplateDefinitionsClient {
     getTemplateDefinitions(args: { repoId: string, templateName?: string | null | undefined, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfWTemplateInfo>;
 
     /**
-     * Returns a single template definition (including field definitions, if relevant). Provide a template definition ID, and get the single template definition associated with that ID. Useful when a route provides a minimal amount of details, and more information about the specific template is needed. Allowed OData query options: Select
+     * - Returns a single template definition (including field definitions, if relevant).
+    - Provide a template definition ID, and get the single template definition associated with that ID. Useful when a route provides a minimal amount of details, and more information about the specific template is needed.
+    - Allowed OData query options: Select
      * @param args.repoId The requested repository ID.
      * @param args.templateId The requested template definition ID.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -5332,7 +5595,9 @@ export interface ITemplateDefinitionsClient {
     getTemplateDefinitionById(args: { repoId: string, templateId: number, culture?: string | null | undefined, select?: string | null | undefined }): Promise<WTemplateInfo>;
 
     /**
-     * Returns the field definitions assigned to a template definition. Provide a template definition ID, and get a paged listing of the field definitions assigned to that template.  Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the field definitions assigned to a template definition.
+    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template. 
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.templateId The requested template definition ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5348,7 +5613,9 @@ export interface ITemplateDefinitionsClient {
     getTemplateFieldDefinitions(args: { repoId: string, templateId: number, prefer?: string | null | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
 
     /**
-     * Returns the field definitions assigned to a template definition. Provide a template definition name, and get a paged listing of the field definitions assigned to that template.  Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the field definitions assigned to a template definition.
+    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template. 
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.templateName A required query parameter for the requested template name.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5593,7 +5860,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }
 
     /**
-     * Returns all template definitions (including field definitions) in the repository. If a template name query parameter is given, then a single template definition is returned. Provide a repository ID, and get a paged listing of template definitions available in the repository. Useful when trying to find a list of all template definitions available, rather than a specific one. Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns all template definitions (including field definitions) in the repository. If a template name query parameter is given, then a single template definition is returned.
+    - Provide a repository ID, and get a paged listing of template definitions available in the repository. Useful when trying to find a list of all template definitions available, rather than a specific one.
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5703,7 +5972,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     }
 
     /**
-     * Returns a single template definition (including field definitions, if relevant). Provide a template definition ID, and get the single template definition associated with that ID. Useful when a route provides a minimal amount of details, and more information about the specific template is needed. Allowed OData query options: Select
+     * - Returns a single template definition (including field definitions, if relevant).
+    - Provide a template definition ID, and get the single template definition associated with that ID. Useful when a route provides a minimal amount of details, and more information about the specific template is needed.
+    - Allowed OData query options: Select
      * @param args.repoId The requested repository ID.
      * @param args.templateId The requested template definition ID.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -5792,7 +6063,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     }
 
     /**
-     * Returns the field definitions assigned to a template definition. Provide a template definition ID, and get a paged listing of the field definitions assigned to that template.  Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the field definitions assigned to a template definition.
+    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template. 
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.templateId The requested template definition ID.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -5903,7 +6176,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     }
 
     /**
-     * Returns the field definitions assigned to a template definition. Provide a template definition name, and get a paged listing of the field definitions assigned to that template.  Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
+     * - Returns the field definitions assigned to a template definition.
+    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template. 
+    - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
      * @param args.repoId The requested repository ID.
      * @param args.templateName A required query parameter for the requested template name.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -6018,7 +6293,10 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
 export interface IServerSessionClient {
 
     /**
-     * Deprecated. Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session. Only available in Laserfiche Cloud.
+     * - Deprecated.
+    - Invalidates the server session.
+    - Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session.
+    - Only available in Laserfiche Cloud.
      * @param args.repoId The requested repository ID.
      * @return Invalidate the server session successfully.
      * @deprecated
@@ -6026,7 +6304,10 @@ export interface IServerSessionClient {
     invalidateServerSession(args: { repoId: string }): Promise<ODataValueOfBoolean>;
 
     /**
-     * Deprecated. Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token. Only available in Laserfiche Cloud.
+     * - Deprecated.
+    - Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires.
+    - When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token.
+    - Only available in Laserfiche Cloud.
      * @param args.repoId The requested repository ID.
      * @return Refresh the session successfully.
      * @deprecated
@@ -6034,7 +6315,8 @@ export interface IServerSessionClient {
     refreshServerSession(args: { repoId: string }): Promise<ODataValueOfDateTime>;
 
     /**
-     * Deprecated. This function is a no-op, always returns 200. Only available in Laserfiche Cloud.
+     * - Deprecated. This function is a no-op, always returns 200.
+    - Only available in Laserfiche Cloud.
      * @param args.repoId The requested repository ID.
      * @return Create the session successfully.
      * @deprecated
@@ -6053,7 +6335,10 @@ export class ServerSessionClient implements IServerSessionClient {
     }
 
     /**
-     * Deprecated. Invalidates the server session. Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session. Only available in Laserfiche Cloud.
+     * - Deprecated.
+    - Invalidates the server session.
+    - Acts as a "logout" operation, and invalidates the session associated with the provided access token. This method should be used when the client wants to clean up the current session.
+    - Only available in Laserfiche Cloud.
      * @param args.repoId The requested repository ID.
      * @return Invalidate the server session successfully.
      * @deprecated
@@ -6132,7 +6417,10 @@ export class ServerSessionClient implements IServerSessionClient {
     }
 
     /**
-     * Deprecated. Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires. When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token. Only available in Laserfiche Cloud.
+     * - Deprecated.
+    - Refreshes the session associated with the access token. This is only necessary if you want to keep the same session alive, otherwise a new session will be automatically created when the session expires.
+    - When a client application wants to keep a session alive that has been idle for an hour, this route can be used to refresh the expiration timer associated with the access token.
+    - Only available in Laserfiche Cloud.
      * @param args.repoId The requested repository ID.
      * @return Refresh the session successfully.
      * @deprecated
@@ -6211,7 +6499,8 @@ export class ServerSessionClient implements IServerSessionClient {
     }
 
     /**
-     * Deprecated. This function is a no-op, always returns 200. Only available in Laserfiche Cloud.
+     * - Deprecated. This function is a no-op, always returns 200.
+    - Only available in Laserfiche Cloud.
      * @param args.repoId The requested repository ID.
      * @return Create the session successfully.
      * @deprecated
