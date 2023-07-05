@@ -33,7 +33,7 @@ jobs:
       run: 'mkdir -p ./veracode'
       
     - name: 'Compress js repository client files'
-      run: tar -czvf ./veracode/lf-repository-api-client-js.tar.gz ./lib
+      run: tar -czvf ./veracode/lf-repository-api-client-js.tar.gz ./src
 
     - name: Veracode Upload And Scan (Static Application Security Testing)
       uses: veracode/veracode-uploadandscan-action@0.2.6
