@@ -1,4 +1,4 @@
-name: Veracode CI CD
+name: Veracode scan
 
 on:
   push:
