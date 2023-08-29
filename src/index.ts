@@ -1613,7 +1613,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema.
    */
   async getTagsAssignedToEntryForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -1637,7 +1637,7 @@ export class EntriesClient implements IEntriesClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWTagInfo>(
+      response = await getNextLinkListing<TagDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTagsAssignedToEntry,
@@ -1713,7 +1713,7 @@ export class EntriesClient implements IEntriesClient {
   async getTagsAssignedToEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWTagInfo> {
+  }): Promise<TagDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
     return await getNextLinkListing<LinkCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
@@ -5137,7 +5137,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema.
    */
   async getTagDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -5161,7 +5161,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWTagInfo>(
+      response = await getNextLinkListing<TagDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTagDefinitions,
@@ -5180,9 +5180,9 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
   async getTagDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWTagInfo> {
+  }): Promise<TagDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfWTagInfo>(
+    return await getNextLinkListing<TagDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTagDefinitions,
@@ -12393,7 +12393,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema.
    */
   getTagsAssignedToEntryForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -12443,7 +12443,7 @@ export interface IEntriesClient {
   getTagsAssignedToEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWTagInfo>;
+  }): Promise<TagDefinitionCollectionResponse>;
 }
 
 export interface IFieldDefinitionsClient {
@@ -12590,7 +12590,7 @@ export interface ITagDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema.
    */
   getTagDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTagInfo) => Promise<boolean>;
+    callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -12610,7 +12610,7 @@ export interface ITagDefinitionsClient {
   getTagDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWTagInfo>;
+  }): Promise<TagDefinitionCollectionResponse>;
 }
 
 export interface ITemplateDefinitionsClient {

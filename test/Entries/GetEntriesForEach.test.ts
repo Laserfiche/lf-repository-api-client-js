@@ -3,7 +3,7 @@ import {
   FieldCollectionResponse,
   EntryCollectionResponse,
   LinkCollectionResponse,
-  ODataValueContextOfIListOfWTagInfo
+  TagDefinitionCollectionResponse
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
@@ -66,7 +66,7 @@ describe('Get Entry Tests', () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfWTagInfo) => {
+    const callback = async (response: TagDefinitionCollectionResponse) => {
       if (!response.value) {
         throw new Error('response.value is undefined');
       }

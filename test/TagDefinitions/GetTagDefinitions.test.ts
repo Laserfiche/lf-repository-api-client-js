@@ -1,11 +1,11 @@
 import { repositoryId } from '../TestHelper.js';
-import { ODataValueContextOfIListOfWTagInfo, WTagInfo } from '../../src/index.js';
+import { TagDefinitionCollectionResponse, WTagInfo } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Tag Definitions Integration Tests', () => {
   test('Get Tag Definitions', async () => {
-    let TagDefinitionsResponse: ODataValueContextOfIListOfWTagInfo =
+    let TagDefinitionsResponse: TagDefinitionCollectionResponse =
       await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId: repositoryId });
     expect(TagDefinitionsResponse.value).not.toBeNull();
   });
@@ -14,7 +14,7 @@ describe('Tag Definitions Integration Tests', () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfWTagInfo) => {
+    const callback = async (response: TagDefinitionCollectionResponse) => {
       if (!response.value) {
         throw new Error('response.value is undefined');
       }
@@ -49,7 +49,7 @@ describe('Tag Definitions Integration Tests', () => {
     expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
   test('Get Tag Definitions by Id', async () => {
-    let allTagDefinitionsResponse: ODataValueContextOfIListOfWTagInfo =
+    let allTagDefinitionsResponse: TagDefinitionCollectionResponse =
       await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId: repositoryId });
     let TagDefinitionsResponse = allTagDefinitionsResponse.value;
     if (!TagDefinitionsResponse) {
