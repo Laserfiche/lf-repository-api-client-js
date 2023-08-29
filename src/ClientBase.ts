@@ -380,7 +380,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema.
    */
   getFieldValuesForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
+    callback: (response: generated.FieldCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -462,7 +462,7 @@ export interface IEntriesClient {
   getFieldValuesNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfFieldValue>;
+  }): Promise<generated.FieldCollectionResponse>;
   /**
    * Get the links assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
@@ -581,7 +581,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema.
    */
   async getFieldValuesForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfFieldValue) => Promise<boolean>;
+    callback: (response: generated.FieldCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -610,7 +610,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.ODataValueContextOfIListOfFieldValue>(
+      response = await getNextLinkListing<generated.FieldCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetFieldValues,
@@ -744,9 +744,9 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   async getFieldValuesNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfFieldValue> {
+  }): Promise<generated.FieldCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfFieldValue>(
+    return await getNextLinkListing<generated.FieldCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetFieldValues,
