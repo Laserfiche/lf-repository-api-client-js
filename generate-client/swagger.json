@@ -8,7 +8,10 @@
   },
   "servers": [
     {
-      "url": "https://api.laserfiche.com/repository"
+      "url": "http://localhost:11211"
+    },
+    {
+      "url": "https://localhost:11211"
     }
   ],
   "paths": {
@@ -6704,6 +6707,41 @@
           "HighQualityColor"
         ]
       },
+      "ImportAsyncMetadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "templateName": {
+            "type": "string",
+            "description": "The name of the template assigned to the entry.",
+            "nullable": true
+          },
+          "fields": {
+            "type": "array",
+            "description": "The fields that will be assigned to the entry.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/FieldToUpdate"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "description": "The tags that will be assigned to the entry.",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "links": {
+            "type": "array",
+            "description": "The links that will be assigned to the entry.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/LinkToUpdate"
+            }
+          }
+        }
+      },
       "FieldToUpdate": {
         "type": "object",
         "description": "The request body containing fields that will be assigned to the entry.",
@@ -7112,18 +7150,16 @@
           "rowNumber": {
             "type": "integer",
             "description": "Row number assigned to this entry in the listing.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "fields": {
             "type": "array",
             "description": "The fields assigned to this entry.",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/EntryFieldValue"
+              "$ref": "#/components/schemas/Field"
             }
-          },
-          "entry Type": {
-            "type": "string"
           }
         }
       },
@@ -8882,50 +8918,6 @@
             "items": {
               "type": "integer",
               "format": "int32"
-            }
-          }
-        }
-      },
-      "PutFieldValsRequest": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleImportMetadata"
-          },
-          {
-            "type": "object",
-            "description": "The request body containing fields that will be assigned to the entry.",
-            "additionalProperties": false,
-            "properties": {
-              "links": {
-                "type": "array",
-                "description": "The links that will be assigned to the entry.",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/LinkToUpdate"
-                }
-              }
-            }
-          }
-        ]
-      },
-      "SimpleImportMetadata": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "fields": {
-            "type": "object",
-            "description": "The fields that will be assigned to the entry.",
-            "nullable": true,
-            "additionalProperties": {
-              "$ref": "#/components/schemas/FieldToUpdate"
-            }
-          },
-          "tags": {
-            "type": "array",
-            "description": "The tags that will be assigned to the entry.",
-            "nullable": true,
-            "items": {
-              "type": "string"
             }
           }
         }
