@@ -525,7 +525,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema.
    */
   async getFieldDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
+    callback: (response: FieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -549,7 +549,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWFieldInfo>(
+      response = await getNextLinkListing<FieldDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetFieldDefinitions,
@@ -568,9 +568,9 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   async getFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWFieldInfo> {
+  }): Promise<FieldDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfWFieldInfo>(
+    return await getNextLinkListing<FieldDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetFieldDefinitions,
@@ -12463,7 +12463,7 @@ export interface IFieldDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema.
    */
   getFieldDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
+    callback: (response: FieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -12483,7 +12483,7 @@ export interface IFieldDefinitionsClient {
   getFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWFieldInfo>;
+  }): Promise<FieldDefinitionCollectionResponse>;
 }
 
 export interface ISearchesClient {

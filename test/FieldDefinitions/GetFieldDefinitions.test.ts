@@ -1,11 +1,11 @@
 import { repositoryId } from '../TestHelper.js';
-import { ODataValueContextOfIListOfWFieldInfo, WFieldInfo } from '../../src/index.js';
+import { FieldDefinitionCollectionResponse, WFieldInfo } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Field Definitions Integration Tests', () => {
   test('Get Field Definitions', async () => {
-    let result: ODataValueContextOfIListOfWFieldInfo =
+    let result: FieldDefinitionCollectionResponse =
       await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId: repositoryId });
     expect(result.value).not.toBeNull();
   });
@@ -36,7 +36,7 @@ describe('Field Definitions Integration Tests', () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfWFieldInfo) => {
+    const callback = async (response: FieldDefinitionCollectionResponse) => {
       if (!response.value) {
         throw new Error('response.value is undefined');
       }
@@ -50,7 +50,7 @@ describe('Field Definitions Integration Tests', () => {
   });
 
   test('Get Field Definitions by Id', async () => {
-    let FieldDefResponse: ODataValueContextOfIListOfWFieldInfo =
+    let FieldDefResponse: FieldDefinitionCollectionResponse =
       await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId: repositoryId });
     if (!FieldDefResponse.value) {
       throw new Error('FieldDefResponse.value is undefined');

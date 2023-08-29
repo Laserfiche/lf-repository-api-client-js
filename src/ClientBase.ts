@@ -811,7 +811,7 @@ export interface IFieldDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema.
    */
   getFieldDefinitionsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
+    callback: (response: generated.FieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -831,7 +831,7 @@ export interface IFieldDefinitionsClient {
   getFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfWFieldInfo>;
+  }): Promise<generated.FieldDefinitionCollectionResponse>;
 }
 
 export class FieldDefinitionsClient extends generated.FieldDefinitionsClient implements IFieldDefinitionsClient {
@@ -851,7 +851,7 @@ export class FieldDefinitionsClient extends generated.FieldDefinitionsClient imp
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema.
    */
   async getFieldDefinitionsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfWFieldInfo) => Promise<boolean>;
+    callback: (response: generated.FieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     culture?: string;
@@ -875,7 +875,7 @@ export class FieldDefinitionsClient extends generated.FieldDefinitionsClient imp
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.ODataValueContextOfIListOfWFieldInfo>(
+      response = await getNextLinkListing<generated.FieldDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetFieldDefinitions,
@@ -894,9 +894,9 @@ export class FieldDefinitionsClient extends generated.FieldDefinitionsClient imp
   async getFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfWFieldInfo> {
+  }): Promise<generated.FieldDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfWFieldInfo>(
+    return await getNextLinkListing<generated.FieldDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetFieldDefinitions,
