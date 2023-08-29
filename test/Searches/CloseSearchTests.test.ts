@@ -1,5 +1,5 @@
 import { repositoryId } from '../TestHelper.js';
-import { AdvancedSearchRequest, ODataValueContextOfIListOfEntry } from '../../src/index.js';
+import { AdvancedSearchRequest, EntryCollectionResponse } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
@@ -33,7 +33,7 @@ describe('Search Integration Tests', () => {
     expect(searchToken).not.toBeNull();
     await new Promise((r) => setTimeout(r, 5000));
     let prefer = `maxpagesize=${maxPageSize}`;
-    let response: ODataValueContextOfIListOfEntry = await _RepositoryApiClient.searchesClient.getSearchResults({
+    let response: EntryCollectionResponse = await _RepositoryApiClient.searchesClient.getSearchResults({
       repoId: repositoryId,
       searchToken,
       prefer,

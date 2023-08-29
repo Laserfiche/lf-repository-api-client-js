@@ -346,7 +346,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema.
    */
   getEntryListingForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: generated.EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     groupByEntryType?: boolean;
@@ -452,7 +452,7 @@ export interface IEntriesClient {
   getEntryListingNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfEntry>;
+  }): Promise<generated.EntryCollectionResponse>;
   /**
    * Returns the fields assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
@@ -505,7 +505,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema.
    */
   async getEntryListingForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: generated.EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     groupByEntryType?: boolean;
@@ -552,7 +552,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
+      response = await getNextLinkListing<generated.EntryCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetEntryListing,
@@ -725,9 +725,9 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   async getEntryListingNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfEntry> {
+  }): Promise<generated.EntryCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
+    return await getNextLinkListing<generated.EntryCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetEntryListing,
@@ -928,7 +928,7 @@ export interface ISearchesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema.
    */
   getSearchResultsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: generated.EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     groupByEntryType?: boolean;
@@ -980,7 +980,7 @@ export interface ISearchesClient {
   getSearchResultsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfEntry>;
+  }): Promise<generated.EntryCollectionResponse>;
   /**
    * Returns the context hits associated with a search result entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
@@ -1015,7 +1015,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema.
    */
   async getSearchResultsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: generated.EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     groupByEntryType?: boolean;
@@ -1065,7 +1065,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
+      response = await getNextLinkListing<generated.EntryCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetSearchResults,
@@ -1135,9 +1135,9 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
   async getSearchResultsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfEntry> {
+  }): Promise<generated.EntryCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfEntry>(
+    return await getNextLinkListing<generated.EntryCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetSearchResults,
@@ -1634,7 +1634,7 @@ export interface ILinkDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema.
    */
   getLinkDefinitionsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfEntryLinkTypeInfo) => Promise<boolean>;
+    callback: (response: generated.EntryCollectionResponseLinkTypeInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     select?: string;
@@ -1654,7 +1654,7 @@ export interface ILinkDefinitionsClient {
   getLinkDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfEntryLinkTypeInfo>;
+  }): Promise<generated.EntryCollectionResponseLinkTypeInfo>;
 }
 
 export class LinkDefinitionsClient extends generated.LinkDefinitionsClient implements ILinkDefinitionsClient {
@@ -1671,7 +1671,7 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema.
    */
   async getLinkDefinitionsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfEntryLinkTypeInfo) => Promise<boolean>;
+    callback: (response: generated.EntryCollectionResponseLinkTypeInfo) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     select?: string;
@@ -1693,7 +1693,7 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.ODataValueContextOfIListOfEntryLinkTypeInfo>(
+      response = await getNextLinkListing<generated.EntryCollectionResponseLinkTypeInfo>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetLinkDefinitions,
@@ -1713,9 +1713,9 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
   async getLinkDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfEntryLinkTypeInfo> {
+  }): Promise<generated.EntryCollectionResponseLinkTypeInfo> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfEntryLinkTypeInfo>(
+    return await getNextLinkListing<generated.EntryCollectionResponseLinkTypeInfo>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetLinkDefinitions,

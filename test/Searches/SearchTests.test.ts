@@ -2,7 +2,7 @@ import { repositoryId } from '../TestHelper.js';
 import {
   AdvancedSearchRequest,
   ODataValueContextOfIListOfContextHit,
-  ODataValueContextOfIListOfEntry
+  EntryCollectionResponse
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
@@ -60,7 +60,7 @@ describe('Search Integration Tests', () => {
     await new Promise((r) => setTimeout(r, 10000));
     let searchResults = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfEntry) => {
+    const callback = async (response: EntryCollectionResponse) => {
       if (!response.value) {
         throw new Error('response.value is undefined');
       }

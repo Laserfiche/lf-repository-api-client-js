@@ -1,7 +1,7 @@
 import { repositoryId } from '../TestHelper.js';
 import {
   ODataValueContextOfIListOfFieldValue,
-  ODataValueContextOfIListOfEntry,
+  EntryCollectionResponse,
   ODataValueContextOfIListOfWEntryLinkInfo,
   ODataValueContextOfIListOfWTagInfo
 } from '../../src/index.js';
@@ -15,7 +15,7 @@ describe('Get Entry Tests', () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfEntry) => {
+    const callback = async (response: EntryCollectionResponse) => {
       if (!response.value) {
         throw new Error('response.value is undefined');
       }
