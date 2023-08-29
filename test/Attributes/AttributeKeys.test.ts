@@ -1,11 +1,11 @@
 import { repositoryId } from '../TestHelper.js';
-import { ODataValueContextOfListOfAttribute, IRepositoryApiClient } from '../../src/index.js';
+import { AttributeCollectionResponse, IRepositoryApiClient } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Attribute Key Integration Tests', () => {
   test('Get the attribute keys', async () => {
-    let result: ODataValueContextOfListOfAttribute =
+    let result: AttributeCollectionResponse =
       await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId: repositoryId, everyone: true });
     expect(result).not.toBeNull();
   });
@@ -13,7 +13,7 @@ describe('Attribute Key Integration Tests', () => {
   test('Get the attribute keys simple paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
-    let result: ODataValueContextOfListOfAttribute =
+    let result: AttributeCollectionResponse =
       await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId: repositoryId, everyone: true, prefer });
     if (!result.value) {
       throw new Error('result.value is undefined');
@@ -38,7 +38,7 @@ describe('Attribute Key Integration Tests', () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfListOfAttribute) => {
+    const callback = async (response: AttributeCollectionResponse) => {
       entries += response.toJSON().value.length;
       pages += 1;
       return true;
@@ -54,7 +54,7 @@ describe('Attribute Key Integration Tests', () => {
   });
 
   test('Get the attribute value by Key', async () => {
-    let result: ODataValueContextOfListOfAttribute =
+    let result: AttributeCollectionResponse =
       await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId: repositoryId });
     let attributeKeys = result.value;
     if (!attributeKeys) {

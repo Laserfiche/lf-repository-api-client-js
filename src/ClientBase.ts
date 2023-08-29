@@ -234,7 +234,7 @@ export interface IAttributesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of attributes key value pairs allowed per API response schema
    */
   getTrusteeAttributeKeyValuePairsForEach(args: {
-    callback: (response: generated.ODataValueContextOfListOfAttribute) => Promise<boolean>;
+    callback: (response: generated.AttributeCollectionResponse) => Promise<boolean>;
     repoId: string;
     everyone?: boolean;
     select?: string;
@@ -254,7 +254,7 @@ export interface IAttributesClient {
   getTrusteeAttributeKeyValuePairsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfListOfAttribute>;
+  }): Promise<generated.AttributeCollectionResponse>;
 }
 
 export class AttributesClient extends generated.AttributesClient implements IAttributesClient {
@@ -271,7 +271,7 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
    * @param args.maxPageSize (optional) the maximum page size or number of attributes key value pairs allowed per API response schema
    */
   async getTrusteeAttributeKeyValuePairsForEach(args: {
-    callback: (response: generated.ODataValueContextOfListOfAttribute) => Promise<boolean>;
+    callback: (response: generated.AttributeCollectionResponse) => Promise<boolean>;
     repoId: string;
     everyone?: boolean;
     select?: string;
@@ -294,7 +294,7 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.ODataValueContextOfListOfAttribute>(
+      response = await getNextLinkListing<generated.AttributeCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTrusteeAttributeKeyValuePairs,
@@ -313,9 +313,9 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
   async getTrusteeAttributeKeyValuePairsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfListOfAttribute> {
+  }): Promise<generated.AttributeCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfListOfAttribute>(
+    return await getNextLinkListing<generated.AttributeCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTrusteeAttributeKeyValuePairs,
