@@ -1,7 +1,7 @@
 import { repositoryId } from '../TestHelper.js';
 import {
   AdvancedSearchRequest,
-  ODataValueContextOfIListOfContextHit,
+  SearchContextHitCollectionResponse,
   EntryCollectionResponse
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -95,7 +95,7 @@ describe('Search Integration Tests', () => {
     let rowNum = searchResults[0].rowNumber ?? 0;
     let searchContextHits = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfContextHit) => {
+    const callback = async (response: SearchContextHitCollectionResponse) => {
       if (!response.value) {
         throw new Error('response.value is undefined');
       }

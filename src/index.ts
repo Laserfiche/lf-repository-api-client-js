@@ -4501,7 +4501,7 @@ export class SearchesClient implements ISearchesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema.
    */
   async getSearchContextHitsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfContextHit) => Promise<boolean>;
+    callback: (response: SearchContextHitCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     rowNumber: number;
@@ -4527,7 +4527,7 @@ export class SearchesClient implements ISearchesClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfContextHit>(
+      response = await getNextLinkListing<SearchContextHitCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetSearchContextHits,
@@ -4565,9 +4565,9 @@ export class SearchesClient implements ISearchesClient {
   async getSearchContextHitsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfContextHit> {
+  }): Promise<SearchContextHitCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfContextHit>(
+    return await getNextLinkListing<SearchContextHitCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetSearchContextHits,
@@ -12539,7 +12539,7 @@ export interface ISearchesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema.
    */
   getSearchContextHitsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfContextHit) => Promise<boolean>;
+    callback: (response: SearchContextHitCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     rowNumber: number;
@@ -12570,7 +12570,7 @@ export interface ISearchesClient {
   getSearchContextHitsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfContextHit>;
+  }): Promise<SearchContextHitCollectionResponse>;
 }
 
 export interface ITagDefinitionsClient {

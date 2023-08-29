@@ -959,7 +959,7 @@ export interface ISearchesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema.
    */
   getSearchContextHitsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfContextHit) => Promise<boolean>;
+    callback: (response: generated.SearchContextHitCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     rowNumber: number;
@@ -990,7 +990,7 @@ export interface ISearchesClient {
   getSearchContextHitsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfContextHit>;
+  }): Promise<generated.SearchContextHitCollectionResponse>;
 }
 
 export class SearchesClient extends generated.SearchesClient implements ISearchesClient {
@@ -1090,7 +1090,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema.
    */
   async getSearchContextHitsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfContextHit) => Promise<boolean>;
+    callback: (response: generated.SearchContextHitCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     rowNumber: number;
@@ -1116,7 +1116,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.ODataValueContextOfIListOfContextHit>(
+      response = await getNextLinkListing<generated.SearchContextHitCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetSearchContextHits,
@@ -1154,9 +1154,9 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
   async getSearchContextHitsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfContextHit> {
+  }): Promise<generated.SearchContextHitCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfContextHit>(
+    return await getNextLinkListing<generated.SearchContextHitCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetSearchContextHits,
