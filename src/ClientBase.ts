@@ -16,7 +16,6 @@ export interface IRepositoryApiClient {
   fieldDefinitionsClient: IFieldDefinitionsClient;
   repositoriesClient: generated.IRepositoriesClient;
   searchesClient: ISearchesClient;
-  serverSessionClient: generated.IServerSessionClient;
   simpleSearchesClient: generated.ISimpleSearchesClient;
   tagDefinitionsClient: ITagDefinitionsClient;
   tasksClient: generated.ITasksClient;
@@ -35,7 +34,6 @@ export class RepositoryApiClient implements IRepositoryApiClient {
   public fieldDefinitionsClient: IFieldDefinitionsClient;
   public repositoriesClient: generated.IRepositoriesClient;
   public searchesClient: ISearchesClient;
-  public serverSessionClient: generated.IServerSessionClient;
   public simpleSearchesClient: generated.ISimpleSearchesClient;
   public tagDefinitionsClient: ITagDefinitionsClient;
   public tasksClient: generated.ITasksClient;
@@ -75,7 +73,6 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     this.fieldDefinitionsClient = new FieldDefinitionsClient(this.baseUrl, http);
     this.repositoriesClient = new generated.RepositoriesClient(this.baseUrl, http);
     this.searchesClient = new SearchesClient(this.baseUrl, http);
-    this.serverSessionClient = new generated.ServerSessionClient(this.baseUrl, http);
     this.simpleSearchesClient = new generated.SimpleSearchesClient(this.baseUrl, http);
     this.tagDefinitionsClient = new TagDefinitionsClient(this.baseUrl, http);
     this.tasksClient = new generated.TasksClient(this.baseUrl, http);
