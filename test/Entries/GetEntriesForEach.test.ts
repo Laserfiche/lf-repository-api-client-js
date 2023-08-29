@@ -2,7 +2,7 @@ import { repositoryId } from '../TestHelper.js';
 import {
   FieldCollectionResponse,
   EntryCollectionResponse,
-  ODataValueContextOfIListOfWEntryLinkInfo,
+  LinkCollectionResponse,
   ODataValueContextOfIListOfWTagInfo
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -49,7 +49,7 @@ describe('Get Entry Tests', () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfWEntryLinkInfo) => {
+    const callback = async (response: LinkCollectionResponse) => {
       if (!response.value) {
         throw new Error('response.value is undefined');
       }

@@ -1565,7 +1565,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema.
    */
   async getLinkValuesFromEntryForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
+    callback: (response: LinkCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -1589,7 +1589,7 @@ export class EntriesClient implements IEntriesClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWEntryLinkInfo>(
+      response = await getNextLinkListing<LinkCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetLinkValuesFromEntry,
@@ -1694,9 +1694,9 @@ export class EntriesClient implements IEntriesClient {
   async getLinkValuesFromEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWEntryLinkInfo> {
+  }): Promise<LinkCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfWEntryLinkInfo>(
+    return await getNextLinkListing<LinkCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetLinkValuesFromEntry,
@@ -1715,7 +1715,7 @@ export class EntriesClient implements IEntriesClient {
     maxPageSize?: number;
   }): Promise<ODataValueContextOfIListOfWTagInfo> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfWEntryLinkInfo>(
+    return await getNextLinkListing<LinkCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTagsAssignedToEntry,
@@ -12368,7 +12368,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema.
    */
   getLinkValuesFromEntryForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
+    callback: (response: LinkCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -12433,7 +12433,7 @@ export interface IEntriesClient {
   getLinkValuesFromEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWEntryLinkInfo>;
+  }): Promise<LinkCollectionResponse>;
   /**
    * Get the tags assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection

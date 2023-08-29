@@ -407,7 +407,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema.
    */
   getLinkValuesFromEntryForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
+    callback: (response: generated.LinkCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -472,7 +472,7 @@ export interface IEntriesClient {
   getLinkValuesFromEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfWEntryLinkInfo>;
+  }): Promise<generated.LinkCollectionResponse>;
   /**
    * Get the tags assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
@@ -634,7 +634,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema.
    */
   async getLinkValuesFromEntryForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfWEntryLinkInfo) => Promise<boolean>;
+    callback: (response: generated.LinkCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     prefer?: string;
@@ -658,7 +658,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
+      response = await getNextLinkListing<generated.LinkCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetLinkValuesFromEntry,
@@ -763,9 +763,9 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   async getLinkValuesFromEntryNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfWEntryLinkInfo> {
+  }): Promise<generated.LinkCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
+    return await getNextLinkListing<generated.LinkCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetLinkValuesFromEntry,
@@ -784,7 +784,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     maxPageSize?: number;
   }): Promise<generated.ODataValueContextOfIListOfWTagInfo> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfWEntryLinkInfo>(
+    return await getNextLinkListing<generated.LinkCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTagsAssignedToEntry,
