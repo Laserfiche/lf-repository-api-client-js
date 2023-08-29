@@ -1296,7 +1296,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema.
    */
   getTemplateDefinitionsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
+    callback: (response: generated.TemplateDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName?: string;
     prefer?: string;
@@ -1375,7 +1375,7 @@ export interface ITemplateDefinitionsClient {
   getTemplateDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfWTemplateInfo>;
+  }): Promise<generated.TemplateDefinitionCollectionResponse>;
   /**
    * Returns the field definitions assigned to a template definition using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
@@ -1419,7 +1419,7 @@ export class TemplateDefinitionsClient
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema.
    */
   async getTemplateDefinitionsForEach(args: {
-    callback: (response: generated.ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
+    callback: (response: generated.TemplateDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName?: string;
     prefer?: string;
@@ -1445,7 +1445,7 @@ export class TemplateDefinitionsClient
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.ODataValueContextOfIListOfWTemplateInfo>(
+      response = await getNextLinkListing<generated.TemplateDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTemplateDefinitions,
@@ -1570,9 +1570,9 @@ export class TemplateDefinitionsClient
   async getTemplateDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.ODataValueContextOfIListOfWTemplateInfo> {
+  }): Promise<generated.TemplateDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.ODataValueContextOfIListOfWTemplateInfo>(
+    return await getNextLinkListing<generated.TemplateDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTemplateDefinitions,

@@ -1,12 +1,12 @@
 import { repositoryId } from '../TestHelper.js';
-import { GetDynamicFieldLogicValueRequest, ODataValueContextOfIListOfWTemplateInfo } from '../../src/index.js';
+import { GetDynamicFieldLogicValueRequest, TemplateDefinitionCollectionResponse } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Dynamic Fields Integration Tests', () => {
   let entryId: number = 1;
   test('Get Dynamic Fields Entry', async () => {
-    let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
+    let templateDefinitionResponse: TemplateDefinitionCollectionResponse =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId: repositoryId });
     let templateDefinitions = templateDefinitionResponse.value;
     if (!templateDefinitions) {

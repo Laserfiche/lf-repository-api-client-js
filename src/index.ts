@@ -5700,7 +5700,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema.
    */
   async getTemplateDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
+    callback: (response: TemplateDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName?: string;
     prefer?: string;
@@ -5726,7 +5726,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfWTemplateInfo>(
+      response = await getNextLinkListing<TemplateDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTemplateDefinitions,
@@ -5851,9 +5851,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   async getTemplateDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWTemplateInfo> {
+  }): Promise<TemplateDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfWTemplateInfo>(
+    return await getNextLinkListing<TemplateDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTemplateDefinitions,
@@ -12631,7 +12631,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema.
    */
   getTemplateDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfWTemplateInfo) => Promise<boolean>;
+    callback: (response: TemplateDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName?: string;
     prefer?: string;
@@ -12710,7 +12710,7 @@ export interface ITemplateDefinitionsClient {
   getTemplateDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfWTemplateInfo>;
+  }): Promise<TemplateDefinitionCollectionResponse>;
   /**
    * Returns the field definitions assigned to a template definition using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection

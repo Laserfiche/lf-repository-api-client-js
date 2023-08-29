@@ -1,7 +1,7 @@
 import { repositoryId } from '../TestHelper.js';
 import {
   ODataValueContextOfIListOfTemplateFieldInfo,
-  ODataValueContextOfIListOfWTemplateInfo,
+  TemplateDefinitionCollectionResponse,
   WTemplateInfo,
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -9,14 +9,14 @@ import 'isomorphic-fetch';
 
 describe('Template Definitions Integration Tests', () => {
   test('Get Template Definition', async () => {
-    let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
+    let templateDefinitionResponse: TemplateDefinitionCollectionResponse =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId: repositoryId });
     if (!templateDefinitionResponse.value) {
       throw new Error('templateDefinitionResponse.value');
     }
     let firstTemplateDefinition = templateDefinitionResponse.value[0];
     expect(firstTemplateDefinition).not.toBeNull();
-    let result: ODataValueContextOfIListOfWTemplateInfo =
+    let result: TemplateDefinitionCollectionResponse =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({
         repoId: repositoryId,
         templateName: firstTemplateDefinition.name,
@@ -30,7 +30,7 @@ describe('Template Definitions Integration Tests', () => {
     expect(templateInfo.id).toBe(firstTemplateDefinition.id);
   });
   test('Get Template Definition Fields', async () => {
-    let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
+    let templateDefinitionResponse: TemplateDefinitionCollectionResponse =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId: repositoryId });
     if (!templateDefinitionResponse.value) {
       throw new Error('templateDefinitionResponse.value');
@@ -51,7 +51,7 @@ describe('Template Definitions Integration Tests', () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfWTemplateInfo) => {
+    const callback = async (response: TemplateDefinitionCollectionResponse) => {
       if (!response.value) {
         throw new Error('response.value is undefined');
       }
@@ -91,7 +91,7 @@ describe('Template Definitions Integration Tests', () => {
   });
 
   test('Get Template Definition Fields by Template Name', async () => {
-    let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
+    let templateDefinitionResponse: TemplateDefinitionCollectionResponse =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId: repositoryId });
     if (!templateDefinitionResponse.value) {
       throw new Error('templateDefinitionResponse.value');
@@ -131,7 +131,7 @@ describe('Template Definitions Integration Tests', () => {
   });
 
   test('Get Template Definition Fields by Id', async () => {
-    let templateDefinitionResponse: ODataValueContextOfIListOfWTemplateInfo =
+    let templateDefinitionResponse: TemplateDefinitionCollectionResponse =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({ repoId: repositoryId });
     if (!templateDefinitionResponse.value) {
       throw new Error('templateDefinitionResponse.value');
