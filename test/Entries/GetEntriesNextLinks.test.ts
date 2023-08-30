@@ -13,7 +13,7 @@ describe('Get Entry Next Links Tests', () => {
     let nextLink = response.toJSON()['@odata.nextLink'];
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.entriesClient.getFieldValuesNextLink({ nextLink, maxPageSize });
+    let response2 = await _RepositoryApiClient.entriesClient.listFieldsNextLink({ nextLink, maxPageSize });
     expect(response2).not.toBeNull();
     expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
   });
@@ -26,7 +26,7 @@ describe('Get Entry Next Links Tests', () => {
     let nextLink = response.toJSON()['@odata.nextLink'];
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.entriesClient.getLinkValuesFromEntryNextLink({ nextLink, maxPageSize });
+    let response2 = await _RepositoryApiClient.entriesClient.listLinksNextLink({ nextLink, maxPageSize });
     expect(response2).not.toBeNull();
     expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
   });
@@ -39,7 +39,7 @@ describe('Get Entry Next Links Tests', () => {
     let nextLink = response.toJSON()['@odata.nextLink'];
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.entriesClient.getEntryListingNextLink({ nextLink, maxPageSize });
+    let response2 = await _RepositoryApiClient.entriesClient.listEntriesNextLink({ nextLink, maxPageSize });
     expect(response2).not.toBeNull();
     expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
   });
@@ -52,7 +52,7 @@ describe('Get Entry Next Links Tests', () => {
     let nextLink = response.toJSON()['@odata.nextLink'];
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.entriesClient.getTagsAssignedToEntryNextLink({ nextLink, maxPageSize });
+    let response2 = await _RepositoryApiClient.entriesClient.listTagsNextLink({ nextLink, maxPageSize });
     expect(response2).not.toBeNull();
     expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
   });

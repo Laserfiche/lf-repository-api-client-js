@@ -79,7 +79,7 @@ describe('Template Definitions Integration Tests', () => {
     let nextLink = response.odataNextLink ?? '';
     expect(nextLink).not.toBeNull();
     expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitionsNextLink({
+    let response2 = await _RepositoryApiClient.templateDefinitionsClient.listTemplateDefinitionsNextLink({
       nextLink,
       maxPageSize,
     });
@@ -119,7 +119,7 @@ describe('Template Definitions Integration Tests', () => {
     let nextLink = response.odataNextLink ?? '';
     expect(nextLink).not.toBeNull();
     expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitionsNextLink({
+    let response2 = await _RepositoryApiClient.templateDefinitionsClient.listTemplateFieldDefinitionsByTemplateIdNextLink({
       nextLink,
       maxPageSize,
     });
@@ -158,7 +158,7 @@ describe('Template Definitions Integration Tests', () => {
     expect(nextLink).not.toBeNull();
     expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
     let response2 =
-      await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitionsByTemplateNameNextLink({
+      await _RepositoryApiClient.templateDefinitionsClient.listTemplateFieldDefinitionsByTemplateNameNextLink({
         nextLink,
         maxPageSize,
       });

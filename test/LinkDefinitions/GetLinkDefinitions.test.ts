@@ -51,7 +51,7 @@ describe('Link Definitions Integration Tests', () => {
     let nextLink = response.odataNextLink ?? '';
     expect(nextLink).not.toBeNull();
     expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.linkDefinitionsClient.getLinkDefinitionsNextLink({
+    let response2 = await _RepositoryApiClient.linkDefinitionsClient.listLinkDefinitionsNextLink({
       nextLink,
       maxPageSize,
     });

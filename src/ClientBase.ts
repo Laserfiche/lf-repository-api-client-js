@@ -251,7 +251,7 @@ export interface IAttributesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of attribute keys allowed per API response schema
    * @return Get trustee attribute keys with the next link successfully
    */
-  getTrusteeAttributeKeyValuePairsNextLink(args: {
+  listAttributesNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.AttributeCollectionResponse>;
@@ -310,7 +310,7 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
    * @param args.maxPageSize (optional) the maximum page size or number of attribute keys allowed per API response schema.
    * @return Get trustee attribute keys with the next link successfully
    */
-  async getTrusteeAttributeKeyValuePairsNextLink(args: {
+  async listAttributesNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.AttributeCollectionResponse> {
@@ -449,7 +449,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema
    * @return Get the children entries of a Folder with the next link successfully
    */
-  getEntryListingNextLink(args: {
+  listEntriesNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.EntryCollectionResponse>;
@@ -459,7 +459,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema
    * @return Get field values with the next link successfully
    */
-  getFieldValuesNextLink(args: {
+  listFieldsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.FieldCollectionResponse>;
@@ -469,7 +469,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema
    * @return Get links with the next link successfully
    */
-  getLinkValuesFromEntryNextLink(args: {
+  listLinksNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.LinkCollectionResponse>;
@@ -479,7 +479,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema
    * @return Get entry tags with the next link successfully
    */
-  getTagsAssignedToEntryNextLink(args: {
+  listTagsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TagDefinitionCollectionResponse>;
@@ -722,7 +722,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema
    * @return Get the children entries of a Folder with the next link successfully
    */
-  async getEntryListingNextLink(args: {
+  async listEntriesNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.EntryCollectionResponse> {
@@ -741,7 +741,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema
    * @return Get field values with the next link successfully
    */
-  async getFieldValuesNextLink(args: {
+  async listFieldsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.FieldCollectionResponse> {
@@ -760,7 +760,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema
    * @return Get links with the next link successfully
    */
-  async getLinkValuesFromEntryNextLink(args: {
+  async listLinksNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.LinkCollectionResponse> {
@@ -779,7 +779,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema
    * @return Get entry tags with the next link successfully
    */
-  async getTagsAssignedToEntryNextLink(args: {
+  async listTagsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TagDefinitionCollectionResponse> {
@@ -828,7 +828,7 @@ export interface IFieldDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema
    * @return Get field definitions with the next link successfully
    */
-  getFieldDefinitionsNextLink(args: {
+  listFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.FieldDefinitionCollectionResponse>;
@@ -891,7 +891,7 @@ export class FieldDefinitionsClient extends generated.FieldDefinitionsClient imp
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema
    * @return Get field definitions with the next link successfully
    */
-  async getFieldDefinitionsNextLink(args: {
+  async listFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.FieldDefinitionCollectionResponse> {
@@ -977,7 +977,7 @@ export interface ISearchesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema
    * @return Get search result with the next link successfully
    */
-  getSearchResultsNextLink(args: {
+  listSearchResultsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.EntryCollectionResponse>;
@@ -987,7 +987,7 @@ export interface ISearchesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema
    * @return Get search context hits with the next link successfully
    */
-  getSearchContextHitsNextLink(args: {
+  listSearchContextHitsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.SearchContextHitCollectionResponse>;
@@ -1132,7 +1132,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema
    * @return Get search result with the next link successfully
    */
-  async getSearchResultsNextLink(args: {
+  async listSearchResultsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.EntryCollectionResponse> {
@@ -1151,7 +1151,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema
    * @return Get search context hits with the next link successfully
    */
-  async getSearchContextHitsNextLink(args: {
+  async listSearchContextHitsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.SearchContextHitCollectionResponse> {
@@ -1200,7 +1200,7 @@ export interface ITagDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema
    * @return Get tag definitions with the next link successfully
    */
-  getTagDefinitionsNextLink(args: {
+  listTagDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TagDefinitionCollectionResponse>;
@@ -1263,7 +1263,7 @@ export class TagDefinitionsClient extends generated.TagDefinitionsClient impleme
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema
    * @return Get tag definitions with the next link successfully
    */
-  async getTagDefinitionsNextLink(args: {
+  async listTagDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TagDefinitionCollectionResponse> {
@@ -1372,7 +1372,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema
    * @return Get template definitions with the next link successfully
    */
-  getTemplateDefinitionsNextLink(args: {
+  listTemplateDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TemplateDefinitionCollectionResponse>;
@@ -1382,7 +1382,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema
    * @return Get field definitions with the next link successfully
    */
-  getTemplateFieldDefinitionsNextLink(args: {
+  listTemplateFieldDefinitionsByTemplateIdNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TemplateFieldDefinitionCollectionResponse>;
@@ -1392,7 +1392,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema
    * @return Get field definitions by template name with the next link successfully
    */
-  getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
+  listTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TemplateFieldDefinitionCollectionResponse>;
@@ -1567,7 +1567,7 @@ export class TemplateDefinitionsClient
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema
    * @return Get template definitions with the next link successfully
    */
-  async getTemplateDefinitionsNextLink(args: {
+  async listTemplateDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TemplateDefinitionCollectionResponse> {
@@ -1586,7 +1586,7 @@ export class TemplateDefinitionsClient
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema
    * @return Get field definitions with the next link successfully
    */
-  async getTemplateFieldDefinitionsNextLink(args: {
+  async listTemplateFieldDefinitionsByTemplateIdNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TemplateFieldDefinitionCollectionResponse> {
@@ -1605,7 +1605,7 @@ export class TemplateDefinitionsClient
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema
    * @return Get field definitions by template name with the next link successfully
    */
-  async getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
+  async listTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.TemplateFieldDefinitionCollectionResponse> {
@@ -1651,7 +1651,7 @@ export interface ILinkDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema
    * @return Get link definitions with the next link successfully
    */
-  getLinkDefinitionsNextLink(args: {
+  listLinkDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.LinkDefinitionCollectionResponse>;
@@ -1710,7 +1710,7 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema
    * @return Get link definitions with the next link successfully
    */
-  async getLinkDefinitionsNextLink(args: {
+  async listLinkDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
   }): Promise<generated.LinkDefinitionCollectionResponse> {

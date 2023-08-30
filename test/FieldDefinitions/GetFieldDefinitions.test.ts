@@ -21,7 +21,7 @@ describe('Field Definitions Integration Tests', () => {
     let nextLink: string = response.odataNextLink ?? '';
     expect(nextLink).not.toBeNull();
     expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitionsNextLink({
+    let response2 = await _RepositoryApiClient.fieldDefinitionsClient.listFieldDefinitionsNextLink({
       nextLink,
       maxPageSize,
     });

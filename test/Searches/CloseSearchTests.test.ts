@@ -45,7 +45,7 @@ describe('Search Integration Tests', () => {
     let nextLink: string = response.odataNextLink ?? '';
     expect(nextLink).not.toBeNull();
     expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.searchesClient.getSearchResultsNextLink({ nextLink, maxPageSize });
+    let response2 = await _RepositoryApiClient.searchesClient.listSearchResultsNextLink({ nextLink, maxPageSize });
     if (!response2.value) {
       throw new Error('response2.value is undefined');
     }

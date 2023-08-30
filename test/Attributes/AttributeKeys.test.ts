@@ -23,7 +23,7 @@ describe('Attribute Key Integration Tests', () => {
     let nextLink = result.odataNextLink ?? '';
     expect(nextLink).not.toBeNull();
     expect(result.value.length).toBeLessThanOrEqual(maxPageSize);
-    let response2 = await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairsNextLink({
+    let response2 = await _RepositoryApiClient.attributesClient.listAttributesNextLink({
       nextLink,
       maxPageSize,
     });
