@@ -1634,7 +1634,7 @@ export interface ILinkDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema.
    */
   getLinkDefinitionsForEach(args: {
-    callback: (response: generated.EntryCollectionResponseLinkTypeInfo) => Promise<boolean>;
+    callback: (response: generated.LinkDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     select?: string;
@@ -1654,7 +1654,7 @@ export interface ILinkDefinitionsClient {
   getLinkDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.EntryCollectionResponseLinkTypeInfo>;
+  }): Promise<generated.LinkDefinitionCollectionResponse>;
 }
 
 export class LinkDefinitionsClient extends generated.LinkDefinitionsClient implements ILinkDefinitionsClient {
@@ -1671,7 +1671,7 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema.
    */
   async getLinkDefinitionsForEach(args: {
-    callback: (response: generated.EntryCollectionResponseLinkTypeInfo) => Promise<boolean>;
+    callback: (response: generated.LinkDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     select?: string;
@@ -1693,7 +1693,7 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<generated.EntryCollectionResponseLinkTypeInfo>(
+      response = await getNextLinkListing<generated.LinkDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetLinkDefinitions,
@@ -1713,9 +1713,9 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
   async getLinkDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<generated.EntryCollectionResponseLinkTypeInfo> {
+  }): Promise<generated.LinkDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<generated.EntryCollectionResponseLinkTypeInfo>(
+    return await getNextLinkListing<generated.LinkDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetLinkDefinitions,
