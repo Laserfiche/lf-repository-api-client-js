@@ -1436,7 +1436,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema.
    */
   async getEntryListingForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     groupByEntryType?: boolean;
@@ -1483,7 +1483,7 @@ export class EntriesClient implements IEntriesClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfEntry>(
+      response = await getNextLinkListing<EntryCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetEntryListing,
@@ -1656,9 +1656,9 @@ export class EntriesClient implements IEntriesClient {
   async getEntryListingNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfEntry> {
+  }): Promise<EntryCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfEntry>(
+    return await getNextLinkListing<EntryCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetEntryListing,
@@ -4426,7 +4426,7 @@ export class SearchesClient implements ISearchesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema.
    */
   async getSearchResultsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     groupByEntryType?: boolean;
@@ -4476,7 +4476,7 @@ export class SearchesClient implements ISearchesClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfEntry>(
+      response = await getNextLinkListing<EntryCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetSearchResults,
@@ -4546,9 +4546,9 @@ export class SearchesClient implements ISearchesClient {
   async getSearchResultsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfEntry> {
+  }): Promise<EntryCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfEntry>(
+    return await getNextLinkListing<EntryCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetSearchResults,
@@ -12307,7 +12307,7 @@ export interface IEntriesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema.
    */
   getEntryListingForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
     groupByEntryType?: boolean;
@@ -12413,7 +12413,7 @@ export interface IEntriesClient {
   getEntryListingNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfEntry>;
+  }): Promise<EntryCollectionResponse>;
   /**
    * Returns the fields assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
@@ -12508,7 +12508,7 @@ export interface ISearchesClient {
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema.
    */
   getSearchResultsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntry) => Promise<boolean>;
+    callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
     groupByEntryType?: boolean;
@@ -12560,7 +12560,7 @@ export interface ISearchesClient {
   getSearchResultsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfEntry>;
+  }): Promise<EntryCollectionResponse>;
   /**
    * Returns the context hits associated with a search result entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
