@@ -85,7 +85,7 @@ export class AttributesClient implements IAttributesClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, everyone, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getTrusteeAttributeKeyValuePairs({
+    var response = await this.listAttributes({
       repoId,
       everyone,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
@@ -100,7 +100,7 @@ export class AttributesClient implements IAttributesClient {
       response = await getNextLinkListing<AttributeCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetTrusteeAttributeKeyValuePairs,
+        this.processListAttributes,
         nextLink,
         maxPageSize
       );
@@ -121,7 +121,7 @@ export class AttributesClient implements IAttributesClient {
     return await getNextLinkListing<AttributeCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetTrusteeAttributeKeyValuePairs,
+      this.processListAttributes,
       nextLink,
       maxPageSize
     );
@@ -537,7 +537,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getFieldDefinitions({
+    var response = await this.listFieldDefinitions({
       repoId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -552,7 +552,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
       response = await getNextLinkListing<FieldDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetFieldDefinitions,
+        this.processListFieldDefinitions,
         nextLink,
         maxPageSize
       );
@@ -573,7 +573,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
     return await getNextLinkListing<FieldDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetFieldDefinitions,
+      this.processListFieldDefinitions,
       nextLink,
       maxPageSize
     );
@@ -846,7 +846,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getLinkDefinitions({
+    var response = await this.listLinkDefinitions({
       repoId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -860,7 +860,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
       response = await getNextLinkListing<LinkDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetLinkDefinitions,
+        this.processListLinkDefinitions,
         nextLink,
         maxPageSize
       );
@@ -882,7 +882,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
     return await getNextLinkListing<LinkDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetLinkDefinitions,
+      this.processListLinkDefinitions,
       nextLink,
       maxPageSize
     );
@@ -1467,7 +1467,7 @@ export class EntriesClient implements IEntriesClient {
       count,
       maxPageSize,
     } = args;
-    var response = await this.getEntryListing({
+    var response = await this.listEntries({
       repoId,
       entryId,
       groupByEntryType,
@@ -1486,7 +1486,7 @@ export class EntriesClient implements IEntriesClient {
       response = await getNextLinkListing<EntryCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetEntryListing,
+        this.processListEntries,
         nextLink,
         maxPageSize
       );
@@ -1527,7 +1527,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let { callback, repoId, entryId, prefer, formatValue, culture, select, orderby, top, skip, count, maxPageSize } =
       args;
-    var response = await this.getFieldValues({
+    var response = await this.listFields({
       repoId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
@@ -1544,7 +1544,7 @@ export class EntriesClient implements IEntriesClient {
       response = await getNextLinkListing<FieldCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetFieldValues,
+        this.processListFields,
         nextLink,
         maxPageSize
       );
@@ -1577,7 +1577,7 @@ export class EntriesClient implements IEntriesClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getLinkValuesFromEntry({
+    var response = await this.listLinks({
       repoId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
@@ -1592,7 +1592,7 @@ export class EntriesClient implements IEntriesClient {
       response = await getNextLinkListing<LinkCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetLinkValuesFromEntry,
+        this.processListLinks,
         nextLink,
         maxPageSize
       );
@@ -1625,7 +1625,7 @@ export class EntriesClient implements IEntriesClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getTagsAssignedToEntry({
+    var response = await this.listTags({
       repoId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
@@ -1640,7 +1640,7 @@ export class EntriesClient implements IEntriesClient {
       response = await getNextLinkListing<TagDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetTagsAssignedToEntry,
+        this.processListTags,
         nextLink,
         maxPageSize
       );
@@ -1661,7 +1661,7 @@ export class EntriesClient implements IEntriesClient {
     return await getNextLinkListing<EntryCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetEntryListing,
+      this.processListEntries,
       nextLink,
       maxPageSize
     );
@@ -1680,7 +1680,7 @@ export class EntriesClient implements IEntriesClient {
     return await getNextLinkListing<FieldCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetFieldValues,
+      this.processListFields,
       nextLink,
       maxPageSize
     );
@@ -1699,7 +1699,7 @@ export class EntriesClient implements IEntriesClient {
     return await getNextLinkListing<LinkCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetLinkValuesFromEntry,
+      this.processListLinks,
       nextLink,
       maxPageSize
     );
@@ -1718,7 +1718,7 @@ export class EntriesClient implements IEntriesClient {
     return await getNextLinkListing<LinkCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetTagsAssignedToEntry,
+      this.processListTags,
       nextLink,
       maxPageSize
     );
@@ -4265,7 +4265,7 @@ export class RepositoriesClient implements IRepositoriesClient {
     let http = {
       fetch,
     };
-    return await new RepositoriesClient(baseUrlWithoutSlash, http).getRepositoryList({});
+    return await new RepositoriesClient(baseUrlWithoutSlash, http).listRepositories({});
   }
 
     /**
@@ -4459,7 +4459,7 @@ export class SearchesClient implements ISearchesClient {
       count,
       maxPageSize,
     } = args;
-    var response = await this.getSearchResults({
+    var response = await this.listSearchResults({
       repoId,
       searchToken,
       groupByEntryType,
@@ -4479,7 +4479,7 @@ export class SearchesClient implements ISearchesClient {
       response = await getNextLinkListing<EntryCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetSearchResults,
+        this.processListSearchResults,
         nextLink,
         maxPageSize
       );
@@ -4514,7 +4514,7 @@ export class SearchesClient implements ISearchesClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, searchToken, rowNumber, prefer, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getSearchContextHits({
+    var response = await this.listSearchContextHits({
       repoId,
       searchToken,
       rowNumber,
@@ -4530,7 +4530,7 @@ export class SearchesClient implements ISearchesClient {
       response = await getNextLinkListing<SearchContextHitCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetSearchContextHits,
+        this.processListSearchContextHits,
         nextLink,
         maxPageSize
       );
@@ -4551,7 +4551,7 @@ export class SearchesClient implements ISearchesClient {
     return await getNextLinkListing<EntryCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetSearchResults,
+      this.processListSearchResults,
       nextLink,
       maxPageSize
     );
@@ -4570,7 +4570,7 @@ export class SearchesClient implements ISearchesClient {
     return await getNextLinkListing<SearchContextHitCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetSearchContextHits,
+      this.processListSearchContextHits,
       nextLink,
       maxPageSize
     );
@@ -5149,7 +5149,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getTagDefinitions({
+    var response = await this.listTagDefinitions({
       repoId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5164,7 +5164,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
       response = await getNextLinkListing<TagDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetTagDefinitions,
+        this.processListTagDefinitions,
         nextLink,
         maxPageSize
       );
@@ -5185,7 +5185,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
     return await getNextLinkListing<TagDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetTagDefinitions,
+      this.processListTagDefinitions,
       nextLink,
       maxPageSize
     );
@@ -5713,7 +5713,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getTemplateDefinitions({
+    var response = await this.listTemplateDefinitions({
       repoId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
@@ -5729,7 +5729,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
       response = await getNextLinkListing<TemplateDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetTemplateDefinitions,
+        this.processListTemplateDefinitions,
         nextLink,
         maxPageSize
       );
@@ -5752,7 +5752,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema.
    */
-  async listTemplateFieldDefinitionsByTemplateId(args: {
+  async listTemplateFieldDefinitionsByTemplateIdForEach(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateId: number;
@@ -5766,7 +5766,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, templateId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getTemplateFieldDefinitions({
+    var response = await this.listTemplateFieldDefinitionsByTemplateId({
       repoId,
       templateId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
@@ -5782,7 +5782,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
       response = await getNextLinkListing<TemplateFieldDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetTemplateFieldDefinitions,
+        this.processListTemplateFieldDefinitionsByTemplateId,
         nextLink,
         maxPageSize
       );
@@ -5819,7 +5819,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     maxPageSize?: number;
   }): Promise<void> {
     let { callback, repoId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
-    var response = await this.getTemplateFieldDefinitionsByTemplateName({
+    var response = await this.listTemplateFieldDefinitionsByTemplateName({
       repoId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
@@ -5835,7 +5835,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
       response = await getNextLinkListing<TemplateFieldDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
-        this.processGetTemplateFieldDefinitionsByTemplateName,
+        this.processListTemplateFieldDefinitionsByTemplateName,
         nextLink,
         maxPageSize
       );
@@ -5856,7 +5856,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     return await getNextLinkListing<TemplateDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetTemplateDefinitions,
+      this.processListTemplateDefinitions,
       nextLink,
       maxPageSize
     );
@@ -5875,7 +5875,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     return await getNextLinkListing<TemplateFieldDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetTemplateFieldDefinitions,
+      this.processListTemplateFieldDefinitionsByTemplateId,
       nextLink,
       maxPageSize
     );
@@ -5894,7 +5894,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     return await getNextLinkListing<TemplateFieldDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
-      this.processGetTemplateFieldDefinitionsByTemplateName,
+      this.processListTemplateFieldDefinitionsByTemplateName,
       nextLink,
       maxPageSize
     );
@@ -12656,7 +12656,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema.
    */
-  listTemplateFieldDefinitionsByTemplateId(args: {
+  listTemplateFieldDefinitionsByTemplateIdForEach(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateId: number;
