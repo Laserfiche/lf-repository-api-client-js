@@ -4259,7 +4259,7 @@ export class RepositoriesClient implements IRepositoriesClient {
    * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
    * @returns Get the repository resource list successfully.
    */
-  public static async getSelfHostedRepositoryList(args: { baseUrl: string }): Promise<RepositoryInfo[]> {
+  public static async getSelfHostedRepositoryList(args: { baseUrl: string }): Promise<RepositoryCollectionResponse[]> {
     let { baseUrl } = args;
     const baseUrlWithoutSlash: string = StringUtils.trimEnd(baseUrl, '/');
     let http = {
