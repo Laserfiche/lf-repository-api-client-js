@@ -30,7 +30,7 @@ describe('Link Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
-    await _RepositoryApiClient.linkDefinitionsClient.getLinkDefinitionsForEach({
+    await _RepositoryApiClient.linkDefinitionsClient.listLinkDefinitionsForEach({
       callback,
       repoId: repositoryId,
       maxPageSize,

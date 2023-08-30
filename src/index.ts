@@ -73,7 +73,7 @@ export class AttributesClient implements IAttributesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of attributes key value pairs allowed per API response schema
    */
-  async getTrusteeAttributeKeyValuePairsForEach(args: {
+  async listAttributesForEach(args: {
     callback: (response: AttributeCollectionResponse) => Promise<boolean>;
     repoId: string;
     everyone?: boolean;
@@ -524,7 +524,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema.
    */
-  async getFieldDefinitionsForEach(args: {
+  async listFieldDefinitionsForEach(args: {
     callback: (response: FieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
@@ -834,7 +834,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema.
    */
-  async getLinkDefinitionsForEach(args: {
+  async listLinkDefinitionsForEach(args: {
     callback: (response: LinkDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
@@ -1435,7 +1435,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema.
    */
-  async getEntryListingForEach(args: {
+  async listEntriesForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -1511,7 +1511,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema.
    */
-  async getFieldValuesForEach(args: {
+  async listFieldsForEach(args: {
     callback: (response: FieldCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -1564,7 +1564,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema.
    */
-  async getLinkValuesFromEntryForEach(args: {
+  async listLinksForEach(args: {
     callback: (response: LinkCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -1612,7 +1612,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema.
    */
-  async getTagsAssignedToEntryForEach(args: {
+  async listTagsForEach(args: {
     callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -4425,7 +4425,7 @@ export class SearchesClient implements ISearchesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema.
    */
-  async getSearchResultsForEach(args: {
+  async listSearchResultsForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
@@ -4500,7 +4500,7 @@ export class SearchesClient implements ISearchesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema.
    */
-  async getSearchContextHitsForEach(args: {
+  async listSearchContextHitsForEach(args: {
     callback: (response: SearchContextHitCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
@@ -5136,7 +5136,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema.
    */
-  async getTagDefinitionsForEach(args: {
+  async listTagDefinitionsForEach(args: {
     callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
@@ -5699,7 +5699,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema.
    */
-  async getTemplateDefinitionsForEach(args: {
+  async listTemplateDefinitionsForEach(args: {
     callback: (response: TemplateDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName?: string;
@@ -5752,7 +5752,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema.
    */
-  async getTemplateFieldDefinitionsForEach(args: {
+  async listTemplateFieldDefinitionsByTemplateId(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateId: number;
@@ -5805,7 +5805,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema.
    */
-  async getTemplateFieldDefinitionsByTemplateNameForEach(args: {
+  async listTemplateFieldDefinitionsByTemplateNameForEach(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName: string;
@@ -12259,7 +12259,7 @@ export interface IAttributesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of attributes key value pairs allowed per API response schema
    */
-  getTrusteeAttributeKeyValuePairsForEach(args: {
+  listAttributesForEach(args: {
     callback: (response: AttributeCollectionResponse) => Promise<boolean>;
     repoId: string;
     everyone?: boolean;
@@ -12303,7 +12303,7 @@ export interface IEntriesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema.
    */
-  getEntryListingForEach(args: {
+  listEntriesForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -12337,7 +12337,7 @@ export interface IEntriesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema.
    */
-  getFieldValuesForEach(args: {
+  listFieldsForEach(args: {
     callback: (response: FieldCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -12364,7 +12364,7 @@ export interface IEntriesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema.
    */
-  getLinkValuesFromEntryForEach(args: {
+  listLinksForEach(args: {
     callback: (response: LinkCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -12389,7 +12389,7 @@ export interface IEntriesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema.
    */
-  getTagsAssignedToEntryForEach(args: {
+  listTagsForEach(args: {
     callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     entryId: number;
@@ -12459,7 +12459,7 @@ export interface IFieldDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema.
    */
-  getFieldDefinitionsForEach(args: {
+  listFieldDefinitionsForEach(args: {
     callback: (response: FieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
@@ -12504,7 +12504,7 @@ export interface ISearchesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema.
    */
-  getSearchResultsForEach(args: {
+  listSearchResultsForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
@@ -12535,7 +12535,7 @@ export interface ISearchesClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema.
    */
-  getSearchContextHitsForEach(args: {
+  listSearchContextHitsForEach(args: {
     callback: (response: SearchContextHitCollectionResponse) => Promise<boolean>;
     repoId: string;
     searchToken: string;
@@ -12586,7 +12586,7 @@ export interface ITagDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema.
    */
-  getTagDefinitionsForEach(args: {
+  listTagDefinitionsForEach(args: {
     callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
@@ -12627,7 +12627,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema.
    */
-  getTemplateDefinitionsForEach(args: {
+  listTemplateDefinitionsForEach(args: {
     callback: (response: TemplateDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName?: string;
@@ -12656,7 +12656,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema.
    */
-  getTemplateFieldDefinitionsForEach(args: {
+  listTemplateFieldDefinitionsByTemplateId(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateId: number;
@@ -12685,7 +12685,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema.
    */
-  getTemplateFieldDefinitionsByTemplateNameForEach(args: {
+  listTemplateFieldDefinitionsByTemplateNameForEach(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName: string;
@@ -12743,7 +12743,7 @@ export interface ILinkDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema.
    */
-  getLinkDefinitionsForEach(args: {
+  listLinkDefinitionsForEach(args: {
     callback: (response: LinkDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
