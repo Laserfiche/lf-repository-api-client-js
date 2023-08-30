@@ -835,7 +835,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema.
    */
   async getLinkDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntryLinkTypeInfo) => Promise<boolean>;
+    callback: (response: LinkDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     select?: string;
@@ -857,7 +857,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfEntryLinkTypeInfo>(
+      response = await getNextLinkListing<LinkDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetLinkDefinitions,
@@ -877,9 +877,9 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
   async getLinkDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfEntryLinkTypeInfo> {
+  }): Promise<LinkDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfEntryLinkTypeInfo>(
+    return await getNextLinkListing<LinkDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetLinkDefinitions,
@@ -12747,7 +12747,7 @@ export interface ILinkDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema.
    */
   getLinkDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfEntryLinkTypeInfo) => Promise<boolean>;
+    callback: (response: LinkDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     prefer?: string;
     select?: string;
@@ -12767,7 +12767,7 @@ export interface ILinkDefinitionsClient {
   getLinkDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfEntryLinkTypeInfo>;
+  }): Promise<LinkDefinitionCollectionResponse>;
 }
 
 export class ApiException extends ApiExceptionCore {

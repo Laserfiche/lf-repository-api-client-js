@@ -1,6 +1,6 @@
 import { repositoryId } from '../TestHelper.js';
 import {
-  ODataValueContextOfIListOfEntryLinkTypeInfo,
+  LinkDefinitionCollectionResponse,
 
 } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -8,7 +8,7 @@ import 'isomorphic-fetch';
 
 describe('Link Definitions Integration Tests', () => {
   test('Get Link Definition', async () => {
-    let linkDefinitionsResponse: ODataValueContextOfIListOfEntryLinkTypeInfo =
+    let linkDefinitionsResponse: LinkDefinitionCollectionResponse =
       await _RepositoryApiClient.linkDefinitionsClient.getLinkDefinitions({ repoId: repositoryId });
     if (!linkDefinitionsResponse.value) {
       throw new Error('linkDefinitionsResponse.value');
@@ -22,7 +22,7 @@ describe('Link Definitions Integration Tests', () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
-    const callback = async (response: ODataValueContextOfIListOfEntryLinkTypeInfo) => {
+    const callback = async (response: LinkDefinitionCollectionResponse) => {
       if (!response.value) {
         throw new Error('response.value is undefined');
       }
