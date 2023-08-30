@@ -86,7 +86,7 @@ export class AttributesClient implements IAttributesClient {
   }): Promise<void> {
     let { callback, repoId, everyone, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listAttributes({
-      repoId,
+      repositoryId: repoId,
       everyone,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -538,7 +538,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   }): Promise<void> {
     let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listFieldDefinitions({
-      repoId,
+      repositoryId: repoId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -847,7 +847,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
   }): Promise<void> {
     let { callback, repoId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinkDefinitions({
-      repoId,
+      repositoryId: repoId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
       orderby,
@@ -1468,11 +1468,11 @@ export class EntriesClient implements IEntriesClient {
       maxPageSize,
     } = args;
     var response = await this.listEntries({
-      repoId,
+      repositoryId: repoId,
       entryId,
       groupByEntryType,
       fields,
-      formatFields,
+      formatFieldValues: formatFields,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -1528,10 +1528,10 @@ export class EntriesClient implements IEntriesClient {
     let { callback, repoId, entryId, prefer, formatValue, culture, select, orderby, top, skip, count, maxPageSize } =
       args;
     var response = await this.listFields({
-      repoId,
+      repositoryId: repoId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
-      formatValue,
+      formatFieldValues: formatValue,
       culture,
       select,
       orderby,
@@ -1578,7 +1578,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let { callback, repoId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinks({
-      repoId,
+      repositoryId: repoId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -1626,7 +1626,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let { callback, repoId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTags({
-      repoId,
+      repositoryId: repoId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -4259,7 +4259,7 @@ export class RepositoriesClient implements IRepositoriesClient {
    * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
    * @returns Get the repository resource list successfully.
    */
-  public static async getSelfHostedRepositoryList(args: { baseUrl: string }): Promise<RepositoryCollectionResponse[]> {
+  public static async getSelfHostedRepositoryList(args: { baseUrl: string }): Promise<RepositoryCollectionResponse> {
     let { baseUrl } = args;
     const baseUrlWithoutSlash: string = StringUtils.trimEnd(baseUrl, '/');
     let http = {
@@ -4460,12 +4460,12 @@ export class SearchesClient implements ISearchesClient {
       maxPageSize,
     } = args;
     var response = await this.listSearchResults({
-      repoId,
-      searchToken,
+      repositoryId: repoId,
+      taskId: searchToken,
       groupByEntryType,
       refresh,
       fields,
-      formatFields,
+      formatFieldValues: formatFields,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -4515,8 +4515,8 @@ export class SearchesClient implements ISearchesClient {
   }): Promise<void> {
     let { callback, repoId, searchToken, rowNumber, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listSearchContextHits({
-      repoId,
-      searchToken,
+      repositoryId: repoId,
+      taskId: searchToken,
       rowNumber,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -5150,7 +5150,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
   }): Promise<void> {
     let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTagDefinitions({
-      repoId,
+      repositoryId: repoId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -5714,7 +5714,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repoId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateDefinitions({
-      repoId,
+      repositoryId: repoId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5767,7 +5767,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repoId, templateId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateId({
-      repoId,
+      repositoryId: repoId,
       templateId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5820,7 +5820,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repoId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateName({
-      repoId,
+      repositoryId: repoId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
