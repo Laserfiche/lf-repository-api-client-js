@@ -1,6 +1,6 @@
 import { repositoryId } from '../TestHelper.js';
 import {
-  ODataValueContextOfIListOfTemplateFieldInfo,
+  TemplateFieldDefinitionCollectionResponse,
   TemplateDefinitionCollectionResponse,
   WTemplateInfo,
 } from '../../src/index.js';
@@ -37,7 +37,7 @@ describe('Template Definitions Integration Tests', () => {
     }
     let firstTemplateDefinition = templateDefinitionResponse.value[0];
     expect(firstTemplateDefinition).not.toBeNull();
-    let result: ODataValueContextOfIListOfTemplateFieldInfo =
+    let result: TemplateFieldDefinitionCollectionResponse =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitions({
         repoId: repositoryId,
         templateId: firstTemplateDefinition.id ?? -1,
@@ -98,7 +98,7 @@ describe('Template Definitions Integration Tests', () => {
     }
     let firstTemplateDefinition = templateDefinitionResponse.value[0];
     expect(firstTemplateDefinition).not.toBeNull();
-    let result: ODataValueContextOfIListOfTemplateFieldInfo =
+    let result: TemplateFieldDefinitionCollectionResponse =
       await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitionsByTemplateName({
         repoId: repositoryId,
         templateName: firstTemplateDefinition.name ?? '',

@@ -5753,7 +5753,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema.
    */
   async getTemplateFieldDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateId: number;
     prefer?: string;
@@ -5779,7 +5779,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
+      response = await getNextLinkListing<TemplateFieldDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTemplateFieldDefinitions,
@@ -5806,7 +5806,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema.
    */
   async getTemplateFieldDefinitionsByTemplateNameForEach(args: {
-    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName: string;
     prefer?: string;
@@ -5832,7 +5832,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     });
     let nextLink = response.odataNextLink;
     while ((await callback(response)) && nextLink) {
-      response = await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
+      response = await getNextLinkListing<TemplateFieldDefinitionCollectionResponse>(
         // @ts-ignore: allow sub class to use private variable from the super class
         this.http,
         this.processGetTemplateFieldDefinitionsByTemplateName,
@@ -5870,9 +5870,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   async getTemplateFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
+  }): Promise<TemplateFieldDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
+    return await getNextLinkListing<TemplateFieldDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTemplateFieldDefinitions,
@@ -5889,9 +5889,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   async getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfTemplateFieldInfo> {
+  }): Promise<TemplateFieldDefinitionCollectionResponse> {
     let { nextLink, maxPageSize } = args;
-    return await getNextLinkListing<ODataValueContextOfIListOfTemplateFieldInfo>(
+    return await getNextLinkListing<TemplateFieldDefinitionCollectionResponse>(
       // @ts-ignore: allow sub class to use private variable from the super class
       this.http,
       this.processGetTemplateFieldDefinitionsByTemplateName,
@@ -12660,7 +12660,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema.
    */
   getTemplateFieldDefinitionsForEach(args: {
-    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateId: number;
     prefer?: string;
@@ -12689,7 +12689,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema.
    */
   getTemplateFieldDefinitionsByTemplateNameForEach(args: {
-    callback: (response: ODataValueContextOfIListOfTemplateFieldInfo) => Promise<boolean>;
+    callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateName: string;
     prefer?: string;
@@ -12720,7 +12720,7 @@ export interface ITemplateDefinitionsClient {
   getTemplateFieldDefinitionsNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
+  }): Promise<TemplateFieldDefinitionCollectionResponse>;
   /**
    * Returns the field definitions assigned to a template definition by template name using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
@@ -12730,7 +12730,7 @@ export interface ITemplateDefinitionsClient {
   getTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
     maxPageSize?: number;
-  }): Promise<ODataValueContextOfIListOfTemplateFieldInfo>;
+  }): Promise<TemplateFieldDefinitionCollectionResponse>;
 }
 
 export interface ILinkDefinitionsClient {
