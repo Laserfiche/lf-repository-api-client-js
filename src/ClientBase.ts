@@ -1741,47 +1741,11 @@ export class RepositoriesClient extends generated.RepositoriesClient {
   }
 }
 
-export class CreateEntryResult extends generated.CreateEntryResult {
-  /** @internal */
-  getSummary(): string {
-    let messages = [];
-    const entryId: number = this.operations?.entryCreate?.entryId ?? 0;
-    if (entryId !== 0) {
-      messages.push(`entryId = ${entryId}`);
-    }
-
-    function getErrorMessages(errors: generated.APIServerException[] | undefined): string {
-      if (errors == null) {
-        return '';
-      }
-
-      return errors.map((item) => item.message).join(' ');
-    }
-
-    messages.push(getErrorMessages(this.operations?.entryCreate?.exceptions));
-    messages.push(getErrorMessages(this.operations?.setEdoc?.exceptions));
-    messages.push(getErrorMessages(this.operations?.setFields?.exceptions));
-    messages.push(getErrorMessages(this.operations?.setLinks?.exceptions));
-    messages.push(getErrorMessages(this.operations?.setTags?.exceptions));
-    messages.push(getErrorMessages(this.operations?.setTemplate?.exceptions));
-
-    return messages.filter((item) => item).join(' ');
-  }
-}
-
 export class ProblemDetails extends generated.ProblemDetails {
   extensions: any;
 }
 export class ApiException extends ApiExceptionCore {
   constructor(message: string, status: number, response: string, headers: { [key: string]: any }, result: any) {
     super(message, status, headers, result);
-
-    if (result instanceof generated.CreateEntryResult) {
-      this.problemDetails.title = result.getSummary();
-      this.problemDetails.extensions = {
-        createEntryResult: Object.assign({}, result),
-      };
-      this.message = this.problemDetails.title;
-    }
   }
 }
