@@ -12770,13 +12770,5 @@ export interface ILinkDefinitionsClient {
 export class ApiException extends ApiExceptionCore {
   constructor(message: string, status: number, response: string, headers: { [key: string]: any }, result: any) {
     super(message, status, headers, result);
-
-    if (result instanceof CreateEntryResult) {
-      this.problemDetails.title = result.getSummary();
-      this.problemDetails.extensions = {
-        createEntryResult: Object.assign({}, result),
-      };
-      this.message = this.problemDetails.title;
-    }
   }
 }
