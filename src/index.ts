@@ -12042,7 +12042,6 @@ export interface IRepositoryApiClient {
   fieldDefinitionsClient: IFieldDefinitionsClient;
   repositoriesClient: IRepositoriesClient;
   searchesClient: ISearchesClient;
-  serverSessionClient: IServerSessionClient;
   simpleSearchesClient: ISimpleSearchesClient;
   tagDefinitionsClient: ITagDefinitionsClient;
   tasksClient: ITasksClient;
@@ -12061,7 +12060,6 @@ export class RepositoryApiClient implements IRepositoryApiClient {
   public fieldDefinitionsClient: IFieldDefinitionsClient;
   public repositoriesClient: IRepositoriesClient;
   public searchesClient: ISearchesClient;
-  public serverSessionClient: IServerSessionClient;
   public simpleSearchesClient: ISimpleSearchesClient;
   public tagDefinitionsClient: ITagDefinitionsClient;
   public tasksClient: ITasksClient;
@@ -12101,7 +12099,6 @@ export class RepositoryApiClient implements IRepositoryApiClient {
     this.fieldDefinitionsClient = new FieldDefinitionsClient(this.baseUrl, http);
     this.repositoriesClient = new RepositoriesClient(this.baseUrl, http);
     this.searchesClient = new SearchesClient(this.baseUrl, http);
-    this.serverSessionClient = new ServerSessionClient(this.baseUrl, http);
     this.simpleSearchesClient = new SimpleSearchesClient(this.baseUrl, http);
     this.tagDefinitionsClient = new TagDefinitionsClient(this.baseUrl, http);
     this.tasksClient = new TasksClient(this.baseUrl, http);
