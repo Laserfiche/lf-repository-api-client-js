@@ -1324,7 +1324,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema.
    */
-  listTemplateFieldDefinitionsByTemplateId(args: {
+  listTemplateFieldDefinitionsByTemplateIdForEach(args: {
     callback: (response: generated.TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateId: number;
@@ -1471,7 +1471,7 @@ export class TemplateDefinitionsClient
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema.
    */
-  async listTemplateFieldDefinitionsByTemplateId(args: {
+  async listTemplateFieldDefinitionsByTemplateIdForEach(args: {
     callback: (response: generated.TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
     repoId: string;
     templateId: number;
