@@ -6,7 +6,7 @@ import 'isomorphic-fetch';
 describe('Attribute Key Integration Tests', () => {
   test('Get the attribute keys', async () => {
     let result: AttributeCollectionResponse =
-      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId: repositoryId, everyone: true });
+      await _RepositoryApiClient.attributesClient.listAttributes({ repositoryId: repositoryId, everyone: true });
     expect(result).not.toBeNull();
   });
 
@@ -14,7 +14,7 @@ describe('Attribute Key Integration Tests', () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
     let result: AttributeCollectionResponse =
-      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId: repositoryId, everyone: true, prefer });
+      await _RepositoryApiClient.attributesClient.listAttributes({ repositoryId: repositoryId, everyone: true, prefer });
     if (!result.value) {
       throw new Error('result.value is undefined');
     }
@@ -55,15 +55,15 @@ describe('Attribute Key Integration Tests', () => {
 
   test('Get the attribute value by Key', async () => {
     let result: AttributeCollectionResponse =
-      await _RepositoryApiClient.attributesClient.getTrusteeAttributeKeyValuePairs({ repoId: repositoryId });
+      await _RepositoryApiClient.attributesClient.listAttributes({ repositoryId: repositoryId });
     let attributeKeys = result.value;
     if (!attributeKeys) {
       throw new Error('attributeKeys is undefined');
     }
     expect(attributeKeys).not.toBeNull();
     expect(attributeKeys.length).toBeGreaterThan(0);
-    let attributeValueResponse = await _RepositoryApiClient.attributesClient.getTrusteeAttributeValueByKey({
-      repoId: repositoryId,
+    let attributeValueResponse = await _RepositoryApiClient.attributesClient.getAttribute({
+      repositoryId: repositoryId,
       attributeKey: attributeKeys[0].key ?? '',
     });
     expect(attributeValueResponse).not.toBeNull();
