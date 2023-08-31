@@ -8,7 +8,7 @@ describe('Get Entry Next Links Tests', () => {
   test('Get Entry Field simple paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
-    let response = await _RepositoryApiClient.entriesClient.getFieldValues({ repoId: repositoryId, entryId, prefer });
+    let response = await _RepositoryApiClient.entriesClient.listFields({ repositoryId, entryId, prefer });
     expect(response).not.toBeNull();
     let nextLink = response.toJSON()['@odata.nextLink'];
     expect(nextLink).not.toBeNull();
@@ -21,7 +21,7 @@ describe('Get Entry Next Links Tests', () => {
   test('Get Entry Links simple paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
-    let response = await _RepositoryApiClient.entriesClient.getLinkValuesFromEntry({ repoId: repositoryId, entryId, prefer });
+    let response = await _RepositoryApiClient.entriesClient.listLinks({ repositoryId, entryId, prefer });
     expect(response).not.toBeNull();
     let nextLink = response.toJSON()['@odata.nextLink'];
     expect(nextLink).not.toBeNull();
@@ -34,7 +34,7 @@ describe('Get Entry Next Links Tests', () => {
   test('Get Entry Listing simple paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
-    let response = await _RepositoryApiClient.entriesClient.getEntryListing({ repoId: repositoryId, entryId, prefer });
+    let response = await _RepositoryApiClient.entriesClient.listEntries({ repositoryId, entryId, prefer });
     expect(response).not.toBeNull();
     let nextLink = response.toJSON()['@odata.nextLink'];
     expect(nextLink).not.toBeNull();
@@ -47,7 +47,7 @@ describe('Get Entry Next Links Tests', () => {
   test('Get Entry Tags simple paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
-    let response = await _RepositoryApiClient.entriesClient.getTagsAssignedToEntry({ repoId: repositoryId, entryId, prefer });
+    let response = await _RepositoryApiClient.entriesClient.listTags({ repositoryId, entryId, prefer });
     expect(response).not.toBeNull();
     let nextLink = response.toJSON()['@odata.nextLink'];
     expect(nextLink).not.toBeNull();
