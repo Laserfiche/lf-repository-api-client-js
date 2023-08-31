@@ -1,5 +1,5 @@
 import { repositoryId } from '../TestHelper.js';
-import { AttributeCollectionResponse, IRepositoryApiClient } from '../../src/index.js';
+import { AttributeCollectionResponse } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 

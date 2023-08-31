@@ -1,6 +1,5 @@
 import { repositoryId } from '../TestHelper.js';
 import {
-  CopyEntryRequest,
   CreateEntryRequest,
   CreateEntryRequestEntryType,
   Entry,
