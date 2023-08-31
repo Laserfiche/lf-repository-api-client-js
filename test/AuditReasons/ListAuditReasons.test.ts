@@ -1,13 +1,12 @@
 import { repositoryId } from '../TestHelper.js';
-import { AuditReasons } from '../../src/index.js';
+import { AuditReasonCollectionResponse } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Audit Reasons Integration Test', () => {
   test('Get the Audit Reasons', async () => {
-    let result: AuditReasons = await _RepositoryApiClient.auditReasonsClient.getAuditReasons({ repoId: repositoryId });
+    let result: AuditReasonCollectionResponse = await _RepositoryApiClient.auditReasonsClient.listAuditReasons({ repositoryId: repositoryId });
     expect(result).not.toBeNull();
-    expect(result.deleteEntry).not.toBeNull();
-    expect(result.exportDocument).not.toBeNull();
+    expect(result.value).not.toBeNull();
   });
 });
