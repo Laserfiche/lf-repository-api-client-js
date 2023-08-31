@@ -47,7 +47,7 @@ export function createClient(): IRepositoryApiClient {
     if (authorizationType === authType.CloudAccessKey) {
       if (!testServicePrincipalKey || !OAuthAccessKey)
         throw new Error(`testServicePrincipalKey or OAuthAccessKey is undefined`);
-      _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+      _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey, "repository.ReadWrite");
     } else if (authorizationType === authType.APIServerUsernamePassword) {
       if (!repositoryId || !username || !password || !baseUrl)
         throw new Error(`RepositoryId, Username, Password, or BaseURL is undefined`);
