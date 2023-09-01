@@ -1,12 +1,13 @@
 import { repositoryId } from '../TestHelper.js';
-import { TagDefinitionCollectionResponse, WTagInfo } from '../../src/index.js';
+import { TagDefinitionCollectionResponse } from '../../src/index.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Tag Definitions Integration Tests', () => {
   test('Get Tag Definitions', async () => {
     let TagDefinitionsResponse: TagDefinitionCollectionResponse =
-      await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId: repositoryId });
+      await _RepositoryApiClient.tagDefinitionsClient.listTagDefinitions({ repositoryId });
+    
     expect(TagDefinitionsResponse.value).not.toBeNull();
   });
 
@@ -23,6 +24,7 @@ describe('Tag Definitions Integration Tests', () => {
       return true;
     };
     await _RepositoryApiClient.tagDefinitionsClient.listTagDefinitionsForEach({ callback, repoId: repositoryId, maxPageSize });
+    
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -30,14 +32,18 @@ describe('Tag Definitions Integration Tests', () => {
   test('Get Tag Definitions Simple Paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
-    let response = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId: repositoryId, prefer });
+    let response = await _RepositoryApiClient.tagDefinitionsClient.listTagDefinitions({ repositoryId, prefer });
     if (!response.value) {
       throw new Error('response.value is undefined');
     }
+    
     expect(response).not.toBeNull();
+    
     let nextLink = response.odataNextLink ?? '';
+    
     expect(nextLink).not.toBeNull();
     expect(response.value.length).toBeLessThanOrEqual(maxPageSize);
+    
     let response2 = await _RepositoryApiClient.tagDefinitionsClient.listTagDefinitionsNextLink({
       nextLink,
       maxPageSize,
@@ -45,22 +51,26 @@ describe('Tag Definitions Integration Tests', () => {
     if (!response2.value) {
       throw new Error('response.value is undefined');
     }
+    
     expect(response2).not.toBeNull();
     expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
   test('Get Tag Definitions by Id', async () => {
     let allTagDefinitionsResponse: TagDefinitionCollectionResponse =
-      await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId: repositoryId });
+      await _RepositoryApiClient.tagDefinitionsClient.listTagDefinitions({ repositoryId });
     let TagDefinitionsResponse = allTagDefinitionsResponse.value;
     if (!TagDefinitionsResponse) {
       throw new Error('TagDefinitionsResponse is undefined');
     }
     let firstTagDefinitionsResponse = TagDefinitionsResponse[0];
+    
     expect(allTagDefinitionsResponse.value).not.toBeNull();
-    let tagDefinition: WTagInfo = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitionById({
-      repoId: repositoryId,
+    
+    let tagDefinition = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinition({
+      repositoryId,
       tagId: firstTagDefinitionsResponse.id ?? -1,
     });
+    
     expect(tagDefinition).not.toBeNull();
     expect(tagDefinition.id).toBe(firstTagDefinitionsResponse.id);
   });
