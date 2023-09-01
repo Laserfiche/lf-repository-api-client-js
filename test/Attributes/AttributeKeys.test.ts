@@ -7,7 +7,8 @@ describe('Attribute Key Integration Tests', () => {
   test('Get the attribute keys', async () => {
     let result: AttributeCollectionResponse =
       await _RepositoryApiClient.attributesClient.listAttributes({ repositoryId: repositoryId, everyone: true });
-    expect(result).not.toBeNull();
+    
+      expect(result).not.toBeNull();
   });
 
   test('Get the attribute keys simple paging', async () => {
@@ -18,11 +19,15 @@ describe('Attribute Key Integration Tests', () => {
     if (!result.value) {
       throw new Error('result.value is undefined');
     }
+    
     expect(result).not.toBeNull();
     expect(result).not.toBeNull();
+    
     let nextLink = result.odataNextLink ?? '';
+    
     expect(nextLink).not.toBeNull();
     expect(result.value.length).toBeLessThanOrEqual(maxPageSize);
+    
     let response2 = await _RepositoryApiClient.attributesClient.listAttributesNextLink({
       nextLink,
       maxPageSize,
@@ -30,6 +35,7 @@ describe('Attribute Key Integration Tests', () => {
     if (!response2.value) {
       throw new Error('result.value is undefined');
     }
+    
     expect(response2).not.toBeNull();
     expect(response2.value.length).toBeLessThanOrEqual(maxPageSize);
   });
@@ -49,6 +55,7 @@ describe('Attribute Key Integration Tests', () => {
       everyone: true,
       maxPageSize,
     });
+    
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -60,12 +67,15 @@ describe('Attribute Key Integration Tests', () => {
     if (!attributeKeys) {
       throw new Error('attributeKeys is undefined');
     }
+    
     expect(attributeKeys).not.toBeNull();
     expect(attributeKeys.length).toBeGreaterThan(0);
+    
     let attributeValueResponse = await _RepositoryApiClient.attributesClient.getAttribute({
       repositoryId: repositoryId,
       attributeKey: attributeKeys[0].key ?? '',
     });
+    
     expect(attributeValueResponse).not.toBeNull();
     expect(attributeValueResponse).not.toBe('');
   });

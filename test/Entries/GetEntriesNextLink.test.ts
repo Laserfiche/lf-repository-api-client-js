@@ -9,11 +9,16 @@ describe('Get Entry Next Links Tests', () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
     let response = await _RepositoryApiClient.entriesClient.listFields({ repositoryId, entryId, prefer });
+    
     expect(response).not.toBeNull();
+    
     let nextLink = response.toJSON()['@odata.nextLink'];
+    
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
+    
     let response2 = await _RepositoryApiClient.entriesClient.listFieldsNextLink({ nextLink, maxPageSize });
+    
     expect(response2).not.toBeNull();
     expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
   });
@@ -22,11 +27,16 @@ describe('Get Entry Next Links Tests', () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
     let response = await _RepositoryApiClient.entriesClient.listLinks({ repositoryId, entryId, prefer });
+    
     expect(response).not.toBeNull();
+    
     let nextLink = response.toJSON()['@odata.nextLink'];
+    
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
+    
     let response2 = await _RepositoryApiClient.entriesClient.listLinksNextLink({ nextLink, maxPageSize });
+    
     expect(response2).not.toBeNull();
     expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
   });
@@ -35,11 +45,16 @@ describe('Get Entry Next Links Tests', () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
     let response = await _RepositoryApiClient.entriesClient.listEntries({ repositoryId, entryId, prefer });
+    
     expect(response).not.toBeNull();
+    
     let nextLink = response.toJSON()['@odata.nextLink'];
+    
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
+    
     let response2 = await _RepositoryApiClient.entriesClient.listEntriesNextLink({ nextLink, maxPageSize });
+    
     expect(response2).not.toBeNull();
     expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
   });
@@ -48,11 +63,16 @@ describe('Get Entry Next Links Tests', () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
     let response = await _RepositoryApiClient.entriesClient.listTags({ repositoryId, entryId, prefer });
+    
     expect(response).not.toBeNull();
+    
     let nextLink = response.toJSON()['@odata.nextLink'];
+    
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
+    
     let response2 = await _RepositoryApiClient.entriesClient.listTagsNextLink({ nextLink, maxPageSize });
+    
     expect(response2).not.toBeNull();
     expect(response2.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
   });

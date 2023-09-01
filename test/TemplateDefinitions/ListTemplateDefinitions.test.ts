@@ -47,6 +47,7 @@ describe('Template Definitions Integration Tests', () => {
         repositoryId,
         templateId: firstTemplateDefinition.id ?? -1,
       });
+    
     let templateDefinitions = result.value;
     
     expect(templateDefinitions).not.toBeNull();
@@ -65,6 +66,7 @@ describe('Template Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.templateDefinitionsClient.listTemplateDefinitionsForEach({
       callback,
       repoId: repositoryId,
@@ -78,6 +80,7 @@ describe('Template Definitions Integration Tests', () => {
   test('Get Template Definition Fields Simple Paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
+    
     let response = await _RepositoryApiClient.templateDefinitionsClient.listTemplateDefinitions({ repositoryId, prefer });
     if (!response.value) {
       throw new Error('response.value is undefined');
@@ -94,6 +97,7 @@ describe('Template Definitions Integration Tests', () => {
       nextLink,
       maxPageSize,
     });
+    
     if (!response2.value) {
       throw new Error('response.value is undefined');
     }
@@ -126,7 +130,9 @@ describe('Template Definitions Integration Tests', () => {
   test('Get Template Field Definition Fields Simple Paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
+    
     let response = await _RepositoryApiClient.templateDefinitionsClient.listTemplateDefinitions({ repositoryId, prefer });
+    
     if (!response.value) {
       throw new Error('response.value is undefined');
     }
@@ -142,6 +148,7 @@ describe('Template Definitions Integration Tests', () => {
       nextLink,
       maxPageSize,
     });
+    
     if (!response2.value) {
       throw new Error('response.value is undefined');
     }
@@ -172,7 +179,9 @@ describe('Template Definitions Integration Tests', () => {
   test('Get Template Field Definition by Template Name Simple Paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
+    
     let response = await _RepositoryApiClient.templateDefinitionsClient.listTemplateDefinitions({ repositoryId, prefer });
+    
     if (!response.value) {
       throw new Error('response.value is undefined');
     }
@@ -189,6 +198,7 @@ describe('Template Definitions Integration Tests', () => {
         nextLink,
         maxPageSize,
       });
+    
     if (!response2.value) {
       throw new Error('response.value is undefined');
     }

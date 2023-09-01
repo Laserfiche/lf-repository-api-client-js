@@ -31,6 +31,7 @@ describe('Link Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.linkDefinitionsClient.listLinkDefinitionsForEach({
       callback,
       repoId: repositoryId,
@@ -45,7 +46,9 @@ describe('Link Definitions Integration Tests', () => {
   test('Get Link Definitions Simple Paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
+    
     let response = await _RepositoryApiClient.linkDefinitionsClient.listLinkDefinitions({ repositoryId, prefer });
+    
     if (!response.value) {
       throw new Error('response.value is undefined');
     }
@@ -61,6 +64,7 @@ describe('Link Definitions Integration Tests', () => {
       nextLink,
       maxPageSize,
     });
+    
     if (!response2.value) {
       throw new Error('response.value is undefined');
     }

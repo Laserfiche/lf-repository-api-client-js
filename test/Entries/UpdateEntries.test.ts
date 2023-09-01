@@ -32,6 +32,7 @@ describe('Update Entries Integration Tests', () => {
       entryId: childFolder.id ?? -1,
       request,
     });
+    
     expect(movedEntry).not.toBeNull();
     expect(movedEntry.id).toBe(childFolder.id);
     expect(movedEntry.parentId).toBe(parentFolder.id);

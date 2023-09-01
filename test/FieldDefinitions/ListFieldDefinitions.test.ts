@@ -6,14 +6,16 @@ import 'isomorphic-fetch';
 describe('Field Definitions Integration Tests', () => {
   test('Get Field Definitions', async () => {
     let result: FieldDefinitionCollectionResponse =
-      await _RepositoryApiClient.fieldDefinitionsClient.listFieldDefinitions({ repositoryId });
     
-      expect(result.value).not.toBeNull();
+    await _RepositoryApiClient.fieldDefinitionsClient.listFieldDefinitions({ repositoryId });
+    
+    expect(result.value).not.toBeNull();
   });
 
   test('Get Field Definitions simple paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
+    
     let response = await _RepositoryApiClient.fieldDefinitionsClient.listFieldDefinitions({ repositoryId, prefer });
     
     expect(response).not.toBeNull();
@@ -46,6 +48,7 @@ describe('Field Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.fieldDefinitionsClient.listFieldDefinitionsForEach({ callback, repoId: repositoryId, maxPageSize });
     
     expect(entries).toBeGreaterThan(0);

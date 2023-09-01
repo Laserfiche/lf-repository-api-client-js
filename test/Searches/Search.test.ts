@@ -30,6 +30,7 @@ describe('Search Integration Tests', () => {
     expect(taskId).not.toBe('');
     
     await new Promise((r) => setTimeout(r, 5000));
+    
     var searchResultsResponse = await _RepositoryApiClient.searchesClient.listSearchResults({ repositoryId, taskId });
     var searchResults = searchResultsResponse.value;
     if (!searchResults) {
@@ -54,16 +55,19 @@ describe('Search Integration Tests', () => {
     let maxPageSize = 10;
     let searchRequest = new StartSearchEntryRequest();
     searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option="DFANLT"})';
+    
     let searchResponse = await _RepositoryApiClient.searchesClient.startSearchEntry({
       repositoryId,
       request: searchRequest,
     });
+    
     taskId = searchResponse.taskId ?? '';
     
     expect(taskId).not.toBe('');
     expect(taskId).not.toBeNull();
     
     await new Promise((r) => setTimeout(r, 10000));
+    
     let searchResults = 0;
     let pages = 0;
     const callback = async (response: EntryCollectionResponse) => {
@@ -74,6 +78,7 @@ describe('Search Integration Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.searchesClient.listSearchResultsForEach({ callback, repoId: repositoryId, searchToken: taskId, maxPageSize });
     
     expect(searchResults).toBeGreaterThan(0);
@@ -94,6 +99,7 @@ describe('Search Integration Tests', () => {
     expect(taskId).not.toBeNull();
     
     await new Promise((r) => setTimeout(r, 5000));
+    
     var searchResultsResponse = await _RepositoryApiClient.searchesClient.listSearchResults({ repositoryId, taskId });
     if (!searchResultsResponse.value) {
       throw new Error('searchResultsResponse.value is undefined');
@@ -114,6 +120,7 @@ describe('Search Integration Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.searchesClient.listSearchContextHitsForEach({
       callback,
       repoId: repositoryId,
@@ -136,6 +143,7 @@ describe('Search Integration Tests', () => {
     expect(taskId).not.toBe('');
     
     await new Promise((r) => setTimeout(r, 10000));
+    
     var searchResultsResponse = await _RepositoryApiClient.searchesClient.listSearchResults({ repositoryId, taskId });
     var searchResults = searchResultsResponse.value;
     

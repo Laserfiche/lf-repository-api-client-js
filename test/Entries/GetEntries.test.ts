@@ -9,6 +9,7 @@ describe('Get Entries Integration Tests', () => {
 
   test('Get Entry Fields', async () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.listFields({ repositoryId, entryId });
+    
     expect(entryFieldResponse?.value).not.toBeNull();
   });
   test('Get Entry Listing', async () => {
@@ -16,21 +17,25 @@ describe('Get Entries Integration Tests', () => {
       repositoryId,
       entryId,
     });
+    
     expect(result?.value?.length).toBeGreaterThan(1);
   });
 
   test('Get Entry Links', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.listLinks({ repositoryId, entryId });
+    
     expect(result?.value).not.toBeNull();
   });
 
   test('Get Entry Tags', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.listTags({ repositoryId, entryId });
+    
     expect(result?.value).not.toBeNull();
   });
 
   test('Get Entry Return Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntry({ repositoryId, entryId });
+    
     expect(result?.value).not.toBeNull();
   });
 
@@ -40,6 +45,7 @@ describe('Get Entries Integration Tests', () => {
       fullPath: rootPath,
       fallbackToClosestAncestor: false,
     });
+    
     expect(result?.entry.id).toBe(1);
     expect(result?.entry.fullPath).toBe(rootPath);
     expect(result?.entry.entryType).toBe('Folder');
@@ -52,6 +58,7 @@ describe('Get Entries Integration Tests', () => {
       fullPath: nonExistingPath,
       fallbackToClosestAncestor: true,
     });
+    
     expect(result?.ancestorEntry.id).toBe(1);
     expect(result?.ancestorEntry.fullPath).toBe(rootPath);
     expect(result?.ancestorEntry.entryType).toBe('Folder');

@@ -23,7 +23,9 @@ describe('Get Entry Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.entriesClient.listEntriesForEach({ callback, repoId: repositoryId, entryId, maxPageSize });
+    
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -40,7 +42,9 @@ describe('Get Entry Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.entriesClient.listFieldsForEach({ callback, repoId: repositoryId, entryId, maxPageSize });
+    
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -57,7 +61,9 @@ describe('Get Entry Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.entriesClient.listLinksForEach({ callback, repoId: repositoryId, entryId, maxPageSize });
+    
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
@@ -74,7 +80,9 @@ describe('Get Entry Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.entriesClient.listTagsForEach({ callback, repoId: repositoryId, entryId, maxPageSize });
+    
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });

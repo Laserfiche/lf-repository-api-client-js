@@ -43,8 +43,11 @@ describe('Copy Entry Test', () => {
       entryId: testFolder.id ?? -1,
       request,
     });
+    
     expect(targetEntry).not.toBeNull();
+    
     createdEntries.push(targetEntry);
+    
     expect(targetEntry.parentId).toBe(testFolder.id);
     expect(targetEntry.entryType).toBe(EntryType.Folder);
 
@@ -83,6 +86,7 @@ describe('Copy Entry Test', () => {
       entryId: testFolder.id ?? -1,
       request: deleteEntryRequest,
     });
+    
     expect(deletionResult).not.toBeNull();
   });
 });

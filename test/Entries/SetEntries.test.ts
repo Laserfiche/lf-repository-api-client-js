@@ -114,7 +114,7 @@ describe('Set Entries Integration Tests', () => {
 
     expect(template).not.toBeNull();
 
-    //Set the template on an entry
+    // Set the template on an entry
     let request = new SetTemplateRequest();
     request.templateName = template?.name!;
 

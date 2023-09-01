@@ -22,8 +22,10 @@ describe('Remove Entries Integration Tests', () => {
     if (!templateDefinitions) {
       throw new Error('templateDefinitions is undefined');
     }
+    
     expect(templateDefinitions).not.toBeNull();
     expect(templateDefinitions.length).toBeGreaterThan(0);
+    
     for (let i = 0; i < templateDefinitions.length; i++) {
       let templateDefinitionFieldsResponse =
         await _RepositoryApiClient.templateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId({
@@ -37,7 +39,7 @@ describe('Remove Entries Integration Tests', () => {
     }
     expect(template).not.toBeNull();
 
-    //Set the template on an entry
+    // Set the template on an entry
     let request = new SetTemplateRequest();
     request.templateName = template?.name!;
     entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS RemoveTemplateFromEntry');
@@ -47,15 +49,17 @@ describe('Remove Entries Integration Tests', () => {
       entryId,
       request,
     });
+    
     expect(setTemplateResponse).not.toBeNull();
     expect(setTemplateResponse.templateName).toBe(template?.name);
 
-    //Delete the template on the entry
+    // Delete the template on the entry
     let DeleteTemplateResponse = await _RepositoryApiClient.entriesClient.removeTemplate({
       repositoryId,
       entryId,
     });
     let returnedEntry = DeleteTemplateResponse;
+    
     expect(returnedEntry).not.toBeNull();
     expect(returnedEntry.id).toBe(entry.id);
     expect(returnedEntry.templateId).toBe(0);

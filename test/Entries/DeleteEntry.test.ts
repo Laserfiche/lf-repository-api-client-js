@@ -14,6 +14,7 @@ describe('Delete Entries Integration Tests', () => {
       request: body,
     });
     let taskId: string = result.taskId ?? '';
+    
     expect(taskId).not.toBeNull();
     expect(taskId).not.toBe('');
   });

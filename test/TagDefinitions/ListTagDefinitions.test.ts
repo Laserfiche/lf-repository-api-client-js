@@ -23,6 +23,7 @@ describe('Tag Definitions Integration Tests', () => {
       pages += 1;
       return true;
     };
+    
     await _RepositoryApiClient.tagDefinitionsClient.listTagDefinitionsForEach({ callback, repoId: repositoryId, maxPageSize });
     
     expect(entries).toBeGreaterThan(0);
@@ -32,7 +33,9 @@ describe('Tag Definitions Integration Tests', () => {
   test('Get Tag Definitions Simple Paging', async () => {
     let maxPageSize = 1;
     let prefer = `maxpagesize=${maxPageSize}`;
+    
     let response = await _RepositoryApiClient.tagDefinitionsClient.listTagDefinitions({ repositoryId, prefer });
+    
     if (!response.value) {
       throw new Error('response.value is undefined');
     }
@@ -48,6 +51,7 @@ describe('Tag Definitions Integration Tests', () => {
       nextLink,
       maxPageSize,
     });
+    
     if (!response2.value) {
       throw new Error('response.value is undefined');
     }
