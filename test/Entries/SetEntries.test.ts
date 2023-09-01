@@ -1,14 +1,12 @@
 import { repositoryId } from '../TestHelper.js';
 import {
-  DeleteEntryWithAuditReason,
   Entry,
   FieldToUpdate,
-  PutTagRequest,
-  PutTemplateRequest,
-  ValueToUpdate,
-  WFieldInfo,
-  WFieldType,
-  WTagInfo,
+  FieldType,
+  SetFieldsRequest,
+  SetTagsRequest,
+  SetTemplateRequest,
+  StartDeleteEntryRequest,
 } from '../../src/index.js';
 import { allFalse, CreateEntry } from '../BaseTest.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
@@ -19,24 +17,24 @@ describe('Set Entries Integration Tests', () => {
 
   afterEach(async () => {
     if (entry) {
-      let body = new DeleteEntryWithAuditReason();
-      let num = Number(entry.id);
-      await _RepositoryApiClient.entriesClient.deleteEntryInfo({ repoId: repositoryId, entryId: num, request: body });
+      let request = new StartDeleteEntryRequest();
+      let entryId = entry.id!;
+      await _RepositoryApiClient.entriesClient.startDeleteEntry({ repositoryId, entryId, request });
     }
   });
 
   test('Set fields', async () => {
     let field = null;
     let fieldValue = 'a';
-    let fieldDefinitionsResponse = await _RepositoryApiClient.fieldDefinitionsClient.getFieldDefinitions({ repoId: repositoryId });
-    let fieldDefinitions: WFieldInfo[] | undefined = fieldDefinitionsResponse.value;
-    if (!fieldDefinitions) {
-      throw new Error('fieldDefinitions is undefined');
-    }
+    let fieldDefinitionsResponse = await _RepositoryApiClient.fieldDefinitionsClient.listFieldDefinitions({ repositoryId });
+    let fieldDefinitions = fieldDefinitionsResponse.value;
+    
     expect(fieldDefinitions).not.toBeNull();
+    fieldDefinitions = fieldDefinitions!;
+    
     for (let i = 0; i < fieldDefinitions.length; i++) {
       if (
-        fieldDefinitions[i].fieldType == WFieldType.String &&
+        fieldDefinitions[i].fieldType == FieldType.String &&
         (fieldDefinitions[i].constraint == '' || fieldDefinitions[i].constraint == null) &&
         (fieldDefinitions[i].length ?? -1 >= 1)
       ) {
@@ -44,50 +42,48 @@ describe('Set Entries Integration Tests', () => {
         break;
       }
     }
-    if (!field?.name) {
-      throw new Error('field is undefined');
-    }
+
     expect(field).not.toBeNull();
-    let value = new ValueToUpdate();
-    value.value = fieldValue;
-    value.position = 1;
-    let name = new FieldToUpdate();
-    name.values = [value];
-    let requestBody = { [field.name]: name };
+    field = field!;
+
+    let fieldToUpdate = new FieldToUpdate();
+    fieldToUpdate.values = [fieldValue];
+    fieldToUpdate.name = field.name!
+    
+    let request = new SetFieldsRequest();
+    request.fields = [fieldToUpdate]
+
     entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetFields');
-    let num = Number(entry.id);
-    let response = await _RepositoryApiClient.entriesClient.assignFieldValues({
-      repoId: repositoryId,
-      entryId: num,
-      fieldsToUpdate: requestBody,
+    
+    let entryId = entry.id!;
+    let response = await _RepositoryApiClient.entriesClient.setFields({
+      repositoryId,
+      entryId,
+      request,
     });
     let fields = response.value;
-    if (!fields) {
-      throw new Error('fields is undefined');
-    }
+
     expect(fields).not.toBeNull();
-    expect(fields.length).toBe(1);
-    expect(fields[0].fieldName).toBe(field.name);
+    expect(fields!.length).toBe(1);
+    expect(fields![0].name!).toBe(field.name);
   });
 
   test('Set Tags', async () => {
-    let tagDefinitionsResponse = await _RepositoryApiClient.tagDefinitionsClient.getTagDefinitions({ repoId: repositoryId });
-    let tagDefinitions = tagDefinitionsResponse.value;
-    if (!tagDefinitions) {
-      throw new Error('tagDefinitions is undefined');
-    }
+    let tagDefinitionsResponse = await _RepositoryApiClient.tagDefinitionsClient.listTagDefinitions({ repositoryId });
+    let tagDefinitions = tagDefinitionsResponse.value!;
+    
     expect(tagDefinitions).not.toBeNull();
     expect(tagDefinitions.length).toBeGreaterThan(0);
-    let tag: string | undefined = tagDefinitions[0].name ?? '';
-    let request = new PutTagRequest();
-    request.tags = new Array(tag);
+    
+    let tag = tagDefinitions[0].name!;
+    let request = new SetTagsRequest();
+    request.tags = [tag];
     entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetTags');
-    let num = Number(entry.id);
-    let response = await _RepositoryApiClient.entriesClient.assignTags({ repoId: repositoryId, entryId: num, tagsToAdd: request });
-    let tags: WTagInfo[] | undefined = response.value;
-    if (!tags) {
-      throw new Error('tags is undefined');
-    }
+    
+    let entryId = entry.id!;
+    let response = await _RepositoryApiClient.entriesClient.setTags({ repositoryId, entryId: entryId, request });
+    let tags = response.value!;
+    
     expect(tags).not.toBeNull();
     expect(response?.value?.length).toBe(tags?.length);
     expect(tag).toBe(tags[0].name);
@@ -96,19 +92,18 @@ describe('Set Entries Integration Tests', () => {
   test('Set Templates', async () => {
     // Find a template definition with no required fields
     let template = null;
-    let templateDefinitionResponse = await _RepositoryApiClient.templateDefinitionsClient.getTemplateDefinitions({
-      repoId: repositoryId,
+    let templateDefinitionResponse = await _RepositoryApiClient.templateDefinitionsClient.listTemplateDefinitions({
+      repositoryId,
     });
-    let templateDefinitions = templateDefinitionResponse.value;
-    if (!templateDefinitions) {
-      throw new Error('templateDefinitions is undefined');
-    }
+    let templateDefinitions = templateDefinitionResponse.value!;
+
     expect(templateDefinitions).not.toBeNull();
     expect(templateDefinitions.length).toBeGreaterThan(0);
+
     for (let i = 0; i < templateDefinitions.length; i++) {
       let templateDefinitionFieldsResponse =
-        await _RepositoryApiClient.templateDefinitionsClient.getTemplateFieldDefinitions({
-          repoId: repositoryId,
+        await _RepositoryApiClient.templateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId({
+          repositoryId,
           templateId: templateDefinitions[i].id ?? -1,
         });
       if (templateDefinitionFieldsResponse.value && (await allFalse(templateDefinitionFieldsResponse.value))) {
@@ -116,17 +111,21 @@ describe('Set Entries Integration Tests', () => {
         break;
       }
     }
+
     expect(template).not.toBeNull();
 
     //Set the template on an entry
-    let request = new PutTemplateRequest();
-    request.templateName = template?.name;
+    let request = new SetTemplateRequest();
+    request.templateName = template?.name!;
+
     entry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS DeleteTemplate');
-    let setTemplateResponse = await _RepositoryApiClient.entriesClient.writeTemplateValueToEntry({
-      repoId: repositoryId,
-      entryId: Number(entry.id),
+
+    let setTemplateResponse = await _RepositoryApiClient.entriesClient.setTemplate({
+      repositoryId,
+      entryId: entry.id!,
       request,
     });
+
     expect(setTemplateResponse).not.toBeNull();
     expect(setTemplateResponse.templateName).toBe(template?.name);
   });
