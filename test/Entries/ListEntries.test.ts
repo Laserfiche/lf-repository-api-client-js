@@ -2,17 +2,17 @@ import { repositoryId } from '../TestHelper.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
-describe('Get Entries Integration Tests', () => {
+describe('List Entries Integration Tests', () => {
   let entryId: number = 1;
   let rootPath: string = '\\';
   let nonExistingPath: string = '\\Non Existing Path';
 
-  test('Get Entry Fields', async () => {
+  test('List Fields', async () => {
     let entryFieldResponse = await _RepositoryApiClient.entriesClient.listFields({ repositoryId, entryId });
     
     expect(entryFieldResponse?.value).not.toBeNull();
   });
-  test('Get Entry Listing', async () => {
+  test('List Entries', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.listEntries({
       repositoryId,
       entryId,
@@ -21,25 +21,25 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.value?.length).toBeGreaterThan(1);
   });
 
-  test('Get Entry Links', async () => {
+  test('List Links', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.listLinks({ repositoryId, entryId });
     
     expect(result?.value).not.toBeNull();
   });
 
-  test('Get Entry Tags', async () => {
+  test('List Tags', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.listTags({ repositoryId, entryId });
     
     expect(result?.value).not.toBeNull();
   });
 
-  test('Get Entry Return Root Folder', async () => {
+  test('List Entry Return Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntry({ repositoryId, entryId });
     
     expect(result?.value).not.toBeNull();
   });
 
-  test('Get Entry By Full Path Return Root Folder', async () => {
+  test('List Entry by Full Path Returns Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
       repositoryId,
       fullPath: rootPath,
@@ -52,7 +52,7 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.ancestorEntry).toBeUndefined();
   });
 
-  test('Get Entry By Full Path Return Ancestor Root Folder', async () => {
+  test('List Entry by Full Path Returns Ancestor Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
       repositoryId,
       fullPath: nonExistingPath,
@@ -65,7 +65,7 @@ describe('Get Entries Integration Tests', () => {
     expect(result?.entry).toBeUndefined();
   });
 
-  test('Get Entry Throw Exception', async () => {
+  test('List Entry Throw Exception', async () => {
     try {
       await _RepositoryApiClient.entriesClient.listEntries({
         repositoryId: "fakeRepo",

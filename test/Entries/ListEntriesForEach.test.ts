@@ -8,10 +8,10 @@ import {
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
-describe('Get Entry Tests', () => {
+describe('List Entry Tests', () => {
   let entryId: number = 1;
 
-  test('Get Entry Listing for each paging', async () => {
+  test('List Entries ForEach', async () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
@@ -30,7 +30,7 @@ describe('Get Entry Tests', () => {
     expect(pages).toBeGreaterThan(0);
   });
 
-  test('Get Entry Field for each paging', async () => {
+  test('List Fields ForEach', async () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
@@ -49,7 +49,7 @@ describe('Get Entry Tests', () => {
     expect(pages).toBeGreaterThan(0);
   });
 
-  test('Get Entry Links for each paging', async () => {
+  test('List Links ForEach', async () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
@@ -68,7 +68,7 @@ describe('Get Entry Tests', () => {
     expect(pages).toBeGreaterThan(0);
   });
 
-  test('Get Entry Tags for each paging', async () => {
+  test('List Tags ForEach', async () => {
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
