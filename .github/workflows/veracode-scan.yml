@@ -25,7 +25,7 @@ jobs:
     - name: Build solution
       run: npm run build
 
-    - name: 'create an empty ./veracode folder'
+    - name: 'Create an empty ./veracode folder'
       run: 'mkdir -p ./veracode'
       
     - name: 'Compress js repository client files'
