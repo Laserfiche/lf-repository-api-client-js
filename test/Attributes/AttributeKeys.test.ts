@@ -51,7 +51,7 @@ describe('Attribute Key Integration Tests', () => {
     };
     await _RepositoryApiClient.attributesClient.listAttributesForEach({
       callback,
-      repoId: repositoryId,
+      repositoryId,
       everyone: true,
       maxPageSize,
     });

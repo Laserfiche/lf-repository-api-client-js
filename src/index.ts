@@ -64,7 +64,7 @@ export class AttributesClient implements IAttributesClient {
   /**
    * It will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -75,7 +75,7 @@ export class AttributesClient implements IAttributesClient {
    */
   async listAttributesForEach(args: {
     callback: (response: AttributeCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     everyone?: boolean;
     select?: string;
     orderby?: string;
@@ -84,9 +84,9 @@ export class AttributesClient implements IAttributesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, everyone, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, everyone, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listAttributes({
-      repositoryId: repoId,
+      repositoryId,
       everyone,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -12261,7 +12261,7 @@ export interface IAttributesClient {
    */
   listAttributesForEach(args: {
     callback: (response: AttributeCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     everyone?: boolean;
     select?: string;
     orderby?: string;
