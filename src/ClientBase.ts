@@ -333,10 +333,10 @@ export interface IEntriesClient {
    * @param args.entryId The requested entry ID.
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
-   * @param args.formatFields (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+   * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting. 
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -351,7 +351,7 @@ export interface IEntriesClient {
     entryId: number;
     groupByEntryType?: boolean;
     fields?: string[];
-    formatFields?: boolean;
+    formatFieldValues?: boolean;
     prefer?: string;
     culture?: string;
     select?: string;
@@ -370,7 +370,7 @@ export interface IEntriesClient {
    * @param args.formatValue (optional) An optional query parameter used to indicate if the field values should be formatted.
           The default value is false. 
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting. 
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -492,10 +492,10 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.entryId The requested entry ID.
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
-   * @param args.formatFields (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+   * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting. 
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -510,7 +510,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     entryId: number;
     groupByEntryType?: boolean;
     fields?: string[];
-    formatFields?: boolean;
+    formatFieldValues?: boolean;
     prefer?: string;
     culture?: string;
     select?: string;
@@ -526,7 +526,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
       entryId,
       groupByEntryType,
       fields,
-      formatFields,
+      formatFieldValues,
       prefer,
       culture,
       select,
@@ -541,7 +541,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
       entryId,
       groupByEntryType,
       fields,
-      formatFieldValues: formatFields,
+      formatFieldValues,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -571,7 +571,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.formatValue (optional) An optional query parameter used to indicate if the field values should be formatted.
           The default value is false. 
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting. 
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -801,7 +801,7 @@ export interface IFieldDefinitionsClient {
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -841,7 +841,7 @@ export class FieldDefinitionsClient extends generated.FieldDefinitionsClient imp
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -915,10 +915,10 @@ export interface ISearchesClient {
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.refresh (optional) If the search listing should be refreshed to show updated values.
    * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
-   * @param args.formatFields (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+   * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -934,7 +934,7 @@ export interface ISearchesClient {
     groupByEntryType?: boolean;
     refresh?: boolean;
     fields?: string[];
-    formatFields?: boolean;
+    formatFieldValues?: boolean;
     prefer?: string;
     culture?: string;
     select?: string;
@@ -1002,10 +1002,10 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.refresh (optional) If the search listing should be refreshed to show updated values.
    * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
-   * @param args.formatFields (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+   * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -1021,7 +1021,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
     groupByEntryType?: boolean;
     refresh?: boolean;
     fields?: string[];
-    formatFields?: boolean;
+    formatFieldValues?: boolean;
     prefer?: string;
     culture?: string;
     select?: string;
@@ -1038,7 +1038,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
       groupByEntryType,
       refresh,
       fields,
-      formatFields,
+      formatFieldValues,
       prefer,
       culture,
       select,
@@ -1054,7 +1054,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
       groupByEntryType,
       refresh,
       fields,
-      formatFieldValues: formatFields,
+      formatFieldValues,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -1173,7 +1173,7 @@ export interface ITagDefinitionsClient {
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -1213,7 +1213,7 @@ export class TagDefinitionsClient extends generated.TagDefinitionsClient impleme
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -1286,7 +1286,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -1315,7 +1315,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -1344,7 +1344,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -1409,7 +1409,7 @@ export class TemplateDefinitionsClient
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -1462,7 +1462,7 @@ export class TemplateDefinitionsClient
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -1515,7 +1515,7 @@ export class TemplateDefinitionsClient
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
           culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
