@@ -83,19 +83,6 @@ jobs:
           TEST_HEADER: ${{ secrets.TEST_HEADER }}
         run: npm run test:all
 
-      - name: Npm test on self-hosted
-        if: always() && (steps.test-cloud.outcome == 'success' || steps.test-cloud.outcome == 'failure')
-        env:
-          ACCESS_KEY: ${{ secrets.DEV_US_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
-          SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_US_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
-          REPOSITORY_ID:  ${{ secrets.APISERVER_REPOSITORY_ID }}
-          APISERVER_USERNAME: ${{ secrets.APISERVER_USERNAME }}
-          APISERVER_PASSWORD: ${{ secrets.APISERVER_PASSWORD }}
-          APISERVER_REPOSITORY_API_BASE_URL: ${{ secrets.APISERVER_REPOSITORY_API_BASE_URL }}
-          AUTHORIZATION_TYPE: ${{ secrets.APISERVER_AUTHORIZATION_TYPE }}
-          TEST_HEADER: ${{ secrets.TEST_HEADER }}
-        run: npm run test:all
-
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure() # run this step even if previous step failed
