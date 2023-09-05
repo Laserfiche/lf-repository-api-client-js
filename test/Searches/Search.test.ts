@@ -79,7 +79,7 @@ describe('Search Integration Tests', () => {
       return true;
     };
     
-    await _RepositoryApiClient.searchesClient.listSearchResultsForEach({ callback, repoId: repositoryId, searchToken: taskId, maxPageSize });
+    await _RepositoryApiClient.searchesClient.listSearchResultsForEach({ callback, repositoryId, searchToken: taskId, maxPageSize });
     
     expect(searchResults).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
@@ -123,7 +123,7 @@ describe('Search Integration Tests', () => {
     
     await _RepositoryApiClient.searchesClient.listSearchContextHitsForEach({
       callback,
-      repoId: repositoryId,
+      repositoryId,
       searchToken: taskId,
       rowNumber: rowNum,
       maxPageSize,

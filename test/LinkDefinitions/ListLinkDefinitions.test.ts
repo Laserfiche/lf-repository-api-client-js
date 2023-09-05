@@ -34,7 +34,7 @@ describe('Link Definitions Integration Tests', () => {
     
     await _RepositoryApiClient.linkDefinitionsClient.listLinkDefinitionsForEach({
       callback,
-      repoId: repositoryId,
+      repositoryId,
       maxPageSize,
     });
     

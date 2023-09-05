@@ -512,7 +512,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
@@ -526,7 +526,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
    */
   async listFieldDefinitionsForEach(args: {
     callback: (response: FieldDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     prefer?: string;
     culture?: string;
     select?: string;
@@ -536,9 +536,9 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listFieldDefinitions({
-      repositoryId: repoId,
+      repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -825,7 +825,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -836,7 +836,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
    */
   async listLinkDefinitionsForEach(args: {
     callback: (response: LinkDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     prefer?: string;
     select?: string;
     orderby?: string;
@@ -845,9 +845,9 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinkDefinitions({
-      repositoryId: repoId,
+      repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
       orderby,
@@ -1419,7 +1419,7 @@ export class EntriesClient implements IEntriesClient {
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
@@ -1437,7 +1437,7 @@ export class EntriesClient implements IEntriesClient {
    */
   async listEntriesForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     entryId: number;
     groupByEntryType?: boolean;
     fields?: string[];
@@ -1453,7 +1453,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let {
       callback,
-      repoId,
+      repositoryId,
       entryId,
       groupByEntryType,
       fields,
@@ -1468,7 +1468,7 @@ export class EntriesClient implements IEntriesClient {
       maxPageSize,
     } = args;
     var response = await this.listEntries({
-      repositoryId: repoId,
+      repositoryId,
       entryId,
       groupByEntryType,
       fields,
@@ -1496,7 +1496,7 @@ export class EntriesClient implements IEntriesClient {
   /**
    * It will continue to make the same call to get a list of field values of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.formatValue (optional) An optional query parameter used to indicate if the field values should be formatted.
@@ -1513,7 +1513,7 @@ export class EntriesClient implements IEntriesClient {
    */
   async listFieldsForEach(args: {
     callback: (response: FieldCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     entryId: number;
     prefer?: string;
     formatValue?: boolean;
@@ -1525,10 +1525,10 @@ export class EntriesClient implements IEntriesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, entryId, prefer, formatValue, culture, select, orderby, top, skip, count, maxPageSize } =
+    let { callback, repositoryId, entryId, prefer, formatValue, culture, select, orderby, top, skip, count, maxPageSize } =
       args;
     var response = await this.listFields({
-      repositoryId: repoId,
+      repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       formatFieldValues: formatValue,
@@ -1554,7 +1554,7 @@ export class EntriesClient implements IEntriesClient {
   /**
    * It will continue to make the same call to get a list of link values from entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.select (optional) Limits the properties returned in the result.
@@ -1566,7 +1566,7 @@ export class EntriesClient implements IEntriesClient {
    */
   async listLinksForEach(args: {
     callback: (response: LinkCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     entryId: number;
     prefer?: string;
     select?: string;
@@ -1576,9 +1576,9 @@ export class EntriesClient implements IEntriesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinks({
-      repositoryId: repoId,
+      repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -1602,7 +1602,7 @@ export class EntriesClient implements IEntriesClient {
   /**
    * It will continue to make the same call to get a list of tags assigned to entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.select (optional) Limits the properties returned in the result.
@@ -1614,7 +1614,7 @@ export class EntriesClient implements IEntriesClient {
    */
   async listTagsForEach(args: {
     callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     entryId: number;
     prefer?: string;
     select?: string;
@@ -1624,9 +1624,9 @@ export class EntriesClient implements IEntriesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTags({
-      repositoryId: repoId,
+      repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -4408,7 +4408,7 @@ export class SearchesClient implements ISearchesClient {
   /**
    * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.searchToken The requested searchToken.
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.refresh (optional) If the search listing should be refreshed to show updated values.
@@ -4427,7 +4427,7 @@ export class SearchesClient implements ISearchesClient {
    */
   async listSearchResultsForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     searchToken: string;
     groupByEntryType?: boolean;
     refresh?: boolean;
@@ -4444,7 +4444,7 @@ export class SearchesClient implements ISearchesClient {
   }): Promise<void> {
     let {
       callback,
-      repoId,
+      repositoryId,
       searchToken,
       groupByEntryType,
       refresh,
@@ -4460,7 +4460,7 @@ export class SearchesClient implements ISearchesClient {
       maxPageSize,
     } = args;
     var response = await this.listSearchResults({
-      repositoryId: repoId,
+      repositoryId,
       taskId: searchToken,
       groupByEntryType,
       refresh,
@@ -4489,7 +4489,7 @@ export class SearchesClient implements ISearchesClient {
   /**
    * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.searchToken The requested searchToken.
    * @param args.rowNumber The search result listing row number to get context hits for.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -4502,7 +4502,7 @@ export class SearchesClient implements ISearchesClient {
    */
   async listSearchContextHitsForEach(args: {
     callback: (response: SearchContextHitCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     searchToken: string;
     rowNumber: number;
     prefer?: string;
@@ -4513,9 +4513,9 @@ export class SearchesClient implements ISearchesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, searchToken, rowNumber, prefer, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, searchToken, rowNumber, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listSearchContextHits({
-      repositoryId: repoId,
+      repositoryId,
       taskId: searchToken,
       rowNumber,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
@@ -5124,7 +5124,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of tag definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
@@ -5138,7 +5138,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
    */
   async listTagDefinitionsForEach(args: {
     callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     prefer?: string;
     culture?: string;
     select?: string;
@@ -5148,9 +5148,9 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTagDefinitions({
-      repositoryId: repoId,
+      repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -5686,7 +5686,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   /**
    * Given a maximum page size, it will continue to make the same call to get a list of template definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -5701,7 +5701,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    */
   async listTemplateDefinitionsForEach(args: {
     callback: (response: TemplateDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     templateName?: string;
     prefer?: string;
     culture?: string;
@@ -5712,9 +5712,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateDefinitions({
-      repositoryId: repoId,
+      repositoryId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5739,7 +5739,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of template field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -5754,7 +5754,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    */
   async listTemplateFieldDefinitionsByTemplateIdForEach(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     templateId: number;
     prefer?: string;
     culture?: string;
@@ -5765,9 +5765,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, templateId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, templateId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateId({
-      repositoryId: repoId,
+      repositoryId,
       templateId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5792,7 +5792,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of template field definitions by template name of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -5807,7 +5807,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    */
   async listTemplateFieldDefinitionsByTemplateNameForEach(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     templateName: string;
     prefer?: string;
     culture?: string;
@@ -5818,9 +5818,9 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repoId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateName({
-      repositoryId: repoId,
+      repositoryId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -12250,7 +12250,7 @@ export interface IAttributesClient {
   /**
    * It will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -12287,7 +12287,7 @@ export interface IEntriesClient {
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
@@ -12305,7 +12305,7 @@ export interface IEntriesClient {
    */
   listEntriesForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     entryId: number;
     groupByEntryType?: boolean;
     fields?: string[];
@@ -12322,7 +12322,7 @@ export interface IEntriesClient {
   /**
    * It will continue to make the same call to get a list of field values of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.formatValue (optional) An optional query parameter used to indicate if the field values should be formatted.
@@ -12339,7 +12339,7 @@ export interface IEntriesClient {
    */
   listFieldsForEach(args: {
     callback: (response: FieldCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     entryId: number;
     prefer?: string;
     formatValue?: boolean;
@@ -12354,7 +12354,7 @@ export interface IEntriesClient {
   /**
    * It will continue to make the same call to get a list of link values from entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.select (optional) Limits the properties returned in the result.
@@ -12366,7 +12366,7 @@ export interface IEntriesClient {
    */
   listLinksForEach(args: {
     callback: (response: LinkCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     entryId: number;
     prefer?: string;
     select?: string;
@@ -12379,7 +12379,7 @@ export interface IEntriesClient {
   /**
    * It will continue to make the same call to get a list of tags assigned to entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.select (optional) Limits the properties returned in the result.
@@ -12391,7 +12391,7 @@ export interface IEntriesClient {
    */
   listTagsForEach(args: {
     callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     entryId: number;
     prefer?: string;
     select?: string;
@@ -12447,7 +12447,7 @@ export interface IFieldDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
@@ -12461,7 +12461,7 @@ export interface IFieldDefinitionsClient {
    */
   listFieldDefinitionsForEach(args: {
     callback: (response: FieldDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     prefer?: string;
     culture?: string;
     select?: string;
@@ -12487,7 +12487,7 @@ export interface ISearchesClient {
   /**
    * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.searchToken The requested searchToken.
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.refresh (optional) If the search listing should be refreshed to show updated values.
@@ -12506,7 +12506,7 @@ export interface ISearchesClient {
    */
   listSearchResultsForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     searchToken: string;
     groupByEntryType?: boolean;
     refresh?: boolean;
@@ -12524,7 +12524,7 @@ export interface ISearchesClient {
   /**
    * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.searchToken The requested searchToken.
    * @param args.rowNumber The search result listing row number to get context hits for.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -12537,7 +12537,7 @@ export interface ISearchesClient {
    */
   listSearchContextHitsForEach(args: {
     callback: (response: SearchContextHitCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     searchToken: string;
     rowNumber: number;
     prefer?: string;
@@ -12574,7 +12574,7 @@ export interface ITagDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of tag definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFields query parameter must be set to true, otherwise
@@ -12588,7 +12588,7 @@ export interface ITagDefinitionsClient {
    */
   listTagDefinitionsForEach(args: {
     callback: (response: TagDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     prefer?: string;
     culture?: string;
     select?: string;
@@ -12614,7 +12614,7 @@ export interface ITemplateDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of template definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -12629,7 +12629,7 @@ export interface ITemplateDefinitionsClient {
    */
   listTemplateDefinitionsForEach(args: {
     callback: (response: TemplateDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     templateName?: string;
     prefer?: string;
     culture?: string;
@@ -12643,7 +12643,7 @@ export interface ITemplateDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of template field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -12658,7 +12658,7 @@ export interface ITemplateDefinitionsClient {
    */
   listTemplateFieldDefinitionsByTemplateIdForEach(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     templateId: number;
     prefer?: string;
     culture?: string;
@@ -12672,7 +12672,7 @@ export interface ITemplateDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of template field definitions by template name of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
@@ -12687,7 +12687,7 @@ export interface ITemplateDefinitionsClient {
    */
   listTemplateFieldDefinitionsByTemplateNameForEach(args: {
     callback: (response: TemplateFieldDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     templateName: string;
     prefer?: string;
     culture?: string;
@@ -12734,7 +12734,7 @@ export interface ILinkDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repoId The requested repository ID.
+   * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -12745,7 +12745,7 @@ export interface ILinkDefinitionsClient {
    */
   listLinkDefinitionsForEach(args: {
     callback: (response: LinkDefinitionCollectionResponse) => Promise<boolean>;
-    repoId: string;
+    repositoryId: string;
     prefer?: string;
     select?: string;
     orderby?: string;

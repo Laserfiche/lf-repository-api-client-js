@@ -69,7 +69,7 @@ describe('Template Definitions Integration Tests', () => {
     
     await _RepositoryApiClient.templateDefinitionsClient.listTemplateDefinitionsForEach({
       callback,
-      repoId: repositoryId,
+      repositoryId,
       maxPageSize,
     });
     

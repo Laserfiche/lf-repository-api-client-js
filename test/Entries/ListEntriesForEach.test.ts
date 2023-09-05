@@ -24,7 +24,7 @@ describe('List Entry Tests', () => {
       return true;
     };
     
-    await _RepositoryApiClient.entriesClient.listEntriesForEach({ callback, repoId: repositoryId, entryId, maxPageSize });
+    await _RepositoryApiClient.entriesClient.listEntriesForEach({ callback, repositoryId, entryId, maxPageSize });
     
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
@@ -43,7 +43,7 @@ describe('List Entry Tests', () => {
       return true;
     };
     
-    await _RepositoryApiClient.entriesClient.listFieldsForEach({ callback, repoId: repositoryId, entryId, maxPageSize });
+    await _RepositoryApiClient.entriesClient.listFieldsForEach({ callback, repositoryId, entryId, maxPageSize });
     
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
@@ -62,7 +62,7 @@ describe('List Entry Tests', () => {
       return true;
     };
     
-    await _RepositoryApiClient.entriesClient.listLinksForEach({ callback, repoId: repositoryId, entryId, maxPageSize });
+    await _RepositoryApiClient.entriesClient.listLinksForEach({ callback, repositoryId, entryId, maxPageSize });
     
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
@@ -81,7 +81,7 @@ describe('List Entry Tests', () => {
       return true;
     };
     
-    await _RepositoryApiClient.entriesClient.listTagsForEach({ callback, repoId: repositoryId, entryId, maxPageSize });
+    await _RepositoryApiClient.entriesClient.listTagsForEach({ callback, repositoryId, entryId, maxPageSize });
     
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);

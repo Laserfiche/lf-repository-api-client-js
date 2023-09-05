@@ -49,7 +49,7 @@ describe('Field Definitions Integration Tests', () => {
       return true;
     };
     
-    await _RepositoryApiClient.fieldDefinitionsClient.listFieldDefinitionsForEach({ callback, repoId: repositoryId, maxPageSize });
+    await _RepositoryApiClient.fieldDefinitionsClient.listFieldDefinitionsForEach({ callback, repositoryId, maxPageSize });
     
     expect(entries).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
