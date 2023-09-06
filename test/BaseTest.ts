@@ -1,4 +1,4 @@
-import { Entry, PostEntryChildrenRequest, EntryType, WFieldInfo, PostEntryChildrenEntryType } from '../src';
+import { Entry, CreateEntryRequest, EntryType, FieldDefinition, CreateEntryRequestEntryType } from '../src';
 import {
   OAuthAccessKey,
   repositoryId,
@@ -14,18 +14,18 @@ import { authorizationTypeEnum as authType } from './AuthorizationType.js';
 
 export async function CreateEntry(
   client: IRepositoryApiClient,
-  entryName: string | undefined,
+  entryName: string,
   parentEntryId: number = 1,
   autoRename: boolean = true
 ): Promise<Entry> {
-  var request = new PostEntryChildrenRequest();
-  request.entryType = PostEntryChildrenEntryType.Folder;
+  var request = new CreateEntryRequest();
+  request.entryType = CreateEntryRequestEntryType.Folder;
+  request.autoRename = autoRename;
   request.name = entryName;
-  var newEntry = await client.entriesClient.createOrCopyEntry({
-    repoId: repositoryId,
+  var newEntry = await client.entriesClient.createEntry({
+    repositoryId: repositoryId,
     entryId: parentEntryId,
-    request,
-    autoRename,
+    request
   });
   expect(newEntry).not.toBeNull();
   expect(newEntry.parentId).toBe(parentEntryId);
@@ -33,7 +33,7 @@ export async function CreateEntry(
   return newEntry;
 }
 
-export async function allFalse(arr: WFieldInfo[]): Promise<boolean> {
+export async function allFalse(arr: FieldDefinition[]): Promise<boolean> {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].isRequired) {
       return false;
@@ -47,7 +47,7 @@ export function createClient(): IRepositoryApiClient {
     if (authorizationType === authType.CloudAccessKey) {
       if (!testServicePrincipalKey || !OAuthAccessKey)
         throw new Error(`testServicePrincipalKey or OAuthAccessKey is undefined`);
-      _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey);
+      _RepositoryApiClient = RepositoryApiClient.createFromAccessKey(testServicePrincipalKey, OAuthAccessKey, "repository.ReadWrite");
     } else if (authorizationType === authType.APIServerUsernamePassword) {
       if (!repositoryId || !username || !password || !baseUrl)
         throw new Error(`RepositoryId, Username, Password, or BaseURL is undefined`);
