@@ -1441,20 +1441,23 @@ export class EntriesClient implements IEntriesClient {
     file: FileParameter; 
     request: ImportEntryRequest; 
   }): Promise<StartTaskResponse> {
+    // Determine how many parts does the file have, and as a result how many URLs is needed. 
     const [numberOfParts, partSizeInMB] = this.computeSplitInfo(args.fileSizeInBytes);
-    console.log (`Split information is computed: fileSizeInBytes ${args.fileSizeInBytes}, numberOfParts: ${numberOfParts}, PartSizeInMB: ${partSizeInMB}`);
-    const numberOfUrlsRequestedInEachCall = 5;
-    const numberOfIterations = Math.ceil(numberOfParts / numberOfUrlsRequestedInEachCall);
+    // The maximum number of URLs requested in each call to the CreateMultipartUploadUrls API.
+    const maxUrlsRequestedInEachIteration = 10;
+    const iterations = Math.ceil(numberOfParts / maxUrlsRequestedInEachIteration);
     
     var file = null;
-    var eTags = null;
+    var eTags = new Array<string>();
     let uploadId = null;
     try 
     {
       file = await fsPromise.open(args.file.fileName, 'r');
-      for (let i = 0; i < numberOfIterations; i++) {
-        console.log (`Requesting upload URL batch #${i+1}`);
-        var request = this.createRequestForIteration(i, numberOfParts, numberOfUrlsRequestedInEachCall, args.fileName, args.mimeType, uploadId);
+
+      // Iteratively request URLs and write file chunks into the URLs.
+      for (let i = 0; i < iterations; i++) {
+        // Step 1: Request a batch of URLs by calling the CreateMultipartUploadUrls API.
+        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(i, numberOfParts, maxUrlsRequestedInEachIteration, args.fileName, args.mimeType, uploadId);
         let response = await this.createMultipartUploadUrls({
           repositoryId: args.repositoryId,
           request: request
@@ -1462,36 +1465,42 @@ export class EntriesClient implements IEntriesClient {
 
         if (i == 0) {
           uploadId = response.uploadId;
-          console.log(`Upload Id: ${response.uploadId}`);
         }
-
-        eTags = await this.writeFileParts(file, partSizeInMB, response.urls);
+        
+        // Step 2: Split the file and write the chunks to current batch of URLs.
+        var eTagsForThisIteration = await this.writeFileParts(file, partSizeInMB, response.urls);
+        eTags.push.apply(eTags, eTagsForThisIteration);
       }
+
+      // Step 3: File chunks are written, and eTags are ready. Call the ImportUploadedParts API.
+      var finalRequest = this.prepareRequestForImportUploadedPartsApi(uploadId!, eTags, args.request.name, args.request.autoRename, args.request.pdfOptions, args.request.importAsElectronicDocument, args.request.metadata, args.request.volumeName);
+      var response = await this.startImportUploadedParts({
+        repositoryId: args.repositoryId,
+        entryId: args.entryId,
+        request: finalRequest
+      });
+  
+      return StartTaskResponse.fromJS(response);
+  
     } finally {
       if (file) {
         file.close();
       }
     }
+  }
 
+  private prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: ImportAsyncMetadata, volumeName?: string) {
     var parameters ={
       uploadId: uploadId,
       partETags: eTags,
-      name: args.request.name,
-      autoRename: args.request.autoRename,
-      pdfOptions: args.request.pdfOptions,
-      importAsElectronicDocument: args.request.importAsElectronicDocument,
-      metadata: args.request.metadata,
-      volumeName: args.request.volumeName
+      name: name,
+      autoRename: autoRename,
+      pdfOptions: pdfOptions,
+      importAsElectronicDocument: importAsElectronicDocument,
+      metadata: metadata,
+      volumeName: volumeName
     };
-
-    var request2 =  StartImportUploadedPartsRequest.fromJS(parameters);
-    var response = await this.startImportUploadedParts({
-      repositoryId: args.repositoryId,
-      entryId: args.entryId,
-      request: request2
-    });
-
-    return StartTaskResponse.fromJS(response);
+    return StartImportUploadedPartsRequest.fromJS(parameters);
   }
 
   private async writeFileParts(file: fsPromise.FileHandle, partSizeInMB: number, urls?: string[]): Promise<string[]> {
@@ -1509,7 +1518,7 @@ export class EntriesClient implements IEntriesClient {
   }
 
   private async writeFilePart(file: fsPromise.FileHandle, partSizeInMB: number, url: string): Promise<string> {
-    const bufferSizeInBytes = partSizeInMB * 1024;
+    const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
     var buffer = new Uint8Array(bufferSizeInBytes);
     var readResult = await file.read(buffer, 0, bufferSizeInBytes);
     var content = readResult.buffer; 
@@ -1529,7 +1538,7 @@ export class EntriesClient implements IEntriesClient {
     throw new Error("No ETag.");
   }
 
-  private createRequestForIteration(iterationIndex: number, numberOfParts: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): CreateMultipartUploadUrlsRequest {
+  private prepareRequestForCreateMultipartUploadUrlsApi(iterationIndex: number, numberOfParts: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): CreateMultipartUploadUrlsRequest {
     var parameters = (iterationIndex == 0) ? {
       startingPartNumber: 1,
       numberOfParts: Math.min(numberOfParts, numberOfUrlsRequestedInEachCall),
