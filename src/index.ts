@@ -8,6 +8,7 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+import * as fsPromise from 'fs/promises';
 import { UrlUtils, StringUtils } from '@laserfiche/lf-js-utils';
 import {
   UsernamePasswordHandler,
@@ -17,6 +18,8 @@ import {
   AccessKey,
   ApiException as ApiExceptionCore,
 } from '@laserfiche/lf-api-client-core';
+import { repositoryId } from '../test/TestHelper.js';
+import { url } from 'inspector';
 
 export interface IAttributesClient {
 
@@ -538,7 +541,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listFieldDefinitions({
-      repositoryId,
+      repositoryId: repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -847,7 +850,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinkDefinitions({
-      repositoryId,
+      repositoryId: repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
       orderby,
@@ -1417,6 +1420,143 @@ export class EntriesClient implements IEntriesClient {
 
     
   /**
+   * 
+   * @param args.fileName ------------------------------------------
+   * @param args.fileSizeInBytes ------------------------------------------
+   * @param args.mimeType ------------------------------------------
+   * @param args.repositoryId The requested repository ID.
+   * @param args.entryId The entry ID of the folder that the document will be created in.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
+   * @param args.file (optional) 
+   * @param args.request (optional) 
+   * @return -------------------------------------
+   */
+  async startImport(args: { 
+    fileName: string;
+    fileSizeInBytes: number;
+    mimeType: string; 
+    repositoryId: string; 
+    entryId: number; 
+    culture?: string | null | undefined; 
+    file: FileParameter; 
+    request: ImportEntryRequest; 
+  }): Promise<StartTaskResponse> {
+    const [numberOfParts, partSizeInMB] = this.computeSplitInfo(args.fileSizeInBytes);
+    console.log (`Split information is computed: fileSizeInBytes ${args.fileSizeInBytes}, numberOfParts: ${numberOfParts}, PartSizeInMB: ${partSizeInMB}`);
+    const numberOfUrlsRequestedInEachCall = 5;
+    const numberOfIterations = Math.ceil(numberOfParts / numberOfUrlsRequestedInEachCall);
+    
+    var file = null;
+    var eTags = null;
+    let uploadId = null;
+    try 
+    {
+      file = await fsPromise.open(args.file.fileName, 'r');
+      for (let i = 0; i < numberOfIterations; i++) {
+        console.log (`Requesting upload URL batch #${i+1}`);
+        var request = this.createRequestForIteration(i, numberOfParts, numberOfUrlsRequestedInEachCall, args.fileName, args.mimeType, uploadId);
+        let response = await this.createMultipartUploadUrls({
+          repositoryId: args.repositoryId,
+          request: request
+        });
+
+        if (i == 0) {
+          uploadId = response.uploadId;
+          console.log(`Upload Id: ${response.uploadId}`);
+        }
+
+        eTags = await this.writeFileParts(file, partSizeInMB, response.urls);
+      }
+    } finally {
+      if (file) {
+        file.close();
+      }
+    }
+
+    var parameters ={
+      uploadId: uploadId,
+      partETags: eTags,
+      name: args.request.name,
+      autoRename: args.request.autoRename,
+      pdfOptions: args.request.pdfOptions,
+      importAsElectronicDocument: args.request.importAsElectronicDocument,
+      metadata: args.request.metadata,
+      volumeName: args.request.volumeName
+    };
+
+    var request2 =  StartImportUploadedPartsRequest.fromJS(parameters);
+    var response = await this.startImportUploadedParts({
+      repositoryId: args.repositoryId,
+      entryId: args.entryId,
+      request: request2
+    });
+
+    return StartTaskResponse.fromJS(response);
+  }
+
+  private async writeFileParts(file: fsPromise.FileHandle, partSizeInMB: number, urls?: string[]): Promise<string[]> {
+    if (urls) {
+      let eTags = new Array<string>(urls?.length);
+      for (let i = 0; i < urls.length; i++) {
+        var url = urls[i];
+        var eTag = await this.writeFilePart(file, partSizeInMB, url);
+        eTags[i] = eTag;
+      }
+
+      return eTags;
+    }
+    throw new Error("Writing file part failed.");
+  }
+
+  private async writeFilePart(file: fsPromise.FileHandle, partSizeInMB: number, url: string): Promise<string> {
+    const bufferSizeInBytes = partSizeInMB * 1024;
+    var buffer = new Uint8Array(bufferSizeInBytes);
+    var readResult = await file.read(buffer, 0, bufferSizeInBytes);
+    var content = readResult.buffer; 
+    const response = await fetch(url, {
+      method: 'PUT',
+      body: content,
+      headers: {'Content-Type': 'application/octet-stream'} });
+    
+    if (response.ok && response.body !== null && response.status == 200) {
+      var eTag = response.headers.get("ETag");
+      if (eTag) {
+        eTag = eTag.substring(1, eTag.length - 1); // Remove heading and trailing double-quotation
+        return eTag;
+      }
+    } 
+    
+    throw new Error("No ETag.");
+  }
+
+  private createRequestForIteration(iterationIndex: number, numberOfParts: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): CreateMultipartUploadUrlsRequest {
+    var parameters = (iterationIndex == 0) ? {
+      startingPartNumber: 1,
+      numberOfParts: Math.min(numberOfParts, numberOfUrlsRequestedInEachCall),
+      fileName: fileName,
+      mimeType: mimeType
+    } : {
+      uploadId: uploadId,
+      startingPartNumber: iterationIndex * numberOfUrlsRequestedInEachCall + 1,
+      numberOfParts: Math.min(numberOfParts - (iterationIndex * numberOfUrlsRequestedInEachCall), numberOfUrlsRequestedInEachCall),
+    };
+    return CreateMultipartUploadUrlsRequest.fromJS(parameters);
+  }
+
+  private computeSplitInfo(fileSizeInBytes: number): [number, number] {
+    const maxFileSizeInGB = 64;
+
+    if (fileSizeInBytes > maxFileSizeInGB * 1024 * 1024 * 1024) 
+    {
+      throw new Error(`Maximum file size allowed is ${maxFileSizeInGB} GB.`);
+    }
+    const partSizeInMB = 100;
+    const numberOfParts = Math.ceil(fileSizeInBytes / (partSizeInMB * 1024 * 1024));
+
+    return [numberOfParts, partSizeInMB];
+  }
+
+  /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
@@ -1468,7 +1608,7 @@ export class EntriesClient implements IEntriesClient {
       maxPageSize,
     } = args;
     var response = await this.listEntries({
-      repositoryId,
+      repositoryId: repositoryId,
       entryId,
       groupByEntryType,
       fields,
@@ -1528,7 +1668,7 @@ export class EntriesClient implements IEntriesClient {
     let { callback, repositoryId, entryId, prefer, formatValue, culture, select, orderby, top, skip, count, maxPageSize } =
       args;
     var response = await this.listFields({
-      repositoryId,
+      repositoryId: repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       formatFieldValues: formatValue,
@@ -1578,7 +1718,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let { callback, repositoryId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinks({
-      repositoryId,
+      repositoryId: repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -1626,7 +1766,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let { callback, repositoryId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTags({
-      repositoryId,
+      repositoryId: repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -4460,7 +4600,7 @@ export class SearchesClient implements ISearchesClient {
       maxPageSize,
     } = args;
     var response = await this.listSearchResults({
-      repositoryId,
+      repositoryId: repositoryId,
       taskId: searchToken,
       groupByEntryType,
       refresh,
@@ -4515,7 +4655,7 @@ export class SearchesClient implements ISearchesClient {
   }): Promise<void> {
     let { callback, repositoryId, searchToken, rowNumber, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listSearchContextHits({
-      repositoryId,
+      repositoryId: repositoryId,
       taskId: searchToken,
       rowNumber,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
@@ -5150,7 +5290,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTagDefinitions({
-      repositoryId,
+      repositoryId: repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -5714,7 +5854,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateDefinitions({
-      repositoryId,
+      repositoryId: repositoryId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5767,7 +5907,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, templateId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateId({
-      repositoryId,
+      repositoryId: repositoryId,
       templateId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5820,7 +5960,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateName({
-      repositoryId,
+      repositoryId: repositoryId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -12284,6 +12424,16 @@ export interface IAttributesClient {
 }
 
 export interface IEntriesClient {
+  startImport(args: {
+    fileName: string;
+    fileSizeInBytes: number;
+    mimeType: string;
+    repositoryId: string;
+    entryId: number;
+    culture?: string | null | undefined;
+    file: FileParameter;
+    request: ImportEntryRequest;
+  }): Promise<StartTaskResponse>;
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
