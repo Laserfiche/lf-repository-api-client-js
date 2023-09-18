@@ -548,7 +548,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
       // Iteratively request URLs and write file chunks into the URLs.
       for (let i = 0; i < iterations; i++) {
         // Step 1: Request a batch of URLs by calling the CreateMultipartUploadUrls API.
-        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(i, numberOfParts, maxUrlsRequestedInEachIteration, args.file.fileName, args.mimeType, uploadId);
+        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(i, numberOfParts, maxUrlsRequestedInEachIteration, this.getFileName(args.file.fileName), args.mimeType, uploadId);
         let response = await this.createMultipartUploadUrls({
           repositoryId: args.repositoryId,
           request: request
@@ -580,6 +580,19 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     }
   }
 
+  /**
+   * Returns the file name of a given file path.
+   * @param filePath The path to a file.
+   * @returns The file name.
+   */
+  private getFileName(filePath: string): string {
+    let fileName = filePath;
+    var index = filePath.lastIndexOf('/');
+    if (index >= 0) {
+      fileName = filePath.substring(index + 1);
+    }
+    return fileName;
+  }
   /**
    * Prepares and returns the request body for calling the ImportUploadedParts API.
    */
