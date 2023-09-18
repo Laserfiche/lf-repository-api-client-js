@@ -7,7 +7,7 @@ import { isBrowser } from '@laserfiche/lf-js-utils/dist/utils/core-utils.js';
 
 describe('Large File Import Integration Tests', () => {
 
-      test('Importing a 60MB file is successful', async () => {
+      test('Importing a 60MB file with assigning a template and tag is successful', async () => {
         let blob: any;
         if (isBrowser()){
             blob = new Blob([""], {
@@ -23,7 +23,9 @@ describe('Large File Import Integration Tests', () => {
             data: blob
           }
 
-          var name = "sample.pdf";
+          var fileName = "sample";
+          var fileExtension = "pdf";
+          var name = `${fileName}.${fileExtension}`;
           var templateName = "Email";
           var tagName = "TestTag";
           var mimeType = "application/pdf";
@@ -62,11 +64,12 @@ describe('Large File Import Integration Tests', () => {
         var createdEntry = await _RepositoryApiClient.entriesClient.getEntry({repositoryId: repositoryId, entryId: createdEntryId!});
         expect(createdEntry).not.toBeNull();
         expect(createdEntry.id).toEqual(createdEntryId);
-        expect(createdEntry.name).toEqual(name);
+        expect(createdEntry.name?.startsWith(fileName)).toBeTruthy(); // As autoRename is true, the name of the created entry is not exactly the same as the given name, e.g. it can be 'sample (5).pdf'
+        expect(createdEntry.name?.endsWith(fileExtension)).toBeTruthy(); 
         expect(createdEntry.isContainer).toBeFalsy();
         expect(createdEntry.isLeaf).toBeTruthy();
         expect(createdEntry.parentId).toEqual(rootEntryId);
-        
+
         // Verify the created entry's templateName
         expect(createdEntry.templateName).toEqual(templateName);
 
