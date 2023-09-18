@@ -336,7 +336,6 @@ export interface IEntriesClient {
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The entry ID of the folder that the document will be created in.
    * @param args.file The file to be imported as a new document. 
-   * @param args.fileSizeInBytes The length, in bytes, of the file to be imported as a new document. 
    * @param args.mimeType The mime-type of the file to be imported as a new document. 
    * @param args.request The body of the request.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
@@ -346,7 +345,6 @@ export interface IEntriesClient {
     repositoryId: string;
     entryId: number;
     file: generated.FileParameter;
-    fileSizeInBytes: number;
     mimeType: string;
     request: generated.ImportEntryRequest;
     culture?: string | null | undefined;
@@ -517,7 +515,6 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The entry ID of the folder that the document will be created in.
    * @param args.file The file to be imported as a new document. 
-   * @param args.fileSizeInBytes The length, in bytes, of the file to be imported as a new document. 
    * @param args.mimeType The mime-type of the file to be imported as a new document. 
    * @param args.request The body of the request.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
@@ -527,17 +524,13 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     repositoryId: string;
     entryId: number;
     file: generated.FileParameter;
-    fileSizeInBytes: number;
     mimeType: string;
     request: generated.ImportEntryRequest;
     culture?: string | null | undefined;
   }): Promise<generated.StartTaskResponse> {
-    // Determine how many parts does the file have, and as a result how many URLs is needed. 
-    const [numberOfParts, partSizeInMB] = this.computeSplitInfo(args.fileSizeInBytes);
     // The maximum number of URLs requested in each call to the CreateMultipartUploadUrls API.
-    const maxUrlsRequestedInEachIteration = 10;
-    const iterations = Math.ceil(numberOfParts / maxUrlsRequestedInEachIteration);
-    
+    const numberOfUrlsRequestedInEachCall = 10;
+    var thereAreMoreParts = true;   
     var file = null;
     var eTags = new Array<string>();
     let uploadId = null;
@@ -545,22 +538,26 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     {
       file = await fsPromise.open(args.file.fileName, 'r');
 
+      let iteration = 0;
       // Iteratively request URLs and write file chunks into the URLs.
-      for (let i = 0; i < iterations; i++) {
+      while (thereAreMoreParts) {
+        iteration++;
         // Step 1: Request a batch of URLs by calling the CreateMultipartUploadUrls API.
-        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(i, numberOfParts, maxUrlsRequestedInEachIteration, this.getFileName(args.file.fileName), args.mimeType, uploadId);
+        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(iteration, numberOfUrlsRequestedInEachCall, this.getFileName(args.file.fileName), args.mimeType, uploadId);
         let response = await this.createMultipartUploadUrls({
           repositoryId: args.repositoryId,
           request: request
         });
 
-        if (i == 0) {
+        if (iteration == 1) {
           uploadId = response.uploadId;
         }
         
         // Step 2: Split the file and write the chunks to current batch of URLs.
-        var eTagsForThisIteration = await this.writeFileParts(file, partSizeInMB, response.urls);
+        var eTagsForThisIteration = await this.writeFileParts(file, response.urls!);
         eTags.push.apply(eTags, eTagsForThisIteration);
+
+        thereAreMoreParts = eTagsForThisIteration.length == numberOfUrlsRequestedInEachCall;
       }
 
       // Step 3: File chunks are written, and eTags are ready. Call the ImportUploadedParts API.
@@ -614,77 +611,67 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * Takes a file handler and a set of URLs. Then splits the file from the handler's current position, and writes the file parts to the given URLs.
    * @returns The eTags of the parts written.
    */
-  async writeFileParts(file: fsPromise.FileHandle, partSizeInMB: number, urls?: string[]): Promise<string[]> {
-    if (urls) {
-      let eTags = new Array<string>(urls?.length);
-      for (let i = 0; i < urls.length; i++) {
-        var url = urls[i];
-        var eTag = await this.writeFilePart(file, partSizeInMB, url);
-        eTags[i] = eTag;
+  async writeFileParts(file: fsPromise.FileHandle, urls: string[]): Promise<string[]> {
+    let eTags = new Array<string>(urls.length);
+    var writtenParts = 0;
+    for (let i = 0; i < urls.length; i++) {
+      var url = urls[i];
+      var [eTag, endOfFileReached] = await this.writeFilePart(file, url);
+      if (endOfFileReached) {
+        // There has been no more data to write.
+        break;
       }
-
-      return eTags;
+      writtenParts++;
+      eTags[i] = eTag;
     }
-    throw new Error("Writing file part failed.");
+
+    return eTags.slice(0, writtenParts);
   }
 
   /**
-   * Takes a file handler and a single URL, and writes a single file part to the given URL. The size of the part is determiend by the partSizeInMB parameter.
-   * @returns The eTag of the part written.
+   * Takes a file handler and a single URL, and writes one part of the file to the given URL.
+   * @returns The eTag of the part written, and a boolean flag which determines whether the end of file is reached.
    */
-  async writeFilePart(file: fsPromise.FileHandle, partSizeInMB: number, url: string): Promise<string> {
+  async writeFilePart(file: fsPromise.FileHandle, url: string): Promise<[string, boolean]> {
+    let partSizeInMB = 100;
     const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
     var buffer = new Uint8Array(bufferSizeInBytes);
     var readResult = await file.read(buffer, 0, bufferSizeInBytes);
-    var content = readResult.buffer; 
-    const response = await fetch(url, {
-      method: 'PUT',
-      body: content,
-      headers: {'Content-Type': 'application/octet-stream'} });
+    var endOfFileReached = readResult.bytesRead == 0;
+    var content = readResult.buffer;
+    var eTag = "";
+    if (!endOfFileReached) {
+      const response = await fetch(url, {
+        method: 'PUT',
+        body: content,
+        headers: {'Content-Type': 'application/octet-stream'} });
+      
+      if (response.ok && response.body !== null && response.status == 200) {
+        eTag = response.headers.get("ETag")!;
+        if (eTag) {
+          eTag = eTag.substring(1, eTag.length - 1); // Remove heading and trailing double-quotation
+        }
+      } 
+    }
     
-    if (response.ok && response.body !== null && response.status == 200) {
-      var eTag = response.headers.get("ETag");
-      if (eTag) {
-        eTag = eTag.substring(1, eTag.length - 1); // Remove heading and trailing double-quotation
-        return eTag;
-      }
-    } 
-    
-    throw new Error("No ETag.");
+    return [eTag, endOfFileReached];
   }
-
 
   /**
    * Prepares and returns the request body for calling the CreateMultipartUploadUrls API.
    */
-  prepareRequestForCreateMultipartUploadUrlsApi(iterationIndex: number, numberOfParts: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): generated.CreateMultipartUploadUrlsRequest {
-    var parameters = (iterationIndex == 0) ? {
+  prepareRequestForCreateMultipartUploadUrlsApi(iteration: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): generated.CreateMultipartUploadUrlsRequest {
+    var parameters = (iteration == 1) ? {
       startingPartNumber: 1,
-      numberOfParts: Math.min(numberOfParts, numberOfUrlsRequestedInEachCall),
+      numberOfParts: numberOfUrlsRequestedInEachCall,
       fileName: fileName,
       mimeType: mimeType
     } : {
       uploadId: uploadId,
-      startingPartNumber: iterationIndex * numberOfUrlsRequestedInEachCall + 1,
-      numberOfParts: Math.min(numberOfParts - (iterationIndex * numberOfUrlsRequestedInEachCall), numberOfUrlsRequestedInEachCall),
+      startingPartNumber: (iteration - 1) * numberOfUrlsRequestedInEachCall + 1,
+      numberOfParts: numberOfUrlsRequestedInEachCall,
     };
     return generated.CreateMultipartUploadUrlsRequest.fromJS(parameters);
-  }
-
-  /**
-   * Takes the file size as input and determies the number of parts and the part size (in MB). 
-   */
-  computeSplitInfo(fileSizeInBytes: number): [number, number] {
-    const maxFileSizeInGB = 64;
-
-    if (fileSizeInBytes > maxFileSizeInGB * 1024 * 1024 * 1024) 
-    {
-      throw new Error(`Maximum file size allowed is ${maxFileSizeInGB} GB.`);
-    }
-    const partSizeInMB = 100;
-    const numberOfParts = Math.ceil(fileSizeInBytes / (partSizeInMB * 1024 * 1024));
-
-    return [numberOfParts, partSizeInMB];
   }
 
   /**
