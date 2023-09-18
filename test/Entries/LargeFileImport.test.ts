@@ -43,7 +43,6 @@ describe('Large File Import Integration Tests', () => {
             repositoryId,
             entryId: rootEntryId,
             file: edoc,
-            fileSizeInBytes: 63096545,
             mimeType: mimeType,
             request: request
         });
@@ -59,6 +58,7 @@ describe('Large File Import Integration Tests', () => {
     
         let taskProgress = response2.value![0];
         expect(taskProgress.status).toBe(TaskStatus.Completed);
+        
         expect(taskProgress.percentComplete).toBe(100);
         let createdEntryId = taskProgress.result?.entryId;
         var createdEntry = await _RepositoryApiClient.entriesClient.getEntry({repositoryId: repositoryId, entryId: createdEntryId!});
