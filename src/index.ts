@@ -1494,7 +1494,7 @@ export class EntriesClient implements IEntriesClient {
    * @param filePath The path to a file.
    * @returns The file name.
    */
-  private getFileName(filePath: string): string {
+  getFileName(filePath: string): string {
     let fileName = filePath;
     var index = filePath.lastIndexOf('/');
     if (index >= 0) {
@@ -1505,7 +1505,7 @@ export class EntriesClient implements IEntriesClient {
   /**
    * Prepares and returns the request body for calling the ImportUploadedParts API.
    */
-  private prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: ImportAsyncMetadata, volumeName?: string): StartImportUploadedPartsRequest {
+  prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: ImportAsyncMetadata, volumeName?: string): StartImportUploadedPartsRequest {
     var parameters ={
       uploadId: uploadId,
       partETags: eTags,
@@ -1523,7 +1523,7 @@ export class EntriesClient implements IEntriesClient {
    * Takes a file handler and a set of URLs. Then splits the file from the handler's current position, and writes the file parts to the given URLs.
    * @returns The eTags of the parts written.
    */
-  private async writeFileParts(file: fsPromise.FileHandle, partSizeInMB: number, urls?: string[]): Promise<string[]> {
+  async writeFileParts(file: fsPromise.FileHandle, partSizeInMB: number, urls?: string[]): Promise<string[]> {
     if (urls) {
       let eTags = new Array<string>(urls?.length);
       for (let i = 0; i < urls.length; i++) {
@@ -1541,7 +1541,7 @@ export class EntriesClient implements IEntriesClient {
    * Takes a file handler and a single URL, and writes a single file part to the given URL. The size of the part is determiend by the partSizeInMB parameter.
    * @returns The eTag of the part written.
    */
-  private async writeFilePart(file: fsPromise.FileHandle, partSizeInMB: number, url: string): Promise<string> {
+  async writeFilePart(file: fsPromise.FileHandle, partSizeInMB: number, url: string): Promise<string> {
     const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
     var buffer = new Uint8Array(bufferSizeInBytes);
     var readResult = await file.read(buffer, 0, bufferSizeInBytes);
@@ -1565,7 +1565,7 @@ export class EntriesClient implements IEntriesClient {
   /**
    * Prepares and returns the request body for calling the CreateMultipartUploadUrls API.
    */
-  private prepareRequestForCreateMultipartUploadUrlsApi(iterationIndex: number, numberOfParts: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): CreateMultipartUploadUrlsRequest {
+  prepareRequestForCreateMultipartUploadUrlsApi(iterationIndex: number, numberOfParts: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): CreateMultipartUploadUrlsRequest {
     var parameters = (iterationIndex == 0) ? {
       startingPartNumber: 1,
       numberOfParts: Math.min(numberOfParts, numberOfUrlsRequestedInEachCall),
@@ -1582,7 +1582,7 @@ export class EntriesClient implements IEntriesClient {
   /**
    * Takes the file size as input and determies the number of parts and the part size (in MB). 
    */
-  private computeSplitInfo(fileSizeInBytes: number): [number, number] {
+  computeSplitInfo(fileSizeInBytes: number): [number, number] {
     const maxFileSizeInGB = 64;
 
     if (fileSizeInBytes > maxFileSizeInGB * 1024 * 1024 * 1024) 
