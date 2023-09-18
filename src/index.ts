@@ -1525,7 +1525,10 @@ export class EntriesClient implements IEntriesClient {
     }
   }
 
-  private prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: ImportAsyncMetadata, volumeName?: string) {
+  /**
+   * Prepares and returns the request body for calling the ImportUploadedParts API.
+   */
+  private prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: ImportAsyncMetadata, volumeName?: string): StartImportUploadedPartsRequest {
     var parameters ={
       uploadId: uploadId,
       partETags: eTags,
@@ -1539,6 +1542,10 @@ export class EntriesClient implements IEntriesClient {
     return StartImportUploadedPartsRequest.fromJS(parameters);
   }
 
+  /**
+   * Takes a file handler and a set of URLs. Then splits the file from the handler's current position, and writes the file parts to the given URLs.
+   * @returns The eTags of the parts written.
+   */
   private async writeFileParts(file: fsPromise.FileHandle, partSizeInMB: number, urls?: string[]): Promise<string[]> {
     if (urls) {
       let eTags = new Array<string>(urls?.length);
@@ -1553,6 +1560,10 @@ export class EntriesClient implements IEntriesClient {
     throw new Error("Writing file part failed.");
   }
 
+  /**
+   * Takes a file handler and a single URL, and writes a single file part to the given URL. The size of the part is determiend by the partSizeInMB parameter.
+   * @returns The eTag of the part written.
+   */
   private async writeFilePart(file: fsPromise.FileHandle, partSizeInMB: number, url: string): Promise<string> {
     const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
     var buffer = new Uint8Array(bufferSizeInBytes);
@@ -1574,6 +1585,9 @@ export class EntriesClient implements IEntriesClient {
     throw new Error("No ETag.");
   }
 
+  /**
+   * Prepares and returns the request body for calling the CreateMultipartUploadUrls API.
+   */
   private prepareRequestForCreateMultipartUploadUrlsApi(iterationIndex: number, numberOfParts: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): CreateMultipartUploadUrlsRequest {
     var parameters = (iterationIndex == 0) ? {
       startingPartNumber: 1,
@@ -1588,6 +1602,9 @@ export class EntriesClient implements IEntriesClient {
     return CreateMultipartUploadUrlsRequest.fromJS(parameters);
   }
 
+  /**
+   * Takes the file size as input and determies the number of parts and the part size (in MB). 
+   */
   private computeSplitInfo(fileSizeInBytes: number): [number, number] {
     const maxFileSizeInGB = 64;
 
