@@ -20,6 +20,65 @@ import {
 } from '@laserfiche/lf-api-client-core';
 import { repositoryId } from '../test/TestHelper.js';
 import { url } from 'inspector';
+import operation to import a document.
+   * If successful, it returns a taskId which can be used to check the status of the import operation or retrieve the import result, otherwise, it returns an error.
+   * Required OAuth scope: repository.Write
+   * @param args.repositoryId The requested repository ID.
+   * @param args.entryId The entry ID of the folder that the document will be created in.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
+   * @param args.file The file to be imported as a new document. 
+   * @param args.fileSizeInBytes The length, in bytes, of the file to be imported as a new document. 
+   * @param args.mimeType The mime-type of the file to be imported as a new document. 
+   * @param args.request The body of the import request.
+   * @return A long operation task id.
+  */
+  startImportEntry(args: {
+    repositoryId: string;
+    entryId: number;
+    culture?: string | null | undefined;
+    file: FileParameter;
+    fileSizeInBytes: number;
+    mimeType: string;
+    request: ImportEntryRequest;
+  }): Promise<StartTaskResponse>;
+  /**
+   * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
+   * @param args.repositoryId The requested repository ID.
+   * @param args.entryId The requested entry ID.
+   * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
+   * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
+   * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+   * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
+          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
+          culture will not be used for formatting. 
+   * @param args.select (optional) Limits the properties returned in the result.
+   * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
+   * @param args.top (optional) Limits the number of items returned from a collection.
+import operation to import a document.
+   * If successful, it returns a taskId which can be used to check the status of the import operation or retrieve the import result, otherwise, it returns an error.
+   * Required OAuth scope: repository.Write
+   * @param args.repositoryId The requested repository ID.
+   * @param args.entryId The entry ID of the folder that the document will be created in.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
+   * @param args.file The file to be imported as a new document. 
+   * @param args.fileSizeInBytes The length, in bytes, of the file to be imported as a new document. 
+   * @param args.mimeType The mime-type of the file to be imported as a new document. 
+   * @param args.request The body of the import request.
+   * @return A long operation task id.
+  */
+  async startImportEntry(args: { 
+    repositoryId: string;
+    entryId: number;
+    culture?: string | null | undefined;
+    file: FileParameter;
+    fileSizeInBytes: number;
+    mimeType: string;
+    request: ImportEntryRequest;
+  }): Promise<StartTaskResponse> {
+    // Determine how many parts does the file have, and as a result how many URLs is needed. 
+    const [numberOfParts, partSizeInMB] = this.computeSplitInfo(args.fileSizeInBytes);
 
 export interface IAttributesClient {
 
@@ -1420,30 +1479,7 @@ export class EntriesClient implements IEntriesClient {
 
     
   /**
-   * 
-   * @param args.fileName ------------------------------------------
-   * @param args.fileSizeInBytes ------------------------------------------
-   * @param args.mimeType ------------------------------------------
-   * @param args.repositoryId The requested repository ID.
-   * @param args.entryId The entry ID of the folder that the document will be created in.
-   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
-   * @param args.file (optional) 
-   * @param args.request (optional) 
-   * @return -------------------------------------
-   */
-  async startImport(args: { 
-    fileName: string;
-    fileSizeInBytes: number;
-    mimeType: string; 
-    repositoryId: string; 
-    entryId: number; 
-    culture?: string | null | undefined; 
-    file: FileParameter; 
-    request: ImportEntryRequest; 
-  }): Promise<StartTaskResponse> {
-    // Determine how many parts does the file have, and as a result how many URLs is needed. 
-    const [numberOfParts, partSizeInMB] = this.computeSplitInfo(args.fileSizeInBytes);
-    // The maximum number of URLs requested in each call to the CreateMultipartUploadUrls API.
+   * Starts an asynchronous     // The maximum number of URLs requested in each call to the CreateMultipartUploadUrls API.
     const maxUrlsRequestedInEachIteration = 10;
     const iterations = Math.ceil(numberOfParts / maxUrlsRequestedInEachIteration);
     
@@ -1457,7 +1493,7 @@ export class EntriesClient implements IEntriesClient {
       // Iteratively request URLs and write file chunks into the URLs.
       for (let i = 0; i < iterations; i++) {
         // Step 1: Request a batch of URLs by calling the CreateMultipartUploadUrls API.
-        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(i, numberOfParts, maxUrlsRequestedInEachIteration, args.fileName, args.mimeType, uploadId);
+        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(i, numberOfParts, maxUrlsRequestedInEachIteration, args.file.fileName, args.mimeType, uploadId);
         let response = await this.createMultipartUploadUrls({
           repositoryId: args.repositoryId,
           request: request
@@ -12433,32 +12469,8 @@ export interface IAttributesClient {
 }
 
 export interface IEntriesClient {
-  startImport(args: {
-    fileName: string;
-    fileSizeInBytes: number;
-    mimeType: string;
-    repositoryId: string;
-    entryId: number;
-    culture?: string | null | undefined;
-    file: FileParameter;
-    request: ImportEntryRequest;
-  }): Promise<StartTaskResponse>;
   /**
-   * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
-   * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
-   * @param args.repositoryId The requested repository ID.
-   * @param args.entryId The requested entry ID.
-   * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
-   * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
-   * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
-   * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
-   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
-          The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting. 
-   * @param args.select (optional) Limits the properties returned in the result.
-   * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
-   * @param args.top (optional) Limits the number of items returned from a collection.
-   * @param args.skip (optional) Excludes the specified number of items of the queried collection from the result.
+   * Starts an asynchronous    * @param args.skip (optional) Excludes the specified number of items of the queried collection from the result.
    * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema.
    */

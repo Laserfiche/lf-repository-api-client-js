@@ -329,14 +329,26 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
 }
 
 export interface IEntriesClient {
-  startImport(args: {
-    fileName: string;
-    fileSizeInBytes: number;
-    mimeType: string;
+  /**
+   * Starts an asynchronous import operation to import a document.
+   * If successful, it returns a taskId which can be used to check the status of the import operation or retrieve the import result, otherwise, it returns an error.
+   * Required OAuth scope: repository.Write
+   * @param args.repositoryId The requested repository ID.
+   * @param args.entryId The entry ID of the folder that the document will be created in.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
+   * @param args.file The file to be imported as a new document. 
+   * @param args.fileSizeInBytes The length, in bytes, of the file to be imported as a new document. 
+   * @param args.mimeType The mime-type of the file to be imported as a new document. 
+   * @param args.request The body of the import request.
+   * @return A long operation task id.
+  */
+  startImportEntry(args: {
     repositoryId: string;
     entryId: number;
     culture?: string | null | undefined;
     file: generated.FileParameter;
+    fileSizeInBytes: number;
+    mimeType: string;
     request: generated.ImportEntryRequest;
   }): Promise<generated.StartTaskResponse>;
   /**
@@ -499,26 +511,26 @@ export interface IEntriesClient {
 }
 export class EntriesClient extends generated.EntriesClient implements IEntriesClient {
   /**
-   * 
-   * @param args.fileName ------------------------------------------
-   * @param args.fileSizeInBytes ------------------------------------------
-   * @param args.mimeType ------------------------------------------
+   * Starts an asynchronous import operation to import a document.
+   * If successful, it returns a taskId which can be used to check the status of the import operation or retrieve the import result, otherwise, it returns an error.
+   * Required OAuth scope: repository.Write
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The entry ID of the folder that the document will be created in.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
-   * @param args.file (optional) 
-   * @param args.request (optional) 
-   * @return -------------------------------------
-   */
-  async startImport(args: { 
-    fileName: string;
+   * @param args.file The file to be imported as a new document. 
+   * @param args.fileSizeInBytes The length, in bytes, of the file to be imported as a new document. 
+   * @param args.mimeType The mime-type of the file to be imported as a new document. 
+   * @param args.request The body of the import request.
+   * @return A long operation task id.
+  */
+  async startImportEntry(args: { 
+    repositoryId: string;
+    entryId: number;
+    culture?: string | null | undefined;
+    file: generated.FileParameter;
     fileSizeInBytes: number;
-    mimeType: string; 
-    repositoryId: string; 
-    entryId: number; 
-    culture?: string | null | undefined; 
-    file: generated.FileParameter; 
-    request: generated.ImportEntryRequest; 
+    mimeType: string;
+    request: generated.ImportEntryRequest;
   }): Promise<generated.StartTaskResponse> {
     // Determine how many parts does the file have, and as a result how many URLs is needed. 
     const [numberOfParts, partSizeInMB] = this.computeSplitInfo(args.fileSizeInBytes);
@@ -536,7 +548,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
       // Iteratively request URLs and write file chunks into the URLs.
       for (let i = 0; i < iterations; i++) {
         // Step 1: Request a batch of URLs by calling the CreateMultipartUploadUrls API.
-        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(i, numberOfParts, maxUrlsRequestedInEachIteration, args.fileName, args.mimeType, uploadId);
+        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(i, numberOfParts, maxUrlsRequestedInEachIteration, args.file.fileName, args.mimeType, uploadId);
         let response = await this.createMultipartUploadUrls({
           repositoryId: args.repositoryId,
           request: request
