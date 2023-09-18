@@ -335,21 +335,21 @@ export interface IEntriesClient {
    * Required OAuth scope: repository.Write
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The entry ID of the folder that the document will be created in.
-   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
    * @param args.file The file to be imported as a new document. 
    * @param args.fileSizeInBytes The length, in bytes, of the file to be imported as a new document. 
    * @param args.mimeType The mime-type of the file to be imported as a new document. 
    * @param args.request The body of the import request.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
    * @return A long operation task id.
   */
   startImportEntry(args: {
     repositoryId: string;
     entryId: number;
-    culture?: string | null | undefined;
     file: generated.FileParameter;
     fileSizeInBytes: number;
     mimeType: string;
     request: generated.ImportEntryRequest;
+    culture?: string | null | undefined;
   }): Promise<generated.StartTaskResponse>;
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
@@ -516,21 +516,21 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
    * Required OAuth scope: repository.Write
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The entry ID of the folder that the document will be created in.
-   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
    * @param args.file The file to be imported as a new document. 
    * @param args.fileSizeInBytes The length, in bytes, of the file to be imported as a new document. 
    * @param args.mimeType The mime-type of the file to be imported as a new document. 
    * @param args.request The body of the import request.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
    * @return A long operation task id.
   */
   async startImportEntry(args: { 
     repositoryId: string;
     entryId: number;
-    culture?: string | null | undefined;
     file: generated.FileParameter;
     fileSizeInBytes: number;
     mimeType: string;
     request: generated.ImportEntryRequest;
+    culture?: string | null | undefined;
   }): Promise<generated.StartTaskResponse> {
     // Determine how many parts does the file have, and as a result how many URLs is needed. 
     const [numberOfParts, partSizeInMB] = this.computeSplitInfo(args.fileSizeInBytes);
