@@ -2,49 +2,57 @@ import { repositoryId } from '../TestHelper.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 import { Blob as NodeBlob } from 'buffer';
-import { FileParameter, ImportAsyncMetadata, ImportEntryRequest, StartTaskResponse, TaskStatus } from '../../src/index.js';
+import { AuditEventType, ExportEntryRequestPart, FileParameter, ImportAsyncMetadata, ImportEntryRequest, StartExportEntryRequest, StartTaskResponse, TaskStatus } from '../../src/index.js';
 import { isBrowser } from '@laserfiche/lf-js-utils/dist/utils/core-utils.js';
 
 describe('Large File Import Integration Tests', () => {
 
       test('Importing a 60MB file with assigning a template and tag is successful', async () => {
         let blob: any;
+        let edoc : FileParameter;
         if (isBrowser()){
-            blob = new Blob([""], {
-                type: "application/json",
-              });
+          var fakeFileSizeInMB = 123;
+          var fakeFileSizeInBytes = fakeFileSizeInMB * 1024 * 1024 + 3455; // Not used a round value for file size.
+          const buffer = new ArrayBuffer(fakeFileSizeInBytes);
+          blob = new Blob([buffer], {
+            type: "application/pdf",
+          });
+          edoc = {
+            fileName: "FakeFile.pdf",
+            data: blob
+          }
         } else {
-            blob = new NodeBlob([""], {
-                type: "application/json",
-              });
-        }
-        const edoc : FileParameter = {
+          blob = new NodeBlob([""], {
+            type: "application/json",
+          });
+          edoc = {
             fileName: "test/Entries/sampleFiles/60MB.pdf",
             data: blob
           }
+        }
 
-          var fileName = "sample";
-          var fileExtension = "pdf";
-          var name = `${fileName}.${fileExtension}`;
-          var templateName = "Email";
-          var tagName = "TestTag";
-          var mimeType = "application/pdf";
-          var rootEntryId = 1;
-          const request = new ImportEntryRequest();
-          request.autoRename = true;
-          request.name = name;
-          var metadata ={
-            templateName: templateName,
-            tags: [tagName]
-          };
-      
-          request.metadata = ImportAsyncMetadata.fromJS(metadata);
-          let response: StartTaskResponse = await _RepositoryApiClient.entriesClient.startImportEntry({
-            repositoryId,
-            entryId: rootEntryId,
-            file: edoc,
-            mimeType: mimeType,
-            request: request
+        var fileName = "sample";
+        var fileExtension = "pdf";
+        var name = `${fileName}.${fileExtension}`;
+        var templateName = "Email";
+        var tagName = "TestTag";
+        var mimeType = "application/pdf";
+        var rootEntryId = 1;
+        const request = new ImportEntryRequest();
+        request.autoRename = true;
+        request.name = name;
+        var metadata ={
+          templateName: templateName,
+          tags: [tagName]
+        };
+    
+        request.metadata = ImportAsyncMetadata.fromJS(metadata);
+        let response: StartTaskResponse = await _RepositoryApiClient.entriesClient.startImportEntry({
+          repositoryId,
+          entryId: rootEntryId,
+          file: edoc,
+          mimeType: mimeType,
+          request: request
         });
 
         var response2 = await _RepositoryApiClient.tasksClient.listTasks({
