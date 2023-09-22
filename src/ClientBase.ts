@@ -11,6 +11,7 @@ import {
 } from '@laserfiche/lf-api-client-core';
 import { repositoryId } from '../test/TestHelper.js';
 import { url } from 'inspector';
+import { isBrowser } from '@laserfiche/lf-js-utils/dist/utils/core-utils.js';
 class ClientBase {}
 export interface IRepositoryApiClient {
   attributesClient: IAttributesClient;
@@ -531,15 +532,20 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
     // The maximum number of URLs requested in each call to the CreateMultipartUploadUrls API.
     const numberOfUrlsRequestedInEachCall = 10;
     var thereAreMoreParts = true;   
-    var file = null;
     var eTags = new Array<string>();
     let uploadId = null;
+    var dataSource = null;
     try 
     {
-      file = await fsPromise.open(args.file.fileName, 'r');
+
+      if (isBrowser()) {
+        dataSource = args.file.data;
+      } else {
+        dataSource = await fsPromise.open(args.file.fileName, 'r');
+      }
 
       let iteration = 0;
-      // Iteratively request URLs and write file chunks into the URLs.
+      // Iteratively request URLs and write file parts into the URLs.
       while (thereAreMoreParts) {
         iteration++;
         // Step 1: Request a batch of URLs by calling the CreateMultipartUploadUrls API.
@@ -553,14 +559,15 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
           uploadId = response.uploadId;
         }
         
-        // Step 2: Split the file and write the chunks to current batch of URLs.
-        var eTagsForThisIteration = await this.writeFileParts(file, response.urls!);
+        // Step 2: Split the file and write the parts to current batch of URLs.
+        var eTagsForThisIteration: any;
+        eTagsForThisIteration = await this.writeFileParts(dataSource!, response.urls!);
         eTags.push.apply(eTags, eTagsForThisIteration);
 
         thereAreMoreParts = eTagsForThisIteration.length == numberOfUrlsRequestedInEachCall;
       }
 
-      // Step 3: File chunks are written, and eTags are ready. Call the ImportUploadedParts API.
+      // Step 3: File parts are written, and eTags are ready. Call the ImportUploadedParts API.
       var finalRequest = this.prepareRequestForImportUploadedPartsApi(uploadId!, eTags, args.request.name, args.request.autoRename, args.request.pdfOptions, args.request.importAsElectronicDocument, args.request.metadata, args.request.volumeName);
       var response = await this.startImportUploadedParts({
         repositoryId: args.repositoryId,
@@ -571,8 +578,8 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
       return generated.StartTaskResponse.fromJS(response);
   
     } finally {
-      if (file) {
-        file.close();
+      if (dataSource && !isBrowser()) {
+        dataSource.close();
       }
     }
   }
@@ -608,42 +615,81 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   }
 
   /**
-   * Takes a file handler and a set of URLs. Then splits the file from the handler's current position, and writes the file parts to the given URLs.
+   * Takes a source for reading file data, and a set of URLs. 
+   * Then reads data from the source, on a part-by-part basis, and and writes the file parts to the given URLs.
    * @returns The eTags of the parts written.
    */
-  async writeFileParts(file: fsPromise.FileHandle, urls: string[]): Promise<string[]> {
+  async writeFileParts(source: any, urls: string[]): Promise<string[]> {
+    let partSizeInMB = 100;
     let eTags = new Array<string>(urls.length);
     var writtenParts = 0;
+
+    var partNumber = 0;
     for (let i = 0; i < urls.length; i++) {
+      partNumber++;
       var url = urls[i];
-      var [eTag, endOfFileReached] = await this.writeFilePart(file, url);
+      var partData: any;
+      var endOfFileReached: boolean;
+      if (isBrowser()) {
+        [partData, endOfFileReached] = await this.readOnePartForBrowserMode(source, partSizeInMB, partNumber);
+      } else {
+        [partData, endOfFileReached] = await this.readOnePartForNonBrowserMode(source, partSizeInMB);
+      }
+
       if (endOfFileReached) {
         // There has been no more data to write.
         break;
       }
+      var eTag = await this.writeFilePart(partData, url);
       writtenParts++;
       eTags[i] = eTag;
     }
-
     return eTags.slice(0, writtenParts);
   }
 
-  /**
-   * Takes a file handler and a single URL, and writes one part of the file to the given URL.
-   * @returns The eTag of the part written, and a boolean flag which determines whether the end of file is reached.
-   */
-  async writeFilePart(file: fsPromise.FileHandle, url: string): Promise<[string, boolean]> {
-    let partSizeInMB = 100;
+  async readOnePartForNonBrowserMode(file: fsPromise.FileHandle, partSizeInMB: number): Promise<[Uint8Array, boolean]> {
     const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
     var buffer = new Uint8Array(bufferSizeInBytes);
     var readResult = await file.read(buffer, 0, bufferSizeInBytes);
     var endOfFileReached = readResult.bytesRead == 0;
-    var content = readResult.buffer;
+    var partData = readResult.buffer.subarray(0, readResult.bytesRead);
+    return [partData, endOfFileReached];
+  }
+
+  async readOnePartForBrowserMode(blob: Blob, partSizeInMB: number, partNumber: number): Promise<[Uint8Array | null, boolean]> {
+    const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
+    var offset = (partNumber - 1) *  bufferSizeInBytes;
+    var partBlob = blob.slice(offset, offset + bufferSizeInBytes);
+    var endOfFileReached = false;
+    var partData = null;
+    var readerDone = false;
+    if (partBlob) {
+      const reader = new FileReader();
+      reader.addEventListener("loadend", (event) => {
+        var data = reader.result;
+        if (data instanceof ArrayBuffer) {
+          partData = new Uint8Array(data);
+          endOfFileReached = partData.byteLength == 0;
+        }
+        readerDone = true;
+      });
+      reader.readAsArrayBuffer(partBlob); 
+    }
+    while(!readerDone) {
+      await new Promise((r) => setTimeout(r, 5000));
+    }
+    return [partData, endOfFileReached];
+  }
+
+    /**
+   * Takes a file part and a single URL, and writes the part to the given URL.
+   * @returns The eTag of the part written.
+   */
+  async writeFilePart(part: Uint8Array, url: string): Promise<string> {
     var eTag = "";
-    if (!endOfFileReached) {
       const response = await fetch(url, {
         method: 'PUT',
-        body: content,
+        body: part,
         headers: {'Content-Type': 'application/octet-stream'} });
       
       if (response.ok && response.body !== null && response.status == 200) {
@@ -652,9 +698,8 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
           eTag = eTag.substring(1, eTag.length - 1); // Remove heading and trailing double-quotation
         }
       } 
-    }
     
-    return [eTag, endOfFileReached];
+    return eTag;
   }
 
   /**
