@@ -1448,7 +1448,6 @@ export class EntriesClient implements IEntriesClient {
     var dataSource = null;
     try 
     {
-
       if (isBrowser()) {
         dataSource = args.file.data;
       } else {
@@ -1487,14 +1486,12 @@ export class EntriesClient implements IEntriesClient {
       });
   
       return StartTaskResponse.fromJS(response);
-  
     } finally {
       if (dataSource && !isBrowser()) {
         dataSource.close();
       }
     }
   }
-
   /**
    * Returns the file name of a given file path.
    * @param filePath The path to a file.
@@ -1524,7 +1521,6 @@ export class EntriesClient implements IEntriesClient {
     };
     return StartImportUploadedPartsRequest.fromJS(parameters);
   }
-
   /**
    * Takes a source for reading file data, and a set of URLs. 
    * Then reads data from the source, on a part-by-part basis, and and writes the file parts to the given URLs.
@@ -1534,7 +1530,6 @@ export class EntriesClient implements IEntriesClient {
     let partSizeInMB = 100;
     let eTags = new Array<string>(urls.length);
     var writtenParts = 0;
-
     var partNumber = 0;
     for (let i = 0; i < urls.length; i++) {
       partNumber++;
@@ -1557,7 +1552,9 @@ export class EntriesClient implements IEntriesClient {
     }
     return eTags.slice(0, writtenParts);
   }
-
+  /**
+   * Reads one part from the given file. This is used in non-browser mode.
+   */
   async readOnePartForNonBrowserMode(file: fsPromise.FileHandle, partSizeInMB: number): Promise<[Uint8Array, boolean]> {
     const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
     var buffer = new Uint8Array(bufferSizeInBytes);
@@ -1566,7 +1563,9 @@ export class EntriesClient implements IEntriesClient {
     var partData = readResult.buffer.subarray(0, readResult.bytesRead);
     return [partData, endOfFileReached];
   }
-
+  /**
+   * Reads one part from the given blob. This is used in browser mode.
+   */
   async readOnePartForBrowserMode(blob: Blob, partSizeInMB: number, partNumber: number): Promise<[Uint8Array | null, boolean]> {
     const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
     var offset = (partNumber - 1) *  bufferSizeInBytes;
@@ -1591,7 +1590,6 @@ export class EntriesClient implements IEntriesClient {
     }
     return [partData, endOfFileReached];
   }
-
     /**
    * Takes a file part and a single URL, and writes the part to the given URL.
    * @returns The eTag of the part written.
@@ -1612,7 +1610,6 @@ export class EntriesClient implements IEntriesClient {
     
     return eTag;
   }
-
   /**
    * Prepares and returns the request body for calling the CreateMultipartUploadUrls API.
    */
@@ -1629,7 +1626,6 @@ export class EntriesClient implements IEntriesClient {
     };
     return CreateMultipartUploadUrlsRequest.fromJS(parameters);
   }
-
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
