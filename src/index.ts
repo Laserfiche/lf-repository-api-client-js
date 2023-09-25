@@ -1499,7 +1499,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
-   * @param args.formatValue (optional) An optional query parameter used to indicate if the field values should be formatted.
+   * @param args.formatFieldValues (optional) An optional query parameter used to indicate if the field values should be formatted.
           The default value is false. 
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
@@ -1516,7 +1516,7 @@ export class EntriesClient implements IEntriesClient {
     repositoryId: string;
     entryId: number;
     prefer?: string;
-    formatValue?: boolean;
+    formatFieldValues?: boolean;
     culture?: string;
     select?: string;
     orderby?: string;
@@ -1525,13 +1525,13 @@ export class EntriesClient implements IEntriesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repositoryId, entryId, prefer, formatValue, culture, select, orderby, top, skip, count, maxPageSize } =
+    let { callback, repositoryId, entryId, prefer, formatFieldValues, culture, select, orderby, top, skip, count, maxPageSize } =
       args;
     var response = await this.listFields({
       repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
-      formatFieldValues: formatValue,
+      formatFieldValues,
       culture,
       select,
       orderby,
@@ -4409,7 +4409,7 @@ export class SearchesClient implements ISearchesClient {
    * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
-   * @param args.searchToken The requested searchToken.
+   * @param args.taskId The requested task ID.
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.refresh (optional) If the search listing should be refreshed to show updated values.
    * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
@@ -4428,7 +4428,7 @@ export class SearchesClient implements ISearchesClient {
   async listSearchResultsForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repositoryId: string;
-    searchToken: string;
+    taskId: string;
     groupByEntryType?: boolean;
     refresh?: boolean;
     fields?: string[];
@@ -4445,7 +4445,7 @@ export class SearchesClient implements ISearchesClient {
     let {
       callback,
       repositoryId,
-      searchToken,
+      taskId,
       groupByEntryType,
       refresh,
       fields,
@@ -4461,7 +4461,7 @@ export class SearchesClient implements ISearchesClient {
     } = args;
     var response = await this.listSearchResults({
       repositoryId,
-      taskId: searchToken,
+      taskId,
       groupByEntryType,
       refresh,
       fields,
@@ -4490,7 +4490,7 @@ export class SearchesClient implements ISearchesClient {
    * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
-   * @param args.searchToken The requested searchToken.
+   * @param args.taskId The requested task ID.
    * @param args.rowNumber The search result listing row number to get context hits for.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.select (optional) Limits the properties returned in the result.
@@ -4503,7 +4503,7 @@ export class SearchesClient implements ISearchesClient {
   async listSearchContextHitsForEach(args: {
     callback: (response: SearchContextHitCollectionResponse) => Promise<boolean>;
     repositoryId: string;
-    searchToken: string;
+    taskId: string;
     rowNumber: number;
     prefer?: string;
     select?: string;
@@ -4513,10 +4513,10 @@ export class SearchesClient implements ISearchesClient {
     count?: boolean;
     maxPageSize?: number;
   }): Promise<void> {
-    let { callback, repositoryId, searchToken, rowNumber, prefer, select, orderby, top, skip, count, maxPageSize } = args;
+    let { callback, repositoryId, taskId, rowNumber, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listSearchContextHits({
       repositoryId,
-      taskId: searchToken,
+      taskId,
       rowNumber,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -12325,7 +12325,7 @@ export interface IEntriesClient {
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
-   * @param args.formatValue (optional) An optional query parameter used to indicate if the field values should be formatted.
+   * @param args.formatFieldValues (optional) An optional query parameter used to indicate if the field values should be formatted.
           The default value is false. 
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
@@ -12342,7 +12342,7 @@ export interface IEntriesClient {
     repositoryId: string;
     entryId: number;
     prefer?: string;
-    formatValue?: boolean;
+    formatFieldValues?: boolean;
     culture?: string;
     select?: string;
     orderby?: string;
@@ -12488,7 +12488,7 @@ export interface ISearchesClient {
    * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
-   * @param args.searchToken The requested searchToken.
+   * @param args.taskId The requested task ID.
    * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
    * @param args.refresh (optional) If the search listing should be refreshed to show updated values.
    * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
@@ -12507,7 +12507,7 @@ export interface ISearchesClient {
   listSearchResultsForEach(args: {
     callback: (response: EntryCollectionResponse) => Promise<boolean>;
     repositoryId: string;
-    searchToken: string;
+    taskId: string;
     groupByEntryType?: boolean;
     refresh?: boolean;
     fields?: string[];
@@ -12525,7 +12525,7 @@ export interface ISearchesClient {
    * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
-   * @param args.searchToken The requested searchToken.
+   * @param args.taskId The requested task ID.
    * @param args.rowNumber The search result listing row number to get context hits for.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.select (optional) Limits the properties returned in the result.
@@ -12538,7 +12538,7 @@ export interface ISearchesClient {
   listSearchContextHitsForEach(args: {
     callback: (response: SearchContextHitCollectionResponse) => Promise<boolean>;
     repositoryId: string;
-    searchToken: string;
+    taskId: string;
     rowNumber: number;
     prefer?: string;
     select?: string;
