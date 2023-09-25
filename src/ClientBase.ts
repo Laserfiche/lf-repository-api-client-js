@@ -1731,7 +1731,7 @@ export class RepositoriesClient extends generated.RepositoriesClient {
    * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
    * @returns Get the repository resource list successfully.
    */
-  public static async getSelfHostedRepositoryList(args: { baseUrl: string }): Promise<generated.RepositoryCollectionResponse> {
+  public static async listSelfHostedRepositories(args: { baseUrl: string }): Promise<generated.RepositoryCollectionResponse> {
     let { baseUrl } = args;
     const baseUrlWithoutSlash: string = StringUtils.trimEnd(baseUrl, '/');
     let http = {
