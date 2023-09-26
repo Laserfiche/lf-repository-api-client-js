@@ -8,6 +8,7 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+import * as fsPromise from 'fs/promises';
 import { UrlUtils, StringUtils } from '@laserfiche/lf-js-utils';
 import {
   UsernamePasswordHandler,
@@ -17,6 +18,9 @@ import {
   AccessKey,
   ApiException as ApiExceptionCore,
 } from '@laserfiche/lf-api-client-core';
+import { repositoryId } from '../test/TestHelper.js';
+import { url } from 'inspector';
+import { isBrowser } from '@laserfiche/lf-js-utils/dist/utils/core-utils.js';
 
 export interface IAttributesClient {
 
@@ -60,7 +64,7 @@ export class AttributesClient implements IAttributesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-    
+
   /**
    * It will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
@@ -468,7 +472,7 @@ export class AuditReasonsClient implements IAuditReasonsClient {
 export interface IFieldDefinitionsClient {
 
     /**
-     * - Returns a single field definition associated with the specified ID. 
+     * - Returns a single field definition associated with the specified ID.
     - Useful when a route provides a minimal amount of details and more information about the specific field definition is needed.
     - Allowed OData query options: Select
     - Required OAuth scope: repository.Read
@@ -508,7 +512,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-    
+
   /**
    * It will continue to make the same call to get a list of field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
@@ -516,7 +520,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -538,7 +542,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listFieldDefinitions({
-      repositoryId,
+      repositoryId: repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -580,7 +584,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   }
 
     /**
-     * - Returns a single field definition associated with the specified ID. 
+     * - Returns a single field definition associated with the specified ID.
     - Useful when a route provides a minimal amount of details and more information about the specific field definition is needed.
     - Allowed OData query options: Select
     - Required OAuth scope: repository.Read
@@ -821,7 +825,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-    
+
   /**
    * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
@@ -847,7 +851,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinkDefinitions({
-      repositoryId,
+      repositoryId: repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
       orderby,
@@ -1092,7 +1096,7 @@ export interface IEntriesClient {
     - Example: if a file is going to be uploaded in 10 chunks, the 10 Upload URLs can be retrieved by two successive calls to this api, each call requesting 5 Upload URLs. For this, the first call should have StartingPartNumber=1 and NumberOfParts=5, and the second call should have StartingPartNumber=6 and NumberOfParts=5, along with UploadId returned in the first call.
     - Each Upload URL expires after 15 minutes.
     - Each file chunk written to an Upload URL should be at least 5 MB and at most 5 GB. There is no minimum size limit for the last chunk.
-    - The value of NumberOfParts must be in the range [1, 100], meaning that in each call to this api, a maximum of 100 Upload URLs can be requested. 
+    - The value of NumberOfParts must be in the range [1, 100], meaning that in each call to this api, a maximum of 100 Upload URLs can be requested.
     - The total number of Upload URLs for a single file is 1000, which means (StartingPartNumber + NumberOfParts) should be less than or equal to 1001.
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
@@ -1184,8 +1188,8 @@ export interface IEntriesClient {
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The entry ID of the folder that the document will be created in.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
-     * @param args.file (optional) 
-     * @param args.request (optional) 
+     * @param args.file (optional)
+     * @param args.request (optional)
      * @return The created entry.
      */
     importEntry(args: { repositoryId: string, entryId: number, culture?: string | null | undefined, file?: FileParameter | undefined, request?: ImportEntryRequest | undefined }): Promise<Entry>;
@@ -1217,7 +1221,7 @@ export interface IEntriesClient {
      * - Returns the children entries of a folder in the repository.
     - Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository.
     - Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route.
-    - Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. 
+    - Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type.
     - Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. The remaining field values can be retrieved via the GET fields route. Null or Empty field values should not be used to determine if a field is assigned to the entry.
     - Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc".
     - Required OAuth scope: repository.Read
@@ -1415,7 +1419,213 @@ export class EntriesClient implements IEntriesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-    
+
+  /**
+   * This is a helper for wrapping the CreateMultipartUploadURls and the ImportUploadedParts APIs.
+   * If successful, it returns a taskId which can be used to check the status of the operation or retrieve its result, otherwise, it returns an error.
+   * Required OAuth scope: repository.Write
+   * @param args.repositoryId The requested repository ID.
+   * @param args.entryId The entry ID of the folder that the document will be created in.
+   * @param args.file The file to be imported as a new document.
+   * @param args.mimeType The mime-type of the file to be imported as a new document.
+   * @param args.request The body of the request.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
+   * @return A long operation task id.
+  */
+  async startImportEntry(args: {
+    repositoryId: string;
+    entryId: number;
+    file: FileParameter;
+    mimeType: string;
+    request: ImportEntryRequest;
+    culture?: string | null | undefined;
+  }): Promise<StartTaskResponse> {
+    // The maximum number of URLs requested in each call to the CreateMultipartUploadUrls API.
+    const numberOfUrlsRequestedInEachCall = 10;
+    var thereAreMoreParts = true;
+    var eTags = new Array<string>();
+    let uploadId = null;
+    var dataSource = null;
+    try
+    {
+      if (isBrowser()) {
+        dataSource = args.file.data;
+      } else {
+        dataSource = await fsPromise.open(args.file.fileName, 'r');
+      }
+
+      let iteration = 0;
+      // Iteratively request URLs and write file parts into the URLs.
+      while (thereAreMoreParts) {
+        iteration++;
+        // Step 1: Request a batch of URLs by calling the CreateMultipartUploadUrls API.
+        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(iteration, numberOfUrlsRequestedInEachCall, this.getFileName(args.file.fileName), args.mimeType, uploadId);
+        let response = await this.createMultipartUploadUrls({
+          repositoryId: args.repositoryId,
+          request: request
+        });
+
+        if (iteration == 1) {
+          uploadId = response.uploadId;
+        }
+
+        // Step 2: Split the file and write the parts to current batch of URLs.
+        var eTagsForThisIteration: any;
+        eTagsForThisIteration = await this.writeFileParts(dataSource!, response.urls!);
+        eTags.push.apply(eTags, eTagsForThisIteration);
+
+        thereAreMoreParts = eTagsForThisIteration.length == numberOfUrlsRequestedInEachCall;
+      }
+
+      // Step 3: File parts are written, and eTags are ready. Call the ImportUploadedParts API.
+      var finalRequest = this.prepareRequestForImportUploadedPartsApi(uploadId!, eTags, args.request.name, args.request.autoRename, args.request.pdfOptions, args.request.importAsElectronicDocument, args.request.metadata, args.request.volumeName);
+      var response = await this.startImportUploadedParts({
+        repositoryId: args.repositoryId,
+        entryId: args.entryId,
+        request: finalRequest
+      });
+
+      return StartTaskResponse.fromJS(response);
+    } finally {
+      if (dataSource && !isBrowser()) {
+        dataSource.close();
+      }
+    }
+  }
+  /**
+   * Returns the file name of a given file path.
+   * @param filePath The path to a file.
+   * @returns The file name.
+   */
+  getFileName(filePath: string): string {
+    let fileName = filePath;
+    var index = filePath.lastIndexOf('/');
+    if (index >= 0) {
+      fileName = filePath.substring(index + 1);
+    }
+    return fileName;
+  }
+  /**
+   * Prepares and returns the request body for calling the ImportUploadedParts API.
+   */
+  prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: ImportAsyncMetadata, volumeName?: string): StartImportUploadedPartsRequest {
+    var parameters ={
+      uploadId: uploadId,
+      partETags: eTags,
+      name: name,
+      autoRename: autoRename,
+      pdfOptions: pdfOptions,
+      importAsElectronicDocument: importAsElectronicDocument,
+      metadata: metadata,
+      volumeName: volumeName
+    };
+    return StartImportUploadedPartsRequest.fromJS(parameters);
+  }
+  /**
+   * Takes a source for reading file data, and a set of URLs.
+   * Then reads data from the source, on a part-by-part basis, and and writes the file parts to the given URLs.
+   * @returns The eTags of the parts written.
+   */
+  async writeFileParts(source: any, urls: string[]): Promise<string[]> {
+    let partSizeInMB = 100;
+    let eTags = new Array<string>(urls.length);
+    var writtenParts = 0;
+    var partNumber = 0;
+    for (let i = 0; i < urls.length; i++) {
+      partNumber++;
+      var url = urls[i];
+      var partData: any;
+      var endOfFileReached: boolean;
+      if (isBrowser()) {
+        [partData, endOfFileReached] = await this.readOnePartForBrowserMode(source, partSizeInMB, partNumber);
+      } else {
+        [partData, endOfFileReached] = await this.readOnePartForNonBrowserMode(source, partSizeInMB);
+      }
+
+      if (endOfFileReached) {
+        // There has been no more data to write.
+        break;
+      }
+      var eTag = await this.writeFilePart(partData, url);
+      writtenParts++;
+      eTags[i] = eTag;
+    }
+    return eTags.slice(0, writtenParts);
+  }
+  /**
+   * Reads one part from the given file. This is used in non-browser mode.
+   */
+  async readOnePartForNonBrowserMode(file: fsPromise.FileHandle, partSizeInMB: number): Promise<[Uint8Array, boolean]> {
+    const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
+    var buffer = new Uint8Array(bufferSizeInBytes);
+    var readResult = await file.read(buffer, 0, bufferSizeInBytes);
+    var endOfFileReached = readResult.bytesRead == 0;
+    var partData = readResult.buffer.subarray(0, readResult.bytesRead);
+    return [partData, endOfFileReached];
+  }
+  /**
+   * Reads one part from the given blob. This is used in browser mode.
+   */
+  async readOnePartForBrowserMode(blob: Blob, partSizeInMB: number, partNumber: number): Promise<[Uint8Array | null, boolean]> {
+    const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
+    var offset = (partNumber - 1) *  bufferSizeInBytes;
+    var partBlob = blob.slice(offset, offset + bufferSizeInBytes);
+    var endOfFileReached = false;
+    var partData = null;
+    var readerDone = false;
+    if (partBlob) {
+      const reader = new FileReader();
+      reader.addEventListener("loadend", (event) => {
+        var data = reader.result;
+        if (data instanceof ArrayBuffer) {
+          partData = new Uint8Array(data);
+          endOfFileReached = partData.byteLength == 0;
+        }
+        readerDone = true;
+      });
+      reader.readAsArrayBuffer(partBlob);
+    }
+    while(!readerDone) {
+      await new Promise((r) => setTimeout(r, 5000));
+    }
+    return [partData, endOfFileReached];
+  }
+    /**
+   * Takes a file part and a single URL, and writes the part to the given URL.
+   * @returns The eTag of the part written.
+   */
+  async writeFilePart(part: Uint8Array, url: string): Promise<string> {
+    var eTag = "";
+      const response = await fetch(url, {
+        method: 'PUT',
+        body: part,
+        headers: {'Content-Type': 'application/octet-stream'} });
+
+      if (response.ok && response.body !== null && response.status == 200) {
+        eTag = response.headers.get("ETag")!;
+        if (eTag) {
+          eTag = eTag.substring(1, eTag.length - 1); // Remove heading and trailing double-quotation
+        }
+      }
+
+    return eTag;
+  }
+  /**
+   * Prepares and returns the request body for calling the CreateMultipartUploadUrls API.
+   */
+  prepareRequestForCreateMultipartUploadUrlsApi(iteration: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): CreateMultipartUploadUrlsRequest {
+    var parameters = (iteration == 1) ? {
+      startingPartNumber: 1,
+      numberOfParts: numberOfUrlsRequestedInEachCall,
+      fileName: fileName,
+      mimeType: mimeType
+    } : {
+      uploadId: uploadId,
+      startingPartNumber: (iteration - 1) * numberOfUrlsRequestedInEachCall + 1,
+      numberOfParts: numberOfUrlsRequestedInEachCall,
+    };
+    return CreateMultipartUploadUrlsRequest.fromJS(parameters);
+  }
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
@@ -1427,7 +1637,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting. 
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -1468,7 +1678,7 @@ export class EntriesClient implements IEntriesClient {
       maxPageSize,
     } = args;
     var response = await this.listEntries({
-      repositoryId,
+      repositoryId: repositoryId,
       entryId,
       groupByEntryType,
       fields,
@@ -1500,10 +1710,10 @@ export class EntriesClient implements IEntriesClient {
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.formatFieldValues (optional) An optional query parameter used to indicate if the field values should be formatted.
-          The default value is false. 
+          The default value is false.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting. 
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -1528,7 +1738,7 @@ export class EntriesClient implements IEntriesClient {
     let { callback, repositoryId, entryId, prefer, formatFieldValues, culture, select, orderby, top, skip, count, maxPageSize } =
       args;
     var response = await this.listFields({
-      repositoryId,
+      repositoryId: repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       formatFieldValues,
@@ -1578,7 +1788,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let { callback, repositoryId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinks({
-      repositoryId,
+      repositoryId: repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -1626,7 +1836,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let { callback, repositoryId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTags({
-      repositoryId,
+      repositoryId: repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -1731,7 +1941,7 @@ export class EntriesClient implements IEntriesClient {
     - Example: if a file is going to be uploaded in 10 chunks, the 10 Upload URLs can be retrieved by two successive calls to this api, each call requesting 5 Upload URLs. For this, the first call should have StartingPartNumber=1 and NumberOfParts=5, and the second call should have StartingPartNumber=6 and NumberOfParts=5, along with UploadId returned in the first call.
     - Each Upload URL expires after 15 minutes.
     - Each file chunk written to an Upload URL should be at least 5 MB and at most 5 GB. There is no minimum size limit for the last chunk.
-    - The value of NumberOfParts must be in the range [1, 100], meaning that in each call to this api, a maximum of 100 Upload URLs can be requested. 
+    - The value of NumberOfParts must be in the range [1, 100], meaning that in each call to this api, a maximum of 100 Upload URLs can be requested.
     - The total number of Upload URLs for a single file is 1000, which means (StartingPartNumber + NumberOfParts) should be less than or equal to 1001.
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
@@ -2442,8 +2652,8 @@ export class EntriesClient implements IEntriesClient {
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The entry ID of the folder that the document will be created in.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
-     * @param args.file (optional) 
-     * @param args.request (optional) 
+     * @param args.file (optional)
+     * @param args.request (optional)
      * @return The created entry.
      */
     importEntry(args: { repositoryId: string, entryId: number, culture?: string | null | undefined, file?: FileParameter | undefined, request?: ImportEntryRequest | undefined }): Promise<Entry> {
@@ -2756,7 +2966,7 @@ export class EntriesClient implements IEntriesClient {
      * - Returns the children entries of a folder in the repository.
     - Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository.
     - Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route.
-    - Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. 
+    - Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type.
     - Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. The remaining field values can be retrieved via the GET fields route. Null or Empty field values should not be used to determine if a field is assigned to the entry.
     - Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc".
     - Required OAuth scope: repository.Read
@@ -4253,7 +4463,7 @@ export class RepositoriesClient implements IRepositoriesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-    
+
   /**
    * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
    * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
@@ -4404,7 +4614,7 @@ export class SearchesClient implements ISearchesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-    
+
   /**
    * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
@@ -4417,7 +4627,7 @@ export class SearchesClient implements ISearchesClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -5120,7 +5330,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-    
+
   /**
    * It will continue to make the same call to get a list of tag definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
@@ -5128,7 +5338,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -5150,7 +5360,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTagDefinitions({
-      repositoryId,
+      repositoryId: repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -5637,7 +5847,7 @@ export interface ITemplateDefinitionsClient {
 
     /**
      * - Returns the field definitions assigned to a template definition.
-    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template. 
+    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template.
     - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
@@ -5655,7 +5865,7 @@ export interface ITemplateDefinitionsClient {
 
     /**
      * - Returns the field definitions assigned to a template definition.
-    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template. 
+    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template.
     - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
@@ -5682,7 +5892,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-    
+
   /**
    * Given a maximum page size, it will continue to make the same call to get a list of template definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
@@ -5691,7 +5901,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -5714,7 +5924,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateDefinitions({
-      repositoryId,
+      repositoryId: repositoryId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5744,7 +5954,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -5767,7 +5977,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, templateId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateId({
-      repositoryId,
+      repositoryId: repositoryId,
       templateId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5797,7 +6007,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -5820,7 +6030,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateName({
-      repositoryId,
+      repositoryId: repositoryId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -6105,7 +6315,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
 
     /**
      * - Returns the field definitions assigned to a template definition.
-    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template. 
+    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template.
     - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
@@ -6218,7 +6428,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
 
     /**
      * - Returns the field definitions assigned to a template definition.
-    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template. 
+    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template.
     - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
@@ -6339,8 +6549,8 @@ export class AttributeCollectionResponse implements IAttributeCollectionResponse
     odataCount?: number | undefined;
     value?: Attribute[];
 
-    
-    
+
+
     constructor(data?: IAttributeCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -6396,8 +6606,8 @@ export class Attribute implements IAttribute {
     key?: string | undefined;
     value?: string | undefined;
 
-    
-    
+
+
     constructor(data?: IAttribute) {
         if (data) {
             for (var property in data) {
@@ -6458,8 +6668,8 @@ export class ProblemDetails implements IProblemDetails {
     /** The instance detail. */
     instanceDetail?: string | undefined;
 
-    
-    
+
+
     extensions: any;
 
     constructor(data?: IProblemDetails) {
@@ -6541,8 +6751,8 @@ export class AuditReasonCollectionResponse implements IAuditReasonCollectionResp
     odataCount?: number | undefined;
     value?: AuditReason[];
 
-    
-    
+
+
     constructor(data?: IAuditReasonCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -6602,8 +6812,8 @@ export class AuditReason implements IAuditReason {
     /** The audit event type for this audit reason. */
     auditEventType?: AuditEventType;
 
-    
-    
+
+
     constructor(data?: IAuditReason) {
         if (data) {
             for (var property in data) {
@@ -6686,8 +6896,8 @@ export class FieldDefinition implements IFieldDefinition {
     /** The custom format pattern for fields that are configured to use a custom format. */
     formatPattern?: string | undefined;
 
-    
-    
+
+
     constructor(data?: IFieldDefinition) {
         if (data) {
             for (var property in data) {
@@ -6824,8 +7034,8 @@ export class FieldDefinitionCollectionResponse implements IFieldDefinitionCollec
     odataCount?: number | undefined;
     value?: FieldDefinition[];
 
-    
-    
+
+
     constructor(data?: IFieldDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -6884,8 +7094,8 @@ export class LinkDefinitionCollectionResponse implements ILinkDefinitionCollecti
     odataCount?: number | undefined;
     value?: LinkDefinition[];
 
-    
-    
+
+
     constructor(data?: ILinkDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -6947,8 +7157,8 @@ export class LinkDefinition implements ILinkDefinition {
     /** The description of the link definition. */
     description?: string | undefined;
 
-    
-    
+
+
     constructor(data?: ILinkDefinition) {
         if (data) {
             for (var property in data) {
@@ -7003,8 +7213,8 @@ export class CreateMultipartUploadUrlsResponse implements ICreateMultipartUpload
     /** A list of URLs to which the file chunk should be written. */
     urls?: string[] | undefined;
 
-    
-    
+
+
     constructor(data?: ICreateMultipartUploadUrlsResponse) {
         if (data) {
             for (var property in data) {
@@ -7065,8 +7275,8 @@ export class CreateMultipartUploadUrlsRequest implements ICreateMultipartUploadU
     /** The mime-type of the file to be uploaded. */
     mimeType?: string | undefined;
 
-    
-    
+
+
     constructor(data?: ICreateMultipartUploadUrlsRequest) {
         if (data) {
             for (var property in data) {
@@ -7127,8 +7337,8 @@ export class StartTaskResponse implements IStartTaskResponse {
     /** A task ID that can be used to check on the status of the task. */
     taskId?: string | undefined;
 
-    
-    
+
+
     constructor(data?: IStartTaskResponse) {
         if (data) {
             for (var property in data) {
@@ -7181,8 +7391,8 @@ export class StartImportUploadedPartsRequest implements IStartImportUploadedPart
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-    
-    
+
+
     constructor(data?: IStartImportUploadedPartsRequest) {
         if (data) {
             for (var property in data) {
@@ -7265,8 +7475,8 @@ export class PdfImportOptions implements IPdfImportOptions {
     /** Determines whether the PDF document should be imported as an electronic document. If set to true, the import operation keeps the PDF electronic document. If set to false, the import operation does not keep the PDF electronic document. The default value is true. */
     keepPdfAfterImport?: boolean;
 
-    
-    
+
+
     constructor(data?: IPdfImportOptions) {
         if (data) {
             for (var property in data) {
@@ -7334,8 +7544,8 @@ export class ImportAsyncMetadata implements IImportAsyncMetadata {
     /** The links that will be assigned to the entry. */
     links?: LinkToUpdate[] | undefined;
 
-    
-    
+
+
     constructor(data?: IImportAsyncMetadata) {
         if (data) {
             for (var property in data) {
@@ -7412,8 +7622,8 @@ export class FieldToUpdate implements IFieldToUpdate {
     /** The field values that will be assigned to the field. */
     values?: string[] | undefined;
 
-    
-    
+
+
     constructor(data?: IFieldToUpdate) {
         if (data) {
             for (var property in data) {
@@ -7470,8 +7680,8 @@ export class LinkToUpdate implements ILinkToUpdate {
     /** Custom properties (key, value pairs) to be added to the link. */
     customProperties?: { [key: string]: string; } | undefined;
 
-    
-    
+
+
     constructor(data?: ILinkToUpdate) {
         if (data) {
             for (var property in data) {
@@ -7546,8 +7756,8 @@ export class StartExportEntryRequest implements IStartExportEntryRequest {
     /** The options applied when exporting as Text. */
     textOptions?: ExportEntryRequestTextOptions | undefined;
 
-    
-    
+
+
     constructor(data?: IStartExportEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -7626,8 +7836,8 @@ export class ExportEntryRequestImageOptions implements IExportEntryRequestImageO
     /** The watermark element added to each image. */
     watermark?: ExportEntryRequestWatermark | undefined;
 
-    
-    
+
+
     constructor(data?: IExportEntryRequestImageOptions) {
         if (data) {
             for (var property in data) {
@@ -7715,8 +7925,8 @@ export class ExportEntryRequestWatermark implements IExportEntryRequestWatermark
     /** The percentage of the page that the watermark spans on. The value must be between 1 and 100 (inclusive). The default value is 50. */
     pageSpanPercentage?: number;
 
-    
-    
+
+
     constructor(data?: IExportEntryRequestWatermark) {
         if (data) {
             for (var property in data) {
@@ -7790,8 +8000,8 @@ export class ExportEntryRequestTextOptions implements IExportEntryRequestTextOpt
     /** The character that replaces the original character in a redacted text. The value must be a string of length 1 and must not be a whitespace character. The default value is 'X'. */
     redactionCharacter?: string | undefined;
 
-    
-    
+
+
     constructor(data?: IExportEntryRequestTextOptions) {
         if (data) {
             for (var property in data) {
@@ -7846,8 +8056,8 @@ export class StartCopyEntryRequest implements IStartCopyEntryRequest {
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-    
-    
+
+
     constructor(data?: IStartCopyEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -7905,8 +8115,8 @@ export class StartDeleteEntryRequest implements IStartDeleteEntryRequest {
     /** The comment for this audit event. */
     auditReasonComment?: string | undefined;
 
-    
-    
+
+
     constructor(data?: IStartDeleteEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -7983,8 +8193,8 @@ export abstract class Entry implements IEntry {
     fields?: Field[] | undefined;
     protected _discriminator: string;
 
-    
-    
+
+
     constructor(data?: IEntry) {
         if (data) {
             for (var property in data) {
@@ -8145,8 +8355,8 @@ export class Field implements IField {
     /** The values assigned to the field. */
     values?: string[] | undefined;
 
-    
-    
+
+
     constructor(data?: IField) {
         if (data) {
             for (var property in data) {
@@ -8221,8 +8431,8 @@ export interface IField {
 /** Represents a Laserfiche record series. */
 export class RecordSeries extends Entry implements IRecordSeries {
 
-    
-    
+
+
     constructor(data?: IRecordSeries) {
         super(data);
         if (data) {
@@ -8275,8 +8485,8 @@ export class Document extends Entry implements IDocument {
     /** A boolean indicating if the represented document is under version control. */
     isUnderVersionControl?: boolean;
 
-    
-    
+
+
     constructor(data?: IDocument) {
         super(data);
         if (data) {
@@ -8353,8 +8563,8 @@ export class Shortcut extends Entry implements IShortcut {
     /** The entry type of the shortcut target. */
     targetType?: EntryType;
 
-    
-    
+
+
     constructor(data?: IShortcut) {
         super(data);
         if (data) {
@@ -8411,8 +8621,8 @@ export class Folder extends Entry implements IFolder {
     /** The entries in this folder. */
     children?: Entry[] | undefined;
 
-    
-    
+
+
     constructor(data?: IFolder) {
         super(data);
         if (data) {
@@ -8561,8 +8771,8 @@ export abstract class IHeaderDictionary implements IIHeaderDictionary {
     xUACompatible?: any[];
     xXSSProtection?: any[];
 
-    
-    
+
+
     constructor(data?: IIHeaderDictionary) {
         if (data) {
             for (var property in data) {
@@ -9597,8 +9807,8 @@ export class ImportEntryRequest implements IImportEntryRequest {
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-    
-    
+
+
     constructor(data?: IImportEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -9660,8 +9870,8 @@ export interface IImportEntryRequest {
 export class ExportEntryResponse implements IExportEntryResponse {
     value?: string;
 
-    
-    
+
+
     constructor(data?: IExportEntryResponse) {
         if (data) {
             for (var property in data) {
@@ -9709,8 +9919,8 @@ export class ExportEntryRequest implements IExportEntryRequest {
     /** The options applied when exporting as Text. */
     textOptions?: ExportEntryRequestTextOptions | undefined;
 
-    
-    
+
+
     constructor(data?: IExportEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -9772,8 +9982,8 @@ export class GetEntryByPathResponse implements IGetEntryByPathResponse {
     /** The closest entry ancestor. This property is set if entry is not found and fallbackToClosestAncestor is set to true. */
     ancestorEntry?: Entry | undefined;
 
-    
-    
+
+
     constructor(data?: IGetEntryByPathResponse) {
         if (data) {
             for (var property in data) {
@@ -9822,8 +10032,8 @@ export class UpdateEntryRequest implements IUpdateEntryRequest {
     /** Indicates if the entry should be automatically renamed if an entry already exists with the given name in the folder. The default value is false. */
     autoRename?: boolean;
 
-    
-    
+
+
     constructor(data?: IUpdateEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -9878,8 +10088,8 @@ export class EntryCollectionResponse implements IEntryCollectionResponse {
     odataCount?: number | undefined;
     value?: Entry[];
 
-    
-    
+
+
     constructor(data?: IEntryCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -9938,8 +10148,8 @@ export class FieldCollectionResponse implements IFieldCollectionResponse {
     odataCount?: number | undefined;
     value?: Field[];
 
-    
-    
+
+
     constructor(data?: IFieldCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -9995,8 +10205,8 @@ export class SetFieldsRequest implements ISetFieldsRequest {
     /** The fields that will be assigned to the entry. */
     fields?: FieldToUpdate[] | undefined;
 
-    
-    
+
+
     constructor(data?: ISetFieldsRequest) {
         if (data) {
             for (var property in data) {
@@ -10048,8 +10258,8 @@ export class TagCollectionResponse implements ITagCollectionResponse {
     odataCount?: number | undefined;
     value?: Tag[];
 
-    
-    
+
+
     constructor(data?: ITagCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -10115,8 +10325,8 @@ export class Tag implements ITag {
     /** The watermark properties associated with the tag definition. */
     watermark?: TagDefinitionWatermark | undefined;
 
-    
-    
+
+
     constructor(data?: ITag) {
         if (data) {
             for (var property in data) {
@@ -10187,8 +10397,8 @@ export class TagDefinitionWatermark implements ITagDefinitionWatermark {
     /** The opacity of the watermark associated with the tag definition. Valid value ranges from 0 to 100, with -1 as the default values. */
     opacity?: number;
 
-    
-    
+
+
     constructor(data?: ITagDefinitionWatermark) {
         if (data) {
             for (var property in data) {
@@ -10249,8 +10459,8 @@ export class SetTagsRequest implements ISetTagsRequest {
     /** The tag names to assign to the entry. */
     tags?: string[] | undefined;
 
-    
-    
+
+
     constructor(data?: ISetTagsRequest) {
         if (data) {
             for (var property in data) {
@@ -10302,8 +10512,8 @@ export class LinkCollectionResponse implements ILinkCollectionResponse {
     odataCount?: number | undefined;
     value?: Link[];
 
-    
-    
+
+
     constructor(data?: ILinkCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -10383,8 +10593,8 @@ export class Link implements ILink {
     /** The custom properties for the represented link. */
     customProperties?: { [key: string]: string; } | undefined;
 
-    
-    
+
+
     constructor(data?: ILink) {
         if (data) {
             for (var property in data) {
@@ -10485,8 +10695,8 @@ export class SetLinksRequest implements ISetLinksRequest {
     /** The links that will be assigned to the entry. */
     links?: LinkToUpdate[] | undefined;
 
-    
-    
+
+
     constructor(data?: ISetLinksRequest) {
         if (data) {
             for (var property in data) {
@@ -10541,8 +10751,8 @@ export class CopyEntryRequest implements ICopyEntryRequest {
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-    
-    
+
+
     constructor(data?: ICopyEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -10606,8 +10816,8 @@ export class CreateEntryRequest implements ICreateEntryRequest {
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-    
-    
+
+
     constructor(data?: ICreateEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -10674,8 +10884,8 @@ export class ListDynamicFieldValuesRequest implements IListDynamicFieldValuesReq
     /** The dynamic fields. */
     fieldValues?: { [key: string]: string; } | undefined;
 
-    
-    
+
+
     constructor(data?: IListDynamicFieldValuesRequest) {
         if (data) {
             for (var property in data) {
@@ -10734,8 +10944,8 @@ export class SetTemplateRequest implements ISetTemplateRequest {
     /** The template fields that will be assigned to the entry. */
     fields?: FieldToUpdate[] | undefined;
 
-    
-    
+
+
     constructor(data?: ISetTemplateRequest) {
         if (data) {
             for (var property in data) {
@@ -10787,8 +10997,8 @@ export interface ISetTemplateRequest {
 export class RepositoryCollectionResponse implements IRepositoryCollectionResponse {
     value?: Repository[];
 
-    
-    
+
+
     constructor(data?: IRepositoryCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -10840,8 +11050,8 @@ export class Repository implements IRepository {
     /** The corresponding repository Web Client url. */
     webClientUrl?: string | undefined;
 
-    
-    
+
+
     constructor(data?: IRepository) {
         if (data) {
             for (var property in data) {
@@ -10894,8 +11104,8 @@ export class StartSearchEntryRequest implements IStartSearchEntryRequest {
     /** Fuzzy factor (percentage as int or int value) */
     fuzzyFactor?: number;
 
-    
-    
+
+
     constructor(data?: IStartSearchEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -10953,8 +11163,8 @@ export class SearchContextHitCollectionResponse implements ISearchContextHitColl
     odataCount?: number | undefined;
     value?: SearchContextHit[];
 
-    
-    
+
+
     constructor(data?: ISearchContextHitCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11037,8 +11247,8 @@ export class SearchContextHit implements ISearchContextHit {
     /** The hit number. */
     hitNumber?: number;
 
-    
-    
+
+
     constructor(data?: ISearchContextHit) {
         if (data) {
             for (var property in data) {
@@ -11154,8 +11364,8 @@ export class SearchEntryRequest implements ISearchEntryRequest {
     /** Search command for simple search */
     searchCommand!: string;
 
-    
-    
+
+
     constructor(data?: ISearchEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -11199,8 +11409,8 @@ export class TagDefinitionCollectionResponse implements ITagDefinitionCollection
     odataCount?: number | undefined;
     value?: TagDefinition[];
 
-    
-    
+
+
     constructor(data?: ITagDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11266,8 +11476,8 @@ export class TagDefinition implements ITagDefinition {
     /** The watermark properties associated with the tag definition. */
     watermark?: TagDefinitionWatermark | undefined;
 
-    
-    
+
+
     constructor(data?: ITagDefinition) {
         if (data) {
             for (var property in data) {
@@ -11327,8 +11537,8 @@ export interface ITagDefinition {
 export class TaskCollectionResponse implements ITaskCollectionResponse {
     value?: TaskProgress[];
 
-    
-    
+
+
     constructor(data?: ITaskCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11390,8 +11600,8 @@ export class TaskProgress implements ITaskProgress {
     /** The time representing when the associated task's status last changed. */
     lastUpdateTime?: Date;
 
-    
-    
+
+
     constructor(data?: ITaskProgress) {
         if (data) {
             for (var property in data) {
@@ -11488,8 +11698,8 @@ export class TaskResult implements ITaskResult {
     /** The URI which can be used (via api call) to access the result(s) of the associated task. */
     uri?: string | undefined;
 
-    
-    
+
+
     constructor(data?: ITaskResult) {
         if (data) {
             for (var property in data) {
@@ -11533,8 +11743,8 @@ export interface ITaskResult {
 export class CancelTasksResponse implements ICancelTasksResponse {
     value?: CancelTaskResult[];
 
-    
-    
+
+
     constructor(data?: ICancelTasksResponse) {
         if (data) {
             for (var property in data) {
@@ -11586,8 +11796,8 @@ export class CancelTaskResult implements ICancelTaskResult {
     /** True if and only if the associated task has been cancelled successfully or it has already been completed. */
     result?: boolean;
 
-    
-    
+
+
     constructor(data?: ICancelTaskResult) {
         if (data) {
             for (var property in data) {
@@ -11639,8 +11849,8 @@ export class TemplateDefinitionCollectionResponse implements ITemplateDefinition
     odataCount?: number | undefined;
     value?: TemplateDefinition[];
 
-    
-    
+
+
     constructor(data?: ITemplateDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11706,8 +11916,8 @@ export class TemplateDefinition implements ITemplateDefinition {
     /** The number of field definitions assigned to the template definition. */
     fieldCount?: number;
 
-    
-    
+
+
     constructor(data?: ITemplateDefinition) {
         if (data) {
             for (var property in data) {
@@ -11774,8 +11984,8 @@ export class LFColor implements ILFColor {
     /** The blue channel component from 0-255. */
     b?: number;
 
-    
-    
+
+
     constructor(data?: ILFColor) {
         if (data) {
             for (var property in data) {
@@ -11831,8 +12041,8 @@ export class TemplateFieldDefinitionCollectionResponse implements ITemplateField
     odataCount?: number | undefined;
     value?: TemplateFieldDefinition[];
 
-    
-    
+
+
     constructor(data?: ITemplateFieldDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11892,8 +12102,8 @@ export class TemplateFieldDefinition extends FieldDefinition implements ITemplat
     /** The name of field group. */
     groupName?: string | undefined;
 
-    
-    
+
+
     constructor(data?: ITemplateFieldDefinition) {
         super(data);
         if (data) {
@@ -11944,8 +12154,8 @@ export class Rule implements IRule {
     /** The IDs of the parent fields in the template according to the form logic rule. */
     ancestors?: number[] | undefined;
 
-    
-    
+
+
     constructor(data?: IRule) {
         if (data) {
             for (var property in data) {
@@ -12285,6 +12495,26 @@ export interface IAttributesClient {
 
 export interface IEntriesClient {
   /**
+   * This is a helper for wrapping the CreateMultipartUploadURls and the ImportUploadedParts APIs.
+   * If successful, it returns a taskId which can be used to check the status of the operation or retrieve its result, otherwise, it returns an error.
+   * Required OAuth scope: repository.Write
+   * @param args.repositoryId The requested repository ID.
+   * @param args.entryId The entry ID of the folder that the document will be created in.
+   * @param args.file The file to be imported as a new document.
+   * @param args.mimeType The mime-type of the file to be imported as a new document.
+   * @param args.request The body of the request.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
+   * @return A long operation task id.
+  */
+  startImportEntry(args: {
+    repositoryId: string;
+    entryId: number;
+    file: FileParameter;
+    mimeType: string;
+    request: ImportEntryRequest;
+    culture?: string | null | undefined;
+  }): Promise<StartTaskResponse>;
+  /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
@@ -12295,7 +12525,7 @@ export interface IEntriesClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting. 
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12326,10 +12556,10 @@ export interface IEntriesClient {
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.formatFieldValues (optional) An optional query parameter used to indicate if the field values should be formatted.
-          The default value is false. 
+          The default value is false.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting. 
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12451,7 +12681,7 @@ export interface IFieldDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12496,7 +12726,7 @@ export interface ISearchesClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12578,7 +12808,7 @@ export interface ITagDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12619,7 +12849,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12648,7 +12878,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12677,7 +12907,7 @@ export interface ITemplateDefinitionsClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.  
+          culture will not be used for formatting.
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.

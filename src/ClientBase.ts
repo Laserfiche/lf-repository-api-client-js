@@ -1,4 +1,5 @@
 import * as generated from './index.js';
+import * as fsPromise from 'fs/promises';
 import { UrlUtils, StringUtils } from '@laserfiche/lf-js-utils';
 import {
   UsernamePasswordHandler,
@@ -8,6 +9,9 @@ import {
   AccessKey,
   ApiException as ApiExceptionCore,
 } from '@laserfiche/lf-api-client-core';
+import { repositoryId } from '../test/TestHelper.js';
+import { url } from 'inspector';
+import { isBrowser } from '@laserfiche/lf-js-utils/dist/utils/core-utils.js';
 class ClientBase {}
 export interface IRepositoryApiClient {
   attributesClient: IAttributesClient;
@@ -327,6 +331,26 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
 
 export interface IEntriesClient {
   /**
+   * This is a helper for wrapping the CreateMultipartUploadURls and the ImportUploadedParts APIs. 
+   * If successful, it returns a taskId which can be used to check the status of the operation or retrieve its result, otherwise, it returns an error.
+   * Required OAuth scope: repository.Write
+   * @param args.repositoryId The requested repository ID.
+   * @param args.entryId The entry ID of the folder that the document will be created in.
+   * @param args.file The file to be imported as a new document. 
+   * @param args.mimeType The mime-type of the file to be imported as a new document. 
+   * @param args.request The body of the request.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
+   * @return A long operation task id.
+  */
+  startImportEntry(args: {
+    repositoryId: string;
+    entryId: number;
+    file: generated.FileParameter;
+    mimeType: string;
+    request: generated.ImportEntryRequest;
+    culture?: string | null | undefined;
+  }): Promise<generated.StartTaskResponse>;
+  /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
@@ -485,6 +509,212 @@ export interface IEntriesClient {
   }): Promise<generated.TagDefinitionCollectionResponse>;
 }
 export class EntriesClient extends generated.EntriesClient implements IEntriesClient {
+  /**
+   * This is a helper for wrapping the CreateMultipartUploadURls and the ImportUploadedParts APIs. 
+   * If successful, it returns a taskId which can be used to check the status of the operation or retrieve its result, otherwise, it returns an error.
+   * Required OAuth scope: repository.Write
+   * @param args.repositoryId The requested repository ID.
+   * @param args.entryId The entry ID of the folder that the document will be created in.
+   * @param args.file The file to be imported as a new document. 
+   * @param args.mimeType The mime-type of the file to be imported as a new document. 
+   * @param args.request The body of the request.
+   * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
+   * @return A long operation task id.
+  */
+  async startImportEntry(args: { 
+    repositoryId: string;
+    entryId: number;
+    file: generated.FileParameter;
+    mimeType: string;
+    request: generated.ImportEntryRequest;
+    culture?: string | null | undefined;
+  }): Promise<generated.StartTaskResponse> {
+    // The maximum number of URLs requested in each call to the CreateMultipartUploadUrls API.
+    const numberOfUrlsRequestedInEachCall = 10;
+    var thereAreMoreParts = true;   
+    var eTags = new Array<string>();
+    let uploadId = null;
+    var dataSource = null;
+    try 
+    {
+      if (isBrowser()) {
+        dataSource = args.file.data;
+      } else {
+        dataSource = await fsPromise.open(args.file.fileName, 'r');
+      }
+
+      let iteration = 0;
+      // Iteratively request URLs and write file parts into the URLs.
+      while (thereAreMoreParts) {
+        iteration++;
+        // Step 1: Request a batch of URLs by calling the CreateMultipartUploadUrls API.
+        var request = this.prepareRequestForCreateMultipartUploadUrlsApi(iteration, numberOfUrlsRequestedInEachCall, this.getFileName(args.file.fileName), args.mimeType, uploadId);
+        let response = await this.createMultipartUploadUrls({
+          repositoryId: args.repositoryId,
+          request: request
+        });
+
+        if (iteration == 1) {
+          uploadId = response.uploadId;
+        }
+        
+        // Step 2: Split the file and write the parts to current batch of URLs.
+        var eTagsForThisIteration: any;
+        eTagsForThisIteration = await this.writeFileParts(dataSource!, response.urls!);
+        eTags.push.apply(eTags, eTagsForThisIteration);
+
+        thereAreMoreParts = eTagsForThisIteration.length == numberOfUrlsRequestedInEachCall;
+      }
+
+      // Step 3: File parts are written, and eTags are ready. Call the ImportUploadedParts API.
+      var finalRequest = this.prepareRequestForImportUploadedPartsApi(uploadId!, eTags, args.request.name, args.request.autoRename, args.request.pdfOptions, args.request.importAsElectronicDocument, args.request.metadata, args.request.volumeName);
+      var response = await this.startImportUploadedParts({
+        repositoryId: args.repositoryId,
+        entryId: args.entryId,
+        request: finalRequest
+      });
+  
+      return generated.StartTaskResponse.fromJS(response);
+    } finally {
+      if (dataSource && !isBrowser()) {
+        dataSource.close();
+      }
+    }
+  }
+  /**
+   * Returns the file name of a given file path.
+   * @param filePath The path to a file.
+   * @returns The file name.
+   */
+  getFileName(filePath: string): string {
+    let fileName = filePath;
+    var index = filePath.lastIndexOf('/');
+    if (index >= 0) {
+      fileName = filePath.substring(index + 1);
+    }
+    return fileName;
+  }
+  /**
+   * Prepares and returns the request body for calling the ImportUploadedParts API.
+   */
+  prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: generated.PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: generated.ImportAsyncMetadata, volumeName?: string): generated.StartImportUploadedPartsRequest {
+    var parameters ={
+      uploadId: uploadId,
+      partETags: eTags,
+      name: name,
+      autoRename: autoRename,
+      pdfOptions: pdfOptions,
+      importAsElectronicDocument: importAsElectronicDocument,
+      metadata: metadata,
+      volumeName: volumeName
+    };
+    return generated.StartImportUploadedPartsRequest.fromJS(parameters);
+  }
+  /**
+   * Takes a source for reading file data, and a set of URLs. 
+   * Then reads data from the source, on a part-by-part basis, and and writes the file parts to the given URLs.
+   * @returns The eTags of the parts written.
+   */
+  async writeFileParts(source: any, urls: string[]): Promise<string[]> {
+    let partSizeInMB = 100;
+    let eTags = new Array<string>(urls.length);
+    var writtenParts = 0;
+    var partNumber = 0;
+    for (let i = 0; i < urls.length; i++) {
+      partNumber++;
+      var url = urls[i];
+      var partData: any;
+      var endOfFileReached: boolean;
+      if (isBrowser()) {
+        [partData, endOfFileReached] = await this.readOnePartForBrowserMode(source, partSizeInMB, partNumber);
+      } else {
+        [partData, endOfFileReached] = await this.readOnePartForNonBrowserMode(source, partSizeInMB);
+      }
+
+      if (endOfFileReached) {
+        // There has been no more data to write.
+        break;
+      }
+      var eTag = await this.writeFilePart(partData, url);
+      writtenParts++;
+      eTags[i] = eTag;
+    }
+    return eTags.slice(0, writtenParts);
+  }
+  /**
+   * Reads one part from the given file. This is used in non-browser mode.
+   */
+  async readOnePartForNonBrowserMode(file: fsPromise.FileHandle, partSizeInMB: number): Promise<[Uint8Array, boolean]> {
+    const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
+    var buffer = new Uint8Array(bufferSizeInBytes);
+    var readResult = await file.read(buffer, 0, bufferSizeInBytes);
+    var endOfFileReached = readResult.bytesRead == 0;
+    var partData = readResult.buffer.subarray(0, readResult.bytesRead);
+    return [partData, endOfFileReached];
+  }
+  /**
+   * Reads one part from the given blob. This is used in browser mode.
+   */
+  async readOnePartForBrowserMode(blob: Blob, partSizeInMB: number, partNumber: number): Promise<[Uint8Array | null, boolean]> {
+    const bufferSizeInBytes = partSizeInMB * 1024 * 1024;
+    var offset = (partNumber - 1) *  bufferSizeInBytes;
+    var partBlob = blob.slice(offset, offset + bufferSizeInBytes);
+    var endOfFileReached = false;
+    var partData = null;
+    var readerDone = false;
+    if (partBlob) {
+      const reader = new FileReader();
+      reader.addEventListener("loadend", (event) => {
+        var data = reader.result;
+        if (data instanceof ArrayBuffer) {
+          partData = new Uint8Array(data);
+          endOfFileReached = partData.byteLength == 0;
+        }
+        readerDone = true;
+      });
+      reader.readAsArrayBuffer(partBlob); 
+    }
+    while(!readerDone) {
+      await new Promise((r) => setTimeout(r, 5000));
+    }
+    return [partData, endOfFileReached];
+  }
+    /**
+   * Takes a file part and a single URL, and writes the part to the given URL.
+   * @returns The eTag of the part written.
+   */
+  async writeFilePart(part: Uint8Array, url: string): Promise<string> {
+    var eTag = "";
+      const response = await fetch(url, {
+        method: 'PUT',
+        body: part,
+        headers: {'Content-Type': 'application/octet-stream'} });
+      
+      if (response.ok && response.body !== null && response.status == 200) {
+        eTag = response.headers.get("ETag")!;
+        if (eTag) {
+          eTag = eTag.substring(1, eTag.length - 1); // Remove heading and trailing double-quotation
+        }
+      } 
+    
+    return eTag;
+  }
+  /**
+   * Prepares and returns the request body for calling the CreateMultipartUploadUrls API.
+   */
+  prepareRequestForCreateMultipartUploadUrlsApi(iteration: number, numberOfUrlsRequestedInEachCall: number, fileName: string, mimeType: string, uploadId? : string | null): generated.CreateMultipartUploadUrlsRequest {
+    var parameters = (iteration == 1) ? {
+      startingPartNumber: 1,
+      numberOfParts: numberOfUrlsRequestedInEachCall,
+      fileName: fileName,
+      mimeType: mimeType
+    } : {
+      uploadId: uploadId,
+      startingPartNumber: (iteration - 1) * numberOfUrlsRequestedInEachCall + 1,
+      numberOfParts: numberOfUrlsRequestedInEachCall,
+    };
+    return generated.CreateMultipartUploadUrlsRequest.fromJS(parameters);
+  }
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
