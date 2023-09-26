@@ -5,17 +5,14 @@ import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Set Entries Integration Tests', () => {
-  let createdEntries: Array<Entry> = new Array();
+  let testFolder: Entry | null = null;
 
   afterEach(async () => {
-    for (let i = 0; i < createdEntries.length; i++) {
-      if (createdEntries[i]) {
-        let request = new StartDeleteEntryRequest();
-        let entryId = createdEntries[i].id!;
-        await _RepositoryApiClient.entriesClient.startDeleteEntry({ repositoryId, entryId, request });
-      }
+    if (testFolder != null) {
+      let request = new StartDeleteEntryRequest();
+      await _RepositoryApiClient.entriesClient.startDeleteEntry({ repositoryId, entryId: testFolder.id!, request });
     }
-    createdEntries = [];
+    testFolder = null;
   });
 
   test('Set Links', async () => {
@@ -24,10 +21,8 @@ describe('Set Entries Integration Tests', () => {
       'RepositoryApiClientIntegrationTest JS SetLinks Source'
     );
     
-    createdEntries.push(sourceEntry);
-    var targetEntry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetLinks Target');
-    
-    createdEntries.push(targetEntry);
+    testFolder = sourceEntry;
+    var targetEntry = await CreateEntry(_RepositoryApiClient, 'RepositoryApiClientIntegrationTest JS SetLinks Target', sourceEntry.id!);
     
     let request = new SetLinksRequest();
     let linkToUpdate = new LinkToUpdate();
