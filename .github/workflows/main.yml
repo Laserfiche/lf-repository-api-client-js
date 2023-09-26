@@ -73,15 +73,25 @@ jobs:
       - name: NPM ci
         run: npm ci
 
-      - name: NPM test on cloud
-        id: test-cloud
+      - name: NPM test on cloud (node environment)
+        id: test-cloud-node
         env:
           ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
           SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
           REPOSITORY_ID: ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_1 }}
           AUTHORIZATION_TYPE: ${{ secrets.AUTHORIZATION_TYPE }}
           TEST_HEADER: ${{ secrets.TEST_HEADER }}
-        run: npm run test:all
+        run: npm run test:node
+      
+      - name: NPM test on cloud (browser environment)
+        id: test-cloud-browser
+        env:
+          ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
+          SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
+          REPOSITORY_ID: ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_3 }}
+          AUTHORIZATION_TYPE: ${{ secrets.AUTHORIZATION_TYPE }}
+          TEST_HEADER: ${{ secrets.TEST_HEADER }}
+        run: npm run test:browser
 
       - name: Test report
         uses: dorny/test-reporter@v1
@@ -118,17 +128,17 @@ jobs:
         run: npm install typedoc
 
       - name: Create temporary directory
-        run: mkdir -p ./docs_temp/${{ github.ref_name }}
+        run: mkdir -p ./docs_temp
 
       - name: Generate typedoc docs
-        run: npx typedoc ./src/index.ts --out ./docs_temp/${{ github.ref_name }} --excludePrivate --includeVersion
+        run: npx typedoc ./src/index.ts --out ./docs_temp --excludePrivate --includeVersion
 
       - name: Upload a build artifact
         uses: actions/upload-artifact@v2.3.1
         with:
           name: documentation-artifact
           # A file, directory or wildcard pattern that describes what to upload
-          path: ${{ github.workspace }}/docs_temp/${{ github.ref_name }}
+          path: ${{ github.workspace }}/docs_temp
 
       - name: Delete temporary directory
         run: rm -r ./docs_temp
