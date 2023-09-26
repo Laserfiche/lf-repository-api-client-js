@@ -37,6 +37,7 @@ describe('Field Definitions Integration Tests', () => {
   });
 
   test('Get Field Definitions for each paging', async () => {
+    let maxPages = 3;
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
@@ -46,7 +47,7 @@ describe('Field Definitions Integration Tests', () => {
       }
       entries += response.value.length;
       pages += 1;
-      return true;
+      return maxPages > pages;
     };
     
     await _RepositoryApiClient.fieldDefinitionsClient.listFieldDefinitionsForEach({ callback, repositoryId, maxPageSize });

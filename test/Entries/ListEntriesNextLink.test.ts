@@ -12,7 +12,7 @@ describe('Get Entry Next Links Tests', () => {
     
     expect(response).not.toBeNull();
     
-    let nextLink = response.toJSON()['@odata.nextLink'];
+    let nextLink = response.odataNextLink!;
     
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
@@ -30,7 +30,7 @@ describe('Get Entry Next Links Tests', () => {
     
     expect(response).not.toBeNull();
     
-    let nextLink = response.toJSON()['@odata.nextLink'];
+    let nextLink = response.odataNextLink!;
     
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
@@ -48,7 +48,7 @@ describe('Get Entry Next Links Tests', () => {
     
     expect(response).not.toBeNull();
     
-    let nextLink = response.toJSON()['@odata.nextLink'];
+    let nextLink = response.odataNextLink!;
     
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);
@@ -66,7 +66,7 @@ describe('Get Entry Next Links Tests', () => {
     
     expect(response).not.toBeNull();
     
-    let nextLink = response.toJSON()['@odata.nextLink'];
+    let nextLink = response.odataNextLink!;
     
     expect(nextLink).not.toBeNull();
     expect(response.toJSON().value.length).toBeLessThanOrEqual(maxPageSize);

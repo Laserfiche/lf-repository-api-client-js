@@ -11,21 +11,17 @@ import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 
 describe('Create Entry Tests', () => {
-  let createdEntries: Array<Entry> = new Array();
+  let testFolder: Entry | null = null;
 
   afterEach(async () => {
-    for (let i = 0; i < createdEntries.length; i++) {
-      if (createdEntries[i]) {
-        let body: StartDeleteEntryRequest = new StartDeleteEntryRequest();
-        let num: number = Number(createdEntries[i].id);
-        
-        await _RepositoryApiClient.entriesClient.startDeleteEntry({ repositoryId: repositoryId, entryId: num, request: body });
-      }
+    if (testFolder != null) {
+      let body: StartDeleteEntryRequest = new StartDeleteEntryRequest();
+      await _RepositoryApiClient.entriesClient.startDeleteEntry({ repositoryId: repositoryId, entryId: testFolder.id!, request: body });
     }
-    createdEntries = [];
+    testFolder = null;
   });
 
-  test('Create Entry Create Folder', async () => {
+  test('Create Folder', async () => {
     let newEntryName: string = 'RepositoryApiClientIntegrationTest JS CreateFolder';
     let parentEntryId: number = 1;
     let request: CreateEntryRequest = new CreateEntryRequest();
@@ -43,14 +39,14 @@ describe('Create Entry Tests', () => {
     
     expect(entry).not.toBeNull();
     
-    createdEntries.push(entry);
+    testFolder = entry;
     
     expect(parentEntryId).toBe(entry.parentId);
     expect(EntryType.Folder).toBe(entry.entryType);
     expect(typeof EntryType).toBe(typeof entry);
   });
 
-  test('Create Entry Create Shortcut', async () => {
+  test('Create Shortcut', async () => {
     // Create new entry
     let newEntryName: string = 'RepositoryApiClientIntegrationTest JS CreateFolder';
     let parentEntryId: number = 1;
@@ -69,7 +65,7 @@ describe('Create Entry Tests', () => {
     
     expect(targetEntry).not.toBeNull();
     
-    createdEntries.push(targetEntry);
+    testFolder = targetEntry;
     
     expect(parentEntryId).toBe(targetEntry.parentId);
     expect(EntryType.Folder).toBe(targetEntry.entryType);
@@ -84,17 +80,14 @@ describe('Create Entry Tests', () => {
     
     response = await _RepositoryApiClient.entriesClient.createEntry({
       repositoryId: repositoryId,
-      entryId: parentEntryId,
+      entryId: targetEntry.id!,
       request,
     });
     
     let shortcut: Shortcut = response;
     
     expect(shortcut).not.toBeNull();
-    
-    createdEntries.push(shortcut);
-    
-    expect(parentEntryId).toBe(shortcut.parentId);
+    expect(targetEntry.id).toBe(shortcut.parentId);
     expect(EntryType.Shortcut).toBe(shortcut.entryType);
   });
 });
