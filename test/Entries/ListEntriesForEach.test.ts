@@ -12,6 +12,7 @@ describe('List Entry Tests', () => {
   let entryId: number = 1;
 
   test('List Entries ForEach', async () => {
+    let maxPages = 3;
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
@@ -21,7 +22,7 @@ describe('List Entry Tests', () => {
       }
       entries += response.value.length;
       pages += 1;
-      return true;
+      return maxPages > pages;
     };
     
     await _RepositoryApiClient.entriesClient.listEntriesForEach({ callback, repositoryId, entryId, maxPageSize });
@@ -31,6 +32,7 @@ describe('List Entry Tests', () => {
   });
 
   test('List Fields ForEach', async () => {
+    let maxPages = 3;
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
@@ -40,7 +42,7 @@ describe('List Entry Tests', () => {
       }
       entries += response.value.length;
       pages += 1;
-      return true;
+      return maxPages > pages;
     };
     
     await _RepositoryApiClient.entriesClient.listFieldsForEach({ callback, repositoryId, entryId, maxPageSize });
@@ -50,6 +52,7 @@ describe('List Entry Tests', () => {
   });
 
   test('List Links ForEach', async () => {
+    let maxPages = 3;
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
@@ -59,7 +62,7 @@ describe('List Entry Tests', () => {
       }
       entries += response.value.length;
       pages += 1;
-      return true;
+      return maxPages > pages;
     };
     
     await _RepositoryApiClient.entriesClient.listLinksForEach({ callback, repositoryId, entryId, maxPageSize });
@@ -69,6 +72,7 @@ describe('List Entry Tests', () => {
   });
 
   test('List Tags ForEach', async () => {
+    let maxPages = 3;
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
@@ -78,7 +82,7 @@ describe('List Entry Tests', () => {
       }
       entries += response.value.length;
       pages += 1;
-      return true;
+      return maxPages > pages;
     };
     
     await _RepositoryApiClient.entriesClient.listTagsForEach({ callback, repositoryId, entryId, maxPageSize });

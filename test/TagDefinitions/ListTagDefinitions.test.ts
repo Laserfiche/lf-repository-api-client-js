@@ -12,6 +12,7 @@ describe('Tag Definitions Integration Tests', () => {
   });
 
   test('Get Tag Definitions for each paging', async () => {
+    let maxPages = 3;
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
@@ -21,7 +22,7 @@ describe('Tag Definitions Integration Tests', () => {
       }
       entries += response.value.length;
       pages += 1;
-      return true;
+      return maxPages > pages;
     };
     
     await _RepositoryApiClient.tagDefinitionsClient.listTagDefinitionsForEach({ callback, repositoryId, maxPageSize });

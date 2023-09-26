@@ -41,13 +41,14 @@ describe('Attribute Key Integration Tests', () => {
   });
 
   test('Get Attribute for each paging', async () => {
+    let maxPages = 3;
     let maxPageSize = 10;
     let entries = 0;
     let pages = 0;
     const callback = async (response: AttributeCollectionResponse) => {
       entries += response.toJSON().value.length;
       pages += 1;
-      return true;
+      return maxPages > pages;
     };
     await _RepositoryApiClient.attributesClient.listAttributesForEach({
       callback,

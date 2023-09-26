@@ -9,8 +9,6 @@ import {
   AccessKey,
   ApiException as ApiExceptionCore,
 } from '@laserfiche/lf-api-client-core';
-import { repositoryId } from '../test/TestHelper.js';
-import { url } from 'inspector';
 import { isBrowser } from '@laserfiche/lf-js-utils/dist/utils/core-utils.js';
 class ClientBase {}
 export interface IRepositoryApiClient {
