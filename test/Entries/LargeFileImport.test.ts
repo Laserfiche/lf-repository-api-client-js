@@ -2,10 +2,19 @@ import { repositoryId } from '../TestHelper.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 import { Blob as NodeBlob } from 'buffer';
-import { AuditEventType, ExportEntryRequestPart, FileParameter, ImportAsyncMetadata, ImportEntryRequest, StartExportEntryRequest, StartTaskResponse, TaskStatus } from '../../src/index.js';
+import { Entry, FileParameter, ImportAsyncMetadata, ImportEntryRequest, StartDeleteEntryRequest, StartTaskResponse, TaskStatus } from '../../src/index.js';
 import { isBrowser } from '@laserfiche/lf-js-utils/dist/utils/core-utils.js';
 
 describe('Large File Import Integration Tests', () => {
+      let createdEntry: Entry | null = null;
+
+      afterEach(async () => {
+        if (createdEntry != null) {
+          let body: StartDeleteEntryRequest = new StartDeleteEntryRequest();
+          await _RepositoryApiClient.entriesClient.startDeleteEntry({ repositoryId: repositoryId, entryId: createdEntry.id!, request: body });
+        }
+        createdEntry = null;
+      });
 
       test('Importing a 60MB file with assigning a template and tag is successful', async () => {
         let blob: any;
@@ -69,7 +78,7 @@ describe('Large File Import Integration Tests', () => {
         
         expect(taskProgress.percentComplete).toBe(100);
         let createdEntryId = taskProgress.result?.entryId;
-        var createdEntry = await _RepositoryApiClient.entriesClient.getEntry({repositoryId: repositoryId, entryId: createdEntryId!});
+        createdEntry = await _RepositoryApiClient.entriesClient.getEntry({repositoryId: repositoryId, entryId: createdEntryId!});
         expect(createdEntry).not.toBeNull();
         expect(createdEntry.id).toEqual(createdEntryId);
         expect(createdEntry.name?.startsWith(fileName)).toBeTruthy(); // As autoRename is true, the name of the created entry is not exactly the same as the given name, e.g. it can be 'sample (5).pdf'

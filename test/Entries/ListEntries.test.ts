@@ -33,13 +33,13 @@ describe('List Entries Integration Tests', () => {
     expect(result?.value).not.toBeNull();
   });
 
-  test('List Entry Return Root Folder', async () => {
+  test('Get Entry Return Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntry({ repositoryId, entryId });
     
     expect(result?.value).not.toBeNull();
   });
 
-  test('List Entry by Full Path Returns Root Folder', async () => {
+  test('Get Entry by Full Path Returns Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
       repositoryId,
       fullPath: rootPath,
@@ -52,7 +52,7 @@ describe('List Entries Integration Tests', () => {
     expect(result?.ancestorEntry).toBeUndefined();
   });
 
-  test('List Entry by Full Path Returns Ancestor Root Folder', async () => {
+  test('Get Entry by Full Path Returns Ancestor Root Folder', async () => {
     let result: any = await _RepositoryApiClient.entriesClient.getEntryByPath({
       repositoryId,
       fullPath: nonExistingPath,

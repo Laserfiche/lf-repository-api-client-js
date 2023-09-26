@@ -52,6 +52,7 @@ describe('Search Integration Tests', () => {
   });
 
   test('Get Search Results for each Paging', async () => {
+    let maxPages = 3;
     let maxPageSize = 10;
     let searchRequest = new StartSearchEntryRequest();
     searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option="DFANLT"})';
@@ -76,7 +77,7 @@ describe('Search Integration Tests', () => {
       }
       searchResults += response.value.length;
       pages += 1;
-      return true;
+      return maxPages > pages;
     };
     
     await _RepositoryApiClient.searchesClient.listSearchResultsForEach({ callback, repositoryId, searchToken: taskId, maxPageSize });
@@ -86,6 +87,7 @@ describe('Search Integration Tests', () => {
   });
 
   test('Get Search Context Hits for each Paging', async () => {
+    let maxPages = 3;
     let maxPageSize = 10;
     let searchRequest = new StartSearchEntryRequest();
     searchRequest.searchCommand = '({LF:Basic ~= "search", option="DFANLT"})';
@@ -118,7 +120,7 @@ describe('Search Integration Tests', () => {
       }
       searchContextHits += response.value.length;
       pages += 1;
-      return true;
+      return maxPages > pages;
     };
     
     await _RepositoryApiClient.searchesClient.listSearchContextHitsForEach({
