@@ -80,7 +80,7 @@ describe('Search Integration Tests', () => {
       return maxPages > pages;
     };
     
-    await _RepositoryApiClient.searchesClient.listSearchResultsForEach({ callback, repositoryId, searchToken: taskId, maxPageSize });
+    await _RepositoryApiClient.searchesClient.listSearchResultsForEach({ callback, repositoryId, taskId, maxPageSize });
     
     expect(searchResults).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
@@ -126,7 +126,7 @@ describe('Search Integration Tests', () => {
     await _RepositoryApiClient.searchesClient.listSearchContextHitsForEach({
       callback,
       repositoryId,
-      searchToken: taskId,
+      taskId,
       rowNumber: rowNum,
       maxPageSize,
     });
