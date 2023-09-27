@@ -595,7 +595,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   /**
    * Prepares and returns the request body for calling the ImportUploadedParts API.
    */
-  prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: generated.PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: generated.ImportAsyncMetadata, volumeName?: string): generated.StartImportUploadedPartsRequest {
+  prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: generated.ImportEntryRequestPdfOptions, importAsElectronicDocument?: boolean, metadata?: generated.ImportEntryRequestMetadata, volumeName?: string): generated.StartImportUploadedPartsRequest {
     var parameters ={
       uploadId: uploadId,
       partETags: eTags,

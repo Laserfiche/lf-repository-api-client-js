@@ -68,7 +68,7 @@ describe('Copy Entry Test', () => {
     // Copy Entry
     let copyRequest = new CopyEntryRequest();
     copyRequest.name = 'RepositoryApiClientIntegrationTest JS CopiedEntry';
-    copyRequest.sourceId = shortcut.id;
+    copyRequest.sourceId = shortcut.id!;
     copyRequest.autoRename = true;
     
     let newEntry: Entry = await _RepositoryApiClient.entriesClient.copyEntry({
