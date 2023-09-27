@@ -53,7 +53,6 @@ See [here](https://api.laserfiche.com/repository/v2/changelog#2023-10) for more 
 | [writeTemplateValueToEntry](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/IEntriesClient.html#writeTemplateValueToEntry) | [setTemplate](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IEntriesClient.html#setTemplate) |
 | -- | [createMultipartUploadUrls](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IEntriesClient.html#createMultipartUploadUrls) |
 | -- | [startImportUploadedParts](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IEntriesClient.html#startImportUploadedParts) |
-| -- | [startImportEntry](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IEntriesClient.html#startImportEntry) |
 | -- | [startExportEntry](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IEntriesClient.html#startExportEntry) |
 
 ### FieldDefinitions
