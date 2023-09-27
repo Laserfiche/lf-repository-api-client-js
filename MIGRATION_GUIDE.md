@@ -1,7 +1,7 @@
 # Migration Guide
 The following guide compares the [@laserfiche/lf-repository-api-client](https://www.npmjs.com/package/@laserfiche/lf-repository-api-client) npm package with the [@laserfiche/lf-repository-api-client-v2](https://www.npmjs.com/package/@laserfiche/lf-repository-api-client-v2) npm package at time of initial release.
 
-The `@laserfiche/lf-repository-api-client` accesses the v1 Laserfiche Repository APIs and the `@laserfiche/lf-repository-api-client-v2` accesses the v2 Laserfiche Repository APIs. Many API function signatures have been updated in the v2 client. See the charts below for the functions in the v1 client that correspond to the functions in v2.
+The `@laserfiche/lf-repository-api-client` accesses the v1 Laserfiche Repository APIs and the `@laserfiche/lf-repository-api-client-v2` accesses the v2 Laserfiche Repository APIs. Many API function signatures have been updated in the v2 client. See the tables below for the functions in the v1 client that correspond to the functions in the v2 client.
 
 See [here](https://api.laserfiche.com/repository/v2/changelog#2023-10) for more details on the changes between the v1 and v2 Laserfiche Repository APIs.
 
