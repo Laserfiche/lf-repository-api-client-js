@@ -113,7 +113,7 @@ export class AttributesClient implements IAttributesClient {
    * Returns the attribute key value pairs using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection.
    * @param args.maxPageSize (optional) the maximum page size or number of attribute keys allowed per API response schema.
-   * @return Get trustee attribute keys with the next link successfully
+   * @return A collection of attributes associated with the authenticated user.
    */
   async listAttributesNextLink(args: {
     nextLink: string;
@@ -565,7 +565,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
    * Returns a paged listing of field definitions available in the specified repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of field definitions.
    */
   async listFieldDefinitionsNextLink(args: {
     nextLink: string;
@@ -874,7 +874,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
    * Returns all link definitions in the repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema
-   * @return Get link definitions with the next link successfully
+   * @return A collection of link definitions.
    */
   async listLinkDefinitionsNextLink(args: {
     nextLink: string;
@@ -1862,7 +1862,7 @@ export class EntriesClient implements IEntriesClient {
    * Returns the children entries of a folder in the repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema
-   * @return Get the children entries of a Folder with the next link successfully
+   * @return A collection of children entries of a folder.
    */
   async listEntriesNextLink(args: {
     nextLink: string;
@@ -1881,7 +1881,7 @@ export class EntriesClient implements IEntriesClient {
    * Returns the fields assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema
-   * @return Get field values with the next link successfully
+   * @return A collection of fields assigned to the entry.
    */
   async listFieldsNextLink(args: {
     nextLink: string;
@@ -1900,7 +1900,7 @@ export class EntriesClient implements IEntriesClient {
    * Returns the links assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema
-   * @return Get links with the next link successfully
+   * @return A collection of links assigned to the entry.
    */
   async listLinksNextLink(args: {
     nextLink: string;
@@ -1919,7 +1919,7 @@ export class EntriesClient implements IEntriesClient {
    * Returns the entry tags assigned to an entry using a link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema
-   * @return Get entry tags with the next link successfully
+   * @return A collection of tags assigned to the entry.
    */
   async listTagsNextLink(args: {
     nextLink: string;
@@ -4471,7 +4471,7 @@ export class RepositoriesClient implements IRepositoriesClient {
   /**
    * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
    * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
-   * @returns Get the repository resource list successfully.
+   * @returns A collection of respositories.
    */
   public static async listSelfHostedRepositories(args: { baseUrl: string }): Promise<RepositoryCollectionResponse> {
     let { baseUrl } = args;
@@ -4755,7 +4755,7 @@ export class SearchesClient implements ISearchesClient {
    * Returns a search result listing if the search is completed using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema
-   * @return Get search result with the next link successfully
+   * @return A collection of entry search results.
    */
   async listSearchResultsNextLink(args: {
     nextLink: string;
@@ -4774,7 +4774,7 @@ export class SearchesClient implements ISearchesClient {
    * Returns the context hits associated with a search result entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema
-   * @return Get search context hits with the next link successfully
+   * @return A collection of context hits for a search result.
    */
   async listSearchContextHitsNextLink(args: {
     nextLink: string;
@@ -5389,7 +5389,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
    * Returns all tag definitions in the repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema
-   * @return Get tag definitions with the next link successfully
+   * @return A collection of tag definitions.
    */
   async listTagDefinitionsNextLink(args: {
     nextLink: string;
@@ -6062,7 +6062,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * Returns all template definitions (including field definitions) in the repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema
-   * @return Get template definitions with the next link successfully
+   * @return A collection of template definitions.
    */
   async listTemplateDefinitionsNextLink(args: {
     nextLink: string;
@@ -6081,7 +6081,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * Returns the field definitions assigned to a template definition using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of template field definitions.
    */
   async listTemplateFieldDefinitionsByTemplateIdNextLink(args: {
     nextLink: string;
@@ -6100,7 +6100,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
    * Returns the field definitions assigned to a template definition by template name using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema
-   * @return Get field definitions by template name with the next link successfully
+   * @return A collection of template field definitions.
    */
   async listTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
@@ -12507,7 +12507,7 @@ export interface IAttributesClient {
    * Returns the attribute key value pairs using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of attribute keys allowed per API response schema
-   * @return Get trustee attribute keys with the next link successfully
+   * @return A collection of attributes associated with the authenticated user.
    */
   listAttributesNextLink(args: {
     nextLink: string;
@@ -12657,7 +12657,7 @@ export interface IEntriesClient {
    * Returns the children entries of a folder in the repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema
-   * @return Get the children entries of a Folder with the next link successfully
+   * @return A collection of children entries of a folder.
    */
   listEntriesNextLink(args: {
     nextLink: string;
@@ -12667,7 +12667,7 @@ export interface IEntriesClient {
    * Returns the fields assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema
-   * @return Get field values with the next link successfully
+   * @return A collection of fields assigned to the entry.
    */
   listFieldsNextLink(args: {
     nextLink: string;
@@ -12677,7 +12677,7 @@ export interface IEntriesClient {
    * Get the links assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema
-   * @return Get links with the next link successfully
+   * @return A collection of links assigned to the entry.
    */
   listLinksNextLink(args: {
     nextLink: string;
@@ -12687,7 +12687,7 @@ export interface IEntriesClient {
    * Get the tags assigned to an entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema
-   * @return Get entry tags with the next link successfully
+   * @return A collection of tags assigned to the entry.
    */
   listTagsNextLink(args: {
     nextLink: string;
@@ -12727,7 +12727,7 @@ export interface IFieldDefinitionsClient {
    * Returns a paged listing of field definitions available in the specified repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of field definitions.
    */
   listFieldDefinitionsNextLink(args: {
     nextLink: string;
@@ -12804,7 +12804,7 @@ export interface ISearchesClient {
    * Returns a search result listing if the search is completed using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema
-   * @return Get search result with the next link successfully
+   * @return A collection of entry search results.
    */
   listSearchResultsNextLink(args: {
     nextLink: string;
@@ -12814,7 +12814,7 @@ export interface ISearchesClient {
    * Returns the context hits associated with a search result entry using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema
-   * @return Get search context hits with the next link successfully
+   * @return A collection of context hits for a search result.
    */
   listSearchContextHitsNextLink(args: {
     nextLink: string;
@@ -12854,7 +12854,7 @@ export interface ITagDefinitionsClient {
    * Returns all tag definitions in the repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema
-   * @return Get tag definitions with the next link successfully
+   * @return A collection of tag definitions.
    */
   listTagDefinitionsNextLink(args: {
     nextLink: string;
@@ -12954,7 +12954,7 @@ export interface ITemplateDefinitionsClient {
    * Returns all template definitions (including field definitions) in the repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema
-   * @return Get template definitions with the next link successfully
+   * @return A collection of template definitions.
    */
   listTemplateDefinitionsNextLink(args: {
     nextLink: string;
@@ -12964,7 +12964,7 @@ export interface ITemplateDefinitionsClient {
    * Returns the field definitions assigned to a template definition using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of template field definitions.
    */
   listTemplateFieldDefinitionsByTemplateIdNextLink(args: {
     nextLink: string;
@@ -12974,7 +12974,7 @@ export interface ITemplateDefinitionsClient {
    * Returns the field definitions assigned to a template definition by template name using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema
-   * @return Get field definitions by template name with the next link successfully
+   * @return A collection of template field definitions.
    */
   listTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
@@ -13011,7 +13011,7 @@ export interface ILinkDefinitionsClient {
    * Returns all link definitions in the repository using a next link
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema
-   * @return Get link definitions with the next link successfully
+   * @return A collection of link definitions.
    */
   listLinkDefinitionsNextLink(args: {
     nextLink: string;
