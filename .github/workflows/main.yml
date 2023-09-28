@@ -2,9 +2,11 @@ name: lf-repository-api-client-js-CI
 
 on:
   push:
-    branches: [v][123456789]
+    branches:
+      - v2
   pull_request:
-    branches: [v][123456789]
+    branches:
+      - v2
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
