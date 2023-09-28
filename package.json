@@ -1,5 +1,5 @@
 {
-  "name": "@laserfiche/lf-repository-api-client",
+  "name": "@laserfiche/lf-repository-api-client-v2",
   "type": "module",
   "version": "1.1.4",
   "description": "Laserfiche Repository API Client library for TypeScript.",
