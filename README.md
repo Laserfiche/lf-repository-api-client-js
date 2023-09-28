@@ -5,7 +5,8 @@ Use the Laserfiche Repository API to access data in a Laserfiche repository. Imp
 ## Documentation
 
 - [Developer Documentation](https://developer.laserfiche.com/)
-- [JS Repository API Client Lib Documentation](https://laserfiche.github.io/lf-repository-api-client-js/)
+- [Documentation](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/index.html) for the `@laserfiche/lf-repository-api-client-v2` npm package used to access the v2 Laserfiche Repository APIs.
+- [Documentation](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/index.html) for the `@laserfiche/lf-repository-api-client` npm package used to access the v1 Laserfiche Repository APIs.
 
 ## Changelog
 
