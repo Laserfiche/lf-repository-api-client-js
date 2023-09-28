@@ -27,7 +27,7 @@ describe('Set Entries Integration Tests', () => {
     let request = new SetLinksRequest();
     let linkToUpdate = new LinkToUpdate();
     linkToUpdate.linkDefinitionId = 1;
-    linkToUpdate.otherEntryId = targetEntry.id;
+    linkToUpdate.otherEntryId = targetEntry.id!;
     request.links = [linkToUpdate];
     
     let result = await _RepositoryApiClient.entriesClient.setLinks({

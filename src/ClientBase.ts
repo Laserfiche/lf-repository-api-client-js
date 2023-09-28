@@ -225,6 +225,7 @@ function createMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefi
 export interface IAttributesClient {
   /**
    * It will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IAttributesClient.listAttributes listAttributes}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
@@ -249,9 +250,10 @@ export interface IAttributesClient {
 
   /**
    * Returns the attribute key value pairs using a next link
+   * - Related: {@link generated.IAttributesClient.listAttributes listAttributes}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of attribute keys allowed per API response schema
-   * @return Get trustee attribute keys with the next link successfully
+   * @return A collection of attributes associated with the authenticated user.
    */
   listAttributesNextLink(args: {
     nextLink: string;
@@ -262,6 +264,7 @@ export interface IAttributesClient {
 export class AttributesClient extends generated.AttributesClient implements IAttributesClient {
   /**
    * It will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IAttributesClient.listAttributes listAttributes}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
@@ -308,9 +311,10 @@ export class AttributesClient extends generated.AttributesClient implements IAtt
   }
   /**
    * Returns the attribute key value pairs using a next link
+   * - Related: {@link generated.IAttributesClient.listAttributes listAttributes}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection.
    * @param args.maxPageSize (optional) the maximum page size or number of attribute keys allowed per API response schema.
-   * @return Get trustee attribute keys with the next link successfully
+   * @return A collection of attributes associated with the authenticated user.
    */
   async listAttributesNextLink(args: {
     nextLink: string;
@@ -350,6 +354,7 @@ export interface IEntriesClient {
   }): Promise<generated.StartTaskResponse>;
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IEntriesClient.listEntries listEntries}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -385,6 +390,7 @@ export interface IEntriesClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of field values of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IEntriesClient.listFields listFields}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -417,6 +423,7 @@ export interface IEntriesClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of link values from entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IEntriesClient.listLinks listLinks}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -442,6 +449,7 @@ export interface IEntriesClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of tags assigned to entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IEntriesClient.listTags listTags}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -467,9 +475,10 @@ export interface IEntriesClient {
   }): Promise<void>;
   /**
    * Returns the children entries of a folder in the repository using a next link
+   * - Related: {@link generated.IEntriesClient.listEntries listEntries}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema
-   * @return Get the children entries of a Folder with the next link successfully
+   * @return A collection of children entries of a folder.
    */
   listEntriesNextLink(args: {
     nextLink: string;
@@ -477,9 +486,10 @@ export interface IEntriesClient {
   }): Promise<generated.EntryCollectionResponse>;
   /**
    * Returns the fields assigned to an entry using a next link
+   * - Related: {@link generated.IEntriesClient.listFields listFields}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema
-   * @return Get field values with the next link successfully
+   * @return A collection of fields assigned to the entry.
    */
   listFieldsNextLink(args: {
     nextLink: string;
@@ -487,9 +497,10 @@ export interface IEntriesClient {
   }): Promise<generated.FieldCollectionResponse>;
   /**
    * Get the links assigned to an entry using a next link
+   * - Related: {@link generated.IEntriesClient.listLinks listLinks}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema
-   * @return Get links with the next link successfully
+   * @return A collection of links assigned to the entry.
    */
   listLinksNextLink(args: {
     nextLink: string;
@@ -497,9 +508,10 @@ export interface IEntriesClient {
   }): Promise<generated.LinkCollectionResponse>;
   /**
    * Get the tags assigned to an entry using a next link
+   * - Related: {@link generated.IEntriesClient.listTags listTags}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema
-   * @return Get entry tags with the next link successfully
+   * @return A collection of tags assigned to the entry.
    */
   listTagsNextLink(args: {
     nextLink: string;
@@ -595,7 +607,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   /**
    * Prepares and returns the request body for calling the ImportUploadedParts API.
    */
-  prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: generated.PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: generated.ImportAsyncMetadata, volumeName?: string): generated.StartImportUploadedPartsRequest {
+  prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: generated.ImportEntryRequestPdfOptions, importAsElectronicDocument?: boolean, metadata?: generated.ImportEntryRequestMetadata, volumeName?: string): generated.StartImportUploadedPartsRequest {
     var parameters ={
       uploadId: uploadId,
       partETags: eTags,
@@ -715,6 +727,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   }
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IEntriesClient.listEntries listEntries}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -792,6 +805,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   }
   /**
    * It will continue to make the same call to get a list of field values of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IEntriesClient.listFields listFields}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -850,6 +864,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   }
   /**
    * It will continue to make the same call to get a list of link values from entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IEntriesClient.listLinks listLinks}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -898,6 +913,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   }
   /**
    * It will continue to make the same call to get a list of tags assigned to entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IEntriesClient.listTags listTags}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -946,9 +962,10 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   }
   /**
    * Returns the children entries of a folder in the repository using a next link
+   * - Related: {@link generated.IEntriesClient.listEntries listEntries}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema
-   * @return Get the children entries of a Folder with the next link successfully
+   * @return A collection of children entries of a folder.
    */
   async listEntriesNextLink(args: {
     nextLink: string;
@@ -965,9 +982,10 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   }
   /**
    * Returns the fields assigned to an entry using a next link
+   * - Related: {@link generated.IEntriesClient.listFields listFields}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema
-   * @return Get field values with the next link successfully
+   * @return A collection of fields assigned to the entry.
    */
   async listFieldsNextLink(args: {
     nextLink: string;
@@ -984,9 +1002,10 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   }
   /**
    * Returns the links assigned to an entry using a next link
+   * - Related: {@link generated.IEntriesClient.listLinks listLinks}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema
-   * @return Get links with the next link successfully
+   * @return A collection of links assigned to the entry.
    */
   async listLinksNextLink(args: {
     nextLink: string;
@@ -1003,9 +1022,10 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
   }
   /**
    * Returns the entry tags assigned to an entry using a link
+   * - Related: {@link generated.IEntriesClient.listTags listTags}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema
-   * @return Get entry tags with the next link successfully
+   * @return A collection of tags assigned to the entry.
    */
   async listTagsNextLink(args: {
     nextLink: string;
@@ -1025,6 +1045,7 @@ export class EntriesClient extends generated.EntriesClient implements IEntriesCl
 export interface IFieldDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IFieldDefinitionsClient.listFieldDefinitions listFieldDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1052,9 +1073,10 @@ export interface IFieldDefinitionsClient {
   }): Promise<void>;
   /**
    * Returns a paged listing of field definitions available in the specified repository using a next link
+   * - Related: {@link generated.IFieldDefinitionsClient.listFieldDefinitions listFieldDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of field definitions.
    */
   listFieldDefinitionsNextLink(args: {
     nextLink: string;
@@ -1065,6 +1087,7 @@ export interface IFieldDefinitionsClient {
 export class FieldDefinitionsClient extends generated.FieldDefinitionsClient implements IFieldDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.IFieldDefinitionsClient.listFieldDefinitions listFieldDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1115,9 +1138,10 @@ export class FieldDefinitionsClient extends generated.FieldDefinitionsClient imp
   }
   /**
    * Returns a paged listing of field definitions available in the specified repository using a next link
+   * - Related: {@link generated.IFieldDefinitionsClient.listFieldDefinitions listFieldDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of field definitions.
    */
   async listFieldDefinitionsNextLink(args: {
     nextLink: string;
@@ -1137,6 +1161,7 @@ export class FieldDefinitionsClient extends generated.FieldDefinitionsClient imp
 export interface ISearchesClient {
   /**
    * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ISearchesClient.listSearchResults listSearchResults}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.taskId The requested task ID.
@@ -1174,6 +1199,7 @@ export interface ISearchesClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ISearchesClient.listSearchContextHits listSearchContextHits}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.taskId The requested task ID.
@@ -1201,9 +1227,10 @@ export interface ISearchesClient {
   }): Promise<void>;
   /**
    * Returns a search result listing if the search is completed using a next link
+   * - Related: {@link generated.ISearchesClient.listSearchResults listSearchResults}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema
-   * @return Get search result with the next link successfully
+   * @return A collection of entry search results.
    */
   listSearchResultsNextLink(args: {
     nextLink: string;
@@ -1211,9 +1238,10 @@ export interface ISearchesClient {
   }): Promise<generated.EntryCollectionResponse>;
   /**
    * Returns the context hits associated with a search result entry using a next link
+   * - Related: {@link generated.ISearchesClient.listSearchContextHits listSearchContextHits}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema
-   * @return Get search context hits with the next link successfully
+   * @return A collection of context hits for a search result.
    */
   listSearchContextHitsNextLink(args: {
     nextLink: string;
@@ -1224,6 +1252,7 @@ export interface ISearchesClient {
 export class SearchesClient extends generated.SearchesClient implements ISearchesClient {
   /**
    * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ISearchesClient.listSearchResults listSearchResults}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.taskId The requested task ID.
@@ -1305,6 +1334,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
   }
   /**
    * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ISearchesClient.listSearchContextHits listSearchContextHits}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.taskId The requested task ID.
@@ -1356,9 +1386,10 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
   }
   /**
    * Returns a search result listing if the search is completed using a next link
+   * - Related: {@link generated.ISearchesClient.listSearchResults listSearchResults}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema
-   * @return Get search result with the next link successfully
+   * @return A collection of entry search results.
    */
   async listSearchResultsNextLink(args: {
     nextLink: string;
@@ -1375,9 +1406,10 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
   }
   /**
    * Returns the context hits associated with a search result entry using a next link
+   * - Related: {@link generated.ISearchesClient.listSearchContextHits listSearchContextHits}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema
-   * @return Get search context hits with the next link successfully
+   * @return A collection of context hits for a search result.
    */
   async listSearchContextHitsNextLink(args: {
     nextLink: string;
@@ -1397,6 +1429,7 @@ export class SearchesClient extends generated.SearchesClient implements ISearche
 export interface ITagDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of tag definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ITagDefinitionsClient.listTagDefinitions listTagDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1424,9 +1457,10 @@ export interface ITagDefinitionsClient {
   }): Promise<void>;
   /**
    * Returns all tag definitions in the repository using a next link
+   * - Related: {@link generated.ITagDefinitionsClient.listTagDefinitions listTagDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema
-   * @return Get tag definitions with the next link successfully
+   * @return A collection of tag definitions.
    */
   listTagDefinitionsNextLink(args: {
     nextLink: string;
@@ -1437,6 +1471,7 @@ export interface ITagDefinitionsClient {
 export class TagDefinitionsClient extends generated.TagDefinitionsClient implements ITagDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of tag definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ITagDefinitionsClient.listTagDefinitions listTagDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1487,9 +1522,10 @@ export class TagDefinitionsClient extends generated.TagDefinitionsClient impleme
   }
   /**
    * Returns all tag definitions in the repository using a next link
+   * - Related: {@link generated.ITagDefinitionsClient.listTagDefinitions listTagDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema
-   * @return Get tag definitions with the next link successfully
+   * @return A collection of tag definitions.
    */
   async listTagDefinitionsNextLink(args: {
     nextLink: string;
@@ -1509,6 +1545,7 @@ export class TagDefinitionsClient extends generated.TagDefinitionsClient impleme
 export interface ITemplateDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of template definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateDefinitions listTemplateDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
@@ -1538,6 +1575,7 @@ export interface ITemplateDefinitionsClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of template field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId listTemplateFieldDefinitionsByTemplateId}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
@@ -1567,6 +1605,7 @@ export interface ITemplateDefinitionsClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of template field definitions by template name of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateName listTemplateFieldDefinitionsByTemplateName}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
@@ -1596,9 +1635,10 @@ export interface ITemplateDefinitionsClient {
   }): Promise<void>;
   /**
    * Returns all template definitions (including field definitions) in the repository using a next link
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateDefinitions listTemplateDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema
-   * @return Get template definitions with the next link successfully
+   * @return A collection of template definitions.
    */
   listTemplateDefinitionsNextLink(args: {
     nextLink: string;
@@ -1606,9 +1646,10 @@ export interface ITemplateDefinitionsClient {
   }): Promise<generated.TemplateDefinitionCollectionResponse>;
   /**
    * Returns the field definitions assigned to a template definition using a next link
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId listTemplateFieldDefinitionsByTemplateId}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of template field definitions.
    */
   listTemplateFieldDefinitionsByTemplateIdNextLink(args: {
     nextLink: string;
@@ -1616,9 +1657,10 @@ export interface ITemplateDefinitionsClient {
   }): Promise<generated.TemplateFieldDefinitionCollectionResponse>;
   /**
    * Returns the field definitions assigned to a template definition by template name using a next link
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateName listTemplateFieldDefinitionsByTemplateName}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema
-   * @return Get field definitions by template name with the next link successfully
+   * @return A collection of template field definitions.
    */
   listTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
@@ -1632,6 +1674,7 @@ export class TemplateDefinitionsClient
 {
   /**
    * Given a maximum page size, it will continue to make the same call to get a list of template definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateDefinitions listTemplateDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
@@ -1685,6 +1728,7 @@ export class TemplateDefinitionsClient
   }
   /**
    * It will continue to make the same call to get a list of template field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId listTemplateFieldDefinitionsByTemplateId}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
@@ -1738,6 +1782,7 @@ export class TemplateDefinitionsClient
   }
   /**
    * It will continue to make the same call to get a list of template field definitions by template name of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateName listTemplateFieldDefinitionsByTemplateName}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
@@ -1791,9 +1836,10 @@ export class TemplateDefinitionsClient
   }
   /**
    * Returns all template definitions (including field definitions) in the repository using a next link
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateDefinitions listTemplateDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema
-   * @return Get template definitions with the next link successfully
+   * @return A collection of template definitions.
    */
   async listTemplateDefinitionsNextLink(args: {
     nextLink: string;
@@ -1810,9 +1856,10 @@ export class TemplateDefinitionsClient
   }
   /**
    * Returns the field definitions assigned to a template definition using a next link
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId listTemplateFieldDefinitionsByTemplateId}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of template field definitions.
    */
   async listTemplateFieldDefinitionsByTemplateIdNextLink(args: {
     nextLink: string;
@@ -1829,9 +1876,10 @@ export class TemplateDefinitionsClient
   }
   /**
    * Returns the field definitions assigned to a template definition by template name using a next link
+   * - Related: {@link generated.ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateName listTemplateFieldDefinitionsByTemplateName}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema
-   * @return Get field definitions by template name with the next link successfully
+   * @return A collection of template field definitions.
    */
   async listTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
@@ -1851,6 +1899,7 @@ export class TemplateDefinitionsClient
 export interface ILinkDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ILinkDefinitionsClient.listLinkDefinitions listLinkDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1875,9 +1924,10 @@ export interface ILinkDefinitionsClient {
 
   /**
    * Returns all link definitions in the repository using a next link
+   * - Related: {@link generated.ILinkDefinitionsClient.listLinkDefinitions listLinkDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema
-   * @return Get link definitions with the next link successfully
+   * @return A collection of link definitions.
    */
   listLinkDefinitionsNextLink(args: {
     nextLink: string;
@@ -1888,6 +1938,7 @@ export interface ILinkDefinitionsClient {
 export class LinkDefinitionsClient extends generated.LinkDefinitionsClient implements ILinkDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link generated.ILinkDefinitionsClient.listLinkDefinitions listLinkDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -1934,9 +1985,10 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
 
   /**
    * Returns all link definitions in the repository using a next link
+   * - Related: {@link generated.ILinkDefinitionsClient.listLinkDefinitions listLinkDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema
-   * @return Get link definitions with the next link successfully
+   * @return A collection of link definitions.
    */
   async listLinkDefinitionsNextLink(args: {
     nextLink: string;
@@ -1956,8 +2008,9 @@ export class LinkDefinitionsClient extends generated.LinkDefinitionsClient imple
 export class RepositoriesClient extends generated.RepositoriesClient {
   /**
    * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
+   * - Related: {@link generated.IRepositoriesClient.listRepositories listRepositories}
    * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
-   * @returns Get the repository resource list successfully.
+   * @returns A collection of respositories.
    */
   public static async listSelfHostedRepositories(args: { baseUrl: string }): Promise<generated.RepositoryCollectionResponse> {
     let { baseUrl } = args;

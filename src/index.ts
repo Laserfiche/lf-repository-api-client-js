@@ -29,7 +29,7 @@ export interface IAttributesClient {
     - Default page size: 100. Allowed OData query options: Select, Count, OrderBy, Skip, Top, SkipToken, Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
-     * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
+     * @param args.everyone (optional) Indicates if attributes associated with the "Everyone" group or the currently authenticated user is returned. The default value is false.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.select (optional) Limits the properties returned in the result.
      * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -46,7 +46,7 @@ export interface IAttributesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.attributeKey The requested attribute key.
-     * @param args.everyone (optional) Boolean value that indicates whether to return attributes associated with everyone or the currently authenticated user.
+     * @param args.everyone (optional) Indicates if attributes associated with the "Everyone" group or the currently authenticated user is returned. The default value is false.
      * @return A single attribute associated with the authenticated user.
      */
     getAttribute(args: { repositoryId: string, attributeKey: string, everyone?: boolean | undefined }): Promise<Attribute>;
@@ -62,9 +62,10 @@ export class AttributesClient implements IAttributesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-
+    
   /**
    * It will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IAttributesClient.listAttributes listAttributes}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
@@ -111,9 +112,10 @@ export class AttributesClient implements IAttributesClient {
   }
   /**
    * Returns the attribute key value pairs using a next link
+   * - Related: {@link IAttributesClient.listAttributes listAttributes}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection.
    * @param args.maxPageSize (optional) the maximum page size or number of attribute keys allowed per API response schema.
-   * @return Get trustee attribute keys with the next link successfully
+   * @return A collection of attributes associated with the authenticated user.
    */
   async listAttributesNextLink(args: {
     nextLink: string;
@@ -136,7 +138,7 @@ export class AttributesClient implements IAttributesClient {
     - Default page size: 100. Allowed OData query options: Select, Count, OrderBy, Skip, Top, SkipToken, Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
-     * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
+     * @param args.everyone (optional) Indicates if attributes associated with the "Everyone" group or the currently authenticated user is returned. The default value is false.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.select (optional) Limits the properties returned in the result.
      * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
@@ -247,7 +249,7 @@ export class AttributesClient implements IAttributesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.attributeKey The requested attribute key.
-     * @param args.everyone (optional) Boolean value that indicates whether to return attributes associated with everyone or the currently authenticated user.
+     * @param args.everyone (optional) Indicates if attributes associated with the "Everyone" group or the currently authenticated user is returned. The default value is false.
      * @return A single attribute associated with the authenticated user.
      */
     getAttribute(args: { repositoryId: string, attributeKey: string, everyone?: boolean | undefined }): Promise<Attribute> {
@@ -470,7 +472,7 @@ export class AuditReasonsClient implements IAuditReasonsClient {
 export interface IFieldDefinitionsClient {
 
     /**
-     * - Returns a single field definition associated with the specified ID.
+     * - Returns a single field definition associated with the specified ID. 
     - Useful when a route provides a minimal amount of details and more information about the specific field definition is needed.
     - Allowed OData query options: Select
     - Required OAuth scope: repository.Read
@@ -510,15 +512,16 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-
+    
   /**
    * It will continue to make the same call to get a list of field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IFieldDefinitionsClient.listFieldDefinitions listFieldDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -540,7 +543,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listFieldDefinitions({
-      repositoryId: repositoryId,
+      repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -563,9 +566,10 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   }
   /**
    * Returns a paged listing of field definitions available in the specified repository using a next link
+   * - Related: {@link IFieldDefinitionsClient.listFieldDefinitions listFieldDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of field definitions.
    */
   async listFieldDefinitionsNextLink(args: {
     nextLink: string;
@@ -582,7 +586,7 @@ export class FieldDefinitionsClient implements IFieldDefinitionsClient {
   }
 
     /**
-     * - Returns a single field definition associated with the specified ID.
+     * - Returns a single field definition associated with the specified ID. 
     - Useful when a route provides a minimal amount of details and more information about the specific field definition is needed.
     - Allowed OData query options: Select
     - Required OAuth scope: repository.Read
@@ -823,9 +827,10 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-
+    
   /**
    * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ILinkDefinitionsClient.listLinkDefinitions listLinkDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -849,7 +854,7 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinkDefinitions({
-      repositoryId: repositoryId,
+      repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
       orderby,
@@ -872,9 +877,10 @@ export class LinkDefinitionsClient implements ILinkDefinitionsClient {
 
   /**
    * Returns all link definitions in the repository using a next link
+   * - Related: {@link ILinkDefinitionsClient.listLinkDefinitions listLinkDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema
-   * @return Get link definitions with the next link successfully
+   * @return A collection of link definitions.
    */
   async listLinkDefinitionsNextLink(args: {
     nextLink: string;
@@ -1094,22 +1100,22 @@ export interface IEntriesClient {
     - Example: if a file is going to be uploaded in 10 chunks, the 10 Upload URLs can be retrieved by two successive calls to this api, each call requesting 5 Upload URLs. For this, the first call should have StartingPartNumber=1 and NumberOfParts=5, and the second call should have StartingPartNumber=6 and NumberOfParts=5, along with UploadId returned in the first call.
     - Each Upload URL expires after 15 minutes.
     - Each file chunk written to an Upload URL should be at least 5 MB and at most 5 GB. There is no minimum size limit for the last chunk.
-    - The value of NumberOfParts must be in the range [1, 100], meaning that in each call to this api, a maximum of 100 Upload URLs can be requested.
+    - The value of NumberOfParts must be in the range [1, 100], meaning that in each call to this api, a maximum of 100 Upload URLs can be requested. 
     - The total number of Upload URLs for a single file is 1000, which means (StartingPartNumber + NumberOfParts) should be less than or equal to 1001.
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
-     * @param args.request The body of the request.
+     * @param args.request The request body.
      * @return A response containing an upload id and an array of upload URLs.
      */
     createMultipartUploadUrls(args: { repositoryId: string, request: CreateMultipartUploadUrlsRequest }): Promise<CreateMultipartUploadUrlsResponse>;
 
     /**
-     * - Imports a new file in the specified folder. The file should be already written (in chunks) to the upload URLs obtained by calling the Upload api.
+     * - Imports a new file in the specified folder. The file should be already written (in chunks) to the upload URLs obtained by calling the Upload api. The maximum file size allowed is 64 GB.
     - This route does not support partial success.
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The entry ID of the folder that the document will be created in.
-     * @param args.request (optional) The metadata that will be set on the document.
+     * @param args.request (optional) The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
      * @return A long operation task id.
      */
@@ -1121,8 +1127,8 @@ export interface IEntriesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The ID of entry to export.
-     * @param args.request The body of the export request.
-     * @param args.pageRange (optional) A comma seperated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when part=Edoc.
+     * @param args.request The request body.
+     * @param args.pageRange (optional) A comma-separated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when part=Edoc.
      * @return A long operation task id.
      */
     startExportEntry(args: { repositoryId: string, entryId: number, request: StartExportEntryRequest, pageRange?: string | null | undefined }): Promise<StartTaskResponse>;
@@ -1135,7 +1141,7 @@ export interface IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
-     * @param args.request Copy entry request.
+     * @param args.request The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag.
      * @return A long operation task id.
      */
@@ -1180,14 +1186,14 @@ export interface IEntriesClient {
     updateEntry(args: { repositoryId: string, entryId: number, request: UpdateEntryRequest, culture?: string | null | undefined }): Promise<Entry>;
 
     /**
-     * - Import a new document in the specified folder, and sets metadata.
+     * - Import a new document in the specified folder, and optionally assigns metadata.
     - The import may fail if the file is greater than 100 MB or time out if it takes longer than 60 seconds. These values are subject to change at anytime. Use the long operation asynchronous import if you run into these restrictions.
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The entry ID of the folder that the document will be created in.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
-     * @param args.file (optional)
-     * @param args.request (optional)
+     * @param args.file (optional) 
+     * @param args.request (optional) 
      * @return The created entry.
      */
     importEntry(args: { repositoryId: string, entryId: number, culture?: string | null | undefined, file?: FileParameter | undefined, request?: ImportEntryRequest | undefined }): Promise<Entry>;
@@ -1198,8 +1204,8 @@ export interface IEntriesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The ID of entry to export.
-     * @param args.request The body of the export request.
-     * @param args.pageRange (optional) A comma separated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when exporting as Edoc.
+     * @param args.request The request body.
+     * @param args.pageRange (optional) A comma-separated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when exporting as Edoc.
      * @return A link to download the exported entry.
      */
     exportEntry(args: { repositoryId: string, entryId: number, request: ExportEntryRequest, pageRange?: string | null | undefined }): Promise<ExportEntryResponse>;
@@ -1219,15 +1225,15 @@ export interface IEntriesClient {
      * - Returns the children entries of a folder in the repository.
     - Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository.
     - Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route.
-    - Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type.
+    - Optional query parameters: groupByEntryType (bool). This query parameter decides if results are returned in groups based on their entry type. 
     - Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. The remaining field values can be retrieved via the GET fields route. Null or Empty field values should not be used to determine if a field is assigned to the entry.
     - Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc".
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The folder ID.
-     * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
+     * @param args.groupByEntryType (optional) Indicates if the result should be grouped by entry type or not. The default value is false.
      * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
-     * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+     * @param args.formatFieldValues (optional) Indicates if field values should be formatted. Only applicable if Fields are specified. The default value is false.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting. The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise culture will not be used for formatting.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -1245,7 +1251,7 @@ export interface IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
-     * @param args.request The entry to create.
+     * @param args.request The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag.
      * @return The created entry.
      */
@@ -1266,7 +1272,7 @@ export interface IEntriesClient {
      * @param args.top (optional) Limits the number of items returned from a collection.
      * @param args.skip (optional) Excludes the specified number of items of the queried collection from the result.
      * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
-     * @return A collection of fields set on the entry.
+     * @return A collection of fields assigned to the entry.
      */
     listFields(args: { repositoryId: string, entryId: number, prefer?: string | null | undefined, formatFieldValues?: boolean | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<FieldCollectionResponse>;
 
@@ -1277,8 +1283,9 @@ export interface IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The entry ID of the entry that will have its fields updated.
+     * @param args.request The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
-     * @return A collection of fields set on the entry.
+     * @return A collection of fields assigned to the entry.
      */
     setFields(args: { repositoryId: string, entryId: number, request: SetFieldsRequest, culture?: string | null | undefined }): Promise<FieldCollectionResponse>;
 
@@ -1295,7 +1302,7 @@ export interface IEntriesClient {
      * @param args.top (optional) Limits the number of items returned from a collection.
      * @param args.skip (optional) Excludes the specified number of items of the queried collection from the result.
      * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
-     * @return A collection of tags set on the entry.
+     * @return A collection of tags assigned to the entry.
      */
     listTags(args: { repositoryId: string, entryId: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<TagCollectionResponse>;
 
@@ -1307,7 +1314,7 @@ export interface IEntriesClient {
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.request The tags to add.
-     * @return A collection of tags set on the entry.
+     * @return A collection of tags assigned to the entry.
      */
     setTags(args: { repositoryId: string, entryId: number, request: SetTagsRequest }): Promise<TagCollectionResponse>;
 
@@ -1318,7 +1325,8 @@ export interface IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The request repository ID.
      * @param args.entryId The requested entry ID.
-     * @return A collection of links set on the entry.
+     * @param args.request The request body.
+     * @return A collection of links assigned to the entry.
      */
     setLinks(args: { repositoryId: string, entryId: number, request: SetLinksRequest }): Promise<LinkCollectionResponse>;
 
@@ -1335,7 +1343,7 @@ export interface IEntriesClient {
      * @param args.top (optional) Limits the number of items returned from a collection.
      * @param args.skip (optional) Excludes the specified number of items of the queried collection from the result.
      * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
-     * @return A collection of links set on the entry.
+     * @return A collection of links assigned to the entry.
      */
     listLinks(args: { repositoryId: string, entryId: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<LinkCollectionResponse>;
 
@@ -1345,7 +1353,7 @@ export interface IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
-     * @param args.request The entry to create.
+     * @param args.request The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag.
      * @return The copied entry.
      */
@@ -1362,7 +1370,7 @@ export interface IEntriesClient {
 
     /**
      * - Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted.
-    - Optional parameter: pageRange (default empty). The value should be a comma-seperated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
+    - Optional parameter: pageRange (default empty). The value should be a comma-separated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The requested document ID.
@@ -1378,6 +1386,7 @@ export interface IEntriesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The requested entry ID.
+     * @param args.request The request body.
      * @return A collection of dynamic field values.
      */
     listDynamicFieldValues(args: { repositoryId: string, entryId: number, request: ListDynamicFieldValuesRequest }): Promise<{ [key: string]: string[]; }>;
@@ -1417,20 +1426,20 @@ export class EntriesClient implements IEntriesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-
+    
   /**
-   * This is a helper for wrapping the CreateMultipartUploadURls and the ImportUploadedParts APIs.
+   * This is a helper for wrapping the CreateMultipartUploadURls and the ImportUploadedParts APIs. 
    * If successful, it returns a taskId which can be used to check the status of the operation or retrieve its result, otherwise, it returns an error.
    * Required OAuth scope: repository.Write
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The entry ID of the folder that the document will be created in.
-   * @param args.file The file to be imported as a new document.
-   * @param args.mimeType The mime-type of the file to be imported as a new document.
+   * @param args.file The file to be imported as a new document. 
+   * @param args.mimeType The mime-type of the file to be imported as a new document. 
    * @param args.request The body of the request.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
    * @return A long operation task id.
   */
-  async startImportEntry(args: {
+  async startImportEntry(args: { 
     repositoryId: string;
     entryId: number;
     file: FileParameter;
@@ -1440,11 +1449,11 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<StartTaskResponse> {
     // The maximum number of URLs requested in each call to the CreateMultipartUploadUrls API.
     const numberOfUrlsRequestedInEachCall = 10;
-    var thereAreMoreParts = true;
+    var thereAreMoreParts = true;   
     var eTags = new Array<string>();
     let uploadId = null;
     var dataSource = null;
-    try
+    try 
     {
       if (isBrowser()) {
         dataSource = args.file.data;
@@ -1466,7 +1475,7 @@ export class EntriesClient implements IEntriesClient {
         if (iteration == 1) {
           uploadId = response.uploadId;
         }
-
+        
         // Step 2: Split the file and write the parts to current batch of URLs.
         var eTagsForThisIteration: any;
         eTagsForThisIteration = await this.writeFileParts(dataSource!, response.urls!);
@@ -1482,7 +1491,7 @@ export class EntriesClient implements IEntriesClient {
         entryId: args.entryId,
         request: finalRequest
       });
-
+  
       return StartTaskResponse.fromJS(response);
     } finally {
       if (dataSource && !isBrowser()) {
@@ -1506,7 +1515,7 @@ export class EntriesClient implements IEntriesClient {
   /**
    * Prepares and returns the request body for calling the ImportUploadedParts API.
    */
-  prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: PdfImportOptions, importAsElectronicDocument?: boolean, metadata?: ImportAsyncMetadata, volumeName?: string): StartImportUploadedPartsRequest {
+  prepareRequestForImportUploadedPartsApi(uploadId: string, eTags: string[], name?: string, autoRename?: boolean, pdfOptions?: ImportEntryRequestPdfOptions, importAsElectronicDocument?: boolean, metadata?: ImportEntryRequestMetadata, volumeName?: string): StartImportUploadedPartsRequest {
     var parameters ={
       uploadId: uploadId,
       partETags: eTags,
@@ -1520,7 +1529,7 @@ export class EntriesClient implements IEntriesClient {
     return StartImportUploadedPartsRequest.fromJS(parameters);
   }
   /**
-   * Takes a source for reading file data, and a set of URLs.
+   * Takes a source for reading file data, and a set of URLs. 
    * Then reads data from the source, on a part-by-part basis, and and writes the file parts to the given URLs.
    * @returns The eTags of the parts written.
    */
@@ -1581,7 +1590,7 @@ export class EntriesClient implements IEntriesClient {
         }
         readerDone = true;
       });
-      reader.readAsArrayBuffer(partBlob);
+      reader.readAsArrayBuffer(partBlob); 
     }
     while(!readerDone) {
       await new Promise((r) => setTimeout(r, 5000));
@@ -1598,14 +1607,14 @@ export class EntriesClient implements IEntriesClient {
         method: 'PUT',
         body: part,
         headers: {'Content-Type': 'application/octet-stream'} });
-
+      
       if (response.ok && response.body !== null && response.status == 200) {
         eTag = response.headers.get("ETag")!;
         if (eTag) {
           eTag = eTag.substring(1, eTag.length - 1); // Remove heading and trailing double-quotation
         }
-      }
-
+      } 
+    
     return eTag;
   }
   /**
@@ -1626,6 +1635,7 @@ export class EntriesClient implements IEntriesClient {
   }
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IEntriesClient.listEntries listEntries}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -1635,7 +1645,7 @@ export class EntriesClient implements IEntriesClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting. 
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -1676,7 +1686,7 @@ export class EntriesClient implements IEntriesClient {
       maxPageSize,
     } = args;
     var response = await this.listEntries({
-      repositoryId: repositoryId,
+      repositoryId,
       entryId,
       groupByEntryType,
       fields,
@@ -1703,15 +1713,16 @@ export class EntriesClient implements IEntriesClient {
   }
   /**
    * It will continue to make the same call to get a list of field values of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IEntriesClient.listFields listFields}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.formatFieldValues (optional) An optional query parameter used to indicate if the field values should be formatted.
-          The default value is false.
+          The default value is false. 
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting. 
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -1736,7 +1747,7 @@ export class EntriesClient implements IEntriesClient {
     let { callback, repositoryId, entryId, prefer, formatFieldValues, culture, select, orderby, top, skip, count, maxPageSize } =
       args;
     var response = await this.listFields({
-      repositoryId: repositoryId,
+      repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       formatFieldValues,
@@ -1761,6 +1772,7 @@ export class EntriesClient implements IEntriesClient {
   }
   /**
    * It will continue to make the same call to get a list of link values from entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IEntriesClient.listLinks listLinks}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -1786,7 +1798,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let { callback, repositoryId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listLinks({
-      repositoryId: repositoryId,
+      repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -1809,6 +1821,7 @@ export class EntriesClient implements IEntriesClient {
   }
   /**
    * It will continue to make the same call to get a list of tags assigned to entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IEntriesClient.listTags listTags}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -1834,7 +1847,7 @@ export class EntriesClient implements IEntriesClient {
   }): Promise<void> {
     let { callback, repositoryId, entryId, prefer, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTags({
-      repositoryId: repositoryId,
+      repositoryId,
       entryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       select,
@@ -1857,9 +1870,10 @@ export class EntriesClient implements IEntriesClient {
   }
   /**
    * Returns the children entries of a folder in the repository using a next link
+   * - Related: {@link IEntriesClient.listEntries listEntries}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema
-   * @return Get the children entries of a Folder with the next link successfully
+   * @return A collection of children entries of a folder.
    */
   async listEntriesNextLink(args: {
     nextLink: string;
@@ -1876,9 +1890,10 @@ export class EntriesClient implements IEntriesClient {
   }
   /**
    * Returns the fields assigned to an entry using a next link
+   * - Related: {@link IEntriesClient.listFields listFields}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema
-   * @return Get field values with the next link successfully
+   * @return A collection of fields assigned to the entry.
    */
   async listFieldsNextLink(args: {
     nextLink: string;
@@ -1895,9 +1910,10 @@ export class EntriesClient implements IEntriesClient {
   }
   /**
    * Returns the links assigned to an entry using a next link
+   * - Related: {@link IEntriesClient.listLinks listLinks}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema
-   * @return Get links with the next link successfully
+   * @return A collection of links assigned to the entry.
    */
   async listLinksNextLink(args: {
     nextLink: string;
@@ -1914,9 +1930,10 @@ export class EntriesClient implements IEntriesClient {
   }
   /**
    * Returns the entry tags assigned to an entry using a link
+   * - Related: {@link IEntriesClient.listTags listTags}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema
-   * @return Get entry tags with the next link successfully
+   * @return A collection of tags assigned to the entry.
    */
   async listTagsNextLink(args: {
     nextLink: string;
@@ -1939,11 +1956,11 @@ export class EntriesClient implements IEntriesClient {
     - Example: if a file is going to be uploaded in 10 chunks, the 10 Upload URLs can be retrieved by two successive calls to this api, each call requesting 5 Upload URLs. For this, the first call should have StartingPartNumber=1 and NumberOfParts=5, and the second call should have StartingPartNumber=6 and NumberOfParts=5, along with UploadId returned in the first call.
     - Each Upload URL expires after 15 minutes.
     - Each file chunk written to an Upload URL should be at least 5 MB and at most 5 GB. There is no minimum size limit for the last chunk.
-    - The value of NumberOfParts must be in the range [1, 100], meaning that in each call to this api, a maximum of 100 Upload URLs can be requested.
+    - The value of NumberOfParts must be in the range [1, 100], meaning that in each call to this api, a maximum of 100 Upload URLs can be requested. 
     - The total number of Upload URLs for a single file is 1000, which means (StartingPartNumber + NumberOfParts) should be less than or equal to 1001.
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
-     * @param args.request The body of the request.
+     * @param args.request The request body.
      * @return A response containing an upload id and an array of upload URLs.
      */
     createMultipartUploadUrls(args: { repositoryId: string, request: CreateMultipartUploadUrlsRequest }): Promise<CreateMultipartUploadUrlsResponse> {
@@ -2031,12 +2048,12 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * - Imports a new file in the specified folder. The file should be already written (in chunks) to the upload URLs obtained by calling the Upload api.
+     * - Imports a new file in the specified folder. The file should be already written (in chunks) to the upload URLs obtained by calling the Upload api. The maximum file size allowed is 64 GB.
     - This route does not support partial success.
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The entry ID of the folder that the document will be created in.
-     * @param args.request (optional) The metadata that will be set on the document.
+     * @param args.request (optional) The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
      * @return A long operation task id.
      */
@@ -2142,8 +2159,8 @@ export class EntriesClient implements IEntriesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The ID of entry to export.
-     * @param args.request The body of the export request.
-     * @param args.pageRange (optional) A comma seperated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when part=Edoc.
+     * @param args.request The request body.
+     * @param args.pageRange (optional) A comma-separated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when part=Edoc.
      * @return A long operation task id.
      */
     startExportEntry(args: { repositoryId: string, entryId: number, request: StartExportEntryRequest, pageRange?: string | null | undefined }): Promise<StartTaskResponse> {
@@ -2250,7 +2267,7 @@ export class EntriesClient implements IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
-     * @param args.request Copy entry request.
+     * @param args.request The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag.
      * @return A long operation task id.
      */
@@ -2644,14 +2661,14 @@ export class EntriesClient implements IEntriesClient {
     }
 
     /**
-     * - Import a new document in the specified folder, and sets metadata.
+     * - Import a new document in the specified folder, and optionally assigns metadata.
     - The import may fail if the file is greater than 100 MB or time out if it takes longer than 60 seconds. These values are subject to change at anytime. Use the long operation asynchronous import if you run into these restrictions.
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The entry ID of the folder that the document will be created in.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
-     * @param args.file (optional)
-     * @param args.request (optional)
+     * @param args.file (optional) 
+     * @param args.request (optional) 
      * @return The created entry.
      */
     importEntry(args: { repositoryId: string, entryId: number, culture?: string | null | undefined, file?: FileParameter | undefined, request?: ImportEntryRequest | undefined }): Promise<Entry> {
@@ -2763,8 +2780,8 @@ export class EntriesClient implements IEntriesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The ID of entry to export.
-     * @param args.request The body of the export request.
-     * @param args.pageRange (optional) A comma separated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when exporting as Edoc.
+     * @param args.request The request body.
+     * @param args.pageRange (optional) A comma-separated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when exporting as Edoc.
      * @return A link to download the exported entry.
      */
     exportEntry(args: { repositoryId: string, entryId: number, request: ExportEntryRequest, pageRange?: string | null | undefined }): Promise<ExportEntryResponse> {
@@ -2964,15 +2981,15 @@ export class EntriesClient implements IEntriesClient {
      * - Returns the children entries of a folder in the repository.
     - Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository.
     - Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route.
-    - Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type.
+    - Optional query parameters: groupByEntryType (bool). This query parameter decides if results are returned in groups based on their entry type. 
     - Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. The remaining field values can be retrieved via the GET fields route. Null or Empty field values should not be used to determine if a field is assigned to the entry.
     - Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: "PropertyName direction,PropertyName2 direction". Sort order can be either value "asc" or "desc".
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The folder ID.
-     * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
+     * @param args.groupByEntryType (optional) Indicates if the result should be grouped by entry type or not. The default value is false.
      * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each entry.
-     * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+     * @param args.formatFieldValues (optional) Indicates if field values should be formatted. Only applicable if Fields are specified. The default value is false.
      * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting. The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise culture will not be used for formatting.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -3095,7 +3112,7 @@ export class EntriesClient implements IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
-     * @param args.request The entry to create.
+     * @param args.request The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag.
      * @return The created entry.
      */
@@ -3210,7 +3227,7 @@ export class EntriesClient implements IEntriesClient {
      * @param args.top (optional) Limits the number of items returned from a collection.
      * @param args.skip (optional) Excludes the specified number of items of the queried collection from the result.
      * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
-     * @return A collection of fields set on the entry.
+     * @return A collection of fields assigned to the entry.
      */
     listFields(args: { repositoryId: string, entryId: number, prefer?: string | null | undefined, formatFieldValues?: boolean | undefined, culture?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<FieldCollectionResponse> {
         let { repositoryId, entryId, prefer, formatFieldValues, culture, select, orderby, top, skip, count } = args;
@@ -3320,8 +3337,9 @@ export class EntriesClient implements IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The entry ID of the entry that will have its fields updated.
+     * @param args.request The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
-     * @return A collection of fields set on the entry.
+     * @return A collection of fields assigned to the entry.
      */
     setFields(args: { repositoryId: string, entryId: number, request: SetFieldsRequest, culture?: string | null | undefined }): Promise<FieldCollectionResponse> {
         let { repositoryId, entryId, request, culture } = args;
@@ -3432,7 +3450,7 @@ export class EntriesClient implements IEntriesClient {
      * @param args.top (optional) Limits the number of items returned from a collection.
      * @param args.skip (optional) Excludes the specified number of items of the queried collection from the result.
      * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
-     * @return A collection of tags set on the entry.
+     * @return A collection of tags assigned to the entry.
      */
     listTags(args: { repositoryId: string, entryId: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<TagCollectionResponse> {
         let { repositoryId, entryId, prefer, select, orderby, top, skip, count } = args;
@@ -3537,7 +3555,7 @@ export class EntriesClient implements IEntriesClient {
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The requested entry ID.
      * @param args.request The tags to add.
-     * @return A collection of tags set on the entry.
+     * @return A collection of tags assigned to the entry.
      */
     setTags(args: { repositoryId: string, entryId: number, request: SetTagsRequest }): Promise<TagCollectionResponse> {
         let { repositoryId, entryId, request } = args;
@@ -3640,7 +3658,8 @@ export class EntriesClient implements IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The request repository ID.
      * @param args.entryId The requested entry ID.
-     * @return A collection of links set on the entry.
+     * @param args.request The request body.
+     * @return A collection of links assigned to the entry.
      */
     setLinks(args: { repositoryId: string, entryId: number, request: SetLinksRequest }): Promise<LinkCollectionResponse> {
         let { repositoryId, entryId, request } = args;
@@ -3749,7 +3768,7 @@ export class EntriesClient implements IEntriesClient {
      * @param args.top (optional) Limits the number of items returned from a collection.
      * @param args.skip (optional) Excludes the specified number of items of the queried collection from the result.
      * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
-     * @return A collection of links set on the entry.
+     * @return A collection of links assigned to the entry.
      */
     listLinks(args: { repositoryId: string, entryId: number, prefer?: string | null | undefined, select?: string | null | undefined, orderby?: string | null | undefined, top?: number | undefined, skip?: number | undefined, count?: boolean | undefined }): Promise<LinkCollectionResponse> {
         let { repositoryId, entryId, prefer, select, orderby, top, skip, count } = args;
@@ -3852,7 +3871,7 @@ export class EntriesClient implements IEntriesClient {
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The folder ID that the entry will be created in.
-     * @param args.request The entry to create.
+     * @param args.request The request body.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag.
      * @return The copied entry.
      */
@@ -4044,7 +4063,7 @@ export class EntriesClient implements IEntriesClient {
 
     /**
      * - Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted.
-    - Optional parameter: pageRange (default empty). The value should be a comma-seperated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
+    - Optional parameter: pageRange (default empty). The value should be a comma-separated string which contains non-overlapping single values, or page ranges. Ex: "1,2,3", "1-3,5", "2-7,10-12."
     - Required OAuth scope: repository.Write
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The requested document ID.
@@ -4143,6 +4162,7 @@ export class EntriesClient implements IEntriesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.entryId The requested entry ID.
+     * @param args.request The request body.
      * @return A collection of dynamic field values.
      */
     listDynamicFieldValues(args: { repositoryId: string, entryId: number, request: ListDynamicFieldValuesRequest }): Promise<{ [key: string]: string[]; }> {
@@ -4461,11 +4481,12 @@ export class RepositoriesClient implements IRepositoriesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-
+    
   /**
    * Returns the repository resource list that current user has access to given the API server base URL. Only available in Laserfiche Self-Hosted.
+   * - Related: {@link IRepositoriesClient.listRepositories listRepositories}
    * @param args.baseUrl API server base URL e.g., https://{APIServerName}/LFRepositoryAPI
-   * @returns Get the repository resource list successfully.
+   * @returns A collection of respositories.
    */
   public static async listSelfHostedRepositories(args: { baseUrl: string }): Promise<RepositoryCollectionResponse> {
     let { baseUrl } = args;
@@ -4568,10 +4589,10 @@ export interface ISearchesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.taskId The requested task ID.
-     * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
-     * @param args.refresh (optional) If the search listing should be refreshed to show updated values.
+     * @param args.groupByEntryType (optional) Indicates if the result should be grouped by entry type or not. The default value is false.
+     * @param args.refresh (optional) Indicates if the search listing should be refreshed to show updated values. The default value is false.
      * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each search result.
-     * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+     * @param args.formatFieldValues (optional) Indicates if field values should be formatted. Only applicable if Fields are specified. The default value is false.
      * @param args.prefer (optional) An optional odata header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting. The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise culture will not be used for formatting.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -4612,9 +4633,10 @@ export class SearchesClient implements ISearchesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-
+    
   /**
    * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ISearchesClient.listSearchResults listSearchResults}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.taskId The requested task ID.
@@ -4625,7 +4647,7 @@ export class SearchesClient implements ISearchesClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -4696,6 +4718,7 @@ export class SearchesClient implements ISearchesClient {
   }
   /**
    * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ISearchesClient.listSearchContextHits listSearchContextHits}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.taskId The requested task ID.
@@ -4747,9 +4770,10 @@ export class SearchesClient implements ISearchesClient {
   }
   /**
    * Returns a search result listing if the search is completed using a next link
+   * - Related: {@link ISearchesClient.listSearchResults listSearchResults}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema
-   * @return Get search result with the next link successfully
+   * @return A collection of entry search results.
    */
   async listSearchResultsNextLink(args: {
     nextLink: string;
@@ -4766,9 +4790,10 @@ export class SearchesClient implements ISearchesClient {
   }
   /**
    * Returns the context hits associated with a search result entry using a next link
+   * - Related: {@link ISearchesClient.listSearchContextHits listSearchContextHits}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema
-   * @return Get search context hits with the next link successfully
+   * @return A collection of context hits for a search result.
    */
   async listSearchContextHitsNextLink(args: {
     nextLink: string;
@@ -4887,10 +4912,10 @@ export class SearchesClient implements ISearchesClient {
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
      * @param args.taskId The requested task ID.
-     * @param args.groupByEntryType (optional) An optional query parameter used to indicate if the result should be grouped by entry type or not.
-     * @param args.refresh (optional) If the search listing should be refreshed to show updated values.
+     * @param args.groupByEntryType (optional) Indicates if the result should be grouped by entry type or not. The default value is false.
+     * @param args.refresh (optional) Indicates if the search listing should be refreshed to show updated values. The default value is false.
      * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each search result.
-     * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+     * @param args.formatFieldValues (optional) Indicates if field values should be formatted. Only applicable if Fields are specified. The default value is false.
      * @param args.prefer (optional) An optional odata header. Can be used to set the maximum page size using odata.maxpagesize.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting. The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise culture will not be used for formatting.
      * @param args.select (optional) Limits the properties returned in the result.
@@ -5140,7 +5165,7 @@ export interface ISimpleSearchesClient {
      * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
      * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
      * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each search result.
-     * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+     * @param args.formatFieldValues (optional) Indicates if field values should be formatted. Only applicable if Fields are specified. The default value is false.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting. The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise culture will not be used for formatting.
      * @return A collection of entry search results.
      */
@@ -5169,7 +5194,7 @@ export class SimpleSearchesClient implements ISimpleSearchesClient {
      * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
      * @param args.count (optional) Indicates whether the total count of items within a collection are returned in the result.
      * @param args.fields (optional) Optional array of field names. Field values corresponding to the given field names will be returned for each search result.
-     * @param args.formatFieldValues (optional) Boolean for if field values should be formatted. Only applicable if Fields are specified.
+     * @param args.formatFieldValues (optional) Indicates if field values should be formatted. Only applicable if Fields are specified. The default value is false.
      * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting. The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise culture will not be used for formatting.
      * @return A collection of entry search results.
      */
@@ -5328,15 +5353,16 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-
+    
   /**
    * It will continue to make the same call to get a list of tag definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ITagDefinitionsClient.listTagDefinitions listTagDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -5358,7 +5384,7 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTagDefinitions({
-      repositoryId: repositoryId,
+      repositoryId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
       select,
@@ -5381,9 +5407,10 @@ export class TagDefinitionsClient implements ITagDefinitionsClient {
   }
   /**
    * Returns all tag definitions in the repository using a next link
+   * - Related: {@link ITagDefinitionsClient.listTagDefinitions listTagDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema
-   * @return Get tag definitions with the next link successfully
+   * @return A collection of tag definitions.
    */
   async listTagDefinitionsNextLink(args: {
     nextLink: string;
@@ -5606,23 +5633,24 @@ export interface ITasksClient {
      * - Returns the status of a set of one or more tasks.
     - Provide a comma-separated list of task IDs to get the task status, progress, and any errors that may have occurred.
     - Leave the taskIds query parameter empty, to get the list of all the task IDs associated with the current access token.
-    - TaskStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
-    - This API employs long polling technique and could return the result immediately (e.g. if the export operation is failed or completed successfully) or after atmost 60 seconds.
+    - TaskStatus can be one of the following values: NotStarted, InProgress, Completed, Cancelled, or Failed.
+    - This API employs long polling technique and could return the result immediately (e.g. if the export operation is failed or completed successfully) or after at most 60 seconds.
     - Required OAuth scope: None
      * @param args.repositoryId The requested repository ID
-     * @param args.taskIds (optional) An array of task IDs (string). Leave this parameter empty to get the list of all the task IDs associated with the current access token.
+     * @param args.taskIds (optional) An array of task IDs. Leave this parameter empty to get the list of all the tasks associated with the current access token.
      * @return A collection of task progresses.
      */
     listTasks(args: { repositoryId: string, taskIds?: string[] | null | undefined }): Promise<TaskCollectionResponse>;
 
     /**
-     * - Cancels a set of one or more tasks.
+     * - Starts the cancellation for a set of one or more tasks.
     - Provide comma-separated list of task IDs to cancel. Should be used if an operation was created in error, or is no longer necessary.
+    - Check the status of the task to determine if the task has been cancelled successfully.
     - Leave the taskIds query parameter empty, to cancel the list of all the task IDs associated with the current access token.
     - Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
     - Required OAuth scope: None
      * @param args.repositoryId The requested repository ID
-     * @param args.taskIds (optional) An array of task IDs (string). Leave this parameter empty to cancel the list of all the task IDs associated with the current access token.
+     * @param args.taskIds (optional) An array of task IDs. Leave this parameter empty to cancel the list of all the tasks associated with the current access token.
      * @return A collection of task cancellation results.
      */
     cancelTasks(args: { repositoryId: string, taskIds?: string[] | null | undefined }): Promise<CancelTasksResponse>;
@@ -5642,11 +5670,11 @@ export class TasksClient implements ITasksClient {
      * - Returns the status of a set of one or more tasks.
     - Provide a comma-separated list of task IDs to get the task status, progress, and any errors that may have occurred.
     - Leave the taskIds query parameter empty, to get the list of all the task IDs associated with the current access token.
-    - TaskStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.
-    - This API employs long polling technique and could return the result immediately (e.g. if the export operation is failed or completed successfully) or after atmost 60 seconds.
+    - TaskStatus can be one of the following values: NotStarted, InProgress, Completed, Cancelled, or Failed.
+    - This API employs long polling technique and could return the result immediately (e.g. if the export operation is failed or completed successfully) or after at most 60 seconds.
     - Required OAuth scope: None
      * @param args.repositoryId The requested repository ID
-     * @param args.taskIds (optional) An array of task IDs (string). Leave this parameter empty to get the list of all the task IDs associated with the current access token.
+     * @param args.taskIds (optional) An array of task IDs. Leave this parameter empty to get the list of all the tasks associated with the current access token.
      * @return A collection of task progresses.
      */
     listTasks(args: { repositoryId: string, taskIds?: string[] | null | undefined }): Promise<TaskCollectionResponse> {
@@ -5725,13 +5753,14 @@ export class TasksClient implements ITasksClient {
     }
 
     /**
-     * - Cancels a set of one or more tasks.
+     * - Starts the cancellation for a set of one or more tasks.
     - Provide comma-separated list of task IDs to cancel. Should be used if an operation was created in error, or is no longer necessary.
+    - Check the status of the task to determine if the task has been cancelled successfully.
     - Leave the taskIds query parameter empty, to cancel the list of all the task IDs associated with the current access token.
     - Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.
     - Required OAuth scope: None
      * @param args.repositoryId The requested repository ID
-     * @param args.taskIds (optional) An array of task IDs (string). Leave this parameter empty to cancel the list of all the task IDs associated with the current access token.
+     * @param args.taskIds (optional) An array of task IDs. Leave this parameter empty to cancel the list of all the tasks associated with the current access token.
      * @return A collection of task cancellation results.
      */
     cancelTasks(args: { repositoryId: string, taskIds?: string[] | null | undefined }): Promise<CancelTasksResponse> {
@@ -5845,7 +5874,7 @@ export interface ITemplateDefinitionsClient {
 
     /**
      * - Returns the field definitions assigned to a template definition.
-    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template.
+    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template. 
     - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
@@ -5863,7 +5892,7 @@ export interface ITemplateDefinitionsClient {
 
     /**
      * - Returns the field definitions assigned to a template definition.
-    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template.
+    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template. 
     - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
@@ -5890,16 +5919,17 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://api.laserfiche.com/repository";
     }
 
-
+    
   /**
    * Given a maximum page size, it will continue to make the same call to get a list of template definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateDefinitions listTemplateDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -5922,7 +5952,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateDefinitions({
-      repositoryId: repositoryId,
+      repositoryId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5946,13 +5976,14 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }
   /**
    * It will continue to make the same call to get a list of template field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId listTemplateFieldDefinitionsByTemplateId}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -5975,7 +6006,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, templateId, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateId({
-      repositoryId: repositoryId,
+      repositoryId,
       templateId,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -5999,13 +6030,14 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }
   /**
    * It will continue to make the same call to get a list of template field definitions by template name of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateName listTemplateFieldDefinitionsByTemplateName}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -6028,7 +6060,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }): Promise<void> {
     let { callback, repositoryId, templateName, prefer, culture, select, orderby, top, skip, count, maxPageSize } = args;
     var response = await this.listTemplateFieldDefinitionsByTemplateName({
-      repositoryId: repositoryId,
+      repositoryId,
       templateName,
       prefer: createMaxPageSizePreferHeaderPayload(maxPageSize),
       culture,
@@ -6052,9 +6084,10 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }
   /**
    * Returns all template definitions (including field definitions) in the repository using a next link
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateDefinitions listTemplateDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema
-   * @return Get template definitions with the next link successfully
+   * @return A collection of template definitions.
    */
   async listTemplateDefinitionsNextLink(args: {
     nextLink: string;
@@ -6071,9 +6104,10 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }
   /**
    * Returns the field definitions assigned to a template definition using a next link
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId listTemplateFieldDefinitionsByTemplateId}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of template field definitions.
    */
   async listTemplateFieldDefinitionsByTemplateIdNextLink(args: {
     nextLink: string;
@@ -6090,9 +6124,10 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
   }
   /**
    * Returns the field definitions assigned to a template definition by template name using a next link
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateName listTemplateFieldDefinitionsByTemplateName}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema
-   * @return Get field definitions by template name with the next link successfully
+   * @return A collection of template field definitions.
    */
   async listTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
@@ -6313,7 +6348,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
 
     /**
      * - Returns the field definitions assigned to a template definition.
-    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template.
+    - Provide a template definition ID, and get a paged listing of the field definitions assigned to that template. 
     - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
@@ -6426,7 +6461,7 @@ export class TemplateDefinitionsClient implements ITemplateDefinitionsClient {
 
     /**
      * - Returns the field definitions assigned to a template definition.
-    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template.
+    - Provide a template definition name, and get a paged listing of the field definitions assigned to that template. 
     - Default page size: 100. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer.
     - Required OAuth scope: repository.Read
      * @param args.repositoryId The requested repository ID.
@@ -6547,8 +6582,8 @@ export class AttributeCollectionResponse implements IAttributeCollectionResponse
     odataCount?: number | undefined;
     value?: Attribute[];
 
-
-
+    
+    
     constructor(data?: IAttributeCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -6601,11 +6636,13 @@ export interface IAttributeCollectionResponse {
 
 /** Represents a trustee attribute. */
 export class Attribute implements IAttribute {
+    /** The attribute key. */
     key?: string | undefined;
+    /** The attribute value. */
     value?: string | undefined;
 
-
-
+    
+    
     constructor(data?: IAttribute) {
         if (data) {
             for (var property in data) {
@@ -6639,7 +6676,9 @@ export class Attribute implements IAttribute {
 
 /** Represents a trustee attribute. */
 export interface IAttribute {
+    /** The attribute key. */
     key?: string | undefined;
+    /** The attribute value. */
     value?: string | undefined;
 }
 
@@ -6666,8 +6705,8 @@ export class ProblemDetails implements IProblemDetails {
     /** The instance detail. */
     instanceDetail?: string | undefined;
 
-
-
+    
+    
     extensions: any;
 
     constructor(data?: IProblemDetails) {
@@ -6749,8 +6788,8 @@ export class AuditReasonCollectionResponse implements IAuditReasonCollectionResp
     odataCount?: number | undefined;
     value?: AuditReason[];
 
-
-
+    
+    
     constructor(data?: IAuditReasonCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -6810,8 +6849,8 @@ export class AuditReason implements IAuditReason {
     /** The audit event type for this audit reason. */
     auditEventType?: AuditEventType;
 
-
-
+    
+    
     constructor(data?: IAuditReason) {
         if (data) {
             for (var property in data) {
@@ -6894,8 +6933,8 @@ export class FieldDefinition implements IFieldDefinition {
     /** The custom format pattern for fields that are configured to use a custom format. */
     formatPattern?: string | undefined;
 
-
-
+    
+    
     constructor(data?: IFieldDefinition) {
         if (data) {
             for (var property in data) {
@@ -7032,8 +7071,8 @@ export class FieldDefinitionCollectionResponse implements IFieldDefinitionCollec
     odataCount?: number | undefined;
     value?: FieldDefinition[];
 
-
-
+    
+    
     constructor(data?: IFieldDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -7092,8 +7131,8 @@ export class LinkDefinitionCollectionResponse implements ILinkDefinitionCollecti
     odataCount?: number | undefined;
     value?: LinkDefinition[];
 
-
-
+    
+    
     constructor(data?: ILinkDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -7155,8 +7194,8 @@ export class LinkDefinition implements ILinkDefinition {
     /** The description of the link definition. */
     description?: string | undefined;
 
-
-
+    
+    
     constructor(data?: ILinkDefinition) {
         if (data) {
             for (var property in data) {
@@ -7211,8 +7250,8 @@ export class CreateMultipartUploadUrlsResponse implements ICreateMultipartUpload
     /** A list of URLs to which the file chunk should be written. */
     urls?: string[] | undefined;
 
-
-
+    
+    
     constructor(data?: ICreateMultipartUploadUrlsResponse) {
         if (data) {
             for (var property in data) {
@@ -7264,17 +7303,17 @@ export interface ICreateMultipartUploadUrlsResponse {
 export class CreateMultipartUploadUrlsRequest implements ICreateMultipartUploadUrlsRequest {
     /** A unique identifier for the whole upload process. */
     uploadId?: string | undefined;
-    /** Determines the starting position of the requested parts among all the parts associated with this upload. */
+    /** Determines the starting position of the requested parts among all the parts associated with this upload. The default value is 1. */
     startingPartNumber?: number;
-    /** The value must be in the range [1, 100], meaning that in each call to the CreateMultipartUploadUrlsResult api, a maximum of 100 Upload URLs can be requested. Further, each file chunk written to an Upload URL should be at least 5 MB. There is no minimum size limit for the last chunk. */
-    numberOfParts?: number;
-    /** The name of the file to be uploaded. */
+    /** The value must be in the range [1, 100], meaning that in each call to the CreateMultipartUploadUrls api, a maximum of 100 Upload URLs can be requested. Further, each file chunk written to an Upload URL should be at least 5 MB. There is no minimum size limit for the last chunk. */
+    numberOfParts!: number;
+    /** The name of the file to be uploaded. The file extension in the name will be used as the extension of the imported entry. */
     fileName?: string | undefined;
     /** The mime-type of the file to be uploaded. */
     mimeType?: string | undefined;
 
-
-
+    
+    
     constructor(data?: ICreateMultipartUploadUrlsRequest) {
         if (data) {
             for (var property in data) {
@@ -7320,11 +7359,11 @@ export class CreateMultipartUploadUrlsRequest implements ICreateMultipartUploadU
 export interface ICreateMultipartUploadUrlsRequest {
     /** A unique identifier for the whole upload process. */
     uploadId?: string | undefined;
-    /** Determines the starting position of the requested parts among all the parts associated with this upload. */
+    /** Determines the starting position of the requested parts among all the parts associated with this upload. The default value is 1. */
     startingPartNumber?: number;
-    /** The value must be in the range [1, 100], meaning that in each call to the CreateMultipartUploadUrlsResult api, a maximum of 100 Upload URLs can be requested. Further, each file chunk written to an Upload URL should be at least 5 MB. There is no minimum size limit for the last chunk. */
-    numberOfParts?: number;
-    /** The name of the file to be uploaded. */
+    /** The value must be in the range [1, 100], meaning that in each call to the CreateMultipartUploadUrls api, a maximum of 100 Upload URLs can be requested. Further, each file chunk written to an Upload URL should be at least 5 MB. There is no minimum size limit for the last chunk. */
+    numberOfParts: number;
+    /** The name of the file to be uploaded. The file extension in the name will be used as the extension of the imported entry. */
     fileName?: string | undefined;
     /** The mime-type of the file to be uploaded. */
     mimeType?: string | undefined;
@@ -7335,8 +7374,8 @@ export class StartTaskResponse implements IStartTaskResponse {
     /** A task ID that can be used to check on the status of the task. */
     taskId?: string | undefined;
 
-
-
+    
+    
     constructor(data?: IStartTaskResponse) {
         if (data) {
             for (var property in data) {
@@ -7375,22 +7414,24 @@ export interface IStartTaskResponse {
 /** Request body for starting an asynchronous import entry task. */
 export class StartImportUploadedPartsRequest implements IStartImportUploadedPartsRequest {
     /** The UploadId received when calling the CreateMultipartUploadUrls API to request upload URLs. */
-    uploadId?: string | undefined;
-    /** The array of the ETag values received when writing the file chunks into the upload URLs. */
-    partETags?: string[] | undefined;
-    /** The name of the file. */
-    name?: string | undefined;
+    uploadId!: string;
+    /** The array of the ETag values received when writing the file chunks into the upload URLs. The ETag values should be in the order of their associated upload URLs, i.e. {eTag received when writing to the first URL}, {eTag received when writing to the second URL}, ... */
+    partETags!: string[];
+    /** The name for the imported entry. */
+    name!: string;
     /** Indicates if the entry should be automatically renamed if an entry already exists with the given name in the folder. The default value is false. */
     autoRename?: boolean;
-    pdfOptions?: PdfImportOptions | undefined;
-    /** Determines whether the document should be imported as an electronic document. If set to true, the documented is imported as an electronic document. If set to false, the documented is converted to Laserfiche pages. The default value is false. */
+    /** The options applied when importing a PDF. */
+    pdfOptions?: ImportEntryRequestPdfOptions | undefined;
+    /** Indicates if the document should be imported as an electronic document (true) or as image pages (false). The default value is false. This option is only applicable when importing the following document types: txt, tif, tiff, bmp, pcx, jpg, jpeg, gif, png. */
     importAsElectronicDocument?: boolean;
-    metadata?: ImportAsyncMetadata | undefined;
+    /** The metadata that will be assigned to the entry. */
+    metadata?: ImportEntryRequestMetadata | undefined;
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-
-
+    
+    
     constructor(data?: IStartImportUploadedPartsRequest) {
         if (data) {
             for (var property in data) {
@@ -7399,6 +7440,7 @@ export class StartImportUploadedPartsRequest implements IStartImportUploadedPart
             }
         }
         if (!data) {
+            this.partETags = [];
             this.autoRename = false;
             this.importAsElectronicDocument = false;
         }
@@ -7414,9 +7456,9 @@ export class StartImportUploadedPartsRequest implements IStartImportUploadedPart
             }
             this.name = _data["name"];
             this.autoRename = _data["autoRename"] !== undefined ? _data["autoRename"] : false;
-            this.pdfOptions = _data["pdfOptions"] ? PdfImportOptions.fromJS(_data["pdfOptions"]) : <any>undefined;
+            this.pdfOptions = _data["pdfOptions"] ? ImportEntryRequestPdfOptions.fromJS(_data["pdfOptions"]) : <any>undefined;
             this.importAsElectronicDocument = _data["importAsElectronicDocument"] !== undefined ? _data["importAsElectronicDocument"] : false;
-            this.metadata = _data["metadata"] ? ImportAsyncMetadata.fromJS(_data["metadata"]) : <any>undefined;
+            this.metadata = _data["metadata"] ? ImportEntryRequestMetadata.fromJS(_data["metadata"]) : <any>undefined;
             this.volumeName = _data["volumeName"];
         }
     }
@@ -7449,33 +7491,37 @@ export class StartImportUploadedPartsRequest implements IStartImportUploadedPart
 /** Request body for starting an asynchronous import entry task. */
 export interface IStartImportUploadedPartsRequest {
     /** The UploadId received when calling the CreateMultipartUploadUrls API to request upload URLs. */
-    uploadId?: string | undefined;
-    /** The array of the ETag values received when writing the file chunks into the upload URLs. */
-    partETags?: string[] | undefined;
-    /** The name of the file. */
-    name?: string | undefined;
+    uploadId: string;
+    /** The array of the ETag values received when writing the file chunks into the upload URLs. The ETag values should be in the order of their associated upload URLs, i.e. {eTag received when writing to the first URL}, {eTag received when writing to the second URL}, ... */
+    partETags: string[];
+    /** The name for the imported entry. */
+    name: string;
     /** Indicates if the entry should be automatically renamed if an entry already exists with the given name in the folder. The default value is false. */
     autoRename?: boolean;
-    pdfOptions?: PdfImportOptions | undefined;
-    /** Determines whether the document should be imported as an electronic document. If set to true, the documented is imported as an electronic document. If set to false, the documented is converted to Laserfiche pages. The default value is false. */
+    /** The options applied when importing a PDF. */
+    pdfOptions?: ImportEntryRequestPdfOptions | undefined;
+    /** Indicates if the document should be imported as an electronic document (true) or as image pages (false). The default value is false. This option is only applicable when importing the following document types: txt, tif, tiff, bmp, pcx, jpg, jpeg, gif, png. */
     importAsElectronicDocument?: boolean;
-    metadata?: ImportAsyncMetadata | undefined;
+    /** The metadata that will be assigned to the entry. */
+    metadata?: ImportEntryRequestMetadata | undefined;
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 }
 
 /** PDF-related options for importing an entry. */
-export class PdfImportOptions implements IPdfImportOptions {
+export class ImportEntryRequestPdfOptions implements IImportEntryRequestPdfOptions {
+    /** Indicates if the import operation should generate text. The default value is false. */
     generateText?: boolean;
-    /** Determines whether the import operation should also generate page images. This only works for certain file types, for example PDF files.  */
+    /** Indicates if the import operation should generate image pages. The default value is false. */
     generatePages?: boolean;
+    /** The image type used when generating image pages. The default value is StandardColor. This option is only applicable when GeneratePages is true. */
     generatePagesImageType?: GeneratePagesImageType;
-    /** Determines whether the PDF document should be imported as an electronic document. If set to true, the import operation keeps the PDF electronic document. If set to false, the import operation does not keep the PDF electronic document. The default value is true. */
+    /** Indicates if the PDF file should be retained as an electronic document after generating image pages. The default value is true. This option is only applicable when GeneratePages is true. */
     keepPdfAfterImport?: boolean;
 
-
-
-    constructor(data?: IPdfImportOptions) {
+    
+    
+    constructor(data?: IImportEntryRequestPdfOptions) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -7499,9 +7545,9 @@ export class PdfImportOptions implements IPdfImportOptions {
         }
     }
 
-    static fromJS(data: any): PdfImportOptions {
+    static fromJS(data: any): ImportEntryRequestPdfOptions {
         data = typeof data === 'object' ? data : {};
-        let result = new PdfImportOptions();
+        let result = new ImportEntryRequestPdfOptions();
         result.init(data);
         return result;
     }
@@ -7517,22 +7563,26 @@ export class PdfImportOptions implements IPdfImportOptions {
 }
 
 /** PDF-related options for importing an entry. */
-export interface IPdfImportOptions {
+export interface IImportEntryRequestPdfOptions {
+    /** Indicates if the import operation should generate text. The default value is false. */
     generateText?: boolean;
-    /** Determines whether the import operation should also generate page images. This only works for certain file types, for example PDF files.  */
+    /** Indicates if the import operation should generate image pages. The default value is false. */
     generatePages?: boolean;
+    /** The image type used when generating image pages. The default value is StandardColor. This option is only applicable when GeneratePages is true. */
     generatePagesImageType?: GeneratePagesImageType;
-    /** Determines whether the PDF document should be imported as an electronic document. If set to true, the import operation keeps the PDF electronic document. If set to false, the import operation does not keep the PDF electronic document. The default value is true. */
+    /** Indicates if the PDF file should be retained as an electronic document after generating image pages. The default value is true. This option is only applicable when GeneratePages is true. */
     keepPdfAfterImport?: boolean;
 }
 
+/** Enumeration for the image types when generating pages. */
 export enum GeneratePagesImageType {
     BlackAndWhite = "BlackAndWhite",
     StandardColor = "StandardColor",
     HighQualityColor = "HighQualityColor",
 }
 
-export class ImportAsyncMetadata implements IImportAsyncMetadata {
+/** Represents the metadata that will be assigned to the imported entry. */
+export class ImportEntryRequestMetadata implements IImportEntryRequestMetadata {
     /** The name of the template assigned to the entry. */
     templateName?: string | undefined;
     /** The fields that will be assigned to the entry. */
@@ -7542,9 +7592,9 @@ export class ImportAsyncMetadata implements IImportAsyncMetadata {
     /** The links that will be assigned to the entry. */
     links?: LinkToUpdate[] | undefined;
 
-
-
-    constructor(data?: IImportAsyncMetadata) {
+    
+    
+    constructor(data?: IImportEntryRequestMetadata) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -7574,9 +7624,9 @@ export class ImportAsyncMetadata implements IImportAsyncMetadata {
         }
     }
 
-    static fromJS(data: any): ImportAsyncMetadata {
+    static fromJS(data: any): ImportEntryRequestMetadata {
         data = typeof data === 'object' ? data : {};
-        let result = new ImportAsyncMetadata();
+        let result = new ImportEntryRequestMetadata();
         result.init(data);
         return result;
     }
@@ -7603,7 +7653,8 @@ export class ImportAsyncMetadata implements IImportAsyncMetadata {
     }
 }
 
-export interface IImportAsyncMetadata {
+/** Represents the metadata that will be assigned to the imported entry. */
+export interface IImportEntryRequestMetadata {
     /** The name of the template assigned to the entry. */
     templateName?: string | undefined;
     /** The fields that will be assigned to the entry. */
@@ -7614,14 +7665,15 @@ export interface IImportAsyncMetadata {
     links?: LinkToUpdate[] | undefined;
 }
 
-/** The request body containing fields that will be assigned to the entry. */
+/** Represents a field that will be assigned to the entry. */
 export class FieldToUpdate implements IFieldToUpdate {
+    /** The name of the field that will be assigned to the entry. */
     name!: string;
     /** The field values that will be assigned to the field. */
     values?: string[] | undefined;
 
-
-
+    
+    
     constructor(data?: IFieldToUpdate) {
         if (data) {
             for (var property in data) {
@@ -7661,25 +7713,27 @@ export class FieldToUpdate implements IFieldToUpdate {
     }
 }
 
-/** The request body containing fields that will be assigned to the entry. */
+/** Represents a field that will be assigned to the entry. */
 export interface IFieldToUpdate {
+    /** The name of the field that will be assigned to the entry. */
     name: string;
     /** The field values that will be assigned to the field. */
     values?: string[] | undefined;
 }
 
+/** Represents a link that will be assigned to the entry. */
 export class LinkToUpdate implements ILinkToUpdate {
     /** The id of the link definition to be assigned to the entry. */
-    linkDefinitionId?: number;
+    linkDefinitionId!: number;
     /** The id of the other entry to be linked to the entry. */
-    otherEntryId?: number;
-    /** Whether the entry is the source for the link. */
+    otherEntryId!: number;
+    /** Whether the entry is the source for the link. The default value is true. */
     isSource?: boolean;
     /** Custom properties (key, value pairs) to be added to the link. */
     customProperties?: { [key: string]: string; } | undefined;
 
-
-
+    
+    
     constructor(data?: ILinkToUpdate) {
         if (data) {
             for (var property in data) {
@@ -7730,12 +7784,13 @@ export class LinkToUpdate implements ILinkToUpdate {
     }
 }
 
+/** Represents a link that will be assigned to the entry. */
 export interface ILinkToUpdate {
     /** The id of the link definition to be assigned to the entry. */
-    linkDefinitionId?: number;
+    linkDefinitionId: number;
     /** The id of the other entry to be linked to the entry. */
-    otherEntryId?: number;
-    /** Whether the entry is the source for the link. */
+    otherEntryId: number;
+    /** Whether the entry is the source for the link. The default value is true. */
     isSource?: boolean;
     /** Custom properties (key, value pairs) to be added to the link. */
     customProperties?: { [key: string]: string; } | undefined;
@@ -7754,8 +7809,8 @@ export class StartExportEntryRequest implements IStartExportEntryRequest {
     /** The options applied when exporting as Text. */
     textOptions?: ExportEntryRequestTextOptions | undefined;
 
-
-
+    
+    
     constructor(data?: IStartExportEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -7827,15 +7882,15 @@ export class ExportEntryRequestImageOptions implements IExportEntryRequestImageO
     includeAnnotations?: boolean;
     /** Indicates if the annotations on the image need to be converted to PDF annotations when exporting to PDF format. The default value is true. This option is only applicable when exporting to PDF format and IncludeAnnotations is true. */
     convertPdfAnnotations?: boolean;
-    /** The page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of atmost 10 characters and only valid characters that can be included in file names are allowed. The default value is ", Page ". */
+    /** The page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of at most 10 characters and only valid characters that can be included in file names are allowed. The default value is ", Page ". */
     pagePrefix?: string | undefined;
     /** Indicates if redactions are included. The default value is true. */
     includeRedactions?: boolean;
-    /** The watermark element added to each image. */
+    /** The watermark element added to each image. No watermark will be added by default. */
     watermark?: ExportEntryRequestWatermark | undefined;
 
-
-
+    
+    
     constructor(data?: IExportEntryRequestImageOptions) {
         if (data) {
             for (var property in data) {
@@ -7895,11 +7950,11 @@ export interface IExportEntryRequestImageOptions {
     includeAnnotations?: boolean;
     /** Indicates if the annotations on the image need to be converted to PDF annotations when exporting to PDF format. The default value is true. This option is only applicable when exporting to PDF format and IncludeAnnotations is true. */
     convertPdfAnnotations?: boolean;
-    /** The page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of atmost 10 characters and only valid characters that can be included in file names are allowed. The default value is ", Page ". */
+    /** The page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of at most 10 characters and only valid characters that can be included in file names are allowed. The default value is ", Page ". */
     pagePrefix?: string | undefined;
     /** Indicates if redactions are included. The default value is true. */
     includeRedactions?: boolean;
-    /** The watermark element added to each image. */
+    /** The watermark element added to each image. No watermark will be added by default. */
     watermark?: ExportEntryRequestWatermark | undefined;
 }
 
@@ -7914,17 +7969,17 @@ export enum ExportEntryRequestImageFormat {
 
 /** Represents the watermark added to the images when exporting an entry. */
 export class ExportEntryRequestWatermark implements IExportEntryRequestWatermark {
-    /** The text of the watermark. The value must be a string with a length of atmost 100 characters. */
+    /** The text of the watermark. The value must be a string with a length of at most 100 characters and must not be all whitespace characters. */
     text?: string | undefined;
     /** The position of the watermark. The default value is DeadCenter. */
     position?: WatermarkPosition;
-    /** The rotation angle of the watermark. The value must be between 0 and 360 (inclusive). */
+    /** The rotation angle of the watermark. The value must be between 0 and 360 (inclusive). The default value is 0. */
     rotationAngle?: number;
     /** The percentage of the page that the watermark spans on. The value must be between 1 and 100 (inclusive). The default value is 50. */
     pageSpanPercentage?: number;
 
-
-
+    
+    
     constructor(data?: IExportEntryRequestWatermark) {
         if (data) {
             for (var property in data) {
@@ -7968,11 +8023,11 @@ export class ExportEntryRequestWatermark implements IExportEntryRequestWatermark
 
 /** Represents the watermark added to the images when exporting an entry. */
 export interface IExportEntryRequestWatermark {
-    /** The text of the watermark. The value must be a string with a length of atmost 100 characters. */
+    /** The text of the watermark. The value must be a string with a length of at most 100 characters and must not be all whitespace characters. */
     text?: string | undefined;
     /** The position of the watermark. The default value is DeadCenter. */
     position?: WatermarkPosition;
-    /** The rotation angle of the watermark. The value must be between 0 and 360 (inclusive). */
+    /** The rotation angle of the watermark. The value must be between 0 and 360 (inclusive). The default value is 0. */
     rotationAngle?: number;
     /** The percentage of the page that the watermark spans on. The value must be between 1 and 100 (inclusive). The default value is 50. */
     pageSpanPercentage?: number;
@@ -7998,8 +8053,8 @@ export class ExportEntryRequestTextOptions implements IExportEntryRequestTextOpt
     /** The character that replaces the original character in a redacted text. The value must be a string of length 1 and must not be a whitespace character. The default value is 'X'. */
     redactionCharacter?: string | undefined;
 
-
-
+    
+    
     constructor(data?: IExportEntryRequestTextOptions) {
         if (data) {
             for (var property in data) {
@@ -8054,8 +8109,8 @@ export class StartCopyEntryRequest implements IStartCopyEntryRequest {
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-
-
+    
+    
     constructor(data?: IStartCopyEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -8113,8 +8168,8 @@ export class StartDeleteEntryRequest implements IStartDeleteEntryRequest {
     /** The comment for this audit event. */
     auditReasonComment?: string | undefined;
 
-
-
+    
+    
     constructor(data?: IStartDeleteEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -8191,8 +8246,8 @@ export abstract class Entry implements IEntry {
     fields?: Field[] | undefined;
     protected _discriminator: string;
 
-
-
+    
+    
     constructor(data?: IEntry) {
         if (data) {
             for (var property in data) {
@@ -8327,6 +8382,7 @@ export interface IEntry {
     fields?: Field[] | undefined;
 }
 
+/** Enumeration of entry types. */
 export enum EntryType {
     Folder = "Folder",
     RecordSeries = "RecordSeries",
@@ -8353,8 +8409,8 @@ export class Field implements IField {
     /** The values assigned to the field. */
     values?: string[] | undefined;
 
-
-
+    
+    
     constructor(data?: IField) {
         if (data) {
             for (var property in data) {
@@ -8429,8 +8485,8 @@ export interface IField {
 /** Represents a Laserfiche record series. */
 export class RecordSeries extends Entry implements IRecordSeries {
 
-
-
+    
+    
     constructor(data?: IRecordSeries) {
         super(data);
         if (data) {
@@ -8467,7 +8523,7 @@ export interface IRecordSeries extends IEntry {
 /** Represents a document in a Laserfiche repository. */
 export class Document extends Entry implements IDocument {
     /** The size of the electronic document attached to the represented document, if there is one, in bytes. */
-    elecDocumentSize?: number;
+    electronicDocumentSize?: number;
     /** The extension for the document. */
     extension?: string | undefined;
     /** A boolean indicating if there is an electronic document attached to the represented document. */
@@ -8483,8 +8539,8 @@ export class Document extends Entry implements IDocument {
     /** A boolean indicating if the represented document is under version control. */
     isUnderVersionControl?: boolean;
 
-
-
+    
+    
     constructor(data?: IDocument) {
         super(data);
         if (data) {
@@ -8499,7 +8555,7 @@ export class Document extends Entry implements IDocument {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.elecDocumentSize = _data["elecDocumentSize"];
+            this.electronicDocumentSize = _data["electronicDocumentSize"];
             this.extension = _data["extension"];
             this.isElectronicDocument = _data["isElectronicDocument"];
             this.isRecord = _data["isRecord"];
@@ -8519,7 +8575,7 @@ export class Document extends Entry implements IDocument {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["elecDocumentSize"] = this.elecDocumentSize;
+        data["electronicDocumentSize"] = this.electronicDocumentSize;
         data["extension"] = this.extension;
         data["isElectronicDocument"] = this.isElectronicDocument;
         data["isRecord"] = this.isRecord;
@@ -8535,7 +8591,7 @@ export class Document extends Entry implements IDocument {
 /** Represents a document in a Laserfiche repository. */
 export interface IDocument extends IEntry {
     /** The size of the electronic document attached to the represented document, if there is one, in bytes. */
-    elecDocumentSize?: number;
+    electronicDocumentSize?: number;
     /** The extension for the document. */
     extension?: string | undefined;
     /** A boolean indicating if there is an electronic document attached to the represented document. */
@@ -8561,8 +8617,8 @@ export class Shortcut extends Entry implements IShortcut {
     /** The entry type of the shortcut target. */
     targetType?: EntryType;
 
-
-
+    
+    
     constructor(data?: IShortcut) {
         super(data);
         if (data) {
@@ -8616,11 +8672,9 @@ export class Folder extends Entry implements IFolder {
     isRecordFolder?: boolean;
     /** A boolean indicating if the folder that this instance represents is known to directly or indirectly under a record series in the repository. */
     isUnderRecordSeries?: boolean;
-    /** The entries in this folder. */
-    children?: Entry[] | undefined;
 
-
-
+    
+    
     constructor(data?: IFolder) {
         super(data);
         if (data) {
@@ -8637,11 +8691,6 @@ export class Folder extends Entry implements IFolder {
         if (_data) {
             this.isRecordFolder = _data["isRecordFolder"];
             this.isUnderRecordSeries = _data["isUnderRecordSeries"];
-            if (Array.isArray(_data["children"])) {
-                this.children = [] as any;
-                for (let item of _data["children"])
-                    this.children!.push(Entry.fromJS(item));
-            }
         }
     }
 
@@ -8656,11 +8705,6 @@ export class Folder extends Entry implements IFolder {
         data = typeof data === 'object' ? data : {};
         data["isRecordFolder"] = this.isRecordFolder;
         data["isUnderRecordSeries"] = this.isUnderRecordSeries;
-        if (Array.isArray(this.children)) {
-            data["children"] = [];
-            for (let item of this.children)
-                data["children"].push(item.toJSON());
-        }
         super.toJSON(data);
         return data;
     }
@@ -8672,8 +8716,6 @@ export interface IFolder extends IEntry {
     isRecordFolder?: boolean;
     /** A boolean indicating if the folder that this instance represents is known to directly or indirectly under a record series in the repository. */
     isUnderRecordSeries?: boolean;
-    /** The entries in this folder. */
-    children?: Entry[] | undefined;
 }
 
 export abstract class IHeaderDictionary implements IIHeaderDictionary {
@@ -8769,8 +8811,8 @@ export abstract class IHeaderDictionary implements IIHeaderDictionary {
     xUACompatible?: any[];
     xXSSProtection?: any[];
 
-
-
+    
+    
     constructor(data?: IIHeaderDictionary) {
         if (data) {
             for (var property in data) {
@@ -9794,19 +9836,21 @@ export interface IIHeaderDictionary {
 
 /** Request body for importing an entry. */
 export class ImportEntryRequest implements IImportEntryRequest {
-    /** The name of the file. */
-    name?: string | undefined;
+    /** The name for the imported entry. */
+    name!: string;
     /** Indicates if the entry should be automatically renamed if an entry already exists with the given name in the folder. The default value is false. */
     autoRename?: boolean;
-    pdfOptions?: PdfImportOptions | undefined;
-    /** Determines whether the document should be imported as an electronic document. If set to true, the documented is imported as an electronic document. If set to false, the documented is converted to Laserfiche pages. The default value is false. */
+    /** The options applied when importing a PDF. */
+    pdfOptions?: ImportEntryRequestPdfOptions | undefined;
+    /** Indicates if the document should be imported as an electronic document (true) or as image pages (false). The default value is false. This option is only applicable when importing the following document types: txt, tif, tiff, bmp, pcx, jpg, jpeg, gif, png. */
     importAsElectronicDocument?: boolean;
-    metadata?: ImportAsyncMetadata | undefined;
+    /** The metadata that will be assigned to the entry. */
+    metadata?: ImportEntryRequestMetadata | undefined;
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-
-
+    
+    
     constructor(data?: IImportEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -9824,9 +9868,9 @@ export class ImportEntryRequest implements IImportEntryRequest {
         if (_data) {
             this.name = _data["name"];
             this.autoRename = _data["autoRename"] !== undefined ? _data["autoRename"] : false;
-            this.pdfOptions = _data["pdfOptions"] ? PdfImportOptions.fromJS(_data["pdfOptions"]) : <any>undefined;
+            this.pdfOptions = _data["pdfOptions"] ? ImportEntryRequestPdfOptions.fromJS(_data["pdfOptions"]) : <any>undefined;
             this.importAsElectronicDocument = _data["importAsElectronicDocument"] !== undefined ? _data["importAsElectronicDocument"] : false;
-            this.metadata = _data["metadata"] ? ImportAsyncMetadata.fromJS(_data["metadata"]) : <any>undefined;
+            this.metadata = _data["metadata"] ? ImportEntryRequestMetadata.fromJS(_data["metadata"]) : <any>undefined;
             this.volumeName = _data["volumeName"];
         }
     }
@@ -9852,14 +9896,16 @@ export class ImportEntryRequest implements IImportEntryRequest {
 
 /** Request body for importing an entry. */
 export interface IImportEntryRequest {
-    /** The name of the file. */
-    name?: string | undefined;
+    /** The name for the imported entry. */
+    name: string;
     /** Indicates if the entry should be automatically renamed if an entry already exists with the given name in the folder. The default value is false. */
     autoRename?: boolean;
-    pdfOptions?: PdfImportOptions | undefined;
-    /** Determines whether the document should be imported as an electronic document. If set to true, the documented is imported as an electronic document. If set to false, the documented is converted to Laserfiche pages. The default value is false. */
+    /** The options applied when importing a PDF. */
+    pdfOptions?: ImportEntryRequestPdfOptions | undefined;
+    /** Indicates if the document should be imported as an electronic document (true) or as image pages (false). The default value is false. This option is only applicable when importing the following document types: txt, tif, tiff, bmp, pcx, jpg, jpeg, gif, png. */
     importAsElectronicDocument?: boolean;
-    metadata?: ImportAsyncMetadata | undefined;
+    /** The metadata that will be assigned to the entry. */
+    metadata?: ImportEntryRequestMetadata | undefined;
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 }
@@ -9868,8 +9914,8 @@ export interface IImportEntryRequest {
 export class ExportEntryResponse implements IExportEntryResponse {
     value?: string;
 
-
-
+    
+    
     constructor(data?: IExportEntryResponse) {
         if (data) {
             for (var property in data) {
@@ -9917,8 +9963,8 @@ export class ExportEntryRequest implements IExportEntryRequest {
     /** The options applied when exporting as Text. */
     textOptions?: ExportEntryRequestTextOptions | undefined;
 
-
-
+    
+    
     constructor(data?: IExportEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -9980,8 +10026,8 @@ export class GetEntryByPathResponse implements IGetEntryByPathResponse {
     /** The closest entry ancestor. This property is set if entry is not found and fallbackToClosestAncestor is set to true. */
     ancestorEntry?: Entry | undefined;
 
-
-
+    
+    
     constructor(data?: IGetEntryByPathResponse) {
         if (data) {
             for (var property in data) {
@@ -10030,8 +10076,8 @@ export class UpdateEntryRequest implements IUpdateEntryRequest {
     /** Indicates if the entry should be automatically renamed if an entry already exists with the given name in the folder. The default value is false. */
     autoRename?: boolean;
 
-
-
+    
+    
     constructor(data?: IUpdateEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -10086,8 +10132,8 @@ export class EntryCollectionResponse implements IEntryCollectionResponse {
     odataCount?: number | undefined;
     value?: Entry[];
 
-
-
+    
+    
     constructor(data?: IEntryCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -10146,8 +10192,8 @@ export class FieldCollectionResponse implements IFieldCollectionResponse {
     odataCount?: number | undefined;
     value?: Field[];
 
-
-
+    
+    
     constructor(data?: IFieldCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -10198,13 +10244,13 @@ export interface IFieldCollectionResponse {
     value?: Field[];
 }
 
-/** Request body for setting fields on an entry. */
+/** Request body for assigning fields to an entry. */
 export class SetFieldsRequest implements ISetFieldsRequest {
     /** The fields that will be assigned to the entry. */
     fields?: FieldToUpdate[] | undefined;
 
-
-
+    
+    
     constructor(data?: ISetFieldsRequest) {
         if (data) {
             for (var property in data) {
@@ -10242,7 +10288,7 @@ export class SetFieldsRequest implements ISetFieldsRequest {
     }
 }
 
-/** Request body for setting fields on an entry. */
+/** Request body for assigning fields to an entry. */
 export interface ISetFieldsRequest {
     /** The fields that will be assigned to the entry. */
     fields?: FieldToUpdate[] | undefined;
@@ -10256,8 +10302,8 @@ export class TagCollectionResponse implements ITagCollectionResponse {
     odataCount?: number | undefined;
     value?: Tag[];
 
-
-
+    
+    
     constructor(data?: ITagCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -10323,8 +10369,8 @@ export class Tag implements ITag {
     /** The watermark properties associated with the tag definition. */
     watermark?: TagDefinitionWatermark | undefined;
 
-
-
+    
+    
     constructor(data?: ITag) {
         if (data) {
             for (var property in data) {
@@ -10395,8 +10441,8 @@ export class TagDefinitionWatermark implements ITagDefinitionWatermark {
     /** The opacity of the watermark associated with the tag definition. Valid value ranges from 0 to 100, with -1 as the default values. */
     opacity?: number;
 
-
-
+    
+    
     constructor(data?: ITagDefinitionWatermark) {
         if (data) {
             for (var property in data) {
@@ -10452,13 +10498,13 @@ export interface ITagDefinitionWatermark {
     opacity?: number;
 }
 
-/** Request body for setting tags on an entry. */
+/** Request body for assigning tags to an entry. */
 export class SetTagsRequest implements ISetTagsRequest {
     /** The tag names to assign to the entry. */
     tags?: string[] | undefined;
 
-
-
+    
+    
     constructor(data?: ISetTagsRequest) {
         if (data) {
             for (var property in data) {
@@ -10496,7 +10542,7 @@ export class SetTagsRequest implements ISetTagsRequest {
     }
 }
 
-/** Request body for setting tags on an entry. */
+/** Request body for assigning tags to an entry. */
 export interface ISetTagsRequest {
     /** The tag names to assign to the entry. */
     tags?: string[] | undefined;
@@ -10510,8 +10556,8 @@ export class LinkCollectionResponse implements ILinkCollectionResponse {
     odataCount?: number | undefined;
     value?: Link[];
 
-
-
+    
+    
     constructor(data?: ILinkCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -10591,8 +10637,8 @@ export class Link implements ILink {
     /** The custom properties for the represented link. */
     customProperties?: { [key: string]: string; } | undefined;
 
-
-
+    
+    
     constructor(data?: ILink) {
         if (data) {
             for (var property in data) {
@@ -10688,13 +10734,13 @@ export interface ILink {
     customProperties?: { [key: string]: string; } | undefined;
 }
 
-/** Request body for setting links on an entry. */
+/** Request body for assigning links to an entry. */
 export class SetLinksRequest implements ISetLinksRequest {
     /** The links that will be assigned to the entry. */
     links?: LinkToUpdate[] | undefined;
 
-
-
+    
+    
     constructor(data?: ISetLinksRequest) {
         if (data) {
             for (var property in data) {
@@ -10732,7 +10778,7 @@ export class SetLinksRequest implements ISetLinksRequest {
     }
 }
 
-/** Request body for setting links on an entry. */
+/** Request body for assigning links to an entry. */
 export interface ISetLinksRequest {
     /** The links that will be assigned to the entry. */
     links?: LinkToUpdate[] | undefined;
@@ -10744,13 +10790,13 @@ export class CopyEntryRequest implements ICopyEntryRequest {
     name!: string;
     /** Indicates if the entry should be automatically renamed if an entry already exists with the given name in the folder. The default value is false. */
     autoRename?: boolean;
-    /** The SourceId is needed for some operations that require a source/destination. One example is the Copy operation. */
-    sourceId?: number;
+    /** The source entry Id to copy. */
+    sourceId!: number;
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-
-
+    
+    
     constructor(data?: ICopyEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -10795,8 +10841,8 @@ export interface ICopyEntryRequest {
     name: string;
     /** Indicates if the entry should be automatically renamed if an entry already exists with the given name in the folder. The default value is false. */
     autoRename?: boolean;
-    /** The SourceId is needed for some operations that require a source/destination. One example is the Copy operation. */
-    sourceId?: number;
+    /** The source entry Id to copy. */
+    sourceId: number;
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 }
@@ -10814,8 +10860,8 @@ export class CreateEntryRequest implements ICreateEntryRequest {
     /** The name of the volume to use. Will use the default parent entry volume if not specified. This is ignored in Laserfiche Cloud. */
     volumeName?: string | undefined;
 
-
-
+    
+    
     constructor(data?: ICreateEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -10870,6 +10916,7 @@ export interface ICreateEntryRequest {
     volumeName?: string | undefined;
 }
 
+/** Enumeration of entry types for CreateEntry. */
 export enum CreateEntryRequestEntryType {
     Folder = "Folder",
     Shortcut = "Shortcut",
@@ -10882,8 +10929,8 @@ export class ListDynamicFieldValuesRequest implements IListDynamicFieldValuesReq
     /** The dynamic fields. */
     fieldValues?: { [key: string]: string; } | undefined;
 
-
-
+    
+    
     constructor(data?: IListDynamicFieldValuesRequest) {
         if (data) {
             for (var property in data) {
@@ -10935,15 +10982,15 @@ export interface IListDynamicFieldValuesRequest {
     fieldValues?: { [key: string]: string; } | undefined;
 }
 
-/** Request body for setting a template and template fields on an entry. */
+/** Request body for assigning a template and template fields to an entry. */
 export class SetTemplateRequest implements ISetTemplateRequest {
     /** The template that will be assigned to the entry. */
     templateName!: string;
     /** The template fields that will be assigned to the entry. */
     fields?: FieldToUpdate[] | undefined;
 
-
-
+    
+    
     constructor(data?: ISetTemplateRequest) {
         if (data) {
             for (var property in data) {
@@ -10983,7 +11030,7 @@ export class SetTemplateRequest implements ISetTemplateRequest {
     }
 }
 
-/** Request body for setting a template and template fields on an entry. */
+/** Request body for assigning a template and template fields to an entry. */
 export interface ISetTemplateRequest {
     /** The template that will be assigned to the entry. */
     templateName: string;
@@ -10995,8 +11042,8 @@ export interface ISetTemplateRequest {
 export class RepositoryCollectionResponse implements IRepositoryCollectionResponse {
     value?: Repository[];
 
-
-
+    
+    
     constructor(data?: IRepositoryCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11048,8 +11095,8 @@ export class Repository implements IRepository {
     /** The corresponding repository Web Client url. */
     webClientUrl?: string | undefined;
 
-
-
+    
+    
     constructor(data?: IRepository) {
         if (data) {
             for (var property in data) {
@@ -11095,15 +11142,15 @@ export interface IRepository {
 
 /** Request body for starting an asynchronous search entry task. */
 export class StartSearchEntryRequest implements IStartSearchEntryRequest {
-    /** Search command for advanced search */
+    /** The search command to run. The search command should follow the Laserfiche search syntax. https://doc.laserfiche.com/laserfiche.documentation/en-us/Default.htm#Search_Syntax.htm */
     searchCommand!: string;
-    /** Fuzzy type (None, Percentage, or NumberOfLetters) */
+    /** Fuzzy type (None, Percentage, or NumberOfLetters). */
     fuzzyType?: FuzzyType;
-    /** Fuzzy factor (percentage as int or int value) */
+    /** Fuzzy factor (percentage as int or int value). */
     fuzzyFactor?: number;
 
-
-
+    
+    
     constructor(data?: IStartSearchEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -11139,11 +11186,11 @@ export class StartSearchEntryRequest implements IStartSearchEntryRequest {
 
 /** Request body for starting an asynchronous search entry task. */
 export interface IStartSearchEntryRequest {
-    /** Search command for advanced search */
+    /** The search command to run. The search command should follow the Laserfiche search syntax. https://doc.laserfiche.com/laserfiche.documentation/en-us/Default.htm#Search_Syntax.htm */
     searchCommand: string;
-    /** Fuzzy type (None, Percentage, or NumberOfLetters) */
+    /** Fuzzy type (None, Percentage, or NumberOfLetters). */
     fuzzyType?: FuzzyType;
-    /** Fuzzy factor (percentage as int or int value) */
+    /** Fuzzy factor (percentage as int or int value). */
     fuzzyFactor?: number;
 }
 
@@ -11161,8 +11208,8 @@ export class SearchContextHitCollectionResponse implements ISearchContextHitColl
     odataCount?: number | undefined;
     value?: SearchContextHit[];
 
-
-
+    
+    
     constructor(data?: ISearchContextHitCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11215,6 +11262,7 @@ export interface ISearchContextHitCollectionResponse {
 
 /** Represents a context hit for a search result. */
 export class SearchContextHit implements ISearchContextHit {
+    /** The type of context hit this instance represents. */
     hitType?: HitType;
     /** A boolean indicating if this context hit occurs on an annotation. */
     isAnnotationHit?: boolean;
@@ -11245,8 +11293,8 @@ export class SearchContextHit implements ISearchContextHit {
     /** The hit number. */
     hitNumber?: number;
 
-
-
+    
+    
     constructor(data?: ISearchContextHit) {
         if (data) {
             for (var property in data) {
@@ -11306,6 +11354,7 @@ export class SearchContextHit implements ISearchContextHit {
 
 /** Represents a context hit for a search result. */
 export interface ISearchContextHit {
+    /** The type of context hit this instance represents. */
     hitType?: HitType;
     /** A boolean indicating if this context hit occurs on an annotation. */
     isAnnotationHit?: boolean;
@@ -11359,11 +11408,11 @@ export enum HitType {
 
 /** Request body for searching entries. */
 export class SearchEntryRequest implements ISearchEntryRequest {
-    /** Search command for simple search */
+    /** The search command to run. The search command should follow the Laserfiche search syntax. https://doc.laserfiche.com/laserfiche.documentation/en-us/Default.htm#Search_Syntax.htm */
     searchCommand!: string;
 
-
-
+    
+    
     constructor(data?: ISearchEntryRequest) {
         if (data) {
             for (var property in data) {
@@ -11395,7 +11444,7 @@ export class SearchEntryRequest implements ISearchEntryRequest {
 
 /** Request body for searching entries. */
 export interface ISearchEntryRequest {
-    /** Search command for simple search */
+    /** The search command to run. The search command should follow the Laserfiche search syntax. https://doc.laserfiche.com/laserfiche.documentation/en-us/Default.htm#Search_Syntax.htm */
     searchCommand: string;
 }
 
@@ -11407,8 +11456,8 @@ export class TagDefinitionCollectionResponse implements ITagDefinitionCollection
     odataCount?: number | undefined;
     value?: TagDefinition[];
 
-
-
+    
+    
     constructor(data?: ITagDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11474,8 +11523,8 @@ export class TagDefinition implements ITagDefinition {
     /** The watermark properties associated with the tag definition. */
     watermark?: TagDefinitionWatermark | undefined;
 
-
-
+    
+    
     constructor(data?: ITagDefinition) {
         if (data) {
             for (var property in data) {
@@ -11535,8 +11584,8 @@ export interface ITagDefinition {
 export class TaskCollectionResponse implements ITaskCollectionResponse {
     value?: TaskProgress[];
 
-
-
+    
+    
     constructor(data?: ITaskCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11598,8 +11647,8 @@ export class TaskProgress implements ITaskProgress {
     /** The time representing when the associated task's status last changed. */
     lastUpdateTime?: Date;
 
-
-
+    
+    
     constructor(data?: ITaskProgress) {
         if (data) {
             for (var property in data) {
@@ -11696,8 +11745,8 @@ export class TaskResult implements ITaskResult {
     /** The URI which can be used (via api call) to access the result(s) of the associated task. */
     uri?: string | undefined;
 
-
-
+    
+    
     constructor(data?: ITaskResult) {
         if (data) {
             for (var property in data) {
@@ -11737,12 +11786,12 @@ export interface ITaskResult {
     uri?: string | undefined;
 }
 
-/** Response containing a collection of CancelOperationResponse. */
+/** Response containing a collection of CancelTaskResult. */
 export class CancelTasksResponse implements ICancelTasksResponse {
     value?: CancelTaskResult[];
 
-
-
+    
+    
     constructor(data?: ICancelTasksResponse) {
         if (data) {
             for (var property in data) {
@@ -11780,7 +11829,7 @@ export class CancelTasksResponse implements ICancelTasksResponse {
     }
 }
 
-/** Response containing a collection of CancelOperationResponse. */
+/** Response containing a collection of CancelTaskResult. */
 export interface ICancelTasksResponse {
     value?: CancelTaskResult[];
 }
@@ -11791,11 +11840,11 @@ export class CancelTaskResult implements ICancelTaskResult {
     id?: string | undefined;
     /** The type of the task which has been subject to cancellation. */
     taskType?: TaskType;
-    /** True if and only if the associated task has been cancelled successfully or it has already been completed. */
+    /** Indicates if the request to cancel the task has been received. */
     result?: boolean;
 
-
-
+    
+    
     constructor(data?: ICancelTaskResult) {
         if (data) {
             for (var property in data) {
@@ -11835,7 +11884,7 @@ export interface ICancelTaskResult {
     id?: string | undefined;
     /** The type of the task which has been subject to cancellation. */
     taskType?: TaskType;
-    /** True if and only if the associated task has been cancelled successfully or it has already been completed. */
+    /** Indicates if the request to cancel the task has been received. */
     result?: boolean;
 }
 
@@ -11847,8 +11896,8 @@ export class TemplateDefinitionCollectionResponse implements ITemplateDefinition
     odataCount?: number | undefined;
     value?: TemplateDefinition[];
 
-
-
+    
+    
     constructor(data?: ITemplateDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -11914,8 +11963,8 @@ export class TemplateDefinition implements ITemplateDefinition {
     /** The number of field definitions assigned to the template definition. */
     fieldCount?: number;
 
-
-
+    
+    
     constructor(data?: ITemplateDefinition) {
         if (data) {
             for (var property in data) {
@@ -11982,8 +12031,8 @@ export class LFColor implements ILFColor {
     /** The blue channel component from 0-255. */
     b?: number;
 
-
-
+    
+    
     constructor(data?: ILFColor) {
         if (data) {
             for (var property in data) {
@@ -12039,8 +12088,8 @@ export class TemplateFieldDefinitionCollectionResponse implements ITemplateField
     odataCount?: number | undefined;
     value?: TemplateFieldDefinition[];
 
-
-
+    
+    
     constructor(data?: ITemplateFieldDefinitionCollectionResponse) {
         if (data) {
             for (var property in data) {
@@ -12100,8 +12149,8 @@ export class TemplateFieldDefinition extends FieldDefinition implements ITemplat
     /** The name of field group. */
     groupName?: string | undefined;
 
-
-
+    
+    
     constructor(data?: ITemplateFieldDefinition) {
         super(data);
         if (data) {
@@ -12148,12 +12197,13 @@ export interface ITemplateFieldDefinition extends IFieldDefinition {
     groupName?: string | undefined;
 }
 
+/** Represents a form logic rule associated with a Laserfiche template and field definition. */
 export class Rule implements IRule {
     /** The IDs of the parent fields in the template according to the form logic rule. */
     ancestors?: number[] | undefined;
 
-
-
+    
+    
     constructor(data?: IRule) {
         if (data) {
             for (var property in data) {
@@ -12191,6 +12241,7 @@ export class Rule implements IRule {
     }
 }
 
+/** Represents a form logic rule associated with a Laserfiche template and field definition. */
 export interface IRule {
     /** The IDs of the parent fields in the template according to the form logic rule. */
     ancestors?: number[] | undefined;
@@ -12457,6 +12508,7 @@ function createMaxPageSizePreferHeaderPayload(maxSize?: number): string | undefi
 export interface IAttributesClient {
   /**
    * It will continue to make the same call to get a list of attributes key value pairs of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IAttributesClient.listAttributes listAttributes}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.everyone (optional) Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.
@@ -12481,9 +12533,10 @@ export interface IAttributesClient {
 
   /**
    * Returns the attribute key value pairs using a next link
+   * - Related: {@link IAttributesClient.listAttributes listAttributes}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of attribute keys allowed per API response schema
-   * @return Get trustee attribute keys with the next link successfully
+   * @return A collection of attributes associated with the authenticated user.
    */
   listAttributesNextLink(args: {
     nextLink: string;
@@ -12493,13 +12546,13 @@ export interface IAttributesClient {
 
 export interface IEntriesClient {
   /**
-   * This is a helper for wrapping the CreateMultipartUploadURls and the ImportUploadedParts APIs.
+   * This is a helper for wrapping the CreateMultipartUploadURls and the ImportUploadedParts APIs. 
    * If successful, it returns a taskId which can be used to check the status of the operation or retrieve its result, otherwise, it returns an error.
    * Required OAuth scope: repository.Write
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The entry ID of the folder that the document will be created in.
-   * @param args.file The file to be imported as a new document.
-   * @param args.mimeType The mime-type of the file to be imported as a new document.
+   * @param args.file The file to be imported as a new document. 
+   * @param args.mimeType The mime-type of the file to be imported as a new document. 
    * @param args.request The body of the request.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used. The value should be a standard language tag. This may be used when setting field values with tokens.
    * @return A long operation task id.
@@ -12514,6 +12567,7 @@ export interface IEntriesClient {
   }): Promise<StartTaskResponse>;
   /**
    * It will continue to make the same call to get a list of entry listings of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IEntriesClient.listEntries listEntries}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -12523,7 +12577,7 @@ export interface IEntriesClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting. 
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12549,15 +12603,16 @@ export interface IEntriesClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of field values of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IEntriesClient.listFields listFields}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.formatFieldValues (optional) An optional query parameter used to indicate if the field values should be formatted.
-          The default value is false.
+          The default value is false. 
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting. 
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12581,6 +12636,7 @@ export interface IEntriesClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of link values from entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IEntriesClient.listLinks listLinks}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -12606,6 +12662,7 @@ export interface IEntriesClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of tags assigned to entry of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IEntriesClient.listTags listTags}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.entryId The requested entry ID.
@@ -12631,9 +12688,10 @@ export interface IEntriesClient {
   }): Promise<void>;
   /**
    * Returns the children entries of a folder in the repository using a next link
+   * - Related: {@link IEntriesClient.listEntries listEntries}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of entry listings allowed per API response schema
-   * @return Get the children entries of a Folder with the next link successfully
+   * @return A collection of children entries of a folder.
    */
   listEntriesNextLink(args: {
     nextLink: string;
@@ -12641,9 +12699,10 @@ export interface IEntriesClient {
   }): Promise<EntryCollectionResponse>;
   /**
    * Returns the fields assigned to an entry using a next link
+   * - Related: {@link IEntriesClient.listFields listFields}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field values allowed per API response schema
-   * @return Get field values with the next link successfully
+   * @return A collection of fields assigned to the entry.
    */
   listFieldsNextLink(args: {
     nextLink: string;
@@ -12651,9 +12710,10 @@ export interface IEntriesClient {
   }): Promise<FieldCollectionResponse>;
   /**
    * Get the links assigned to an entry using a next link
+   * - Related: {@link IEntriesClient.listLinks listLinks}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link values from entry allowed per API response schema
-   * @return Get links with the next link successfully
+   * @return A collection of links assigned to the entry.
    */
   listLinksNextLink(args: {
     nextLink: string;
@@ -12661,9 +12721,10 @@ export interface IEntriesClient {
   }): Promise<LinkCollectionResponse>;
   /**
    * Get the tags assigned to an entry using a next link
+   * - Related: {@link IEntriesClient.listTags listTags}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tags assigned to entry allowed per API response schema
-   * @return Get entry tags with the next link successfully
+   * @return A collection of tags assigned to the entry.
    */
   listTagsNextLink(args: {
     nextLink: string;
@@ -12674,12 +12735,13 @@ export interface IEntriesClient {
 export interface IFieldDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link IFieldDefinitionsClient.listFieldDefinitions listFieldDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12701,9 +12763,10 @@ export interface IFieldDefinitionsClient {
   }): Promise<void>;
   /**
    * Returns a paged listing of field definitions available in the specified repository using a next link
+   * - Related: {@link IFieldDefinitionsClient.listFieldDefinitions listFieldDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of field definitions.
    */
   listFieldDefinitionsNextLink(args: {
     nextLink: string;
@@ -12714,6 +12777,7 @@ export interface IFieldDefinitionsClient {
 export interface ISearchesClient {
   /**
    * It will continue to make the same call to get a list of search results of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ISearchesClient.listSearchResults listSearchResults}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.taskId The requested task ID.
@@ -12724,7 +12788,7 @@ export interface ISearchesClient {
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12751,6 +12815,7 @@ export interface ISearchesClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of search context hits of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ISearchesClient.listSearchContextHits listSearchContextHits}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.taskId The requested task ID.
@@ -12778,9 +12843,10 @@ export interface ISearchesClient {
   }): Promise<void>;
   /**
    * Returns a search result listing if the search is completed using a next link
+   * - Related: {@link ISearchesClient.listSearchResults listSearchResults}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search results allowed per API response schema
-   * @return Get search result with the next link successfully
+   * @return A collection of entry search results.
    */
   listSearchResultsNextLink(args: {
     nextLink: string;
@@ -12788,9 +12854,10 @@ export interface ISearchesClient {
   }): Promise<EntryCollectionResponse>;
   /**
    * Returns the context hits associated with a search result entry using a next link
+   * - Related: {@link ISearchesClient.listSearchContextHits listSearchContextHits}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of search context hits allowed per API response schema
-   * @return Get search context hits with the next link successfully
+   * @return A collection of context hits for a search result.
    */
   listSearchContextHitsNextLink(args: {
     nextLink: string;
@@ -12801,12 +12868,13 @@ export interface ISearchesClient {
 export interface ITagDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of tag definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ITagDefinitionsClient.listTagDefinitions listTagDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12828,9 +12896,10 @@ export interface ITagDefinitionsClient {
   }): Promise<void>;
   /**
    * Returns all tag definitions in the repository using a next link
+   * - Related: {@link ITagDefinitionsClient.listTagDefinitions listTagDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of tag definitions allowed per API response schema
-   * @return Get tag definitions with the next link successfully
+   * @return A collection of tag definitions.
    */
   listTagDefinitionsNextLink(args: {
     nextLink: string;
@@ -12841,13 +12910,14 @@ export interface ITagDefinitionsClient {
 export interface ITemplateDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of template definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateDefinitions listTemplateDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12870,13 +12940,14 @@ export interface ITemplateDefinitionsClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of template field definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId listTemplateFieldDefinitionsByTemplateId}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12899,13 +12970,14 @@ export interface ITemplateDefinitionsClient {
   }): Promise<void>;
   /**
    * It will continue to make the same call to get a list of template field definitions by template name of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateName listTemplateFieldDefinitionsByTemplateName}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.templateName (optional) An optional query parameter. Can be used to get a single template definition using the template name.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
    * @param args.culture (optional) An optional query parameter used to indicate the locale that should be used for formatting.
           The value should be a standard language tag. The formatFieldValues query parameter must be set to true, otherwise
-          culture will not be used for formatting.
+          culture will not be used for formatting.  
    * @param args.select (optional) Limits the properties returned in the result.
    * @param args.orderby (optional) Specifies the order in which items are returned. The maximum number of expressions is 5.
    * @param args.top (optional) Limits the number of items returned from a collection.
@@ -12928,9 +13000,10 @@ export interface ITemplateDefinitionsClient {
   }): Promise<void>;
   /**
    * Returns all template definitions (including field definitions) in the repository using a next link
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateDefinitions listTemplateDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template definitions allowed per API response schema
-   * @return Get template definitions with the next link successfully
+   * @return A collection of template definitions.
    */
   listTemplateDefinitionsNextLink(args: {
     nextLink: string;
@@ -12938,9 +13011,10 @@ export interface ITemplateDefinitionsClient {
   }): Promise<TemplateDefinitionCollectionResponse>;
   /**
    * Returns the field definitions assigned to a template definition using a next link
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateId listTemplateFieldDefinitionsByTemplateId}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions allowed per API response schema
-   * @return Get field definitions with the next link successfully
+   * @return A collection of template field definitions.
    */
   listTemplateFieldDefinitionsByTemplateIdNextLink(args: {
     nextLink: string;
@@ -12948,9 +13022,10 @@ export interface ITemplateDefinitionsClient {
   }): Promise<TemplateFieldDefinitionCollectionResponse>;
   /**
    * Returns the field definitions assigned to a template definition by template name using a next link
+   * - Related: {@link ITemplateDefinitionsClient.listTemplateFieldDefinitionsByTemplateName listTemplateFieldDefinitionsByTemplateName}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of template field definitions by template name allowed per API response schema
-   * @return Get field definitions by template name with the next link successfully
+   * @return A collection of template field definitions.
    */
   listTemplateFieldDefinitionsByTemplateNameNextLink(args: {
     nextLink: string;
@@ -12961,6 +13036,7 @@ export interface ITemplateDefinitionsClient {
 export interface ILinkDefinitionsClient {
   /**
    * It will continue to make the same call to get a list of link definitions of a fixed size (i.e. maxpagesize) until it reaches the last page (i.e. when next link is null/undefined) or whenever the callback function returns false.
+   * - Related: {@link ILinkDefinitionsClient.listLinkDefinitions listLinkDefinitions}
    * @param args.callback async callback function that will accept the current page results and return a boolean value to either continue or stop paging.
    * @param args.repositoryId The requested repository ID.
    * @param args.prefer (optional) An optional OData header. Can be used to set the maximum page size using odata.maxpagesize.
@@ -12985,9 +13061,10 @@ export interface ILinkDefinitionsClient {
 
   /**
    * Returns all link definitions in the repository using a next link
+   * - Related: {@link ILinkDefinitionsClient.listLinkDefinitions listLinkDefinitions}
    * @param args.nextLink a url that allows retrieving the next subset of the requested collection
    * @param args.maxPageSize (optional) the maximum page size or number of link definitions allowed per API response schema
-   * @return Get link definitions with the next link successfully
+   * @return A collection of link definitions.
    */
   listLinkDefinitionsNextLink(args: {
     nextLink: string;

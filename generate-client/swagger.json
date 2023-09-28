@@ -3,7 +3,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Laserfiche Repository API",
-    "description": "Welcome to the Laserfiche API Swagger Playground. You can try out any of our API calls against your live Laserfiche Cloud account. Visit the developer center for more details: <a href=\"https://developer.laserfiche.com\">https://developer.laserfiche.com</a><p>Visit the changelog for the list of changes: <a href=\"/repository/v2/changelog\">/repository/v2/changelog</a></p><p><strong>Build# : </strong>develop_localbuild</p>",
+    "description": "Welcome to the Laserfiche API Swagger Playground. You can try out any of our API calls against your live Laserfiche Cloud account. Visit the developer center for more details: <a href=\"https://developer.laserfiche.com\">https://developer.laserfiche.com</a><p>Visit the changelog for the list of changes: <a href=\"/repository/v2/changelog\">/repository/v2/changelog</a></p><p><strong>Build# : </strong>7a428732f1bff8c4736af89a8d8f0ea745bde8fb_.20230919.1</p>",
     "version": "2"
   },
   "servers": [
@@ -33,9 +33,10 @@
           {
             "name": "everyone",
             "in": "query",
-            "description": "Boolean value that indicates whether to return attributes key value pairs associated with everyone or the currently authenticated user.",
+            "description": "Indicates if attributes associated with the \"Everyone\" group or the currently authenticated user is returned. The default value is false.",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             },
             "x-position": 2
           },
@@ -195,9 +196,10 @@
           {
             "name": "everyone",
             "in": "query",
-            "description": "Boolean value that indicates whether to return attributes associated with everyone or the currently authenticated user.",
+            "description": "Indicates if attributes associated with the \"Everyone\" group or the currently authenticated user is returned. The default value is false.",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             },
             "x-position": 3
           }
@@ -946,7 +948,7 @@
         ],
         "requestBody": {
           "x-name": "request",
-          "description": "The body of the request.",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -967,7 +969,7 @@
                   "summary": "Request the second batch of URLs",
                   "description": "The body of the CreateMultipartUploadUrls request for requesting a batch of 5 URLs, as the second batch. The value of UploadId should be the same as the one received in the response of the first request. Any value sent for FileName or MimeType is ignored.",
                   "value": {
-                    "uploadId": "MjQxYmE4MjAtZDc0ZC00OTgyLWE3YTAtZWZjZWM0Y2UxNWRmOllQY0h1UG1uVEpVUkw4VlA4NkJjNkpVOU5xeTNGeTFSQ25lNTc3T0ZrclZTdlp1eUl3djJuR3ppd1RXZ1FOeVV5TTRXYl9jNVM3VHBvZWV3LkN5Z3F3UGFQU3hONmE5WFJNeTJhTUZjUlZvUW15ZVNxVzBiUkp2Z3lvY1Fwd0JweHc3bkdNal9MV3pWYTN5VlAxQU9XekF2U3A4eTd0S0t1a05RYlFOeWhtS2ZrOThJNUJ0QXlTS01sSFU2ZUVYeQ==",
+                    "uploadId": "VXBsb2FkSWRGcm9tRmlyc3RSZXF1ZXN0",
                     "startingPartNumber": 6,
                     "numberOfParts": 5
                   }
@@ -976,7 +978,7 @@
                   "summary": "Request the third batch of URLs",
                   "description": "The body of the CreateMultipartUploadUrls request for requesting a batch of 5 URLs, as the third batch. The value of UploadId should be the same as the one received in the response of the first request. Any value sent for FileName or MimeType is ignored.",
                   "value": {
-                    "uploadId": "MjQxYmE4MjAtZDc0ZC00OTgyLWE3YTAtZWZjZWM0Y2UxNWRmOllQY0h1UG1uVEpVUkw4VlA4NkJjNkpVOU5xeTNGeTFSQ25lNTc3T0ZrclZTdlp1eUl3djJuR3ppd1RXZ1FOeVV5TTRXYl9jNVM3VHBvZWV3LkN5Z3F3UGFQU3hONmE5WFJNeTJhTUZjUlZvUW15ZVNxVzBiUkp2Z3lvY1Fwd0JweHc3bkdNal9MV3pWYTN5VlAxQU9XekF2U3A4eTd0S0t1a05RYlFOeWhtS2ZrOThJNUJ0QXlTS01sSFU2ZUVYeQ==",
+                    "uploadId": "VXBsb2FkSWRGcm9tRmlyc3RSZXF1ZXN0",
                     "startingPartNumber": 11,
                     "numberOfParts": 5
                   }
@@ -1066,7 +1068,7 @@
         "tags": [
           "Entries"
         ],
-        "summary": "- Imports a new file in the specified folder. The file should be already written (in chunks) to the upload URLs obtained by calling the Upload api.\n- This route does not support partial success.\n- Required OAuth scope: repository.Write",
+        "summary": "- Imports a new file in the specified folder. The file should be already written (in chunks) to the upload URLs obtained by calling the Upload api. The maximum file size allowed is 64 GB.\n- This route does not support partial success.\n- Required OAuth scope: repository.Write",
         "operationId": "StartImportUploadedParts",
         "parameters": [
           {
@@ -1104,7 +1106,7 @@
         ],
         "requestBody": {
           "x-name": "request",
-          "description": "The metadata that will be set on the document.",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -1230,7 +1232,7 @@
           {
             "name": "pageRange",
             "in": "query",
-            "description": "A comma seperated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when part=Edoc.",
+            "description": "A comma-separated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when part=Edoc.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1240,7 +1242,7 @@
         ],
         "requestBody": {
           "x-name": "request",
-          "description": "The body of the export request.",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -1249,7 +1251,7 @@
               "examples": {
                 "1": {
                   "summary": "Export the image part of a Laserfiche Document",
-                  "description": "The body of the export request includes:<br /><ol><li>The audit event information to associate with the export operation.</li><li><strong>part</strong>: the part of the document to export. Options include: <strong>Image, Text, Edoc</strong>.</li><li><strong>imageOptions</strong>: The options applied when exporting as Image.<ul><li><strong>format:</strong> the image format to export as. Options include: <strong>MultiPageTIFF, SinglePageTIFF, PNG, PDF, JPEG</strong>. The default value is MultiPageTIFF. MultiPageTIFF format is a single multi-page TIFF file. SinglePageTIFF format is multiple single-page TIFF files (in a single zip file).</li><li><strong>jpegCompressionLevel:</strong> the quality level for JPEG compression when exporting images. The value must be between 0 and 100 (inclusive). The default value is 70.</li><li><strong>includeAnnotations:</strong> indicates if the annotations need to be included. The default value is true.</li><li><strong>convertPdfAnnotations</strong>: indicates if the annotations on the image need to be converted to PDF annotations when exporting to PDF format. The default value is true. This option is only applicable when exporting to PDF format and includeAnnotations is true.</li><li><strong>pagePrefix</strong>: the page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of atmost 10 characters and only valid characters that can be included in file names are allowed. The default value is \", Page \".</li><li><strong>includeRedactions</strong>: indicates if redactions are included. The default value is true.</li><li><strong>watermark</strong>: the watermark element added to the image. This includes the following properties: <ul><li><strong>text</strong>: the text of the watermark. The value must be a string with a length of atmost 100 characters. Using emojis in the text is not supported.</li><li><strong>position</strong>: the position of the watermark. The default value is DeadCenter. Assuming that the page is divided into a 3x3 grid, then position can be specified using the following values: <ul><li>TopLeft, TopCenter, TopRight, MiddleLeft, DeadCenter, MiddleRight, BottomLeft, BottomCenter, BottomRight</li></ul></li><li><strong>rotationAngle</strong>: the rotation angle of the watermark. The value must be between 0 and 360 (inclusive).</li><li><strong>pageSpanPercentage</strong>: the percentage of the page that the watermark spans on. The value must be between 1 and 100 (inclusive). The default value is 50.</li></ul></li></ul></li></ol>",
+                  "description": "The body of the export request includes:<br /><ol><li>The audit event information to associate with the export operation.</li><li><strong>part</strong>: the part of the document to export. Options include: <strong>Image, Text, Edoc</strong>.</li><li><strong>imageOptions</strong>: The options applied when exporting as Image.<ul><li><strong>format:</strong> the image format to export as. Options include: <strong>MultiPageTIFF, SinglePageTIFF, PNG, PDF, JPEG</strong>. The default value is MultiPageTIFF. MultiPageTIFF format is a single multi-page TIFF file. SinglePageTIFF format is multiple single-page TIFF files (in a single zip file).</li><li><strong>jpegCompressionLevel:</strong> the quality level for JPEG compression when exporting images. The value must be between 0 and 100 (inclusive). The default value is 70.</li><li><strong>includeAnnotations:</strong> indicates if the annotations need to be included. The default value is true.</li><li><strong>convertPdfAnnotations</strong>: indicates if the annotations on the image need to be converted to PDF annotations when exporting to PDF format. The default value is true. This option is only applicable when exporting to PDF format and includeAnnotations is true.</li><li><strong>pagePrefix</strong>: the page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of at most 10 characters and only valid characters that can be included in file names are allowed. The default value is \", Page \".</li><li><strong>includeRedactions</strong>: indicates if redactions are included. The default value is true.</li><li><strong>watermark</strong>: the watermark element added to the image. This includes the following properties: <ul><li><strong>text</strong>: the text of the watermark. The value must be a string with a length of at most 100 characters and must not be all whitespace characters. Using emojis in the text is not supported.</li><li><strong>position</strong>: the position of the watermark. The default value is DeadCenter. Assuming that the page is divided into a 3x3 grid, then position can be specified using the following values: <ul><li>TopLeft, TopCenter, TopRight, MiddleLeft, DeadCenter, MiddleRight, BottomLeft, BottomCenter, BottomRight</li></ul></li><li><strong>rotationAngle</strong>: the rotation angle of the watermark. The value must be between 0 and 360 (inclusive). The default value is 0.</li><li><strong>pageSpanPercentage</strong>: the percentage of the page that the watermark spans on. The value must be between 1 and 100 (inclusive). The default value is 50.</li></ul></li></ul></li></ol>",
                   "value": {
                     "auditReasonId": 0,
                     "auditReasonComment": "",
@@ -1425,7 +1427,7 @@
         ],
         "requestBody": {
           "x-name": "request",
-          "description": "Copy entry request.",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -1916,7 +1918,7 @@
         "tags": [
           "Entries"
         ],
-        "summary": "- Import a new document in the specified folder, and sets metadata.\n- The import may fail if the file is greater than 100 MB or time out if it takes longer than 60 seconds. These values are subject to change at anytime. Use the long operation asynchronous import if you run into these restrictions.\n- Required OAuth scope: repository.Write",
+        "summary": "- Import a new document in the specified folder, and optionally assigns metadata.\n- The import may fail if the file is greater than 100 MB or time out if it takes longer than 60 seconds. These values are subject to change at anytime. Use the long operation asynchronous import if you run into these restrictions.\n- Required OAuth scope: repository.Write",
         "operationId": "ImportEntry",
         "parameters": [
           {
@@ -2090,7 +2092,7 @@
           {
             "name": "pageRange",
             "in": "query",
-            "description": "A comma separated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when exporting as Edoc.",
+            "description": "A comma-separated range of pages to include. Ex: 1,3,4 or 1-3,5-7,9. This value is ignored when exporting as Edoc.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2100,7 +2102,7 @@
         ],
         "requestBody": {
           "x-name": "request",
-          "description": "The body of the export request.",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -2109,7 +2111,7 @@
               "examples": {
                 "1": {
                   "summary": "Export the image part of a Laserfiche Document",
-                  "description": "The body of the export request includes:<br /><ol><li>The audit event information to associate with the export operation.</li><li><strong>part</strong>: the part of the document to export. Options include: <strong>Image, Text, Edoc</strong>.</li><li><strong>imageOptions</strong>: The options applied when exporting as Image.<ul><li><strong>format:</strong> the image format to export as. Options include: <strong>MultiPageTIFF, SinglePageTIFF, PNG, PDF, JPEG</strong>. The default value is MultiPageTIFF. MultiPageTIFF format is a single multi-page TIFF file. SinglePageTIFF format is multiple single-page TIFF files (in a single zip file).</li><li><strong>jpegCompressionLevel:</strong> the quality level for JPEG compression when exporting images. The value must be between 0 and 100 (inclusive). The default value is 70.</li><li><strong>includeAnnotations:</strong> indicates if the annotations need to be included. The default value is true.</li><li><strong>convertPdfAnnotations</strong>: indicates if the annotations on the image need to be converted to PDF annotations when exporting to PDF format. The default value is true. This option is only applicable when exporting to PDF format and includeAnnotations is true.</li><li><strong>pagePrefix</strong>: the page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of atmost 10 characters and only valid characters that can be included in file names are allowed. The default value is \", Page \".</li><li><strong>includeRedactions</strong>: indicates if redactions are included. The default value is true.</li><li><strong>watermark</strong>: the watermark element added to the image. This includes the following properties: <ul><li><strong>text</strong>: the text of the watermark. The value must be a string with a length of atmost 100 characters. Using emojis in the text is not supported.</li><li><strong>position</strong>: the position of the watermark. The default value is DeadCenter. Assuming that the page is divided into a 3x3 grid, then position can be specified using the following values: <ul><li>TopLeft, TopCenter, TopRight, MiddleLeft, DeadCenter, MiddleRight, BottomLeft, BottomCenter, BottomRight</li></ul></li><li><strong>rotationAngle</strong>: the rotation angle of the watermark. The value must be between 0 and 360 (inclusive).</li><li><strong>pageSpanPercentage</strong>: the percentage of the page that the watermark spans on. The value must be between 1 and 100 (inclusive). The default value is 50.</li></ul></li></ul></li></ol>",
+                  "description": "The body of the export request includes:<br /><ol><li>The audit event information to associate with the export operation.</li><li><strong>part</strong>: the part of the document to export. Options include: <strong>Image, Text, Edoc</strong>.</li><li><strong>imageOptions</strong>: The options applied when exporting as Image.<ul><li><strong>format:</strong> the image format to export as. Options include: <strong>MultiPageTIFF, SinglePageTIFF, PNG, PDF, JPEG</strong>. The default value is MultiPageTIFF. MultiPageTIFF format is a single multi-page TIFF file. SinglePageTIFF format is multiple single-page TIFF files (in a single zip file).</li><li><strong>jpegCompressionLevel:</strong> the quality level for JPEG compression when exporting images. The value must be between 0 and 100 (inclusive). The default value is 70.</li><li><strong>includeAnnotations:</strong> indicates if the annotations need to be included. The default value is true.</li><li><strong>convertPdfAnnotations</strong>: indicates if the annotations on the image need to be converted to PDF annotations when exporting to PDF format. The default value is true. This option is only applicable when exporting to PDF format and includeAnnotations is true.</li><li><strong>pagePrefix</strong>: the page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of at most 10 characters and only valid characters that can be included in file names are allowed. The default value is \", Page \".</li><li><strong>includeRedactions</strong>: indicates if redactions are included. The default value is true.</li><li><strong>watermark</strong>: the watermark element added to the image. This includes the following properties: <ul><li><strong>text</strong>: the text of the watermark. The value must be a string with a length of at most 100 characters and must not be all whitespace characters. Using emojis in the text is not supported.</li><li><strong>position</strong>: the position of the watermark. The default value is DeadCenter. Assuming that the page is divided into a 3x3 grid, then position can be specified using the following values: <ul><li>TopLeft, TopCenter, TopRight, MiddleLeft, DeadCenter, MiddleRight, BottomLeft, BottomCenter, BottomRight</li></ul></li><li><strong>rotationAngle</strong>: the rotation angle of the watermark. The value must be between 0 and 360 (inclusive). The default value is 0.</li><li><strong>pageSpanPercentage</strong>: the percentage of the page that the watermark spans on. The value must be between 1 and 100 (inclusive). The default value is 50.</li></ul></li></ul></li></ol>",
                   "value": {
                     "auditReasonId": 0,
                     "auditReasonComment": "",
@@ -2360,7 +2362,7 @@
         "tags": [
           "Entries"
         ],
-        "summary": "- Returns the children entries of a folder in the repository.\n- Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository.\n- Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route.\n- Optional query parameters: groupByOrderType (bool). This query parameter decides if results are returned in groups based on their entry type. \n- Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. The remaining field values can be retrieved via the GET fields route. Null or Empty field values should not be used to determine if a field is assigned to the entry.\n- Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: \"PropertyName direction,PropertyName2 direction\". Sort order can be either value \"asc\" or \"desc\".\n- Required OAuth scope: repository.Read",
+        "summary": "- Returns the children entries of a folder in the repository.\n- Provide an entry ID (must be a folder), and get a paged listing of entries in that folder. Used as a way of navigating through the repository.\n- Entries returned in the listing are not automatically converted to their subtype (Folder, Shortcut, Document), so clients who want model-specific information should request it via the GET entry by ID route.\n- Optional query parameters: groupByEntryType (bool). This query parameter decides if results are returned in groups based on their entry type. \n- Optionally returns field values for the entries in the folder. Each field name needs to be specified in the request. Maximum limit of 10 field names. If field values are requested, only the first value is returned if it is a multi value field. The remaining field values can be retrieved via the GET fields route. Null or Empty field values should not be used to determine if a field is assigned to the entry.\n- Default page size: 150. Allowed OData query options: Select | Count | OrderBy | Skip | Top | SkipToken | Prefer. OData $OrderBy syntax should follow: \"PropertyName direction,PropertyName2 direction\". Sort order can be either value \"asc\" or \"desc\".\n- Required OAuth scope: repository.Read",
         "operationId": "ListEntries",
         "parameters": [
           {
@@ -2387,9 +2389,10 @@
           {
             "name": "groupByEntryType",
             "in": "query",
-            "description": "An optional query parameter used to indicate if the result should be grouped by entry type or not.",
+            "description": "Indicates if the result should be grouped by entry type or not. The default value is false.",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             },
             "x-position": 3
           },
@@ -2398,7 +2401,7 @@
             "in": "query",
             "style": "form",
             "explode": true,
-            "description": "Optional array of field names. Field values corresponding to the given field names will be returned for each entry. ",
+            "description": "Optional array of field names. Field values corresponding to the given field names will be returned for each entry.",
             "schema": {
               "type": "array",
               "nullable": true,
@@ -2411,9 +2414,10 @@
           {
             "name": "formatFieldValues",
             "in": "query",
-            "description": "Boolean for if field values should be formatted. Only applicable if Fields are specified.",
+            "description": "Indicates if field values should be formatted. Only applicable if Fields are specified. The default value is false.",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             },
             "x-position": 5
           },
@@ -2594,7 +2598,7 @@
         ],
         "requestBody": {
           "x-name": "request",
-          "description": "The entry to create.",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -2823,7 +2827,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A collection of fields set on the entry.",
+            "description": "A collection of fields assigned to the entry.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2926,7 +2930,7 @@
         ],
         "requestBody": {
           "x-name": "request",
-          "description": "",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -2939,7 +2943,7 @@
         },
         "responses": {
           "200": {
-            "description": "A collection of fields set on the entry.",
+            "description": "A collection of fields assigned to the entry.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3113,7 +3117,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A collection of tags set on the entry.",
+            "description": "A collection of tags assigned to the entry.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3218,7 +3222,7 @@
         },
         "responses": {
           "200": {
-            "description": "A collection of tags set on the entry.",
+            "description": "A collection of tags assigned to the entry.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3332,6 +3336,7 @@
         ],
         "requestBody": {
           "x-name": "request",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -3344,7 +3349,7 @@
         },
         "responses": {
           "200": {
-            "description": "A collection of links set on the entry.",
+            "description": "A collection of links assigned to the entry.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3516,7 +3521,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A collection of links set on the entry.",
+            "description": "A collection of links assigned to the entry.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3621,7 +3626,7 @@
         ],
         "requestBody": {
           "x-name": "request",
-          "description": "The entry to create.",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -3836,7 +3841,7 @@
         "tags": [
           "Entries"
         ],
-        "summary": "- Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted.\n- Optional parameter: pageRange (default empty). The value should be a comma-seperated string which contains non-overlapping single values, or page ranges. Ex: \"1,2,3\", \"1-3,5\", \"2-7,10-12.\"\n- Required OAuth scope: repository.Write",
+        "summary": "- Delete the pages associated with the provided entry ID. If no pageRange is specified, all pages will be deleted.\n- Optional parameter: pageRange (default empty). The value should be a comma-separated string which contains non-overlapping single values, or page ranges. Ex: \"1,2,3\", \"1-3,5\", \"2-7,10-12.\"\n- Required OAuth scope: repository.Write",
         "operationId": "DeletePages",
         "parameters": [
           {
@@ -3977,6 +3982,7 @@
         ],
         "requestBody": {
           "x-name": "request",
+          "description": "The request body.",
           "content": {
             "application/json": {
               "schema": {
@@ -4557,18 +4563,20 @@
           {
             "name": "groupByEntryType",
             "in": "query",
-            "description": "An optional query parameter used to indicate if the result should be grouped by entry type or not.",
+            "description": "Indicates if the result should be grouped by entry type or not. The default value is false.",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             },
             "x-position": 3
           },
           {
             "name": "refresh",
             "in": "query",
-            "description": "If the search listing should be refreshed to show updated values.",
+            "description": "Indicates if the search listing should be refreshed to show updated values. The default value is false.",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             },
             "x-position": 4
           },
@@ -4590,9 +4598,10 @@
           {
             "name": "formatFieldValues",
             "in": "query",
-            "description": "Boolean for if field values should be formatted. Only applicable if Fields are specified.",
+            "description": "Indicates if field values should be formatted. Only applicable if Fields are specified. The default value is false.",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             },
             "x-position": 6
           },
@@ -4932,9 +4941,10 @@
           {
             "name": "formatFieldValues",
             "in": "query",
-            "description": "Boolean for if field values should be formatted. Only applicable if Fields are specified.",
+            "description": "Indicates if field values should be formatted. Only applicable if Fields are specified. The default value is false.",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             },
             "x-position": 3
           },
@@ -5354,7 +5364,7 @@
         "tags": [
           "Tasks"
         ],
-        "summary": "- Returns the status of a set of one or more tasks.\n- Provide a comma-separated list of task IDs to get the task status, progress, and any errors that may have occurred.\n- Leave the taskIds query parameter empty, to get the list of all the task IDs associated with the current access token.\n- TaskStatus can be one of the following values: NotStarted, InProgress, Completed, or Failed.\n- This API employs long polling technique and could return the result immediately (e.g. if the export operation is failed or completed successfully) or after atmost 60 seconds.\n- Required OAuth scope: None",
+        "summary": "- Returns the status of a set of one or more tasks.\n- Provide a comma-separated list of task IDs to get the task status, progress, and any errors that may have occurred.\n- Leave the taskIds query parameter empty, to get the list of all the task IDs associated with the current access token.\n- TaskStatus can be one of the following values: NotStarted, InProgress, Completed, Cancelled, or Failed.\n- This API employs long polling technique and could return the result immediately (e.g. if the export operation is failed or completed successfully) or after at most 60 seconds.\n- Required OAuth scope: None",
         "operationId": "ListTasks",
         "parameters": [
           {
@@ -5372,7 +5382,7 @@
             "in": "query",
             "style": "form",
             "explode": true,
-            "description": "An array of task IDs (string). Leave this parameter empty to get the list of all the task IDs associated with the current access token.",
+            "description": "An array of task IDs. Leave this parameter empty to get the list of all the tasks associated with the current access token.",
             "schema": {
               "type": "array",
               "nullable": true,
@@ -5450,7 +5460,7 @@
         "tags": [
           "Tasks"
         ],
-        "summary": "- Cancels a set of one or more tasks.\n- Provide comma-separated list of task IDs to cancel. Should be used if an operation was created in error, or is no longer necessary.\n- Leave the taskIds query parameter empty, to cancel the list of all the task IDs associated with the current access token.\n- Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.\n- Required OAuth scope: None",
+        "summary": "- Starts the cancellation for a set of one or more tasks.\n- Provide comma-separated list of task IDs to cancel. Should be used if an operation was created in error, or is no longer necessary.\n- Check the status of the task to determine if the task has been cancelled successfully.\n- Leave the taskIds query parameter empty, to cancel the list of all the task IDs associated with the current access token.\n- Rollbacks must be done manually. For example, if a copy operation is started and is halfway complete when canceled, the client application is responsible for cleaning up the files that were successfully copied before the operation was canceled.\n- Required OAuth scope: None",
         "operationId": "CancelTasks",
         "parameters": [
           {
@@ -5468,7 +5478,7 @@
             "in": "query",
             "style": "form",
             "explode": true,
-            "description": "An array of task IDs (string). Leave this parameter empty to cancel the list of all the task IDs associated with the current access token.",
+            "description": "An array of task IDs. Leave this parameter empty to cancel the list of all the tasks associated with the current access token.",
             "schema": {
               "type": "array",
               "nullable": true,
@@ -6185,10 +6195,12 @@
         "properties": {
           "key": {
             "type": "string",
+            "description": "The attribute key.",
             "nullable": true
           },
           "value": {
             "type": "string",
+            "description": "The attribute value.",
             "nullable": true
           }
         }
@@ -6563,6 +6575,9 @@
         "type": "object",
         "description": "Request body for creating multipart upload urls.",
         "additionalProperties": false,
+        "required": [
+          "numberOfParts"
+        ],
         "properties": {
           "uploadId": {
             "type": "string",
@@ -6572,18 +6587,18 @@
           },
           "startingPartNumber": {
             "type": "integer",
-            "description": "Determines the starting position of the requested parts among all the parts associated with this upload.",
+            "description": "Determines the starting position of the requested parts among all the parts associated with this upload. The default value is 1.",
             "format": "int32",
             "default": 1
           },
           "numberOfParts": {
             "type": "integer",
-            "description": "The value must be in the range [1, 100], meaning that in each call to the CreateMultipartUploadUrlsResult api, a maximum of 100 Upload URLs can be requested. Further, each file chunk written to an Upload URL should be at least 5 MB. There is no minimum size limit for the last chunk.",
+            "description": "The value must be in the range [1, 100], meaning that in each call to the CreateMultipartUploadUrls api, a maximum of 100 Upload URLs can be requested. Further, each file chunk written to an Upload URL should be at least 5 MB. There is no minimum size limit for the last chunk.",
             "format": "int32"
           },
           "fileName": {
             "type": "string",
-            "description": "The name of the file to be uploaded.",
+            "description": "The name of the file to be uploaded. The file extension in the name will be used as the extension of the imported entry.",
             "nullable": true
           },
           "mimeType": {
@@ -6609,24 +6624,28 @@
         "type": "object",
         "description": "Request body for starting an asynchronous import entry task.",
         "additionalProperties": false,
+        "required": [
+          "uploadId",
+          "partETags",
+          "name"
+        ],
         "properties": {
           "uploadId": {
             "type": "string",
             "description": "The UploadId received when calling the CreateMultipartUploadUrls API to request upload URLs.",
-            "nullable": true
+            "minLength": 1
           },
           "partETags": {
             "type": "array",
-            "description": "The array of the ETag values received when writing the file chunks into the upload URLs.",
-            "nullable": true,
+            "description": "The array of the ETag values received when writing the file chunks into the upload URLs. The ETag values should be in the order of their associated upload URLs, i.e. {eTag received when writing to the first URL}, {eTag received when writing to the second URL}, ...",
             "items": {
               "type": "string"
             }
           },
           "name": {
             "type": "string",
-            "description": "The name of the file.",
-            "nullable": true
+            "description": "The name for the imported entry.",
+            "minLength": 1
           },
           "autoRename": {
             "type": "boolean",
@@ -6634,23 +6653,25 @@
             "default": false
           },
           "pdfOptions": {
+            "description": "The options applied when importing a PDF.",
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/PdfImportOptions"
+                "$ref": "#/components/schemas/ImportEntryRequestPdfOptions"
               }
             ]
           },
           "importAsElectronicDocument": {
             "type": "boolean",
-            "description": "Determines whether the document should be imported as an electronic document. If set to true, the documented is imported as an electronic document. If set to false, the documented is converted to Laserfiche pages. The default value is false.",
+            "description": "Indicates if the document should be imported as an electronic document (true) or as image pages (false). The default value is false. This option is only applicable when importing the following document types: txt, tif, tiff, bmp, pcx, jpg, jpeg, gif, png.",
             "default": false
           },
           "metadata": {
+            "description": "The metadata that will be assigned to the entry.",
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ImportAsyncMetadata"
+                "$ref": "#/components/schemas/ImportEntryRequestMetadata"
               }
             ]
           },
@@ -6661,21 +6682,23 @@
           }
         }
       },
-      "PdfImportOptions": {
+      "ImportEntryRequestPdfOptions": {
         "type": "object",
         "description": "PDF-related options for importing an entry.",
         "additionalProperties": false,
         "properties": {
           "generateText": {
             "type": "boolean",
+            "description": "Indicates if the import operation should generate text. The default value is false.",
             "default": false
           },
           "generatePages": {
             "type": "boolean",
-            "description": "Determines whether the import operation should also generate page images. This only works for certain file types, for example PDF files. ",
+            "description": "Indicates if the import operation should generate image pages. The default value is false.",
             "default": false
           },
           "generatePagesImageType": {
+            "description": "The image type used when generating image pages. The default value is StandardColor. This option is only applicable when GeneratePages is true.",
             "default": "StandardColor",
             "oneOf": [
               {
@@ -6685,14 +6708,14 @@
           },
           "keepPdfAfterImport": {
             "type": "boolean",
-            "description": "Determines whether the PDF document should be imported as an electronic document. If set to true, the import operation keeps the PDF electronic document. If set to false, the import operation does not keep the PDF electronic document. The default value is true.",
+            "description": "Indicates if the PDF file should be retained as an electronic document after generating image pages. The default value is true. This option is only applicable when GeneratePages is true.",
             "default": true
           }
         }
       },
       "GeneratePagesImageType": {
         "type": "string",
-        "description": "",
+        "description": "Enumeration for the image types when generating pages.",
         "x-enumNames": [
           "BlackAndWhite",
           "StandardColor",
@@ -6704,8 +6727,9 @@
           "HighQualityColor"
         ]
       },
-      "ImportAsyncMetadata": {
+      "ImportEntryRequestMetadata": {
         "type": "object",
+        "description": "Represents the metadata that will be assigned to the imported entry.",
         "additionalProperties": false,
         "properties": {
           "templateName": {
@@ -6741,7 +6765,7 @@
       },
       "FieldToUpdate": {
         "type": "object",
-        "description": "The request body containing fields that will be assigned to the entry.",
+        "description": "Represents a field that will be assigned to the entry.",
         "additionalProperties": false,
         "required": [
           "name"
@@ -6749,6 +6773,7 @@
         "properties": {
           "name": {
             "type": "string",
+            "description": "The name of the field that will be assigned to the entry.",
             "minLength": 1
           },
           "values": {
@@ -6763,7 +6788,12 @@
       },
       "LinkToUpdate": {
         "type": "object",
+        "description": "Represents a link that will be assigned to the entry.",
         "additionalProperties": false,
+        "required": [
+          "linkDefinitionId",
+          "otherEntryId"
+        ],
         "properties": {
           "linkDefinitionId": {
             "type": "integer",
@@ -6777,7 +6807,7 @@
           },
           "isSource": {
             "type": "boolean",
-            "description": "Whether the entry is the source for the link.",
+            "description": "Whether the entry is the source for the link. The default value is true.",
             "default": true
           },
           "customProperties": {
@@ -6883,7 +6913,7 @@
           },
           "pagePrefix": {
             "type": "string",
-            "description": "The page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of atmost 10 characters and only valid characters that can be included in file names are allowed. The default value is \", Page \".",
+            "description": "The page prefix of the individual files, when exporting to multi-file format (e.g.zip). The value must have a length of at most 10 characters and only valid characters that can be included in file names are allowed. The default value is \", Page \".",
             "default": ", Page ",
             "nullable": true
           },
@@ -6893,7 +6923,7 @@
             "default": true
           },
           "watermark": {
-            "description": "The watermark element added to each image.",
+            "description": "The watermark element added to each image. No watermark will be added by default.",
             "nullable": true,
             "oneOf": [
               {
@@ -6928,7 +6958,7 @@
         "properties": {
           "text": {
             "type": "string",
-            "description": "The text of the watermark. The value must be a string with a length of atmost 100 characters.",
+            "description": "The text of the watermark. The value must be a string with a length of at most 100 characters and must not be all whitespace characters.",
             "default": "",
             "nullable": true
           },
@@ -6943,7 +6973,7 @@
           },
           "rotationAngle": {
             "type": "integer",
-            "description": "The rotation angle of the watermark. The value must be between 0 and 360 (inclusive).",
+            "description": "The rotation angle of the watermark. The value must be between 0 and 360 (inclusive). The default value is 0.",
             "format": "int32",
             "default": 0
           },
@@ -7162,7 +7192,7 @@
       },
       "EntryType": {
         "type": "string",
-        "description": "",
+        "description": "Enumeration of entry types.",
         "x-enumNames": [
           "Folder",
           "RecordSeries",
@@ -7249,7 +7279,7 @@
             "description": "Represents a document in a Laserfiche repository.",
             "additionalProperties": false,
             "properties": {
-              "elecDocumentSize": {
+              "electronicDocumentSize": {
                 "type": "integer",
                 "description": "The size of the electronic document attached to the represented document, if there is one, in bytes.",
                 "format": "int64"
@@ -7338,14 +7368,6 @@
               "isUnderRecordSeries": {
                 "type": "boolean",
                 "description": "A boolean indicating if the folder that this instance represents is known to directly or indirectly under a record series in the repository."
-              },
-              "children": {
-                "type": "array",
-                "description": "The entries in this folder.",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Entry"
-                }
               }
             }
           }
@@ -7727,11 +7749,13 @@
         "type": "object",
         "description": "Request body for importing an entry.",
         "additionalProperties": false,
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string",
-            "description": "The name of the file.",
-            "nullable": true
+            "description": "The name for the imported entry."
           },
           "autoRename": {
             "type": "boolean",
@@ -7739,23 +7763,25 @@
             "default": false
           },
           "pdfOptions": {
+            "description": "The options applied when importing a PDF.",
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/PdfImportOptions"
+                "$ref": "#/components/schemas/ImportEntryRequestPdfOptions"
               }
             ]
           },
           "importAsElectronicDocument": {
             "type": "boolean",
-            "description": "Determines whether the document should be imported as an electronic document. If set to true, the documented is imported as an electronic document. If set to false, the documented is converted to Laserfiche pages. The default value is false.",
+            "description": "Indicates if the document should be imported as an electronic document (true) or as image pages (false). The default value is false. This option is only applicable when importing the following document types: txt, tif, tiff, bmp, pcx, jpg, jpeg, gif, png.",
             "default": false
           },
           "metadata": {
+            "description": "The metadata that will be assigned to the entry.",
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ImportAsyncMetadata"
+                "$ref": "#/components/schemas/ImportEntryRequestMetadata"
               }
             ]
           },
@@ -7921,7 +7947,7 @@
       },
       "SetFieldsRequest": {
         "type": "object",
-        "description": "Request body for setting fields on an entry.",
+        "description": "Request body for assigning fields to an entry.",
         "additionalProperties": false,
         "properties": {
           "fields": {
@@ -8039,7 +8065,7 @@
       },
       "SetTagsRequest": {
         "type": "object",
-        "description": "Request body for setting tags on an entry.",
+        "description": "Request body for assigning tags to an entry.",
         "additionalProperties": false,
         "properties": {
           "tags": {
@@ -8153,7 +8179,7 @@
       },
       "SetLinksRequest": {
         "type": "object",
-        "description": "Request body for setting links on an entry.",
+        "description": "Request body for assigning links to an entry.",
         "additionalProperties": false,
         "properties": {
           "links": {
@@ -8171,7 +8197,8 @@
         "description": "Request body for copying an entry.",
         "additionalProperties": false,
         "required": [
-          "name"
+          "name",
+          "sourceId"
         ],
         "properties": {
           "name": {
@@ -8186,7 +8213,7 @@
           },
           "sourceId": {
             "type": "integer",
-            "description": "The SourceId is needed for some operations that require a source/destination. One example is the Copy operation.",
+            "description": "The source entry Id to copy.",
             "format": "int32"
           },
           "volumeName": {
@@ -8237,7 +8264,7 @@
       },
       "CreateEntryRequestEntryType": {
         "type": "string",
-        "description": "",
+        "description": "Enumeration of entry types for CreateEntry.",
         "x-enumNames": [
           "Folder",
           "Shortcut"
@@ -8272,7 +8299,7 @@
       },
       "SetTemplateRequest": {
         "type": "object",
-        "description": "Request body for setting a template and template fields on an entry.",
+        "description": "Request body for assigning a template and template fields to an entry.",
         "additionalProperties": false,
         "required": [
           "templateName"
@@ -8338,11 +8365,11 @@
         "properties": {
           "searchCommand": {
             "type": "string",
-            "description": "Search command for advanced search",
+            "description": "The search command to run. The search command should follow the Laserfiche search syntax. https://doc.laserfiche.com/laserfiche.documentation/en-us/Default.htm#Search_Syntax.htm",
             "minLength": 1
           },
           "fuzzyType": {
-            "description": "Fuzzy type (None, Percentage, or NumberOfLetters)",
+            "description": "Fuzzy type (None, Percentage, or NumberOfLetters).",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/FuzzyType"
@@ -8351,7 +8378,7 @@
           },
           "fuzzyFactor": {
             "type": "integer",
-            "description": "Fuzzy factor (percentage as int or int value)",
+            "description": "Fuzzy factor (percentage as int or int value).",
             "format": "int32"
           }
         }
@@ -8400,7 +8427,12 @@
         "additionalProperties": false,
         "properties": {
           "hitType": {
-            "$ref": "#/components/schemas/HitType"
+            "description": "The type of context hit this instance represents.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/HitType"
+              }
+            ]
           },
           "isAnnotationHit": {
             "type": "boolean",
@@ -8523,7 +8555,7 @@
         "properties": {
           "searchCommand": {
             "type": "string",
-            "description": "Search command for simple search",
+            "description": "The search command to run. The search command should follow the Laserfiche search syntax. https://doc.laserfiche.com/laserfiche.documentation/en-us/Default.htm#Search_Syntax.htm",
             "minLength": 1
           }
         }
@@ -8720,7 +8752,7 @@
       },
       "CancelTasksResponse": {
         "type": "object",
-        "description": "Response containing a collection of CancelOperationResponse.",
+        "description": "Response containing a collection of CancelTaskResult.",
         "additionalProperties": false,
         "properties": {
           "value": {
@@ -8751,7 +8783,7 @@
           },
           "result": {
             "type": "boolean",
-            "description": "True if and only if the associated task has been cancelled successfully or it has already been completed."
+            "description": "Indicates if the request to cancel the task has been received."
           }
         }
       },
@@ -8906,6 +8938,7 @@
       },
       "Rule": {
         "type": "object",
+        "description": "Represents a form logic rule associated with a Laserfiche template and field definition.",
         "additionalProperties": false,
         "properties": {
           "ancestors": {
@@ -8928,11 +8961,11 @@
       },
       "OAuth2 Authorization Code Flow": {
         "type": "oauth2",
-        "description": "<p>Note: Please enter below the clientId/clientSecret of a registered web application, or the clientId of a SPA. For SPA, the clientSecret field must be left empty. The app, either a web application or SPA, must have the following uri defined as its redirect uri.</p><p>http://localhost:11211/repository/swagger/oauth2-redirect.html</p><p>For more information, see <a href=\"https://developer.laserfiche.com/guides/guide_authenticating-to-the-swagger-playground.html\" target=\"_blank\">this page</a></p>",
+        "description": "<p>Note: Please enter below the clientId/clientSecret of a registered web application, or the clientId of a SPA. For SPA, the clientSecret field must be left empty. The app, either a web application or SPA, must have the following uri defined as its redirect uri.</p><p>https://api.laserfiche.com/repository/swagger/oauth2-redirect.html</p><p>For more information, see <a href=\"https://developer.laserfiche.com/guides/guide_authenticating-to-the-swagger-playground.html\" target=\"_blank\">this page</a></p>",
         "flows": {
           "authorizationCode": {
-            "authorizationUrl": "https://signin.a.clouddev.laserfiche.com/oauth/Authorize",
-            "tokenUrl": "https://signin.a.clouddev.laserfiche.com/oauth/Token",
+            "authorizationUrl": "https://signin.laserfiche.com/oauth/Authorize",
+            "tokenUrl": "https://signin.laserfiche.com/oauth/Token",
             "scopes": {
               "repository.Read": "Allows the app to read the content of Laserfiche repositories on behalf of the signed-in user.",
               "repository.Write": "Allows the app to modify the content of Laserfiche repositories on behalf of the signed-in user."

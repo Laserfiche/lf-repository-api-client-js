@@ -2,7 +2,7 @@ import { repositoryId } from '../TestHelper.js';
 import { _RepositoryApiClient } from '../CreateSession.js';
 import 'isomorphic-fetch';
 import { Blob as NodeBlob } from 'buffer';
-import { Entry, FileParameter, ImportAsyncMetadata, ImportEntryRequest, StartDeleteEntryRequest, StartTaskResponse, TaskStatus } from '../../src/index.js';
+import { Entry, FileParameter, ImportEntryRequestMetadata, ImportEntryRequest, StartDeleteEntryRequest, StartTaskResponse, TaskStatus } from '../../src/index.js';
 import { isBrowser } from '@laserfiche/lf-js-utils/dist/utils/core-utils.js';
 
 describe('Large File Import Integration Tests', () => {
@@ -55,7 +55,7 @@ describe('Large File Import Integration Tests', () => {
           tags: [tagName]
         };
     
-        request.metadata = ImportAsyncMetadata.fromJS(metadata);
+        request.metadata = ImportEntryRequestMetadata.fromJS(metadata);
         let response: StartTaskResponse = await _RepositoryApiClient.entriesClient.startImportEntry({
           repositoryId,
           entryId: rootEntryId,
