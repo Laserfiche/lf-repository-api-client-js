@@ -56,7 +56,7 @@ See [here](https://api.laserfiche.com/repository/v2/changelog#2023-10) for more 
 | -- | [startExportEntry](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IEntriesClient.html#startExportEntry) |
 
 ### FieldDefinitions
- @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
+| @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
 |----------------------------------|-------------------------------------|
 | [getFieldDefinitionById](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/IFieldDefinitionsClient.html#getFieldDefinitionById) | [getFieldDefinition](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IFieldDefinitionsClient.html#getFieldDefinition) |
 | [getFieldDefinitions](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/IFieldDefinitionsClient.html#getFieldDefinitions) | [listFieldDefinitions](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IFieldDefinitionsClient.html#listFieldDefinitions) |
@@ -64,7 +64,7 @@ See [here](https://api.laserfiche.com/repository/v2/changelog#2023-10) for more 
 | [getFieldDefinitionsNextLink](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/IFieldDefinitionsClient.html#getFieldDefinitionsNextLink) | [listFieldDefinitionsNextLink](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IFieldDefinitionsClient.html#listFieldDefinitionsNextLink) |
 
 ### LinkDefinitions
- @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
+| @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
 |----------------------------------|-------------------------------------|
 | [getLinkDefinitionById](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/ILinkDefinitionsClient.html#getLinkDefinitionById) | [getLinkDefinition](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/ILinkDefinitionsClient.html#getLinkDefinition) |
 | [getLinkDefinitions](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/ILinkDefinitionsClient.html#getLinkDefinitions) | [listLinkDefinitions](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/ILinkDefinitionsClient.html#listLinkDefinitions) |
@@ -72,13 +72,13 @@ See [here](https://api.laserfiche.com/repository/v2/changelog#2023-10) for more 
 | [getLinkDefinitionsNextLink](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/ILinkDefinitionsClient.html#getLinkDefinitionsNextLink) | [listLinkDefinitionsNextLink](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/ILinkDefinitionsClient.html#listLinkDefinitionsNextLink) |
 
 ### Repositories
- @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
+| @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
 |----------------------------------|-------------------------------------|
 | [getRepositoryList](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/IRepositoriesClient.html#getRepositoryList) | [listRepositories](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/IRepositoriesClient.html#listRepositories) |
 | [getSelfHostedRepositoryList](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/classes/RepositoriesClient.html#getSelfHostedRepositoryList) | [listSelfHostedRepositories](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/classes/RepositoriesClient.html#listSelfHostedRepositories) |
 
 ### Searches
- @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
+| @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
 |----------------------------------|-------------------------------------|
 | [cancelOrCloseSearch](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/ISearchesClient.html#cancelOrCloseSearch) | [cancelTasks](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/ITasksClient.html#cancelTasks) |
 | [createSearchOperation](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/ISearchesClient.html#createSearchOperation) | [startSearchEntry](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/ISearchesClient.html#startSearchEntry) |
@@ -94,12 +94,12 @@ See [here](https://api.laserfiche.com/repository/v2/changelog#2023-10) for more 
 The [IServerSessionClient](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/IServerSessionClient.html) has been removed in `@laserfiche/lf-repository-api-client-v2`.
 
 ### SimpleSearches
- @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
+| @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
 |----------------------------------|-------------------------------------|
 | [createSimpleSearchOperation](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/ISimpleSearchesClient.html#createSimpleSearchOperation) | [searchEntry](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/ISimpleSearchesClient.html#searchEntry) |
 
 ### TagDefinitions
- @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
+| @laserfiche/lf-repository-api-client | @laserfiche/lf-repository-api-client-v2 |
 |----------------------------------|-------------------------------------|
 | [getTagDefinitionById](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/ITagDefinitionsClient.html#getTagDefinitionById) | [getTagDefinition](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/ITagDefinitionsClient.html#getTagDefinition) |
 | [getTagDefinitions](https://laserfiche.github.io/lf-repository-api-client-js/docs/v1/1.x/interfaces/ITagDefinitionsClient.html#getTagDefinitions) | [listTagDefinitions](https://laserfiche.github.io/lf-repository-api-client-js/docs/v2/1.x/interfaces/ITagDefinitionsClient.html#listTagDefinitions) |
