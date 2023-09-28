@@ -12,7 +12,8 @@ on:
   workflow_dispatch:
 
 env:
-  NPM_VERSION: '1.1.4'
+  API_VERSION: 'v2'
+  NPM_VERSION: '1.0.0'
   GITHUB_PAGES_BRANCH: 'gh-pages'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -190,7 +191,7 @@ jobs:
       - name: Tag commit
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ env.NpmPackageVersion }}
+          tag: ${{ env.API_VERSION }}-${{ env.NpmPackageVersion }}
           commit_sha: ${{ github.sha }}
           message: Workflow run ${{github.server_url}}/${{github.repository}}/actions/runs/${{ github.run_id}}
 
@@ -236,7 +237,7 @@ jobs:
       - name: Tag commit
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ env.NPM_VERSION }}
+          tag: ${{ env.API_VERSION }}-${{ env.NPM_VERSION }}
           commit_sha: ${{ github.sha }}
           message: Workflow run ${{github.server_url}}/${{github.repository}}/actions/runs/${{ github.run_id}}
 
@@ -248,41 +249,38 @@ jobs:
     steps:
       - name: Set DOCUMENTATION_VERSION environment variable
         run: |
-          if [[ '${{ github.event_name }}' == 'pull_request' ]]; then
-            echo 'DOCUMENTATION_VERSION=${{ github.base_ref }}' >> $GITHUB_ENV
-          elif [[ '${{ github.ref_protected }}' == 'true' && '${{ github.ref_type }}' == 'branch' ]]; then
-            echo 'DOCUMENTATION_VERSION=${{ github.ref_name }}' >> $GITHUB_ENV
-          else
-            echo '::error::Unable to publish documentation for the current branch.'
-            exit 1
-          fi
+          npm_version=${{ env.NPM_VERSION }}
+          major_version=${npm_version%%.*}
+          documentation_version=$major_version.x
+          echo $documentation_version
+          echo DOCUMENTATION_VERSION=$documentation_version >> $GITHUB_ENV
 
       - name: Print DOCUMENTATION_VERSION environment variable
         run: |
-          echo 'Publishing documentation to ${{ env.GITHUB_PAGES_BRANCH }} for ${{ env.DOCUMENTATION_VERSION }}.'
+          echo 'Publishing documentation to ${{ env.GITHUB_PAGES_BRANCH }} for ${{ env.API_VERSION }} ${{ env.DOCUMENTATION_VERSION }}.'
 
       - uses: actions/checkout@v3
         with:
           ref: ${{ env.GITHUB_PAGES_BRANCH }}
 
       - name: Delete documentation directory
-        run: rm -f -r ./docs/${{ env.DOCUMENTATION_VERSION }}
+        run: rm -f -r ./docs/${{ env.API_VERSION }}/${{ env.DOCUMENTATION_VERSION }}
 
       - name: Create documentation directory
-        run: mkdir -p ./docs/${{ env.DOCUMENTATION_VERSION }}
+        run: mkdir -p ./docs/${{ env.API_VERSION }}/${{ env.DOCUMENTATION_VERSION }}
 
       - name: Download documentation build artifact
         uses: actions/download-artifact@v3.0.0
         with:
           name: documentation-artifact
-          path: ./docs/${{ env.DOCUMENTATION_VERSION }}
+          path: ./docs/${{ env.API_VERSION }}/${{ env.DOCUMENTATION_VERSION }}
 
       - name: Create a pull request
         uses: peter-evans/create-pull-request@v4.2.3
         with:
-          branch: ${{ env.GITHUB_PAGES_BRANCH }}-${{ env.DOCUMENTATION_VERSION }}-patch
+          branch: ${{ env.GITHUB_PAGES_BRANCH }}-${{ env.API_VERSION }}-${{ env.DOCUMENTATION_VERSION }}-patch
           delete-branch: true
-          title: "Automated documentation update for ${{ env.DOCUMENTATION_VERSION }} by action ${{ github.run_id }}"
-          commit-message: "Automated documentation update for ${{ env.DOCUMENTATION_VERSION }} by action ${{ github.run_id }}"
-          body: "Automated documentation update for ${{ env.DOCUMENTATION_VERSION }} by action ${{ github.run_id }}"
+          title: "Automated documentation update for ${{ env.API_VERSION }} ${{ env.DOCUMENTATION_VERSION }} by action ${{ github.run_id }}"
+          commit-message: "Automated documentation update for ${{ env.API_VERSION }} ${{ env.DOCUMENTATION_VERSION }} by action ${{ github.run_id }}"
+          body: "Automated documentation update for ${{ env.API_VERSION }} ${{ env.DOCUMENTATION_VERSION }} by action ${{ github.run_id }}"
           assignees: ${{ github.actor }}
