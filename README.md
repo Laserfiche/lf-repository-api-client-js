@@ -7,7 +7,7 @@ Use the Laserfiche Repository API to access data in a Laserfiche repository. Imp
 - [Developer Documentation](https://developer.laserfiche.com/)
 - [JS Repository API Client Lib Documentation](https://laserfiche.github.io/lf-repository-api-client-js/)
 
-## Change Log
+## Changelog
 
 See CHANGELOG [here](https://github.com/Laserfiche/lf-repository-api-client-js/blob/HEAD/CHANGELOG.md).
 
@@ -18,3 +18,7 @@ To install, [see here](https://www.npmjs.com/package/@laserfiche/lf-repository-a
 ### Build, Test, and Package
 
 See the [.github/workflows/main.yml](https://github.com/Laserfiche/lf-repository-api-client-js/blob/HEAD/.github/workflows/main.yml).
+
+#### Branches
+
+The v1 branch stores client code for the Laserfiche Repository API v1; the v2 branch stores client code for the Laserfiche Repository API v2.
