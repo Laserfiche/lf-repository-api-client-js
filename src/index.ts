@@ -12051,46 +12051,9 @@ export interface IRule {
     ancestors?: number[] | undefined;
 }
 
-export class HttpResponseHead<TResult> {
-    status: number;
-    headers: { [key: string]: any; };
-    result: TResult;
-
-    constructor(status: number, headers: { [key: string]: any; }, result: TResult)
-    {
-        this.status = status;
-        this.headers = headers;
-        this.result = result;
-    }
-}
-
 export interface FileParameter {
     data: any;
     fileName: string;
-}
-
-export class ApiExceptionDummy extends Error {
-    message: string;
-    status: number;
-    response: string;
-    headers: { [key: string]: any; };
-    result: any;
-
-    constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
-        super();
-
-        this.message = message;
-        this.status = status;
-        this.response = response;
-        this.headers = headers;
-        this.result = result;
-    }
-
-    protected isApiExceptionDummy = true;
-
-    static isApiExceptionDummy(obj: any): obj is ApiExceptionDummy {
-        return obj.isApiExceptionDummy === true;
-    }
 }
 
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
