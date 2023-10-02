@@ -16,9 +16,9 @@
       "className": "{controller}Client",
       "configurationClass": null,
       "extensionCode": "../src/ClientBase.ts",
-      "exceptionClass": "ApiExceptionDummy",
+      "excludedTypeNames": [ "ApiException" ],
       "extendedClasses": ["AttributesClient","EntriesClient","FieldDefinitionsClient","SearchesClient","TagDefinitionsClient", "TemplateDefinitionsClient", 
-                          "LinkDefinitionsClient", "ApiExceptionDummy", "ProblemDetails", "CreateEntryResult", "RepositoriesClient"],
+                          "LinkDefinitionsClient", "ProblemDetails", "RepositoriesClient"],
       "output": "../src/index.ts",
       "useTransformOptionsMethod": false,
       "useTransformResultMethod": false,
@@ -26,8 +26,8 @@
       "markOptionalProperties": true,
       "operationGenerationMode": "MultipleClientsFromFirstTagAndOperationId",
       "templateDirectory": "nswag",
-      "wrapResponses": true,
-      "wrapResponseMethods": ["EntriesClient.getDocumentContentType"],
+      "wrapResponses": false,
+      "wrapResponseMethods": [],
       "responseClass": "HttpResponseHead"
     }
   }
