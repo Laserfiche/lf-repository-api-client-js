@@ -1,6 +1,6 @@
-# Laserfiche Repository API Client
+# Laserfiche Repository API Client V2
 
-Use the Laserfiche Repository API to access data in a Laserfiche repository. Import or export files, modify the repository folder structure, read and modify templates and field values, and more.
+Use the Laserfiche Repository API to access data in a Laserfiche repository. Import or export documents, modify the repository folder structure, read and modify templates and field values, and more.
 
 ## Documentation
 
@@ -14,7 +14,7 @@ See CHANGELOG [here](https://github.com/Laserfiche/lf-repository-api-client-js/b
 
 ## Installation
 
-To install, [see here](https://www.npmjs.com/package/@laserfiche/lf-repository-api-client)
+To install, [see here](https://www.npmjs.com/package/@laserfiche/lf-repository-api-client-v2)
 
 ### Build, Test, and Package
 
