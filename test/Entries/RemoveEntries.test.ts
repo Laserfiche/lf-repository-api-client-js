@@ -1,3 +1,5 @@
+// Copyright (c) Laserfiche.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 import { repositoryId } from '../TestHelper.js';
 import { Entry, SetTemplateRequest, StartDeleteEntryRequest } from '../../src/index.js';
 import { allFalse, CreateEntry } from '../BaseTest.js';
