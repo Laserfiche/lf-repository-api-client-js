@@ -1,3 +1,5 @@
+// Copyright (c) Laserfiche.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 import * as generated from './index.js';
 import { UrlUtils, StringUtils } from '@laserfiche/lf-js-utils';
 import {

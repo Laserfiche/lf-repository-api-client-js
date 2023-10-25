@@ -1,3 +1,5 @@
+// Copyright (c) Laserfiche.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 import { repositoryId, authorizationType } from '../TestHelper.js';
 import { authorizationTypeEnum } from '../AuthorizationType.js';
 import { DeleteEntryWithAuditReason, Entry, PutLinksRequest, WEntryLinkInfo } from '../../src/index.js';
