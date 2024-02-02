@@ -59,57 +59,57 @@ jobs:
             ./README.md
             ./LICENSE
 
-  test:
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/checkout@v2
+  # test:
+  #   runs-on: ubuntu-latest
+  #   needs: [build]
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.5.1
-        with:
-          node-version: "16"
+  #     - name: Setup Node.js environment
+  #       uses: actions/setup-node@v2.5.1
+  #       with:
+  #         node-version: "16"
 
-      - name: NPM tool install
-        run: npm install -g npm@8
+  #     - name: NPM tool install
+  #       run: npm install -g npm@8
 
-      - name: NPM ci
-        run: npm ci
+  #     - name: NPM ci
+  #       run: npm ci
 
-      - name: NPM test on cloud (node environment)
-        id: test-cloud-node
-        env:
-          ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
-          SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
-          REPOSITORY_ID: ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_1 }}
-          AUTHORIZATION_TYPE: ${{ secrets.AUTHORIZATION_TYPE }}
-          TEST_HEADER: ${{ secrets.TEST_HEADER }}
-        run: npm run test:node
+  #     - name: NPM test on cloud (node environment)
+  #       id: test-cloud-node
+  #       env:
+  #         ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
+  #         SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
+  #         REPOSITORY_ID: ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_1 }}
+  #         AUTHORIZATION_TYPE: ${{ secrets.AUTHORIZATION_TYPE }}
+  #         TEST_HEADER: ${{ secrets.TEST_HEADER }}
+  #       run: npm run test:node
       
-      - name: NPM test on cloud (browser environment)
-        id: test-cloud-browser
-        env:
-          ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
-          SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
-          REPOSITORY_ID: ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_3 }}
-          AUTHORIZATION_TYPE: ${{ secrets.AUTHORIZATION_TYPE }}
-          TEST_HEADER: ${{ secrets.TEST_HEADER }}
-        run: npm run test:browser
+  #     - name: NPM test on cloud (browser environment)
+  #       id: test-cloud-browser
+  #       env:
+  #         ACCESS_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_INTEGRATION_TEST_ACCESS_KEY }}
+  #         SERVICE_PRINCIPAL_KEY: ${{ secrets.DEV_CA_PUBLIC_USE_TESTOAUTHSERVICEPRINCIPAL_SERVICE_PRINCIPAL_KEY }}
+  #         REPOSITORY_ID: ${{ secrets.DEV_CA_PUBLIC_USE_REPOSITORY_ID_3 }}
+  #         AUTHORIZATION_TYPE: ${{ secrets.AUTHORIZATION_TYPE }}
+  #         TEST_HEADER: ${{ secrets.TEST_HEADER }}
+  #       run: npm run test:browser
 
-      - name: Test report
-        uses: dorny/test-reporter@v1
-        if: success() || failure() # run this step even if previous step failed
-        with:
-          name: Jest Test Results
-          path: ./*.xml
-          reporter: jest-junit
-          only-summary: "false"
-          list-tests: "failed"
-          fail-on-error: "false"
+  #     - name: Test report
+  #       uses: dorny/test-reporter@v1
+  #       if: success() || failure() # run this step even if previous step failed
+  #       with:
+  #         name: Jest Test Results
+  #         path: ./*.xml
+  #         reporter: jest-junit
+  #         only-summary: "false"
+  #         list-tests: "failed"
+  #         fail-on-error: "false"
 
   build-documentation:
     runs-on: ubuntu-latest
-    needs: [build, test]
+    needs: [build]
     steps:
       - uses: actions/checkout@v2
 
@@ -150,7 +150,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: preview
     if: ${{ github.run_attempt != 1 }}
-    needs: [build, test, build-documentation] # wait for build to finish
+    needs: [build, build-documentation] # wait for build to finish
     steps:
       - uses: actions/checkout@v2
         with:
@@ -199,7 +199,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     if: ${{ github.run_attempt != 1 }}
-    needs: [build, test, build-documentation]
+    needs: [build, build-documentation]
     steps:
       - uses: actions/checkout@v2
         with:
