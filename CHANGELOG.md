@@ -1,19 +1,29 @@
-## 1.1.4 Pre-release
+## 1.1.4
 
 ### Features
+
 - Added `RepositoriesClient.getSelfHostedRepositoryList` method that will enable self hosted users to get their repository list without an access token.
-- Added the gzip compression header which will compress every API response to improve performance 
+- Added the gzip compression header which will compress every API response to improve performance
+
+### Maintenance
+
+- Updated `lf-api-client-core` dependency to version `1.1.0` due to `jsrsasign` vulnerability
+
 ## 1.1.3
 
 ### Features
-- `createFromAccessKey` now has an optional parameter `scope` to specify the requested scope(s) for the access token. 
+
+- `createFromAccessKey` now has an optional parameter `scope` to specify the requested scope(s) for the access token.
+
 ## 1.1.1
 
 ### Fixes
+
 - The `ApiException` type now has a `ProblemDetails` property which contains additional information about the error.
 - The `ProblemDetails` type now has additional properties from the response.
-- `importDocument` v1 API can result in a partial success in some cases. The related exceptions can be found in 
-`ProblemDetails.Extensions`:
+- `importDocument` v1 API can result in a partial success in some cases. The related exceptions can be found in
+  `ProblemDetails.Extensions`:
+
 ```javascript
 try {
     await _RepositoryApiClient.entriesClient.importDocument({
