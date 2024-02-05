@@ -1,130 +1,152 @@
 // Copyright (c) Laserfiche.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
-import { repositoryId } from '../TestHelper.js';
+import { repositoryId } from "../TestHelper.js";
 import {
   SearchContextHitCollectionResponse,
   EntryCollectionResponse,
-  StartSearchEntryRequest
-} from '../../src/index.js';
-import { _RepositoryApiClient } from '../CreateSession.js';
-import 'isomorphic-fetch';
+  StartSearchEntryRequest,
+  TaskCollectionResponse,
+  TaskStatus,
+} from "../../src/index.js";
+import { _RepositoryApiClient } from "../CreateSession.js";
+import "isomorphic-fetch";
+import { CoreUtils } from "@laserfiche/lf-js-utils";
 
 let taskId: string;
-describe('Search Integration Tests', () => {
-  
+describe("Search Integration Tests", () => {
   beforeEach(async () => {
-    taskId = '';
+    taskId = "";
   });
 
   afterEach(async () => {
     if (taskId) {
-      await _RepositoryApiClient.tasksClient.cancelTasks({ repositoryId, taskIds: [taskId] });
+      await _RepositoryApiClient.tasksClient.cancelTasks({
+        repositoryId,
+        taskIds: [taskId],
+      });
     }
   });
 
-  test('Get Search Context Hits', async () => {
+  test("Get Search Context Hits", async () => {
     let request = new StartSearchEntryRequest();
-    request.searchCommand = '({LF:Basic ~= \"search text\", option="DFANLT"})';
-    var searchResponse = await _RepositoryApiClient.searchesClient.startSearchEntry({ repositoryId, request });
-    taskId = searchResponse.taskId ?? '';
-    
+    request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
+    var searchResponse =
+      await _RepositoryApiClient.searchesClient.startSearchEntry({
+        repositoryId,
+        request,
+      });
+    taskId = searchResponse.taskId ?? "";
+
     expect(taskId).not.toBeNull();
-    expect(taskId).not.toBe('');
+    expect(taskId).not.toBe("");
     
     await new Promise((r) => setTimeout(r, 5000));
-    
-    var searchResultsResponse = await _RepositoryApiClient.searchesClient.listSearchResults({ repositoryId, taskId });
+    let searchResultsResponse = await waitForSearchResultsAsync(taskId);
+
+    if (!searchResultsResponse) {
+      throw new Error("searchResultsResponse is undefined");
+    }
     var searchResults = searchResultsResponse.value;
     if (!searchResults) {
-      throw new Error('searchResults is undefined');
+      throw new Error("searchResults is undefined");
     }
-    
+
     expect(searchResults).not.toBeNull();
     expect(searchResults.length > 0).toBeTruthy();
     let rowNum = searchResults[0].rowNumber;
 
-    var contextHitResponse = await _RepositoryApiClient.searchesClient.listSearchContextHits({
-      repositoryId,
-      taskId,
-      rowNumber: rowNum ?? -1,
-    });
+    var contextHitResponse =
+      await _RepositoryApiClient.searchesClient.listSearchContextHits({
+        repositoryId,
+        taskId,
+        rowNumber: rowNum ?? -1,
+      });
     var contextHits = contextHitResponse.value;
-    
+
     expect(contextHits).not.toBeNull();
   });
 
-  test('Get Search Results for each Paging', async () => {
+  test("Get Search Results for each Paging", async () => {
     let maxPages = 3;
     let maxPageSize = 10;
     let searchRequest = new StartSearchEntryRequest();
-    searchRequest.searchCommand = '({LF:Basic ~= \"search text\", option="DFANLT"})';
-    
-    let searchResponse = await _RepositoryApiClient.searchesClient.startSearchEntry({
-      repositoryId,
-      request: searchRequest,
-    });
-    
-    taskId = searchResponse.taskId ?? '';
-    
-    expect(taskId).not.toBe('');
+    searchRequest.searchCommand =
+      '({LF:Basic ~= "search text", option="DFANLT"})';
+
+    let searchResponse =
+      await _RepositoryApiClient.searchesClient.startSearchEntry({
+        repositoryId,
+        request: searchRequest,
+      });
+
+    taskId = searchResponse.taskId ?? "";
+
+    expect(taskId).not.toBe("");
     expect(taskId).not.toBeNull();
-    
+
     await new Promise((r) => setTimeout(r, 10000));
-    
+
     let searchResults = 0;
     let pages = 0;
     const callback = async (response: EntryCollectionResponse) => {
       if (!response.value) {
-        throw new Error('response.value is undefined');
+        throw new Error("response.value is undefined");
       }
       searchResults += response.value.length;
       pages += 1;
       return maxPages > pages;
     };
-    
-    await _RepositoryApiClient.searchesClient.listSearchResultsForEach({ callback, repositoryId, taskId, maxPageSize });
-    
+
+    await _RepositoryApiClient.searchesClient.listSearchResultsForEach({
+      callback,
+      repositoryId,
+      taskId,
+      maxPageSize,
+    });
+
     expect(searchResults).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
 
-  test('Get Search Context Hits for each Paging', async () => {
+  test("Get Search Context Hits for each Paging", async () => {
     let maxPages = 3;
     let maxPageSize = 10;
     let searchRequest = new StartSearchEntryRequest();
     searchRequest.searchCommand = '({LF:Basic ~= "search", option="DFANLT"})';
-    let searchResponse = await _RepositoryApiClient.searchesClient.startSearchEntry({
-      repositoryId,
-      request: searchRequest,
-    });
-    taskId = searchResponse.taskId ?? '';
-    
-    expect(taskId).not.toBe('');
+    let searchResponse =
+      await _RepositoryApiClient.searchesClient.startSearchEntry({
+        repositoryId,
+        request: searchRequest,
+      });
+    taskId = searchResponse.taskId ?? "";
+
+    expect(taskId).not.toBe("");
     expect(taskId).not.toBeNull();
-    
+
     await new Promise((r) => setTimeout(r, 5000));
-    
-    var searchResultsResponse = await _RepositoryApiClient.searchesClient.listSearchResults({ repositoryId, taskId });
-    if (!searchResultsResponse.value) {
-      throw new Error('searchResultsResponse.value is undefined');
+
+    var searchResultsResponse = await waitForSearchResultsAsync(taskId);
+
+    if (!searchResultsResponse || !searchResultsResponse.value) {
+      throw new Error("searchResultsResponse.value is undefined");
     }
     var searchResults = searchResultsResponse.value;
-    
+
     expect(searchResults).not.toBeNull();
     expect(searchResults.length > 0).toBeTruthy();
-    
+
     let rowNum = searchResults[0].rowNumber ?? 0;
     let searchContextHits = 0;
     let pages = 0;
     const callback = async (response: SearchContextHitCollectionResponse) => {
       if (!response.value) {
-        throw new Error('response.value is undefined');
+        throw new Error("response.value is undefined");
       }
       searchContextHits += response.value.length;
       pages += 1;
       return maxPages > pages;
     };
-    
+
     await _RepositoryApiClient.searchesClient.listSearchContextHitsForEach({
       callback,
       repositoryId,
@@ -132,25 +154,54 @@ describe('Search Integration Tests', () => {
       rowNumber: rowNum,
       maxPageSize,
     });
-    
+
     expect(searchContextHits).toBeGreaterThan(0);
     expect(pages).toBeGreaterThan(0);
   });
 
-  test('Get Search Results', async () => {
+  test("Get Search Results", async () => {
     let request = new StartSearchEntryRequest();
-    request.searchCommand = '({LF:Basic ~= \"search text\", option="DFANLT"})';
-    var searchResponse = await _RepositoryApiClient.searchesClient.startSearchEntry({ repositoryId, request });
-    taskId = searchResponse.taskId ?? '';
-    
+    request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
+    var searchResponse =
+      await _RepositoryApiClient.searchesClient.startSearchEntry({
+        repositoryId,
+        request,
+      });
+    taskId = searchResponse.taskId ?? "";
+
     expect(taskId).not.toBeNull();
-    expect(taskId).not.toBe('');
-    
-    await new Promise((r) => setTimeout(r, 10000));
-    
-    var searchResultsResponse = await _RepositoryApiClient.searchesClient.listSearchResults({ repositoryId, taskId });
+    expect(taskId).not.toBe("");
+
+    await new Promise((r) => setTimeout(r, 5000));
+
+    var searchResultsResponse = await waitForSearchResultsAsync(taskId);
     var searchResults = searchResultsResponse.value;
-    
+
     expect(searchResults).not.toBeNull();
   });
 });
+
+async function waitForSearchResultsAsync(currentTaskId: string) {
+  const startTime = new Date().getTime();
+  while (new Date().getTime() - startTime < 15000) {
+    const listOfTasks: TaskCollectionResponse =
+      await _RepositoryApiClient.tasksClient.listTasks({
+        repositoryId,
+        taskIds: [currentTaskId],
+      });
+    const isComplete = listOfTasks.value
+      ? listOfTasks.value[0].status === TaskStatus.Completed
+      : false;
+    if (isComplete) {
+      const searchResultsResponse =
+        await _RepositoryApiClient.searchesClient.listSearchResults({
+          repositoryId,
+          taskId: currentTaskId,
+        });
+      return searchResultsResponse;
+    } else {
+      await CoreUtils.sleepAsync(5000);
+    }
+  }
+  throw new Error("Search not completed in 15000 milliseconds");
+}
