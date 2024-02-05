@@ -204,6 +204,7 @@ describe('Search Integration Tests', () => {
         repositoryId,
         taskIds: [taskId],
       });
+
     const isComplete = listOfTasks.value
       ? listOfTasks.value[0].status === TaskStatus.Completed
       : false;
