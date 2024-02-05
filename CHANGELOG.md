@@ -4,7 +4,7 @@
 
 ### Maintenance
 
-- Updated version of `@laserfiche/lf-api-client-core` to `1.1.10` due to `jsrsasign` vulnerability
+- Updated the version of `@laserfiche/lf-api-client-core` to `1.1.10` due to `jsrsasign` vulnerability
 
 ## 1.0.0
 
