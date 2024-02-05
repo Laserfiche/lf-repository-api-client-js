@@ -1,21 +1,21 @@
 // Copyright (c) Laserfiche.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
-import { repositoryId } from "../TestHelper.js";
+import { repositoryId } from '../TestHelper.js';
 import {
   SearchContextHitCollectionResponse,
   EntryCollectionResponse,
   StartSearchEntryRequest,
   TaskCollectionResponse,
   TaskStatus,
-} from "../../src/index.js";
-import { _RepositoryApiClient } from "../CreateSession.js";
-import "isomorphic-fetch";
-import { CoreUtils } from "@laserfiche/lf-js-utils";
+} from '../../src/index.js';
+import { _RepositoryApiClient } from '../CreateSession.js';
+import 'isomorphic-fetch';
+import { CoreUtils } from '@laserfiche/lf-js-utils';
 
 let taskId: string;
-describe("Search Integration Tests", () => {
+describe('Search Integration Tests', () => {
   beforeEach(async () => {
-    taskId = "";
+    taskId = '';
   });
 
   afterEach(async () => {
@@ -27,7 +27,7 @@ describe("Search Integration Tests", () => {
     }
   });
 
-  test("Get Search Context Hits", async () => {
+  test('Get Search Context Hits', async () => {
     let request = new StartSearchEntryRequest();
     request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     var searchResponse =
@@ -35,20 +35,20 @@ describe("Search Integration Tests", () => {
         repositoryId,
         request,
       });
-    taskId = searchResponse.taskId ?? "";
+    taskId = searchResponse.taskId ?? '';
 
     expect(taskId).not.toBeNull();
-    expect(taskId).not.toBe("");
-    
+    expect(taskId).not.toBe('');
+
     await new Promise((r) => setTimeout(r, 5000));
     let searchResultsResponse = await waitForSearchResultsAsync(taskId);
 
     if (!searchResultsResponse) {
-      throw new Error("searchResultsResponse is undefined");
+      throw new Error('searchResultsResponse is undefined');
     }
     var searchResults = searchResultsResponse.value;
     if (!searchResults) {
-      throw new Error("searchResults is undefined");
+      throw new Error('searchResults is undefined');
     }
 
     expect(searchResults).not.toBeNull();
@@ -66,7 +66,7 @@ describe("Search Integration Tests", () => {
     expect(contextHits).not.toBeNull();
   });
 
-  test("Get Search Results for each Paging", async () => {
+  test('Get Search Results for each Paging', async () => {
     let maxPages = 3;
     let maxPageSize = 10;
     let searchRequest = new StartSearchEntryRequest();
@@ -79,9 +79,9 @@ describe("Search Integration Tests", () => {
         request: searchRequest,
       });
 
-    taskId = searchResponse.taskId ?? "";
+    taskId = searchResponse.taskId ?? '';
 
-    expect(taskId).not.toBe("");
+    expect(taskId).not.toBe('');
     expect(taskId).not.toBeNull();
 
     await new Promise((r) => setTimeout(r, 10000));
@@ -90,7 +90,7 @@ describe("Search Integration Tests", () => {
     let pages = 0;
     const callback = async (response: EntryCollectionResponse) => {
       if (!response.value) {
-        throw new Error("response.value is undefined");
+        throw new Error('response.value is undefined');
       }
       searchResults += response.value.length;
       pages += 1;
@@ -108,7 +108,7 @@ describe("Search Integration Tests", () => {
     expect(pages).toBeGreaterThan(0);
   });
 
-  test("Get Search Context Hits for each Paging", async () => {
+  test('Get Search Context Hits for each Paging', async () => {
     let maxPages = 3;
     let maxPageSize = 10;
     let searchRequest = new StartSearchEntryRequest();
@@ -118,9 +118,9 @@ describe("Search Integration Tests", () => {
         repositoryId,
         request: searchRequest,
       });
-    taskId = searchResponse.taskId ?? "";
+    taskId = searchResponse.taskId ?? '';
 
-    expect(taskId).not.toBe("");
+    expect(taskId).not.toBe('');
     expect(taskId).not.toBeNull();
 
     await new Promise((r) => setTimeout(r, 5000));
@@ -128,7 +128,7 @@ describe("Search Integration Tests", () => {
     var searchResultsResponse = await waitForSearchResultsAsync(taskId);
 
     if (!searchResultsResponse || !searchResultsResponse.value) {
-      throw new Error("searchResultsResponse.value is undefined");
+      throw new Error('searchResultsResponse.value is undefined');
     }
     var searchResults = searchResultsResponse.value;
 
@@ -140,7 +140,7 @@ describe("Search Integration Tests", () => {
     let pages = 0;
     const callback = async (response: SearchContextHitCollectionResponse) => {
       if (!response.value) {
-        throw new Error("response.value is undefined");
+        throw new Error('response.value is undefined');
       }
       searchContextHits += response.value.length;
       pages += 1;
@@ -159,7 +159,7 @@ describe("Search Integration Tests", () => {
     expect(pages).toBeGreaterThan(0);
   });
 
-  test("Get Search Results", async () => {
+  test('Get Search Results', async () => {
     let request = new StartSearchEntryRequest();
     request.searchCommand = '({LF:Basic ~= "search text", option="DFANLT"})';
     var searchResponse =
@@ -167,10 +167,10 @@ describe("Search Integration Tests", () => {
         repositoryId,
         request,
       });
-    taskId = searchResponse.taskId ?? "";
+    taskId = searchResponse.taskId ?? '';
 
     expect(taskId).not.toBeNull();
-    expect(taskId).not.toBe("");
+    expect(taskId).not.toBe('');
 
     await new Promise((r) => setTimeout(r, 5000));
 
@@ -203,5 +203,5 @@ async function waitForSearchResultsAsync(currentTaskId: string) {
       await CoreUtils.sleepAsync(5000);
     }
   }
-  throw new Error("Search not completed in 15000 milliseconds");
+  throw new Error('Search not completed in 15000 milliseconds');
 }
