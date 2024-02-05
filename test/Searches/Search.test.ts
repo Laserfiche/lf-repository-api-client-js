@@ -40,8 +40,20 @@ describe('Search Integration Tests', () => {
     expect(taskId).not.toBeNull();
     expect(taskId).not.toBe('');
 
-    await CoreUtils.sleepAsync(5000);
-    let searchResultsResponse = await waitForSearchResultsAsync(taskId);
+    const listOfTasks: TaskCollectionResponse =
+      await _RepositoryApiClient.tasksClient.listTasks({
+        repositoryId,
+        taskIds: [taskId],
+      });
+    const isComplete = listOfTasks.value
+      ? listOfTasks.value[0].status === TaskStatus.Completed
+      : false;
+    expect(isComplete).toBeTruthy();
+    const searchResultsResponse =
+      await _RepositoryApiClient.searchesClient.listSearchResults({
+        repositoryId,
+        taskId,
+      });
 
     if (!searchResultsResponse) {
       throw new Error('searchResultsResponse is undefined');
@@ -122,10 +134,21 @@ describe('Search Integration Tests', () => {
 
     expect(taskId).not.toBe('');
     expect(taskId).not.toBeNull();
+    const listOfTasks: TaskCollectionResponse =
+      await _RepositoryApiClient.tasksClient.listTasks({
+        repositoryId,
+        taskIds: [taskId],
+      });
+    const isComplete = listOfTasks.value
+      ? listOfTasks.value[0].status === TaskStatus.Completed
+      : false;
 
-    await CoreUtils.sleepAsync(5000);
-
-    var searchResultsResponse = await waitForSearchResultsAsync(taskId);
+    expect(isComplete).toBeTruthy();
+    const searchResultsResponse =
+      await _RepositoryApiClient.searchesClient.listSearchResults({
+        repositoryId,
+        taskId,
+      });
 
     if (!searchResultsResponse || !searchResultsResponse.value) {
       throw new Error('searchResultsResponse.value is undefined');
@@ -172,36 +195,22 @@ describe('Search Integration Tests', () => {
     expect(taskId).not.toBeNull();
     expect(taskId).not.toBe('');
 
-    await CoreUtils.sleepAsync(5000);
-
-    var searchResultsResponse = await waitForSearchResultsAsync(taskId);
-    var searchResults = searchResultsResponse.value;
-
-    expect(searchResults).not.toBeNull();
-  });
-});
-
-async function waitForSearchResultsAsync(currentTaskId: string) {
-  const startTime = new Date().getTime();
-  while (new Date().getTime() - startTime < 15000) {
     const listOfTasks: TaskCollectionResponse =
       await _RepositoryApiClient.tasksClient.listTasks({
         repositoryId,
-        taskIds: [currentTaskId],
+        taskIds: [taskId],
       });
     const isComplete = listOfTasks.value
       ? listOfTasks.value[0].status === TaskStatus.Completed
       : false;
-    if (isComplete) {
-      const searchResultsResponse =
-        await _RepositoryApiClient.searchesClient.listSearchResults({
-          repositoryId,
-          taskId: currentTaskId,
-        });
-      return searchResultsResponse;
-    } else {
-      await CoreUtils.sleepAsync(5000);
-    }
-  }
-  throw new Error('Search not completed in 15000 milliseconds');
-}
+    expect(isComplete).toBeTruthy();
+    const searchResultsResponse =
+      await _RepositoryApiClient.searchesClient.listSearchResults({
+        repositoryId,
+        taskId,
+      });
+    const searchResults = searchResultsResponse.value;
+
+    expect(searchResults).not.toBeNull();
+  });
+});
