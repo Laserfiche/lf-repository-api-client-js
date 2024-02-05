@@ -48,7 +48,11 @@ describe('Search Integration Tests', () => {
     const isComplete = listOfTasks.value
       ? listOfTasks.value[0].status === TaskStatus.Completed
       : false;
-    expect(isComplete).toBeTruthy();
+
+    if (!isComplete) {
+      throw new Error('The search task did not complete in 60 seconds');
+    }
+
     const searchResultsResponse =
       await _RepositoryApiClient.searchesClient.listSearchResults({
         repositoryId,
@@ -143,7 +147,10 @@ describe('Search Integration Tests', () => {
       ? listOfTasks.value[0].status === TaskStatus.Completed
       : false;
 
-    expect(isComplete).toBeTruthy();
+    if (!isComplete) {
+      throw new Error('The search task did not complete in 60 seconds');
+    }
+
     const searchResultsResponse =
       await _RepositoryApiClient.searchesClient.listSearchResults({
         repositoryId,
@@ -203,7 +210,11 @@ describe('Search Integration Tests', () => {
     const isComplete = listOfTasks.value
       ? listOfTasks.value[0].status === TaskStatus.Completed
       : false;
-    expect(isComplete).toBeTruthy();
+
+    if (!isComplete) {
+      throw new Error('The search task did not complete in 60 seconds');
+    }
+
     const searchResultsResponse =
       await _RepositoryApiClient.searchesClient.listSearchResults({
         repositoryId,
