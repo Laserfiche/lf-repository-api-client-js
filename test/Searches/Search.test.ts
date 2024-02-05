@@ -40,7 +40,7 @@ describe('Search Integration Tests', () => {
     expect(taskId).not.toBeNull();
     expect(taskId).not.toBe('');
 
-    await new Promise((r) => setTimeout(r, 5000));
+    await CoreUtils.sleepAsync(5000);
     let searchResultsResponse = await waitForSearchResultsAsync(taskId);
 
     if (!searchResultsResponse) {
@@ -84,7 +84,7 @@ describe('Search Integration Tests', () => {
     expect(taskId).not.toBe('');
     expect(taskId).not.toBeNull();
 
-    await new Promise((r) => setTimeout(r, 10000));
+    await CoreUtils.sleepAsync(10000);
 
     let searchResults = 0;
     let pages = 0;
@@ -123,7 +123,7 @@ describe('Search Integration Tests', () => {
     expect(taskId).not.toBe('');
     expect(taskId).not.toBeNull();
 
-    await new Promise((r) => setTimeout(r, 5000));
+    await CoreUtils.sleepAsync(5000);
 
     var searchResultsResponse = await waitForSearchResultsAsync(taskId);
 
@@ -172,7 +172,7 @@ describe('Search Integration Tests', () => {
     expect(taskId).not.toBeNull();
     expect(taskId).not.toBe('');
 
-    await new Promise((r) => setTimeout(r, 5000));
+    await CoreUtils.sleepAsync(5000);
 
     var searchResultsResponse = await waitForSearchResultsAsync(taskId);
     var searchResults = searchResultsResponse.value;
