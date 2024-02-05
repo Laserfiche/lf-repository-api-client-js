@@ -59,9 +59,6 @@ describe('Search Integration Tests', () => {
         taskId,
       });
 
-    if (!searchResultsResponse) {
-      throw new Error('searchResultsResponse is undefined');
-    }
     var searchResults = searchResultsResponse.value;
     if (!searchResults) {
       throw new Error('searchResults is undefined');
