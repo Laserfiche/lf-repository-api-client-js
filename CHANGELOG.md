@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Maintenance
+
+- Updated minor versions of transitive dependencies to fix some vulnerability issues
+
 ## 1.0.1
 
 ### Maintenance
